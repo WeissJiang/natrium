@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nano.component.HerokuConfigVars;
 import nano.component.TelegramBotApi;
+import nano.support.json.JsonObject;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -21,16 +22,34 @@ public class TelegramService {
 
     private final TelegramBotApi telegramBotApi;
 
-
     public void checkTgApiToken(String token) {
         if (!Objects.equals(token, this.herokuConfigVars.nanoTgWebhookToken())) {
             throw new IllegalArgumentException("Illegal webhook token");
         }
     }
 
-    public Map<String, Object> handleRequest(Map<String, Object> request) {
-        log.info("request: {}", request);
-        return new HashMap<>();
+    // request router
+
+    public void handleRequest(Map<String, Object> request) {
+        var jo = new JsonObject(request);
+        log.info("request: {}", jo.encode());
+        var message = jo.getJsonObject("message");
+        var chatId = message.getJsonObject("chat").getInteger("id");
+        var text = message.getString("text");
+        // just echo
+        var result = this.sendMessage(chatId, text);
+        log.info("result: {}", new JsonObject(result).encode());
+    }
+
+    // -- logic
+
+    public Map<String, Object> sendMessage(Integer chatId, String text) {
+        Map<String, Object> parameters = Map.of(
+                "chatId", chatId,
+                "text", text
+        );
+        return this.telegramBotApi.call("sendMessage", parameters);
+
     }
 
     public Map<String, Object> setWebhook() {
