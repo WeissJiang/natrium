@@ -33,6 +33,6 @@ public class TelegramBotApi {
 
     private String buildUrl(String method) {
         var token = this.herokuConfigVars.nanoTgApiToken();
-        return String.format("https://api.telegram.org/%s/%s", token, method);
+        return String.format("https://api.telegram.org/bot%s/%s", token, method);
     }
 }
