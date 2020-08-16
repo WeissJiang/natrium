@@ -35,7 +35,7 @@ public class TelegramService {
 
     public Map<String, Object> setWebhook() {
         var token = this.herokuConfigVars.nanoTgWebhookToken();
-        var url = "https://nano-bot.herokuapp.com/api/telegram/%s" + token;
+        var url = "https://nano-bot.herokuapp.com/api/telegram/" + token;
         return this.telegramBotApi.call("setWebhook", Map.of("url", url));
     }
 }
