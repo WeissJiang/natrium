@@ -26,13 +26,13 @@ public class TelegramBotApi {
     public Map<String, Object> call(String method, Map<String, Object> parameters) {
         var url = URI.create(buildUrl(method));
         var request = RequestEntity.post(url).body(parameters);
-        var typeReference = new ParameterizedTypeReference<Map<String, Object>>() {};
+        var typeReference = new ParameterizedTypeReference<Map<String, Object>>() { };
         var response = this.restTemplate.exchange(request, typeReference);
         return response.getBody();
     }
 
     private String buildUrl(String method) {
         var token = this.herokuConfigVars.nanoTgApiToken();
-        return "https://api.telegram.org/%s/%s".formatted(token, method);
+        return String.format("https://api.telegram.org/%s/%s", token, method);
     }
 }
