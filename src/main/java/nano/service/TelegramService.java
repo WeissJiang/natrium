@@ -44,12 +44,10 @@ public class TelegramService {
     // -- logic
 
     public Map<String, Object> sendMessage(Integer chatId, String text) {
-        Map<String, Object> parameters = Map.of(
-                "chatId", chatId,
-                "text", text
-        );
-        return this.telegramBotApi.call("sendMessage", parameters);
-
+        var jo = new JsonObject()
+                .put("chat_id", chatId)
+                .put("text", text);
+        return this.telegramBotApi.call("sendMessage", jo.getMap());
     }
 
     public Map<String, Object> setWebhook() {
