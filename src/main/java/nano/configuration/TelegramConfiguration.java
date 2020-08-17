@@ -6,10 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import nano.support.Onion;
 import nano.telegram.BotContext;
 import nano.telegram.BotHandler;
-import nano.telegram.handler.BabelHandler;
-import nano.telegram.handler.FoolHandler;
-import nano.telegram.handler.LogHandler;
-import nano.telegram.handler.WikiHandler;
+import nano.telegram.handler.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +25,7 @@ public class TelegramConfiguration {
     public BotHandler telegramBotHandler() {
         var onion = new Onion<BotContext>();
         var clazzList = List.of(
+                ExceptionHandler.class,
                 LogHandler.class,
                 BabelHandler.class,
                 WikiHandler.class,
