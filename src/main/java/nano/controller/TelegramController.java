@@ -22,8 +22,8 @@ public class TelegramController {
     @PostMapping("/{token}")
     public ResponseEntity<?> webhook(@PathVariable("token") String token,
                                      @RequestBody Map<String, Object> request) {
-        this.telegramService.checkTgWebhookToken(token);
-        this.telegramService.handleRequest(request);
+        this.telegramService.checkTelegramWebhookToken(token);
+        this.telegramService.handleWebhook(request);
         return ResponseEntity.ok().build();
     }
 

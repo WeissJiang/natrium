@@ -10,13 +10,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class EchoHandler implements Onion.Middleware<BotContext> {
+public class EchoHandler {
 
     @NonNull
     private final BotApi botApi;
 
-    @Override
-    public void via(BotContext context, Onion.Next next) throws Exception {
+    public void handle(BotContext context, Onion.Next next) throws Exception {
         var parameters = context.getParameters();
         var message = parameters.getJsonObject("message");
         var chatId = message.getJsonObject("chat").getInteger("id");

@@ -59,7 +59,7 @@ public class BotApi {
         return new StringBuilder(apiToken).reverse().toString();
     }
 
-    public void checkTgWebhookToken(String token) {
+    public void checkTelegramWebhookToken(String token) {
         if (!Objects.equals(token, this.getNanoTelegramWebhookToken())) {
             throw new IllegalArgumentException("Illegal webhook token");
         }

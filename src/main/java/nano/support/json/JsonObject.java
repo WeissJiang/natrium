@@ -18,7 +18,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
         map = new LinkedHashMap<>();
     }
 
-    public JsonObject(Map<String, Object> map) {
+    public JsonObject(Map<String,Object> map) {
         this.map = map;
     }
 
@@ -71,7 +71,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 
     public JsonObject getJsonObject(String key) {
         Objects.requireNonNull(key);
-        Map val = (Map) this.map.get(key);
+        Map<String,Object> val = (Map<String,Object>) this.map.get(key);
         if (val == null) {
             return null;
         } else {
@@ -81,7 +81,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 
     public JsonArray getJsonArray(String key) {
         Objects.requireNonNull(key);
-        List val = (List) map.get(key);
+        List<Object> val = (List<Object>) map.get(key);
         if (val == null) {
             return null;
         } else {
@@ -111,9 +111,9 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
         Objects.requireNonNull(key);
         Object val = map.get(key);
         if (val instanceof Map) {
-            val = new JsonObject((Map) val);
+            val = new JsonObject((Map<String, Object>) val);
         } else if (val instanceof List) {
-            val = new JsonArray((List) val);
+            val = new JsonArray((List<Object>) val);
         }
         return val;
     }
@@ -203,7 +203,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
         return map.keySet();
     }
 
-    public JsonObject put(String key, Enum value) {
+    public JsonObject put(String key, Enum<?> value) {
         Objects.requireNonNull(key);
         map.put(key, value == null ? null : value.name());
         return this;
@@ -320,10 +320,10 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
             } else {
                 map.merge(e.getKey(), e.getValue(), (oldVal, newVal) -> {
                     if (oldVal instanceof Map) {
-                        oldVal = new JsonObject((Map) oldVal);
+                        oldVal = new JsonObject((Map<String, Object>) oldVal);
                     }
                     if (newVal instanceof Map) {
-                        newVal = new JsonObject((Map) newVal);
+                        newVal = new JsonObject((Map<String, Object>) newVal);
                     }
                     if (oldVal instanceof JsonObject && newVal instanceof JsonObject) {
                         return ((JsonObject) oldVal).mergeIn((JsonObject) newVal, depth - 1);
@@ -483,9 +483,9 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
         public Map.Entry<String, Object> next() {
             Map.Entry<String, Object> entry = entryIterator.next();
             if (entry.getValue() instanceof Map) {
-                return new Entry(entry.getKey(), new JsonObject((Map) entry.getValue()));
+                return new Entry(entry.getKey(), new JsonObject((Map<String, Object>) entry.getValue()));
             } else if (entry.getValue() instanceof List) {
-                return new Entry(entry.getKey(), new JsonArray((List) entry.getValue()));
+                return new Entry(entry.getKey(), new JsonArray((List<Object>) entry.getValue()));
             }
             return entry;
         }

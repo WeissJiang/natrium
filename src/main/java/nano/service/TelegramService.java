@@ -24,14 +24,14 @@ public class TelegramService {
     private final BotHandler botHandler;
 
     @SneakyThrows
-    public void handleRequest(Map<String, Object> request) {
+    public void handleWebhook(Map<String, Object> request) {
         var parameters = new JsonObject(request);
         var context = BotContext.create(parameters);
         this.botHandler.handle(context);
     }
 
-    public void checkTgWebhookToken(String token) {
-        this.botApi.checkTgWebhookToken(token);
+    public void checkTelegramWebhookToken(String token) {
+        this.botApi.checkTelegramWebhookToken(token);
     }
 
     public Map<String, Object> setWebhook() {

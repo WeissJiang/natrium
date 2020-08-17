@@ -18,7 +18,7 @@ public class JsonArray implements Iterable<Object> {
         list = new ArrayList<>();
     }
 
-    public JsonArray(List list) {
+    public JsonArray(List<Object> list) {
         this.list = list;
     }
 
@@ -56,7 +56,7 @@ public class JsonArray implements Iterable<Object> {
     }
 
     public JsonObject getJsonObject(int pos) {
-        Map val = (Map) list.get(pos);
+        Map<String,Object> val = (Map<String,Object>) list.get(pos);
         if (val == null) {
             return null;
         } else {
@@ -65,7 +65,7 @@ public class JsonArray implements Iterable<Object> {
     }
 
     public JsonArray getJsonArray(int pos) {
-        List val = (List) this.list.get(pos);
+        List<Object> val = (List<Object>) this.list.get(pos);
         if (val == null) {
             return null;
         } else {
@@ -109,7 +109,7 @@ public class JsonArray implements Iterable<Object> {
         return list.get(pos) == null;
     }
 
-    public JsonArray add(Enum value) {
+    public JsonArray add(Enum<?> value) {
         Objects.requireNonNull(value);
         list.add(value.name());
         return this;
@@ -212,9 +212,9 @@ public class JsonArray implements Iterable<Object> {
     public Object remove(int pos) {
         Object removed = list.remove(pos);
         if (removed instanceof Map) {
-            return new JsonObject((Map) removed);
+            return new JsonObject((Map<String, Object>) removed);
         } else if (removed instanceof ArrayList) {
-            return new JsonArray((List) removed);
+            return new JsonArray((List<Object>) removed);
         }
         return removed;
     }
@@ -227,7 +227,7 @@ public class JsonArray implements Iterable<Object> {
         return list.isEmpty();
     }
 
-    public List getList() {
+    public List<Object> getList() {
         return this.list;
     }
 
@@ -331,9 +331,9 @@ public class JsonArray implements Iterable<Object> {
         public Object next() {
             Object val = listIterator.next();
             if (val instanceof Map) {
-                val = new JsonObject((Map) val);
+                val = new JsonObject((Map<String, Object>) val);
             } else if (val instanceof List) {
-                val = new JsonArray((List) val);
+                val = new JsonArray((List<Object>) val);
             }
             return val;
         }

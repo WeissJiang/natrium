@@ -25,8 +25,8 @@ public class TelegramConfiguration {
     @Bean
     public BotHandler telegramBotHandler() {
         var onion = new Onion<BotContext>();
-        onion.use(this.logHandler);
-        onion.use(this.echoHandler);
+        onion.use(this.logHandler::handle);
+        onion.use(this.echoHandler::handle);
         return onion::handle;
     }
 

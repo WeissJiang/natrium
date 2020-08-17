@@ -7,10 +7,9 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class LogHandler implements Onion.Middleware<BotContext> {
+public class LogHandler {
 
-    @Override
-    public void via(BotContext context, Onion.Next next) throws Exception {
+    public void handle(BotContext context, Onion.Next next) throws Exception {
         var parameters = context.getParameters();
         log.info("parameters: {}", parameters);
         // next
