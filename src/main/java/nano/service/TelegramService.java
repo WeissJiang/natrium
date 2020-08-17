@@ -2,9 +2,12 @@ package nano.service;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import nano.component.TelegramBotApi;
+import nano.telegram.BotApi;
 import nano.support.json.JsonObject;
+import nano.telegram.BotContext;
+import nano.telegram.BotHandler;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -15,27 +18,23 @@ import java.util.Map;
 public class TelegramService {
 
     @NonNull
-    private final TelegramBotApi telegramBotApi;
+    private final BotApi botApi;
 
-    // request router
+    @NonNull
+    private final BotHandler botHandler;
 
+    @SneakyThrows
     public void handleRequest(Map<String, Object> request) {
-        var jo = new JsonObject(request);
-        log.info("request: {}", jo.encode());
-        var message = jo.getJsonObject("message");
-        var chatId = message.getJsonObject("chat").getInteger("id");
-        var text = message.getString("text");
-        // just echo
-        var result = this.sendMessage(chatId, text);
-        log.info("result: {}", new JsonObject(result).encode());
+        var parameters = new JsonObject(request);
+        var context = BotContext.create(parameters);
+        this.botHandler.handle(context);
     }
 
-    // -- logic
+    public void checkTgWebhookToken(String token) {
+        this.botApi.checkTgWebhookToken(token);
+    }
 
-    public Map<String, Object> sendMessage(Integer chatId, String text) {
-        var jo = new JsonObject()
-                .put("chat_id", chatId)
-                .put("text", text);
-        return this.telegramBotApi.call("sendMessage", jo.getMap());
+    public Map<String, Object> setWebhook() {
+        return this.botApi.setWebhook();
     }
 }

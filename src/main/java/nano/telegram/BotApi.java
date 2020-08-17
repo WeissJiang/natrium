@@ -1,4 +1,4 @@
-package nano.component;
+package nano.telegram;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import java.util.Objects;
  */
 @Component
 @RequiredArgsConstructor
-public class TelegramBotApi {
+public class BotApi {
 
     @NonNull
     private final Environment env;
