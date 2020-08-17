@@ -65,8 +65,7 @@ public class BotApi {
      * Webhook token: Just reverse API Token
      */
     public String getNanoTelegramWebhookToken() {
-        var apiToken = this.getNanoTelegramApiToken();
-        return new StringBuilder(apiToken).reverse().toString();
+        return this.env.getProperty("NANO_TELEGRAM_WEBHOOK_TOKEN", "");
     }
 
 }
