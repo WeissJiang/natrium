@@ -18,8 +18,8 @@ public class EchoHandler implements Onion.Middleware<BotContext> {
     private final BotApi botApi;
 
     public void via(BotContext context, Onion.Next next) throws Exception {
-        Integer chatId = context.readParameter("message.chat.id");
-        String originalText = context.readParameter("message.text");
+        Integer chatId = context.readParameter("$.message.chat.id");
+        String originalText = context.readParameter("$.message.text");
 
         var text = "nano: " + originalText;
         this.botApi.sendMessage(chatId, text);
