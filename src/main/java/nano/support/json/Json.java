@@ -69,10 +69,10 @@ public class Json {
             return obj;
         } else if (obj instanceof CharSequence) {
             obj = obj.toString();
-        } else if (obj instanceof Map && copy) {
-            obj = (new JsonObject((Map<String, Object>) obj)).copy().getMap();
-        } else if (obj instanceof List && copy) {
-            obj = (new JsonArray((List<Object>) obj)).copy().getList();
+        } else if (obj instanceof Map<?, ?> && copy) {
+            obj = (new JsonObject(obj)).copy().getMap();
+        } else if (obj instanceof List<?> && copy) {
+            obj = (new JsonArray(obj)).copy().getList();
         } else if (obj instanceof byte[]) {
             obj = Base64.getEncoder().encodeToString((byte[]) obj);
         } else if (obj instanceof Instant) {

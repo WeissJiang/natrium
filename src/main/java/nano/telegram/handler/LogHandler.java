@@ -14,7 +14,5 @@ public class LogHandler {
         log.info("parameters: {}", parameters);
         // next
         next.next();
-        var attributes = context.getAttributes();
-        log.info("result: {}", attributes.get("result"));
     }
 }

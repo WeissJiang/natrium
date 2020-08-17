@@ -1,5 +1,7 @@
 package nano.support.json;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import java.nio.ByteBuffer;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
@@ -18,8 +20,16 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
         map = new LinkedHashMap<>();
     }
 
-    public JsonObject(Map<String,Object> map) {
+    public JsonObject(Map<String, Object> map) {
         this.map = map;
+    }
+
+    @SuppressWarnings("unchecked")
+    JsonObject(Object map) {
+        if (!(map instanceof Map<?, ?>)) {
+            throw new IllegalArgumentException("map requires instance of java.util.Map");
+        }
+        this.map = (Map<String, Object>) map;
     }
 
     public JsonObject(ByteBuffer buf) {
@@ -27,7 +37,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
     }
 
     public static JsonObject mapFrom(Object obj) {
-        return new JsonObject((Map<String, Object>) Json.mapper.convertValue(obj, Map.class));
+        return new JsonObject((Object) Json.mapper.convertValue(obj, Map.class));
     }
 
     public <T> T mapTo(Class<T> type) {
@@ -71,7 +81,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 
     public JsonObject getJsonObject(String key) {
         Objects.requireNonNull(key);
-        Map<String,Object> val = (Map<String,Object>) this.map.get(key);
+        Object val = this.map.get(key);
         if (val == null) {
             return null;
         } else {
@@ -81,7 +91,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 
     public JsonArray getJsonArray(String key) {
         Objects.requireNonNull(key);
-        List<Object> val = (List<Object>) map.get(key);
+        Object val = map.get(key);
         if (val == null) {
             return null;
         } else {
@@ -111,9 +121,9 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
         Objects.requireNonNull(key);
         Object val = map.get(key);
         if (val instanceof Map) {
-            val = new JsonObject((Map<String, Object>) val);
-        } else if (val instanceof List) {
-            val = new JsonArray((List<Object>) val);
+            val = new JsonObject(val);
+        } else if (val instanceof List<?>) {
+            val = new JsonArray(val);
         }
         return val;
     }
@@ -290,12 +300,12 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
     public JsonObject put(String key, Object value) {
         Objects.requireNonNull(key);
         value = Json.checkAndCopy(value, false);
-        map.put(key, value);
+        this.map.put(key, value);
         return this;
     }
 
     public Object remove(String key) {
-        return map.remove(key);
+        return this.map.remove(key);
     }
 
     public JsonObject mergeIn(JsonObject other) {
@@ -319,11 +329,11 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
                 map.put(e.getKey(), null);
             } else {
                 map.merge(e.getKey(), e.getValue(), (oldVal, newVal) -> {
-                    if (oldVal instanceof Map) {
-                        oldVal = new JsonObject((Map<String, Object>) oldVal);
+                    if (oldVal instanceof Map<?,?>) {
+                        oldVal = new JsonObject(oldVal);
                     }
-                    if (newVal instanceof Map) {
-                        newVal = new JsonObject((Map<String, Object>) newVal);
+                    if (newVal instanceof Map<?,?>) {
+                        newVal = new JsonObject(newVal);
                     }
                     if (oldVal instanceof JsonObject && newVal instanceof JsonObject) {
                         return ((JsonObject) oldVal).mergeIn((JsonObject) newVal, depth - 1);
@@ -459,11 +469,13 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
     }
 
     private void fromJson(String json) {
-        map = Json.decodeValue(json, Map.class);
+        map = Json.decodeValue(json, new TypeReference<>() {
+        });
     }
 
     private void fromBuffer(ByteBuffer buf) {
-        map = Json.decodeValue(buf, Map.class);
+        map = Json.decodeValue(buf, new TypeReference<>() {
+        });
     }
 
     private static class JsonObjectIterator implements Iterator<Map.Entry<String, Object>> {
@@ -482,10 +494,10 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
         @Override
         public Map.Entry<String, Object> next() {
             Map.Entry<String, Object> entry = entryIterator.next();
-            if (entry.getValue() instanceof Map) {
-                return new Entry(entry.getKey(), new JsonObject((Map<String, Object>) entry.getValue()));
-            } else if (entry.getValue() instanceof List) {
-                return new Entry(entry.getKey(), new JsonArray((List<Object>) entry.getValue()));
+            if (entry.getValue() instanceof Map<?,?>) {
+                return new Entry(entry.getKey(), new JsonObject(entry.getValue()));
+            } else if (entry.getValue() instanceof List<?>) {
+                return new Entry(entry.getKey(), new JsonArray(entry.getValue()));
             }
             return entry;
         }

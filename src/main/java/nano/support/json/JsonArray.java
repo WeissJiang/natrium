@@ -1,5 +1,7 @@
 package nano.support.json;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import java.nio.ByteBuffer;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
@@ -20,6 +22,14 @@ public class JsonArray implements Iterable<Object> {
 
     public JsonArray(List<Object> list) {
         this.list = list;
+    }
+
+    @SuppressWarnings("unchecked")
+    JsonArray(Object list) {
+        if (!(list instanceof List<?>)) {
+            throw new IllegalArgumentException("list requires instance of java.util.List");
+        }
+        this.list = (List<Object>) list;
     }
 
     public JsonArray(ByteBuffer buf) {
@@ -56,7 +66,7 @@ public class JsonArray implements Iterable<Object> {
     }
 
     public JsonObject getJsonObject(int pos) {
-        Map<String,Object> val = (Map<String,Object>) list.get(pos);
+        Object val = list.get(pos);
         if (val == null) {
             return null;
         } else {
@@ -65,7 +75,7 @@ public class JsonArray implements Iterable<Object> {
     }
 
     public JsonArray getJsonArray(int pos) {
-        List<Object> val = (List<Object>) this.list.get(pos);
+        Object val = this.list.get(pos);
         if (val == null) {
             return null;
         } else {
@@ -210,13 +220,7 @@ public class JsonArray implements Iterable<Object> {
     }
 
     public Object remove(int pos) {
-        Object removed = list.remove(pos);
-        if (removed instanceof Map) {
-            return new JsonObject((Map<String, Object>) removed);
-        } else if (removed instanceof ArrayList) {
-            return new JsonArray((List<Object>) removed);
-        }
-        return removed;
+        return this.list.remove(pos);
     }
 
     public int size() {
@@ -307,11 +311,13 @@ public class JsonArray implements Iterable<Object> {
     }
 
     private void fromJson(String json) {
-        list = Json.decodeValue(json, List.class);
+        list = Json.decodeValue(json, new TypeReference<>() {
+        });
     }
 
     private void fromBuffer(ByteBuffer buf) {
-        list = Json.decodeValue(buf, List.class);
+        list = Json.decodeValue(buf, new TypeReference<>() {
+        });
     }
 
     private static class JsonArrayIterator implements Iterator<Object> {
@@ -330,10 +336,10 @@ public class JsonArray implements Iterable<Object> {
         @Override
         public Object next() {
             Object val = listIterator.next();
-            if (val instanceof Map) {
-                val = new JsonObject((Map<String, Object>) val);
-            } else if (val instanceof List) {
-                val = new JsonArray((List<Object>) val);
+            if (val instanceof Map<?,?>) {
+                val = new JsonObject(val);
+            } else if (val instanceof List<?>) {
+                val = new JsonArray(val);
             }
             return val;
         }

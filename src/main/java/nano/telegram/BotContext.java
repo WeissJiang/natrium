@@ -3,13 +3,10 @@ package nano.telegram;
 import lombok.Data;
 import nano.support.json.JsonObject;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Data
 public class BotContext {
 
-    private Map<String, Object> attributes = new HashMap<>();
+    private JsonObject attributes = new JsonObject();
 
     private JsonObject parameters;
 
@@ -18,5 +15,4 @@ public class BotContext {
         context.setParameters(parameters);
         return context;
     }
-
 }

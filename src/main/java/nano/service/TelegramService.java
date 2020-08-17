@@ -24,8 +24,8 @@ public class TelegramService {
     private final BotHandler botHandler;
 
     @SneakyThrows
-    public void handleWebhook(Map<String, Object> request) {
-        var parameters = new JsonObject(request);
+    public void handleWebhook(Map<String, Object> parameterMap) {
+        var parameters = new JsonObject(parameterMap);
         var context = BotContext.create(parameters);
         this.botHandler.handle(context);
     }
