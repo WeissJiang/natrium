@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import nano.support.Onion;
 import nano.telegram.BotContext;
 import nano.telegram.BotHandler;
-import nano.telegram.handler.EchoHandler;
+import nano.telegram.handler.FoolHandler;
 import nano.telegram.handler.LogHandler;
 import nano.telegram.handler.WikiHandler;
 import org.springframework.context.ApplicationContext;
@@ -29,7 +29,7 @@ public class TelegramConfiguration {
         var clazzList = List.of(
                 LogHandler.class,
                 WikiHandler.class,
-                EchoHandler.class
+                FoolHandler.class
         );
         for (var clazz : clazzList) {
             var handler = this.applicationContext.getBean(clazz);
