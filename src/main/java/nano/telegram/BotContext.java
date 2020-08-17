@@ -1,6 +1,7 @@
 package nano.telegram;
 
 import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.PathNotFoundException;
 import lombok.Data;
 
 import java.util.HashMap;
@@ -15,7 +16,11 @@ public class BotContext {
     private DocumentContext documentContext;
 
     public <T> T readParameter(String jsonPath) {
-        return this.documentContext.read(jsonPath);
+        try {
+            return this.documentContext.read(jsonPath);
+        } catch (PathNotFoundException ex) {
+            return null;
+        }
     }
 
 }
