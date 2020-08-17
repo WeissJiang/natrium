@@ -18,5 +18,4 @@ public class BotContext {
         return this.documentContext.read(jsonPath);
     }
 
-
 }

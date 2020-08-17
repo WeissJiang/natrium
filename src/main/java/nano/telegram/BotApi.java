@@ -58,7 +58,8 @@ public class BotApi {
     // API Token
 
     public String getNanoTelegramApiToken() {
-        return this.env.getProperty("NANO_TELEGRAM_API_TOKEN", "");
+        var key = "NANO_TELEGRAM_API_TOKEN";
+        return this.env.getProperty(key, "");
     }
 
     /**
@@ -68,6 +69,5 @@ public class BotApi {
         var apiToken = this.getNanoTelegramApiToken();
         return new StringBuilder(apiToken).reverse().toString();
     }
-
 
 }

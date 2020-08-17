@@ -12,19 +12,18 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class EchoHandler implements Onion.Middleware<BotContext>{
+public class EchoHandler implements Onion.Middleware<BotContext> {
 
     @NonNull
     private final BotApi botApi;
 
     public void via(BotContext context, Onion.Next next) throws Exception {
-        var chatId = (Integer) context.readParameter("message.chat.id");
-        var originalText = context.readParameter("message.text");
+        Integer chatId = context.readParameter("message.chat.id");
+        String originalText = context.readParameter("message.text");
 
         var text = "nano: " + originalText;
-        var result = this.botApi.sendMessage(chatId, text);
-        // log
-        log.info("echo result: {}", Json.encode(result));
+        this.botApi.sendMessage(chatId, text);
+
         // next
         next.next();
     }
