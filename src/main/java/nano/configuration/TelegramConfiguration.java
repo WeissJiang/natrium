@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import nano.support.Onion;
 import nano.telegram.BotContext;
 import nano.telegram.BotHandler;
+import nano.telegram.handler.BabelHandler;
 import nano.telegram.handler.FoolHandler;
 import nano.telegram.handler.LogHandler;
 import nano.telegram.handler.WikiHandler;
@@ -28,6 +29,7 @@ public class TelegramConfiguration {
         var onion = new Onion<BotContext>();
         var clazzList = List.of(
                 LogHandler.class,
+                BabelHandler.class,
                 WikiHandler.class,
                 FoolHandler.class
         );

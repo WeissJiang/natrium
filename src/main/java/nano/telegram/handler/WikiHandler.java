@@ -30,15 +30,14 @@ public class WikiHandler implements Onion.Middleware<BotContext> {
     private final BotApi botApi;
 
     public void via(BotContext context, Onion.Next next) throws Exception {
+        String text = context.readParameter("$.message.text");
         Integer chatId = context.readParameter("$.message.chat.id");
-        String originalText = context.readParameter("$.message.text");
 
-        if (StringUtils.isEmpty(originalText)
-                || !originalText.startsWith(PREFIX)) {
+        if (StringUtils.isEmpty(text) || !text.startsWith(PREFIX)) {
             next.next();
             return;
         }
-        var content = originalText.substring(PREFIX.length());
+        var content = text.substring(PREFIX.length());
         var extracts = this.wikiService.getWikiExtracts(content);
         var extractsDocument = JsonPath.parse(extracts);
         Map<String, Map<String, Object>> pages = extractsDocument.read("$.query.pages");
