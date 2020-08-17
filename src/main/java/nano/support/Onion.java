@@ -11,14 +11,17 @@ public final class Onion<T> {
 
     private Middleware<T> middleware = (ctx, nxt) -> nxt.next();
 
-    public Onion<T> use(Middleware<T> middleware) {
-        this.middleware = this.middleware.compose(middleware);
-        return this;
+    @SafeVarargs
+    public final void use(Middleware<T>... middlewares) {
+        for (Middleware<T> middleware : middlewares) {
+            this.middleware = this.middleware.compose(middleware);
+        }
     }
 
     public void handle(T context) throws Exception {
 
-        this.middleware.via(context,() -> { });
+        this.middleware.via(context, () -> {
+        });
     }
 
     public interface Middleware<T> {
