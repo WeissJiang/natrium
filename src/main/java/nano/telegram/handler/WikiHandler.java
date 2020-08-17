@@ -43,8 +43,7 @@ public class WikiHandler implements Onion.Middleware<BotContext> {
         var extractsDocument = JsonPath.parse(extracts);
         Map<String, Map<String, Object>> pages = extractsDocument.read("$.query.pages");
 
-
-        if (CollectionUtils.isEmpty(pages)) {
+        if (CollectionUtils.isEmpty(pages) || pages.containsKey("-1")) {
             this.botApi.sendMessage(chatId, "nano没有找到：" + content);
             return;
         }
@@ -52,9 +51,9 @@ public class WikiHandler implements Onion.Middleware<BotContext> {
         var wiki = new ArrayList<>(pages.values()).get(0);
         var extract = wiki.get("extract");
         if (StringUtils.isEmpty(extract)) {
-            this.botApi.sendMessage(chatId, URL_PREFIX + content);
+            this.botApi.sendMessage(chatId, url);
             return;
         }
-        this.botApi.sendMessage(chatId, extracts + "\n" + url);
+        this.botApi.sendMessage(chatId, extract + "\n" + url);
     }
 }
