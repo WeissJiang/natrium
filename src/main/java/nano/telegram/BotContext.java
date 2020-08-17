@@ -1,18 +1,22 @@
 package nano.telegram;
 
+import com.jayway.jsonpath.DocumentContext;
 import lombok.Data;
-import nano.support.json.JsonObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Data
 public class BotContext {
 
-    private JsonObject attributes = new JsonObject();
+    private Map<String, Object> attributes = new HashMap<>();
 
-    private JsonObject parameters;
+    private Map<String, Object> parameters;
+    private DocumentContext documentContext;
 
-    public static BotContext create(JsonObject parameters) {
-        var context = new BotContext();
-        context.setParameters(parameters);
-        return context;
+    public <T> T readParameter(String jsonPath) {
+        return this.documentContext.read(jsonPath);
     }
+
+
 }
