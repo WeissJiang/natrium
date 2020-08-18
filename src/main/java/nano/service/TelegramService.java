@@ -11,7 +11,6 @@ import nano.telegram.BotHandler;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
-import java.util.Objects;
 
 @Slf4j
 @Service
@@ -30,12 +29,6 @@ public class TelegramService {
         context.setParameters(parameters);
         context.setDocumentContext(JsonPath.parse(parameters));
         this.botHandler.handle(context);
-    }
-
-    public void checkTelegramWebhookToken(String token) {
-        if (!Objects.equals(token, this.botApi.getNanoTelegramWebhookToken())) {
-            throw new IllegalArgumentException("Illegal webhook token");
-        }
     }
 
     public Map<String, Object> setWebhook() {

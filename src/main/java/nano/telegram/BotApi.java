@@ -2,6 +2,7 @@ package nano.telegram;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import nano.security.SecurityService;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.RequestEntity;
@@ -24,6 +25,9 @@ public class BotApi {
     @NonNull
     private final RestTemplate restTemplate;
 
+    @NonNull
+    private final SecurityService securityService;
+
     /**
      * Send text message
      */
@@ -36,7 +40,7 @@ public class BotApi {
      * Set webhook
      */
     public Map<String, Object> setWebhook() {
-        var token = this.getNanoTelegramWebhookToken();
+        var token = this.securityService.getNanoToken();
         var url = "https://nano-bot.herokuapp.com/api/telegram/" + token;
         return this.call("setWebhook", Map.of("url", url));
     }
@@ -55,17 +59,9 @@ public class BotApi {
         return response.getBody();
     }
 
-    // API Token
+    // API token
 
     public String getNanoTelegramApiToken() {
         return this.env.getProperty("NANO_TELEGRAM_API_TOKEN", "");
     }
-
-    /**
-     * Webhook token: Just reverse API Token
-     */
-    public String getNanoTelegramWebhookToken() {
-        return this.env.getProperty("NANO_TELEGRAM_WEBHOOK_TOKEN", "");
-    }
-
 }
