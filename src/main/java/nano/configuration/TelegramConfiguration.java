@@ -1,7 +1,5 @@
 package nano.configuration;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nano.support.Onion;
 import nano.telegram.BotContext;
@@ -11,30 +9,25 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.List;
-
 @Slf4j
 @Configuration
-@RequiredArgsConstructor
 public class TelegramConfiguration {
 
-    @NonNull
-    private final ApplicationContext applicationContext;
-
     @Bean
-    public BotHandler telegramBotHandler() {
+    public BotHandler telegramBotHandler(ApplicationContext ctx) {
+        var exceptionHandler = ctx.getBean(ExceptionHandler.class);
+        var logHandler = ctx.getBean(LogHandler.class);
+        var babelHandler = ctx.getBean(BabelHandler.class);
+        var wikiHandler = ctx.getBean(WikiHandler.class);
+        var foolHandler = ctx.getBean(FoolHandler.class);
+
         var onion = new Onion<BotContext>();
-        var clazzList = List.of(
-                ExceptionHandler.class,
-                LogHandler.class,
-                BabelHandler.class,
-                WikiHandler.class,
-                FoolHandler.class
-        );
-        for (var clazz : clazzList) {
-            var handler = this.applicationContext.getBean(clazz);
-            onion.use(handler);
-        }
+        onion.use(exceptionHandler);
+        onion.use(logHandler);
+        onion.use(babelHandler);
+        onion.use(wikiHandler);
+        onion.use(foolHandler);
+
         return onion::handle;
     }
 }

@@ -13,8 +13,8 @@ public final class Onion<T> {
 
     @SafeVarargs
     public final void use(Middleware<T>... middlewares) {
-        for (Middleware<T> middleware : middlewares) {
-            this.middleware = this.middleware.compose(middleware);
+        for (Middleware<T> m : middlewares) {
+            this.middleware = compose(this.middleware, m);
         }
     }
 
@@ -27,15 +27,15 @@ public final class Onion<T> {
     public interface Middleware<T> {
 
         void via(T context, Next next) throws Exception;
-
-        default Middleware<T> compose(Middleware<T> middleware) {
-            return (ctx, nxt) -> this.via(ctx, () -> middleware.via(ctx, nxt));
-        }
     }
 
     public interface Next {
 
         void next() throws Exception;
+    }
+
+    public static <U> Middleware<U> compose(Middleware<U> before, Middleware<U> after) {
+        return (ctx, nxt) -> before.via(ctx, () -> after.via(ctx, nxt));
     }
 
 }
