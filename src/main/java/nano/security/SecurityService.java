@@ -22,7 +22,7 @@ public class SecurityService {
 
     public void checkNanoToken(String token) {
         if (StringUtils.isEmpty(token)) {
-            throw new AuthenticationException("token missing");
+            throw new AuthenticationException("Missing token");
         }
 
         if (!token.equals(this.getNanoToken())) {

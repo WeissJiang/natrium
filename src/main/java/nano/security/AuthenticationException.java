@@ -1,12 +1,14 @@
 package nano.security;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.server.ResponseStatusException;
 
-@ResponseStatus(HttpStatus.FORBIDDEN)
-public class AuthenticationException extends RuntimeException{
+/**
+ * Reply HTTP status 403 and reason
+ */
+public class AuthenticationException extends ResponseStatusException {
 
-    public AuthenticationException(String message) {
-        super(message);
+    public AuthenticationException(String reason) {
+        super(HttpStatus.FORBIDDEN, reason);
     }
 }
