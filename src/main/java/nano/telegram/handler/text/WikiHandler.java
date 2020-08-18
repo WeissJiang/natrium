@@ -1,4 +1,4 @@
-package nano.telegram.handler;
+package nano.telegram.handler.text;
 
 import com.jayway.jsonpath.JsonPath;
 import lombok.NonNull;
@@ -8,6 +8,7 @@ import nano.service.WikiService;
 import nano.support.Onion;
 import nano.telegram.BotApi;
 import nano.telegram.BotContext;
+import nano.telegram.BotUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -21,7 +22,7 @@ import java.util.Map;
 public class WikiHandler implements Onion.Middleware<BotContext> {
 
     private static final String URL_PREFIX = "https://zh.m.wikipedia.org/wiki/";
-    private static final String PREFIX = "wiki ";
+    private static final String COMMAND = "wiki ";
 
     @NonNull
     private final WikiService wikiService;
@@ -30,14 +31,15 @@ public class WikiHandler implements Onion.Middleware<BotContext> {
     private final BotApi botApi;
 
     public void via(BotContext context, Onion.Next next) throws Exception {
-        String text = context.readParameter("$.message.text");
-        Integer chatId = context.readParameter("$.message.chat.id");
+        var text = context.text();
+        var chatId = context.chatId();
 
-        if (StringUtils.isEmpty(text) || !text.startsWith(PREFIX)) {
+        var content = BotUtils.parseCommand(COMMAND, text);
+        if (StringUtils.isEmpty(content)) {
             next.next();
             return;
         }
-        var content = text.substring(PREFIX.length());
+
         var extracts = this.wikiService.getWikiExtracts(content);
         var extractsDocument = JsonPath.parse(extracts);
         Map<String, Map<String, Object>> pages = extractsDocument.read("$.query.pages");

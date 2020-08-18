@@ -2,20 +2,30 @@ package nano.telegram;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.PathNotFoundException;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Data
 public class BotContext {
 
-    private Map<String, Object> attributes = new HashMap<>();
+    @Getter
+    private final Map<String, Object> attributes = new HashMap<>();
 
+    @Getter
+    @Setter
     private Map<String, Object> parameters;
+
+    @Setter
     private DocumentContext documentContext;
 
-    public <T> T readParameter(String jsonPath) {
+    /**
+     * @param jsonPath JSON path
+     * @param <T>      result type
+     * @return null if absent
+     */
+    public <T> T read(String jsonPath) {
         try {
             return this.documentContext.read(jsonPath);
         } catch (PathNotFoundException ex) {
@@ -23,4 +33,11 @@ public class BotContext {
         }
     }
 
+    public Integer chatId() {
+        return this.read("$.message.chat.id");
+    }
+
+    public String text(){
+        return this.read("$.message.text");
+    }
 }

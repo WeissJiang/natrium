@@ -1,4 +1,4 @@
-package nano.telegram.handler;
+package nano.telegram.handler.text;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +19,11 @@ public class FoolHandler implements Onion.Middleware<BotContext> {
     private final BotApi botApi;
 
     public void via(BotContext context, Onion.Next next) throws Exception {
-        Integer chatId = context.readParameter("$.message.chat.id");
-
         var random = ThreadLocalRandom.current();
         var count = random.nextInt(1, 7);
         var text = "阿巴".repeat(count);
-        this.botApi.sendMessage(chatId, text);
+
+        this.botApi.sendMessage(context.chatId(), text);
 
         // next
         next.next();

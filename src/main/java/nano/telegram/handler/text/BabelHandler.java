@@ -1,4 +1,4 @@
-package nano.telegram.handler;
+package nano.telegram.handler.text;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +7,7 @@ import nano.service.BaiduService;
 import nano.support.Onion;
 import nano.telegram.BotApi;
 import nano.telegram.BotContext;
+import nano.telegram.BotUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -15,7 +16,7 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 public class BabelHandler implements Onion.Middleware<BotContext> {
 
-    private static final String PREFIX = "babel ";
+    private static final String COMMAND = "babel ";
 
     @NonNull
     private final BotApi botApi;
@@ -25,15 +26,15 @@ public class BabelHandler implements Onion.Middleware<BotContext> {
 
     @Override
     public void via(BotContext context, Onion.Next next) throws Exception {
-        Integer chatId = context.readParameter("$.message.chat.id");
-        String text = context.readParameter("$.message.text");
+        var text = context.text();
 
-        if (StringUtils.isEmpty(text) || !text.startsWith(PREFIX)) {
+        var content = BotUtils.parseCommand(COMMAND, text);
+        if (StringUtils.isEmpty(content)) {
             next.next();
             return;
         }
-        var content = text.substring(PREFIX.length());
+
         var translated = this.baiduService.autoTranslate(content);
-        this.botApi.sendMessage(chatId, translated);
+        this.botApi.sendMessage(context.chatId(), translated);
     }
 }

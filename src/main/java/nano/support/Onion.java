@@ -11,18 +11,15 @@ import java.util.Objects;
  */
 public final class Onion<T> {
 
-    private Middleware<T> middleware = (ctx, nxt) -> nxt.next();
+    private Middleware<T> core = (ctx, nxt) -> nxt.next();
 
-    @SafeVarargs
-    public final void use(Middleware<T>... middlewares) {
-        for (Middleware<T> m : middlewares) {
-            this.middleware = compose(this.middleware, m);
-        }
+    public final void use(Middleware<T> middleware) {
+        this.core = compose(this.core, middleware);
     }
 
     public void handle(T context) throws Exception {
 
-        this.middleware.via(context, () -> {
+        this.core.via(context, () -> {
         });
     }
 

@@ -18,7 +18,7 @@ public class ExceptionHandler implements Onion.Middleware<BotContext> {
 
     @Override
     public void via(BotContext context, Onion.Next next) {
-        Integer chatId = context.readParameter("$.message.chat.id");
+        var chatId = context.chatId();
         try {
             next.next();
         } catch (Exception ex) {
