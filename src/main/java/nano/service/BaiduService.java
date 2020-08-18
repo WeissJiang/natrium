@@ -5,6 +5,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import nano.constant.ConfigVars;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -62,8 +63,8 @@ public class BaiduService {
         var input = options.get("input");
         var from = options.get("from");
         var to = options.get("to");
-        var appId = this.getAppId();
-        var secretKey = this.getSecretKey();
+        var appId = this.env.getProperty(ConfigVars.BAIDU_TRANSLATION_APP_ID, "");
+        var secretKey = this.env.getProperty(ConfigVars.BAIDU_TRANSLATION_SECRET_KEY, "");
         var salt = Instant.now().toString();
         var data = (appId + input + salt + secretKey).getBytes(StandardCharsets.UTF_8);
         var sign = DigestUtils.md5DigestAsHex(data);
@@ -94,13 +95,5 @@ public class BaiduService {
             return "翻译异常：" + documentContext.read("$.error_msg");
         }
         return result.stream().map(it -> it.get("dst")).collect(Collectors.joining("\n"));
-    }
-
-    private String getAppId() {
-        return this.env.getProperty("BAIDU_TRANSLATION_APP_ID", "");
-    }
-
-    private String getSecretKey() {
-        return this.env.getProperty("BAIDU_TRANSLATION_SECRET_KEY", "");
     }
 }

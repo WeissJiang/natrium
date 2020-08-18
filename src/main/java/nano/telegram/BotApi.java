@@ -2,7 +2,7 @@ package nano.telegram;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import nano.security.SecurityService;
+import nano.constant.ConfigVars;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.RequestEntity;
@@ -25,9 +25,6 @@ public class BotApi {
     @NonNull
     private final RestTemplate restTemplate;
 
-    @NonNull
-    private final SecurityService securityService;
-
     /**
      * Send text message
      */
@@ -39,9 +36,7 @@ public class BotApi {
     /**
      * Set webhook
      */
-    public Map<String, Object> setWebhook() {
-        var token = this.securityService.getNanoToken();
-        var url = "https://nano-bot.herokuapp.com/api/telegram/" + token;
+    public Map<String, Object> setWebhook(String url) {
         return this.call("setWebhook", Map.of("url", url));
     }
 
@@ -49,7 +44,7 @@ public class BotApi {
      * Telegram API caller
      */
     public Map<String, Object> call(String method, Map<String, Object> parameters) {
-        var token = this.getNanoTelegramApiToken();
+        var token = this.env.getProperty(ConfigVars.NANO_TELEGRAM_API_TOKEN, "");
         var endpoint = String.format("https://api.telegram.org/bot%s/%s", token, method);
         var url = URI.create(endpoint);
         var request = RequestEntity.post(url).body(parameters);
@@ -57,11 +52,5 @@ public class BotApi {
         };
         var response = this.restTemplate.exchange(request, typeReference);
         return response.getBody();
-    }
-
-    // API token
-
-    public String getNanoTelegramApiToken() {
-        return this.env.getProperty("NANO_TELEGRAM_API_TOKEN", "");
     }
 }

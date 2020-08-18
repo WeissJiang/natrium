@@ -31,10 +31,19 @@ public class TelegramController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/set-webhook")
+    @PostMapping("/setWebhook")
     public ResponseEntity<?> setWebhook(@RequestParam("token") String token) {
         this.securityService.checkNanoToken(token);
         var result = this.telegramService.setWebhook();
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/sendMessage")
+    public ResponseEntity<?> sendMessage(@RequestParam("token") String token,
+                                         @RequestParam("chatId") Integer chatId,
+                                         @RequestParam("text") String text) {
+        this.securityService.checkNanoToken(token);
+        var result = this.telegramService.sendMessage(chatId, text);
         return ResponseEntity.ok(result);
     }
 }
