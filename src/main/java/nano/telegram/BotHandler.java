@@ -40,7 +40,11 @@ public class BotHandler {
         this.onion.use(this.exceptionHandler);
         this.onion.use(this.logHandler);
         // text message
-        this.onion.use(this.textMessageHandler());
+        this.onion.use(this.babelHandler);
+        this.onion.use(this.wikiHandler);
+        this.onion.use(this.foolHandler);
+
+//        this.onion.use(this.textMessageHandler());
     }
 
     private Onion.Middleware<BotContext> textMessageHandler() {
