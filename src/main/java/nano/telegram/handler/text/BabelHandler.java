@@ -16,7 +16,7 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 public class BabelHandler implements Onion.Middleware<BotContext> {
 
-    private static final String COMMAND = "babel ";
+    private static final String COMMAND = "babel";
 
     @NonNull
     private final BotApi botApi;

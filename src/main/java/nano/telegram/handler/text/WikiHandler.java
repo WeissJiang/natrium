@@ -22,7 +22,7 @@ import java.util.Map;
 public class WikiHandler implements Onion.Middleware<BotContext> {
 
     private static final String URL_PREFIX = "https://zh.m.wikipedia.org/wiki/";
-    private static final String COMMAND = "wiki ";
+    private static final String COMMAND = "wiki";
 
     @NonNull
     private final WikiService wikiService;
