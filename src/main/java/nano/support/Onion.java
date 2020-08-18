@@ -1,5 +1,7 @@
 package nano.support;
 
+import java.util.Objects;
+
 /**
  * Onion is just like an Onion
  *
@@ -35,6 +37,8 @@ public final class Onion<T> {
     }
 
     public static <U> Middleware<U> compose(Middleware<U> before, Middleware<U> after) {
+        Objects.requireNonNull(before);
+        Objects.requireNonNull(after);
         return (ctx, nxt) -> before.via(ctx, () -> after.via(ctx, nxt));
     }
 
