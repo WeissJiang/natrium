@@ -1,6 +1,6 @@
 package nano.support;
 
-import java.util.Objects;
+import java.util.Arrays;
 
 /**
  * Onion is just like an Onion
@@ -33,10 +33,9 @@ public final class Onion<T> {
         void next() throws Exception;
     }
 
-    public static <U> Middleware<U> compose(Middleware<U> before, Middleware<U> after) {
-        Objects.requireNonNull(before);
-        Objects.requireNonNull(after);
-        return (ctx, nxt) -> before.via(ctx, () -> after.via(ctx, nxt));
+    @SafeVarargs
+    public static <U> Middleware<U> compose(Middleware<U>... middlewares) {
+        return Arrays.stream(middlewares).reduce((ctx, nxt) -> nxt.next(),
+                (before, after) -> (ctx, nxt) -> before.via(ctx, () -> after.via(ctx, nxt)));
     }
-
 }

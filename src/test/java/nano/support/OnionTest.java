@@ -12,6 +12,7 @@ public class OnionTest {
     @Test
     public void testCompose() throws Exception {
         Onion.Middleware<List<String>> m0 = (ctx, nxt) -> {
+            assertEquals(0, ctx.size());
             ctx.add("0");
             nxt.next();
         };

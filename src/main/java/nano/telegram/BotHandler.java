@@ -11,9 +11,6 @@ import nano.telegram.handler.text.WikiHandler;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
-
-import static nano.support.Sugar.reduce;
 
 @Component
 @RequiredArgsConstructor
@@ -40,16 +37,12 @@ public class BotHandler {
         this.onion.use(this.exceptionHandler);
         this.onion.use(this.logHandler);
         // text message
-        this.onion.use(this.textMessageHandler());
-    }
-
-    private Onion.Middleware<BotContext> textMessageHandler() {
-        var handlerList = List.of(
+        var textMessageHandler = Onion.compose(
                 this.babelHandler,
                 this.wikiHandler,
                 this.foolHandler
         );
-        return reduce(handlerList, (ctx, nxt) -> nxt.next(), Onion::compose);
+        this.onion.use(textMessageHandler);
     }
 
     public void handle(BotContext context) throws Exception {
