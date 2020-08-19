@@ -19,6 +19,6 @@ public class BotUtils {
         if (split.length < 2) {
             return null;
         }
-        return split[1];
+        return split[1].trim();
     }
 }
