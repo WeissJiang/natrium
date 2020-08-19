@@ -57,8 +57,8 @@ public class Json {
     }
 
     @SneakyThrows
-    private static <T> T invoke(ATE<T> ATE) {
-        return ATE.invoke();
+    private static <T> T invoke(ATE<T> actionThrowsException) {
+        return actionThrowsException.invoke();
     }
 
     interface ATE<T> {
