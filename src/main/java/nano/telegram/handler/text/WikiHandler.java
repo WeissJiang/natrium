@@ -13,8 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -40,21 +39,23 @@ public class WikiHandler implements Onion.Middleware<BotContext> {
             return;
         }
 
-        var extracts = this.wikiService.getWikiExtracts(content);
-        var extractsDocument = JsonPath.parse(extracts);
-        Map<String, Map<String, Object>> pages = extractsDocument.read("$.query.pages");
+        var extract = this.fetchExtract(content);
+        this.botApi.sendMessage(chatId, extract);
+    }
 
-        if (CollectionUtils.isEmpty(pages) || pages.containsKey("-1")) {
-            this.botApi.sendMessage(chatId, "nano没有找到：" + content);
-            return;
+    private String fetchExtract(String title) {
+        var extracts = this.wikiService.getWikiExtracts(title);
+        var extractsDocument = JsonPath.parse(extracts);
+        List<String> extractList = extractsDocument.read("$.query.pages.*.extract");
+
+        if (CollectionUtils.isEmpty(extractList)) {
+            return "nano没有找到：" + title;
         }
-        var url = URL_PREFIX + content;
-        var wiki = new ArrayList<>(pages.values()).get(0);
-        var extract = wiki.get("extract");
+        var url = URL_PREFIX + title;
+        var extract = extractList.get(0);
         if (StringUtils.isEmpty(extract)) {
-            this.botApi.sendMessage(chatId, url);
-            return;
+            return url;
         }
-        this.botApi.sendMessage(chatId, extract + "\n" + url);
+        return extract + "\n" + url;
     }
 }

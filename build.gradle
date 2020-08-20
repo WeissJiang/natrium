@@ -20,6 +20,8 @@ repositories {
 }
 
 dependencies {
+	implementation 'org.graalvm.js:js:20.0.0'
+	implementation 'org.graalvm.js:js-scriptengine:20.0.0'
 	implementation 'com.jayway.jsonpath:json-path:2.4.0'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
