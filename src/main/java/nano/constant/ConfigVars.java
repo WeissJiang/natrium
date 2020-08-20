@@ -24,5 +24,4 @@ public final class ConfigVars {
      */
     public static final String BAIDU_TRANSLATION_APP_ID = "BAIDU_TRANSLATION_APP_ID";
     public static final String BAIDU_TRANSLATION_SECRET_KEY = "BAIDU_TRANSLATION_SECRET_KEY";
-
 }

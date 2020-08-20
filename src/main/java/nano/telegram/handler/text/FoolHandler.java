@@ -23,8 +23,10 @@ public class FoolHandler implements Onion.Middleware<BotContext> {
         var count = random.nextInt(1, 7);
         var text = "阿巴".repeat(count);
 
-        this.botApi.sendMessage(context.chatId(), text);
-
+        var integer = context.chatId();
+        if (integer != null) {
+            this.botApi.sendMessage(integer, text);
+        }
         // next
         next.next();
     }

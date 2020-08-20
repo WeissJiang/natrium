@@ -1,6 +1,5 @@
 package nano.service;
 
-import com.jayway.jsonpath.JsonPath;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -30,9 +29,7 @@ public class TelegramService {
 
     @SneakyThrows
     public void handleWebhook(Map<String, Object> parameters) {
-        var context = new BotContext();
-        context.setParameters(parameters);
-        context.setDocumentContext(JsonPath.parse(parameters));
+        var context = new BotContext(parameters);
         this.botHandler.handle(context);
     }
 

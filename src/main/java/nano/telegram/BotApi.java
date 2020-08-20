@@ -28,7 +28,7 @@ public class BotApi {
     /**
      * Send text message
      */
-    public Map<String, Object> sendMessage(Integer chatId, String text) {
+    public Map<String, Object> sendMessage(@NonNull Integer chatId, @NonNull String text) {
         Map<String, Object> parameters = Map.of("chat_id", chatId, "text", text);
         return this.call("sendMessage", parameters);
     }
@@ -36,14 +36,14 @@ public class BotApi {
     /**
      * Set webhook
      */
-    public Map<String, Object> setWebhook(String url) {
+    public Map<String, Object> setWebhook(@NonNull String url) {
         return this.call("setWebhook", Map.of("url", url));
     }
 
     /**
      * Telegram API caller
      */
-    public Map<String, Object> call(String method, Map<String, Object> parameters) {
+    public Map<String, Object> call(@NonNull String method, @NonNull Map<String, Object> parameters) {
         var token = this.env.getProperty(ConfigVars.NANO_TELEGRAM_API_TOKEN, "");
         var endpoint = String.format("https://api.telegram.org/bot%s/%s", token, method);
         var url = URI.create(endpoint);
