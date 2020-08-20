@@ -6,6 +6,7 @@ import nano.support.Onion;
 import nano.telegram.handler.ExceptionHandler;
 import nano.telegram.handler.LogHandler;
 import nano.telegram.handler.text.BabelHandler;
+import nano.telegram.handler.text.EvalHandler;
 import nano.telegram.handler.text.FoolHandler;
 import nano.telegram.handler.text.WikiHandler;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,8 @@ public class BotHandler {
     private final WikiHandler wikiHandler;
     @NonNull
     private final FoolHandler foolHandler;
+    @NonNull
+    private final EvalHandler evalHandler;
 
     private final Onion<BotContext> onion = new Onion<>();
 
@@ -40,6 +43,7 @@ public class BotHandler {
         var textMessageHandler = Onion.compose(
                 this.babelHandler,
                 this.wikiHandler,
+                this.evalHandler,
                 this.foolHandler
         );
         this.onion.use(textMessageHandler);
