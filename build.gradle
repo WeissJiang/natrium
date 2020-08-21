@@ -9,6 +9,18 @@ group = 'nano'
 sourceCompatibility = '14'
 targetCompatibility = '14'
 
+tasks.withType(JavaCompile) {
+	options.compilerArgs += '--enable-preview'
+}
+
+tasks.withType(JavaExec) {
+	jvmArgs += '--enable-preview'
+}
+
+tasks.withType(Test) {
+	jvmArgs += '--enable-preview'
+}
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
