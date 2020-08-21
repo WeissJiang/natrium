@@ -14,7 +14,7 @@ public class BotHandlerTest {
 
     @Test
     public void testHandle() throws Exception {
-        var context = new BotContext(new HashMap<>());
+        var context = new BotContext(new HashMap<>(), null);
         this.botHandler.handle(context);
     }
 }

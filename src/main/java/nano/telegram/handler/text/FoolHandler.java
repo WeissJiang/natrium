@@ -15,18 +15,13 @@ import java.util.concurrent.ThreadLocalRandom;
 @RequiredArgsConstructor
 public class FoolHandler implements Onion.Middleware<BotContext> {
 
-    @NonNull
-    private final BotApi botApi;
-
     public void via(BotContext context, Onion.Next next) throws Exception {
         var random = ThreadLocalRandom.current();
         var count = random.nextInt(1, 7);
         var text = "阿巴".repeat(count);
 
-        var integer = context.chatId();
-        if (integer != null) {
-            this.botApi.sendMessage(integer, text);
-        }
+        context.sendMessage(text);
+
         // next
         next.next();
     }

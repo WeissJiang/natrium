@@ -13,19 +13,19 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ExceptionHandler implements Onion.Middleware<BotContext> {
 
-    @NonNull
-    private final BotApi botApi;
-
     @Override
     public void via(BotContext context, Onion.Next next) {
-        var chatId = context.chatId();
         try {
             next.next();
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
-            if (chatId != null) {
-                this.botApi.sendMessage(chatId, "nano故障：" + ex.getMessage());
-            }
+            sendMessageIfPossible(context, "nano故障：" + ex.getMessage());
+        }
+    }
+
+    private static void sendMessageIfPossible(BotContext context, String text) {
+        if (context.chatId() != null) {
+            context.sendMessage(text);
         }
     }
 }

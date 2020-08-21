@@ -21,9 +21,6 @@ public class EvalHandler implements Onion.Middleware<BotContext> {
 
     private static final String COMMAND = "eval";
 
-    @NonNull
-    private final BotApi botApi;
-
     @Override
     public void via(BotContext context, Onion.Next next) throws Exception {
         var text = context.text();
@@ -34,7 +31,7 @@ public class EvalHandler implements Onion.Middleware<BotContext> {
             return;
         }
 
-        this.botApi.sendMessage(context.chatId(), eval(content));
+        context.sendMessage(eval(content));
     }
 
     @SneakyThrows

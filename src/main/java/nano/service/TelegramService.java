@@ -29,7 +29,7 @@ public class TelegramService {
 
     @SneakyThrows
     public void handleWebhook(Map<String, Object> parameters) {
-        var context = new BotContext(parameters);
+        var context = new BotContext(parameters, this.botApi);
         this.botHandler.handle(context);
     }
 

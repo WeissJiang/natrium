@@ -26,12 +26,8 @@ public class WikiHandler implements Onion.Middleware<BotContext> {
     @NonNull
     private final WikiService wikiService;
 
-    @NonNull
-    private final BotApi botApi;
-
     public void via(BotContext context, Onion.Next next) throws Exception {
         var text = context.text();
-        var chatId = context.chatId();
 
         var content = BotUtils.parseCommand(COMMAND, text);
         if (StringUtils.isEmpty(content)) {
@@ -40,7 +36,7 @@ public class WikiHandler implements Onion.Middleware<BotContext> {
         }
 
         var extract = this.fetchExtract(content);
-        this.botApi.sendMessage(chatId, extract);
+        context.sendMessage(extract);
     }
 
     private String fetchExtract(String title) {

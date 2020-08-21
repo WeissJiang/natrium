@@ -19,9 +19,6 @@ public class BabelHandler implements Onion.Middleware<BotContext> {
     private static final String COMMAND = "babel";
 
     @NonNull
-    private final BotApi botApi;
-
-    @NonNull
     private final BaiduService baiduService;
 
     @Override
@@ -35,6 +32,6 @@ public class BabelHandler implements Onion.Middleware<BotContext> {
         }
 
         var translated = this.baiduService.autoTranslate(content);
-        this.botApi.sendMessage(context.chatId(), translated);
+        context.sendMessage(translated);
     }
 }

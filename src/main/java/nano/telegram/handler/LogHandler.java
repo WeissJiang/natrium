@@ -15,5 +15,8 @@ public class LogHandler implements Onion.Middleware<BotContext> {
         log.info("parameters: {}", Json.encode(parameters));
         // next
         next.next();
+        if (log.isDebugEnabled()) {
+            log.debug("attributes: {}", Json.encode(context.getAttributes()));
+        }
     }
 }
