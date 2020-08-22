@@ -1,7 +1,6 @@
 package nano.telegram.handler;
 
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nano.support.Onion;
 import nano.telegram.BotApi;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class ExceptionHandler implements Onion.Middleware<BotContext> {
 
     @Override
