@@ -1,4 +1,4 @@
-package nano.service;
+package nano.service.baidu;
 
 import com.jayway.jsonpath.JsonPath;
 import lombok.NonNull;
@@ -21,7 +21,6 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -44,25 +43,25 @@ public class BaiduService {
     private final Environment env;
 
     public String autoTranslate(String input) {
-        var options = new HashMap<String, String>();
-        options.put("input", input);
+        var payload = new TranslationPayload();
+        payload.setInput(input);
         if (chinese.test(input)) {
             // 中译英
-            options.put("from", "zh");
-            options.put("to", "en");
+            payload.setFrom("zh");
+            payload.setTo("en");
         } else {
             // 英译中
-            options.put("from", "en");
-            options.put("to", "zh");
+            payload.setFrom("en");
+            payload.setTo("zh");
         }
-        return this.translate(options);
+        return this.translate(payload);
     }
 
     @SneakyThrows
-    public String translate(Map<String, String> options) {
-        var input = options.get("input");
-        var from = options.get("from");
-        var to = options.get("to");
+    public String translate(TranslationPayload payload) {
+        var input = payload.getInput();
+        var from = payload.getFrom();
+        var to = payload.getTo();
         var appId = this.env.getProperty(ConfigVars.BAIDU_TRANSLATION_APP_ID, "");
         var secretKey = this.env.getProperty(ConfigVars.BAIDU_TRANSLATION_SECRET_KEY, "");
         var salt = Instant.now().toString();
