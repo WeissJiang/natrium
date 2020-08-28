@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class BaiduService {
+public class TranslationService {
 
     private static final Predicate<String> chinese = Pattern.compile("[\u4e00-\u9fa5]").asPredicate();
 
@@ -95,4 +95,5 @@ public class BaiduService {
         }
         return result.stream().map(it -> it.get("dst")).collect(Collectors.joining("\n"));
     }
+
 }

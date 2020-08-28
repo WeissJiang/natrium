@@ -3,7 +3,7 @@ package nano.telegram.handler.text;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nano.service.baidu.BaiduService;
+import nano.service.baidu.TranslationService;
 import nano.support.Onion;
 import nano.telegram.BotContext;
 import nano.telegram.BotUtils;
@@ -18,7 +18,7 @@ public class BabelHandler implements Onion.Middleware<BotContext> {
     private static final String COMMAND = "babel";
 
     @NonNull
-    private final BaiduService baiduService;
+    private final TranslationService translationService;
 
     @Override
     public void via(BotContext context, Onion.Next next) throws Exception {
@@ -30,7 +30,7 @@ public class BabelHandler implements Onion.Middleware<BotContext> {
             return;
         }
 
-        var translated = this.baiduService.autoTranslate(content);
+        var translated = this.translationService.autoTranslate(content);
         context.sendMessage(translated);
     }
 }
