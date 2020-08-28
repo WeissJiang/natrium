@@ -22,9 +22,8 @@ public class WikiHandler implements Onion.Middleware<BotContext> {
     private static final String URL_PREFIX = "https://%s.m.wikipedia.org/wiki/";
     private static final String COMMAND = "wiki";
 
-    // wikipedia language
-    private static final String EN = "en";
-    private static final String ZH = "zh";
+    // wikipedia language list
+    private static final List<String> LANGUAGE_LIST = List.of("zh", "en", "ja");
 
     @NonNull
     private final WikiService wikiService;
@@ -43,7 +42,7 @@ public class WikiHandler implements Onion.Middleware<BotContext> {
     }
 
     private String fetchExtract(String title) {
-        for (var language : List.of(ZH, EN)) {
+        for (var language : LANGUAGE_LIST) {
             var extract = this.fetchExtractByLanguage(title, language);
             if (extract != null) {
                 return extract;
