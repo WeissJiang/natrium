@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nano.service.WikiService;
 import nano.support.Onion;
-import nano.telegram.BotApi;
 import nano.telegram.BotContext;
 import nano.telegram.BotUtils;
 import org.springframework.stereotype.Component;
@@ -20,8 +19,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WikiHandler implements Onion.Middleware<BotContext> {
 
-    private static final String URL_PREFIX = "https://zh.m.wikipedia.org/wiki/";
+    private static final String URL_PREFIX = "https://%s.m.wikipedia.org/wiki/";
     private static final String COMMAND = "wiki";
+
+    // wikipedia language
+    private static final String EN = "en";
+    private static final String ZH = "zh";
 
     @NonNull
     private final WikiService wikiService;
@@ -40,14 +43,26 @@ public class WikiHandler implements Onion.Middleware<BotContext> {
     }
 
     private String fetchExtract(String title) {
-        var extracts = this.wikiService.getWikiExtracts(title);
+        for (var language : List.of(ZH, EN)) {
+            var extract = this.fetchExtractByLanguage(title, language);
+            if (extract != null) {
+                return extract;
+            }
+        }
+        return "nano没有找到：" + title;
+    }
+
+    /**
+     * 根据语言获取摘要
+     */
+    private String fetchExtractByLanguage(String title, String language) {
+        var extracts = this.wikiService.getWikiExtracts(title, language);
         var extractsDocument = JsonPath.parse(extracts);
         List<String> extractList = extractsDocument.read("$.query.pages.*.extract");
-
         if (CollectionUtils.isEmpty(extractList)) {
-            return "nano没有找到：" + title;
+            return null;
         }
-        var url = URL_PREFIX + title;
+        var url = URL_PREFIX.formatted(language) + title;
         var extract = extractList.get(0);
         if (StringUtils.isEmpty(extract)) {
             return url;
