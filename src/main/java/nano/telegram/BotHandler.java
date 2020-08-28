@@ -13,7 +13,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -26,7 +25,7 @@ public class BotHandler {
 
     @PostConstruct
     public void init() {
-        var ctx = Objects.requireNonNull(this.applicationContext);
+        var ctx = this.applicationContext;
         this.onion.use(ctx.getBean(ExceptionHandler.class));
         this.onion.use(ctx.getBean(LogHandler.class));
         // text message
