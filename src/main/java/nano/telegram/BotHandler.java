@@ -5,10 +5,7 @@ import lombok.RequiredArgsConstructor;
 import nano.support.Onion;
 import nano.telegram.handler.ExceptionHandler;
 import nano.telegram.handler.LogHandler;
-import nano.telegram.handler.text.BabelHandler;
-import nano.telegram.handler.text.EvalHandler;
-import nano.telegram.handler.text.FoolHandler;
-import nano.telegram.handler.text.WikiHandler;
+import nano.telegram.handler.text.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +29,7 @@ public class BotHandler {
         var textMessageHandler = Onion.compose(
                 ctx.getBean(BabelHandler.class),
                 ctx.getBean(WikiHandler.class),
+                ctx.getBean(BaikeHandler.class),
                 ctx.getBean(EvalHandler.class),
                 ctx.getBean(FoolHandler.class)
         );
