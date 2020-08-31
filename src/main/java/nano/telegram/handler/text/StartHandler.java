@@ -26,6 +26,7 @@ public class StartHandler implements Onion.Middleware<BotContext> {
         var text = context.text();
         if (text != null && text.startsWith(START)) {
             context.sendMessage(HELP);
+            return;
         }
         // next
         next.next();
