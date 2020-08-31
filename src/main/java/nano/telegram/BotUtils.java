@@ -4,6 +4,9 @@ import org.springframework.util.StringUtils;
 
 import java.util.Objects;
 
+/**
+ * Telegram bot utils
+ */
 public class BotUtils {
 
     private BotUtils() {
