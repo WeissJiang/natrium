@@ -15,17 +15,20 @@ public class StartHandler implements Onion.Middleware<BotContext> {
 
     private static final String START = "/start";
 
+    private static final String HELP = """
+            /babel - 中英互译
+            /baike - 百度百科
+            /eval - Evaluate JavaScript
+            /wiki - Wikipedia
+            """;
+
     public void via(BotContext context, Onion.Next next) throws Exception {
         var text = context.text();
-        if (text == null || !text.startsWith(START)) {
-            // next
-            next.next();
+        if (text != null && text.startsWith(START)) {
+            context.sendMessage(HELP);
         }
-        context.sendMessage("""
-                /babel 中英互译
-                /baike 百度百科
-                /eval Evaluate JavaScript
-                /wiki Wikipedia
-                """);
+        // next
+        next.next();
     }
+
 }
