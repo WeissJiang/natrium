@@ -28,7 +28,7 @@ public class BotApi {
     /**
      * Send text message
      */
-    public Map<String, Object> sendMessage(@NonNull Integer chatId, @NonNull String text) {
+    public Map<String, Object> sendMessage(@NonNull Number chatId, @NonNull String text) {
         Map<String, Object> parameters = Map.of("chat_id", chatId, "text", text);
         return this.call("sendMessage", parameters);
     }

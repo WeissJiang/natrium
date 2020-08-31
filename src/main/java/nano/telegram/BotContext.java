@@ -58,7 +58,7 @@ public class BotContext {
         this.attributes.put("%s-%s".formatted(operation, Instant.now()), body);
     }
 
-    public Integer chatId() {
+    public Number chatId() {
         return this.read("$.message.chat.id");
     }
 

@@ -31,7 +31,7 @@ public class BotHandler {
                 ctx.getBean(WikiHandler.class),
                 ctx.getBean(BaikeHandler.class),
                 ctx.getBean(EvalHandler.class),
-                ctx.getBean(FoolHandler.class)
+                ctx.getBean(StartHandler.class)
         );
         this.onion.use(textMessageHandler);
     }

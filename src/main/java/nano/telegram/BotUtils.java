@@ -17,7 +17,7 @@ public class BotUtils {
         if (StringUtils.isEmpty(text)) {
             return null;
         }
-        var regex = "(?i)^" + command.trim() + "\\s";
+        var regex = "(?i)^/?" + command.trim() + "\\s";
         var split = text.trim().split(regex);
         if (split.length < 2) {
             return null;

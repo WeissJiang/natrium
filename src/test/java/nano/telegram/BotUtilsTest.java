@@ -8,6 +8,7 @@ public class BotUtilsTest {
 
     @Test
     public void testParseCommand() {
+        assertEquals("hello world", BotUtils.parseCommand("babel", "/babel hello world"));
         assertEquals("hello world", BotUtils.parseCommand("babel", "babel hello world"));
         assertEquals("hello world", BotUtils.parseCommand("babel ", " babel  hello world"));
         assertEquals("hello world", BotUtils.parseCommand("babel", "BaBeL hello world"));
