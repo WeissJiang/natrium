@@ -5,8 +5,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import nano.constant.ConfigVars;
-import org.springframework.core.env.Environment;
+import nano.component.ConfigVars;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -40,7 +39,7 @@ public class TranslationService {
     private final RestTemplate restTemplate;
 
     @NonNull
-    private final Environment env;
+    private final ConfigVars configVars;
 
     public String autoTranslate(String input) {
         var payload = new TranslationPayload();
@@ -62,8 +61,8 @@ public class TranslationService {
         var input = payload.getInput();
         var from = payload.getFrom();
         var to = payload.getTo();
-        var appId = this.env.getProperty(ConfigVars.BAIDU_TRANSLATION_APP_ID, "");
-        var secretKey = this.env.getProperty(ConfigVars.BAIDU_TRANSLATION_SECRET_KEY, "");
+        var appId = this.configVars.getBaiduTranslationAppId();
+        var secretKey = this.configVars.getBaiduTranslationSecretKey();
         var salt = Instant.now().toString();
         var data = (appId + input + salt + secretKey).getBytes(StandardCharsets.UTF_8);
         var sign = DigestUtils.md5DigestAsHex(data);

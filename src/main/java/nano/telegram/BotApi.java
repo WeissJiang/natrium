@@ -2,9 +2,8 @@ package nano.telegram;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import nano.constant.ConfigVars;
+import nano.component.ConfigVars;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.core.env.Environment;
 import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -20,10 +19,10 @@ import java.util.Map;
 public class BotApi {
 
     @NonNull
-    private final Environment env;
+    private final RestTemplate restTemplate;
 
     @NonNull
-    private final RestTemplate restTemplate;
+    private final ConfigVars configVars;
 
     /**
      * Send text message
@@ -44,7 +43,7 @@ public class BotApi {
      * Telegram API caller
      */
     public Map<String, Object> call(@NonNull String method, @NonNull Map<String, Object> parameters) {
-        var token = this.env.getProperty(ConfigVars.NANO_TELEGRAM_API_TOKEN, "");
+        var token = this.configVars.getTelegramApiToken();
         var endpoint = String.format("https://api.telegram.org/bot%s/%s", token, method);
         var url = URI.create(endpoint);
         var request = RequestEntity.post(url).body(parameters);
