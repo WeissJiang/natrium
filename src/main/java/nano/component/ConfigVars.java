@@ -16,7 +16,7 @@ public class ConfigVars {
      * nano相关配置
      */
     private String nanoApi;
-    private String nanoToken;
+    private String nanoApiToken;
 
     /**
      * 百度翻译APP ID、secret key

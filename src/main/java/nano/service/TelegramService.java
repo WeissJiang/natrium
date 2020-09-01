@@ -8,7 +8,6 @@ import nano.component.ConfigVars;
 import nano.telegram.BotApi;
 import nano.telegram.BotContext;
 import nano.telegram.BotHandler;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -34,7 +33,7 @@ public class TelegramService {
     }
 
     public Map<String, Object> setWebhook() {
-        var nanoToken = this.configVars.getNanoToken();
+        var nanoToken = this.configVars.getNanoApiToken();
         var nanoApi = this.configVars.getNanoApi();
         var url = nanoApi + "/api/telegram/" + nanoToken;
         return this.botApi.setWebhook(url);

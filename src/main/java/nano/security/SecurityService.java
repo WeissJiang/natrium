@@ -3,7 +3,6 @@ package nano.security;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import nano.component.ConfigVars;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -19,7 +18,7 @@ public class SecurityService {
             throw new AuthenticationException("Missing token");
         }
 
-        var nanoToken = this.configVars.getNanoToken();
+        var nanoToken = this.configVars.getNanoApiToken();
         if (!token.equals(nanoToken)) {
             throw new AuthenticationException("Illegal token");
         }
