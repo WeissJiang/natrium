@@ -54,13 +54,13 @@ public class FileCutter implements Closeable {
     @SneakyThrows
     public Map<String, InputStreamSource> split(@NonNull InputStreamSource source) {
         @Cleanup var is = source.getInputStream();
+        byte[] buffer = new byte[BUFFER_SIZE];
+        int read;
         for (int i = 1; ; i++) {
             var partFilename = this.options.getFilename() + this.options.getPartSuffix() + i;
             var tempFile = Files.createTempFile(TEMP_FILE_PREFIX, partFilename);
             @Cleanup var os = Files.newOutputStream(tempFile);
-            byte[] buffer = new byte[BUFFER_SIZE];
             long transferred = 0;
-            int read;
             while ((read = is.read(buffer, 0, BUFFER_SIZE)) >= 0) {
                 os.write(buffer, 0, read);
                 transferred += read;
