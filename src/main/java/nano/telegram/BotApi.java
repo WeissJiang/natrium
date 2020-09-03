@@ -18,6 +18,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class BotApi {
 
+    private static final ParameterizedTypeReference<Map<String, Object>> STRING_OBJECT_MAP_TYPE = new ParameterizedTypeReference<>() {
+    };
+
     @NonNull
     private final RestTemplate restTemplate;
 
@@ -44,12 +47,10 @@ public class BotApi {
      */
     public Map<String, Object> call(@NonNull String method, @NonNull Map<String, Object> parameters) {
         var token = this.configVars.getTelegramApiToken();
-        var endpoint = String.format("https://api.telegram.org/bot%s/%s", token, method);
+        var endpoint = "https://api.telegram.org/bot%s/%s".formatted(token, method);
         var url = URI.create(endpoint);
         var request = RequestEntity.post(url).body(parameters);
-        var typeReference = new ParameterizedTypeReference<Map<String, Object>>() {
-        };
-        var response = this.restTemplate.exchange(request, typeReference);
+        var response = this.restTemplate.exchange(request, STRING_OBJECT_MAP_TYPE);
         return response.getBody();
     }
 }
