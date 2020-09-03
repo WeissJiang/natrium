@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * 文件切割者
@@ -119,6 +121,21 @@ public class FileCutter implements Closeable {
         if (o != null) {
             setter.accept(o);
         }
+    }
+
+    @SneakyThrows
+    public InputStreamSource zip(Map<String, InputStreamSource> sourceMap) {
+        var filename = this.options.filename;
+        var tempFile = Files.createTempFile(filename, "tmp");
+        @Cleanup var zipOutputStream = new ZipOutputStream(Files.newOutputStream(tempFile));
+        for (var source : sourceMap.entrySet()) {
+            zipOutputStream.putNextEntry(new ZipEntry(source.getKey()));
+            @Cleanup var is = source.getValue().getInputStream();
+            is.transferTo(zipOutputStream);
+            zipOutputStream.closeEntry();
+        }
+        this.tempFiles.put(filename, tempFile);
+        return new FileSystemResource(tempFile);
     }
 
     @Data
