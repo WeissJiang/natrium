@@ -56,7 +56,7 @@ public class FileCutter implements Closeable {
         try (is) {
             for (int i = 1; ; i++) {
                 var partFilename = this.options.getFilename() + this.options.getPartSuffix() + i;
-                var tempFile = Files.createTempFile(partFilename, "tmp");
+                var tempFile = Files.createTempFile(partFilename, ".split." + i);
                 @Cleanup var os = Files.newOutputStream(tempFile);
                 byte[] buffer = new byte[BUFFER_SIZE];
                 long transferred = 0;
@@ -85,7 +85,7 @@ public class FileCutter implements Closeable {
     @SneakyThrows
     public Pair<String, InputStreamSource> merge(@NonNull Map<String, InputStreamSource> partSourceMap) {
         var filename = this.options.getFilename();
-        var tempFile = Files.createTempFile(filename, "tmp");
+        var tempFile = Files.createTempFile(filename, ".merge");
         @Cleanup var os = Files.newOutputStream(tempFile);
         var partFilenameList = new ArrayList<>(partSourceMap.keySet());
         partFilenameList.sort(String::compareTo);
@@ -125,8 +125,8 @@ public class FileCutter implements Closeable {
 
     @SneakyThrows
     public InputStreamSource zip(Map<String, InputStreamSource> sourceMap) {
-        var filename = this.options.filename;
-        var tempFile = Files.createTempFile(filename, "tmp");
+        var filename = this.options.getFilename();
+        var tempFile = Files.createTempFile(filename, ".zip");
         @Cleanup var zipOutputStream = new ZipOutputStream(Files.newOutputStream(tempFile));
         for (var source : sourceMap.entrySet()) {
             zipOutputStream.putNextEntry(new ZipEntry(source.getKey()));
