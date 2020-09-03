@@ -53,26 +53,24 @@ public class FileCutter implements Closeable {
      */
     @SneakyThrows
     public Map<String, InputStreamSource> split(@NonNull InputStreamSource source) {
-        var is = source.getInputStream();
-        try (is) {
-            for (int i = 1; ; i++) {
-                var partFilename = this.options.getFilename() + this.options.getPartSuffix() + i;
-                var tempFile = Files.createTempFile(TEMP_FILE_PREFIX, partFilename);
-                @Cleanup var os = Files.newOutputStream(tempFile);
-                byte[] buffer = new byte[BUFFER_SIZE];
-                long transferred = 0;
-                int read;
-                while ((read = is.read(buffer, 0, BUFFER_SIZE)) >= 0) {
-                    os.write(buffer, 0, read);
-                    transferred += read;
-                    if (transferred + BUFFER_SIZE > this.options.getUnitSize()) {
-                        break;
-                    }
-                }
-                this.tempFiles.put(partFilename, tempFile);
-                if (read <= 0) {
+        @Cleanup var is = source.getInputStream();
+        for (int i = 1; ; i++) {
+            var partFilename = this.options.getFilename() + this.options.getPartSuffix() + i;
+            var tempFile = Files.createTempFile(TEMP_FILE_PREFIX, partFilename);
+            @Cleanup var os = Files.newOutputStream(tempFile);
+            byte[] buffer = new byte[BUFFER_SIZE];
+            long transferred = 0;
+            int read;
+            while ((read = is.read(buffer, 0, BUFFER_SIZE)) >= 0) {
+                os.write(buffer, 0, read);
+                transferred += read;
+                if (transferred + BUFFER_SIZE > this.options.getUnitSize()) {
                     break;
                 }
+            }
+            this.tempFiles.put(partFilename, tempFile);
+            if (read <= 0) {
+                break;
             }
         }
         var split = new HashMap<String, InputStreamSource>();
