@@ -28,6 +28,7 @@ import java.util.zip.ZipOutputStream;
 public class FileCutter implements Closeable {
 
     private static final int BUFFER_SIZE = 8192;
+    private static final String TEMP_FILE_PREFIX = "file-cutter";
 
     private final Map<String, Path> tempFiles = new HashMap<>();
 
@@ -56,7 +57,7 @@ public class FileCutter implements Closeable {
         try (is) {
             for (int i = 1; ; i++) {
                 var partFilename = this.options.getFilename() + this.options.getPartSuffix() + i;
-                var tempFile = Files.createTempFile(partFilename, ".split." + i);
+                var tempFile = Files.createTempFile(TEMP_FILE_PREFIX, partFilename);
                 @Cleanup var os = Files.newOutputStream(tempFile);
                 byte[] buffer = new byte[BUFFER_SIZE];
                 long transferred = 0;
@@ -85,7 +86,7 @@ public class FileCutter implements Closeable {
     @SneakyThrows
     public Pair<String, InputStreamSource> merge(@NonNull Map<String, InputStreamSource> partSourceMap) {
         var filename = this.options.getFilename();
-        var tempFile = Files.createTempFile(filename, ".merge");
+        var tempFile = Files.createTempFile(TEMP_FILE_PREFIX, filename);
         @Cleanup var os = Files.newOutputStream(tempFile);
         var partFilenameList = new ArrayList<>(partSourceMap.keySet());
         partFilenameList.sort(String::compareTo);
@@ -103,7 +104,8 @@ public class FileCutter implements Closeable {
     @SneakyThrows
     public InputStreamSource zip(Map<String, InputStreamSource> sourceMap) {
         var filename = this.options.getFilename();
-        var tempFile = Files.createTempFile(filename, ".zip");
+        var zipFilename = filename + ".zip";
+        var tempFile = Files.createTempFile(TEMP_FILE_PREFIX, zipFilename);
         @Cleanup var zipOutputStream = new ZipOutputStream(Files.newOutputStream(tempFile));
         for (var source : sourceMap.entrySet()) {
             zipOutputStream.putNextEntry(new ZipEntry(source.getKey()));
@@ -111,7 +113,7 @@ public class FileCutter implements Closeable {
             is.transferTo(zipOutputStream);
             zipOutputStream.closeEntry();
         }
-        this.tempFiles.put(filename, tempFile);
+        this.tempFiles.put(zipFilename, tempFile);
         return new FileSystemResource(tempFile);
     }
 
