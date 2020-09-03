@@ -7,10 +7,7 @@ import java.util.Objects;
 /**
  * Telegram bot utils
  */
-public class BotUtils {
-
-    private BotUtils() {
-    }
+public abstract class BotUtils {
 
     public static String parseCommand(String command, String text) {
         Objects.requireNonNull(command);
