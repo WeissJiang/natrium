@@ -98,31 +98,8 @@ public class FileCutter implements Closeable {
     }
 
     /**
-     * clean temp files if exists
+     * build zip file
      */
-    @SneakyThrows
-    @Override
-    public void close() {
-        if (this.tempFiles.isEmpty()) {
-            return;
-        }
-        for (var tempFile : this.tempFiles.values()) {
-            Files.deleteIfExists(tempFile);
-        }
-        this.tempFiles.clear();
-    }
-
-    private static String getId() {
-        return UUID.randomUUID().toString().replaceAll("-", "");
-    }
-
-    private static <O> void setIfNotNull(Supplier<O> getter, Consumer<O> setter) {
-        O o = getter.get();
-        if (o != null) {
-            setter.accept(o);
-        }
-    }
-
     @SneakyThrows
     public InputStreamSource zip(Map<String, InputStreamSource> sourceMap) {
         var filename = this.options.getFilename();
@@ -138,6 +115,42 @@ public class FileCutter implements Closeable {
         return new FileSystemResource(tempFile);
     }
 
+    /**
+     * clean temp files if exists
+     */
+    @SneakyThrows
+    @Override
+    public void close() {
+        if (this.tempFiles.isEmpty()) {
+            return;
+        }
+        for (var tempFile : this.tempFiles.values()) {
+            Files.deleteIfExists(tempFile);
+        }
+        this.tempFiles.clear();
+    }
+
+    /**
+     * get UUID
+     */
+    private static String getId() {
+        return UUID.randomUUID().toString().replaceAll("-", "");
+    }
+
+    /**
+     * set if not null
+     */
+    private static <O> void setIfNotNull(Supplier<O> getter, Consumer<O> setter) {
+        O o = getter.get();
+        if (o != null) {
+            setter.accept(o);
+        }
+    }
+
+
+    /**
+     * FileCutter options
+     */
     @Data
     public static class Options {
 
