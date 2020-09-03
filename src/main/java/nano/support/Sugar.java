@@ -9,10 +9,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class Sugar {
-
-    private Sugar() {
-    }
+public abstract class Sugar {
 
     public static <T> T findFirst(Collection<T> list, @NonNull Predicate<? super T> predicate) {
         if (isEmpty(list)) {

@@ -9,7 +9,7 @@ import java.util.Arrays;
  * @author cbdyzj
  * @since 2018.3.23
  */
-public final class Onion<T> {
+public class Onion<T> {
 
     private Middleware<T> core = (ctx, nxt) -> nxt.next();
 

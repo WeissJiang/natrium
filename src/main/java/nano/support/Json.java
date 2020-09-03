@@ -16,7 +16,7 @@ import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class Json {
+public abstract class Json {
 
     static final ObjectMapper mapper = new ObjectMapper();
 

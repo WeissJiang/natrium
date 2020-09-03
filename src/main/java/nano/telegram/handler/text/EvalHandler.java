@@ -1,11 +1,9 @@
 package nano.telegram.handler.text;
 
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import nano.support.Onion;
-import nano.telegram.BotApi;
 import nano.telegram.BotContext;
 import nano.telegram.BotUtils;
 import org.springframework.stereotype.Component;
@@ -35,10 +33,10 @@ public class EvalHandler implements Onion.Middleware<BotContext> {
     }
 
     @SneakyThrows
-    private static String eval(String content) {
+    private static String eval(String script) {
         var manager = new ScriptEngineManager();
         var engine = manager.getEngineByName("graal.js");
         Objects.requireNonNull(engine);
-        return String.valueOf(engine.eval(content));
+        return String.valueOf(engine.eval(script));
     }
 }
