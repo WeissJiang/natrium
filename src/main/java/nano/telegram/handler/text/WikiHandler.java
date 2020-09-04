@@ -25,6 +25,7 @@ public class WikiHandler implements Onion.Middleware<BotContext> {
     @NonNull
     private final WikiService wikiService;
 
+    @Override
     public void via(BotContext context, Onion.Next next) throws Exception {
         var text = context.text();
 

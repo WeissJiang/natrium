@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class LogHandler implements Onion.Middleware<BotContext> {
 
+
+    @Override
     public void via(BotContext context, Onion.Next next) throws Exception {
         var parameters = context.getParameters();
         log.info("parameters: {}", Json.encode(parameters));

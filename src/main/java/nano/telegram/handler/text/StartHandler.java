@@ -22,6 +22,7 @@ public class StartHandler implements Onion.Middleware<BotContext> {
             /wiki - Wikipedia
             """;
 
+    @Override
     public void via(BotContext context, Onion.Next next) throws Exception {
         var text = context.text();
         if (text != null && text.startsWith(START)) {
