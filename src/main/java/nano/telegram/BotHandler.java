@@ -31,6 +31,7 @@ public class BotHandler implements ApplicationContextAware {
         var textMessageHandler = Onion.compose(
                 ctx.getBean(BabelHandler.class),
                 ctx.getBean(WikiHandler.class),
+                ctx.getBean(MoeHandler.class),
                 ctx.getBean(BaikeHandler.class),
                 ctx.getBean(EvalHandler.class),
                 ctx.getBean(StartHandler.class)
