@@ -3,11 +3,8 @@ package nano.security.repository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import nano.security.entity.Session;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.Assert;
 
 @Repository
 @RequiredArgsConstructor

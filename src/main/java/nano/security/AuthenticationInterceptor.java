@@ -1,24 +1,25 @@
 package nano.security;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Component
-@RequiredArgsConstructor
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
     public static final String TOKEN = "X-Token";
 
-    @NonNull
     private final SecurityService securityService;
 
+    public AuthenticationInterceptor(SecurityService securityService) {
+        this.securityService = securityService;
+    }
+
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+    public boolean preHandle(@NonNull HttpServletRequest request,
+                             @NonNull HttpServletResponse response,
+                             @NonNull Object handler) {
         var token = request.getHeader(TOKEN);
         this.securityService.checkNanoToken(token);
         return true;
