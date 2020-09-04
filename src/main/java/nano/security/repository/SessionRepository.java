@@ -54,9 +54,9 @@ public class SessionRepository {
         var paramSource = new BeanPropertySqlParameterSource(session);
         var keyHolder = new GeneratedKeyHolder();
         this.jdbcTemplate.update(slim(sql), paramSource, keyHolder);
-        var generatedKey = keyHolder.getKey();
-        Assert.notNull(generatedKey, "generatedKey");
-        return generatedKey.intValue();
+        var generatedKey = keyHolder.getKeyList().get(0).get("id");
+        Assert.isInstanceOf(Number.class, generatedKey);
+        return ((Number) generatedKey).intValue();
     }
 
     public void updateSession(Session session) {
