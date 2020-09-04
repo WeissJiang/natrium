@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS nano_session;
 CREATE TABLE nano_session
 (
-    id                 INT PRIMARY KEY,
+    id                 SERIAL PRIMARY KEY,
     chat_id            BIGINT,
     user_id            BIGINT,
     attributes         JSON,
