@@ -3,6 +3,7 @@ package nano.security.repository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import nano.security.entity.Session;
+import nano.security.model.InitialSession;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
+import java.sql.Timestamp;
 import java.util.Map;
 
 import static nano.support.SqlUtils.slim;
@@ -70,28 +72,27 @@ public class SessionRepository {
     }
 
     @Transactional
-    public Session upsertSession(Session session) {
+    public Session upsertSession(InitialSession initial) {
+        var chatId = initial.getChatId();
+        var userId = initial.getUserId();
 
-        var chatId = session.getChatId();
-        var userId = session.getUserId();
-
-        var current = this.querySession(chatId, userId);
+        var session = this.querySession(chatId, userId);
         var createNew = false;
-        if (current == null) {
-            current = new Session();
-            current.setCreationTime(session.getLastAccessedTime());
+        if (session == null) {
+            session = new Session();
+            session.setCreationTime(Timestamp.from(initial.getLastAccessedTime()));
             createNew = true;
         }
-        current.setChatId(chatId);
-        current.setUserId(userId);
-        current.setLastAccessedTime(session.getCreationTime());
+        session.setChatId(chatId);
+        session.setUserId(userId);
+        session.setLastAccessedTime(Timestamp.from(initial.getLastAccessedTime()));
         // persistence
         if (createNew) {
-            var id = this.createSessionAndReturnsPrimaryKey(current);
-            current.setId(id);
+            var id = this.createSessionAndReturnsPrimaryKey(session);
+            session.setId(id);
         } else {
-            this.updateSession(current);
+            this.updateSession(session);
         }
-        return current;
+        return session;
     }
 }

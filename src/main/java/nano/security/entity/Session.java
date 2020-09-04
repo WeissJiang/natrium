@@ -2,7 +2,7 @@ package nano.security.entity;
 
 import lombok.Data;
 
-import java.time.Instant;
+import java.sql.Timestamp;
 
 /**
  * Chat ID和User ID确定唯一会话
@@ -20,7 +20,7 @@ public class Session {
 
     private String attributes;
 
-    private Instant creationTime;
-    private Instant lastAccessedTime;
+    private Timestamp creationTime;
+    private Timestamp lastAccessedTime;
 
 }

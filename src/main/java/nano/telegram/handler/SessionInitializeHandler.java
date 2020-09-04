@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nano.security.entity.Session;
+import nano.security.model.InitialSession;
 import nano.security.repository.SessionRepository;
 import nano.support.Onion;
 import nano.telegram.BotContext;
@@ -39,7 +40,7 @@ public class SessionInitializeHandler implements Onion.Middleware<BotContext> {
         Assert.notNull(chatId, "chatId");
         Assert.notNull(userId, "userId");
 
-        var session = new Session();
+        var session = new InitialSession();
         session.setChatId(chatId);
         session.setUserId(userId);
         session.setLastAccessedTime(date);
