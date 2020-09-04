@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-import static nano.security.AuthenticationInterceptor.TOKEN;
-
 /**
  * Handle telegram request
  *
