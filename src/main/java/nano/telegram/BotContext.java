@@ -42,7 +42,7 @@ public class BotContext {
     }
 
     public Instant date() {
-        Number timestamp = this.read("$.date");
+        Number timestamp = this.read("$.message.date");
         Assert.notNull(timestamp, "timestamp");
         return Instant.ofEpochSecond(timestamp.longValue());
     }

@@ -6,7 +6,6 @@ import nano.security.entity.Session;
 import nano.security.repository.SessionRepository;
 import nano.support.Onion;
 import nano.telegram.BotContext;
-import nano.telegram.TelegramService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
@@ -48,7 +47,7 @@ public class SessionInitializeHandler implements Onion.Middleware<BotContext> {
 
     private void persistSession(Session session, boolean createNew) {
         if (createNew) {
-            var id = this.sessionRepository.createSession(session);
+            var id = this.sessionRepository.createSessionAndReturnsPrimaryKey(session);
             session.setId(id);
         } else {
             this.sessionRepository.updateSession(session);
