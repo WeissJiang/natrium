@@ -3,7 +3,7 @@ package nano.telegram.handler.text;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nano.service.WikiService;
+import nano.service.mediawiki.WikiService;
 import nano.support.Onion;
 import nano.telegram.BotContext;
 import nano.telegram.BotUtils;
@@ -41,7 +41,7 @@ public class WikiHandler implements Onion.Middleware<BotContext> {
 
     private String fetchExtract(String title) {
         for (var language : LANGUAGE_LIST) {
-            var extract = this.wikiService.getWikiExtract(title, language);
+            var extract = this.wikiService.getPageExtract(title, language);
             if (extract != null) {
                 return extract;
             }

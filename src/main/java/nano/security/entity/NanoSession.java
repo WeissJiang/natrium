@@ -7,11 +7,11 @@ import java.sql.Timestamp;
 /**
  * Chat ID和User ID确定唯一会话
  *
- * @see Chat
- * @see User
+ * @see NanoChat
+ * @see NanoUser
  */
 @Data
-public class Session {
+public class NanoSession {
 
     private Integer id;
 

@@ -20,6 +20,7 @@ public class StartHandler implements Onion.Middleware<BotContext> {
             /baike - 百度百科
             /eval - Evaluate JavaScript
             /wiki - Wikipedia
+            /moe - 萌娘百科
             """;
 
     @Override

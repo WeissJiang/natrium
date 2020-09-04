@@ -2,7 +2,7 @@ package nano.security.repository;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import nano.security.entity.Chat;
+import nano.security.entity.NanoChat;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ public class ChatRepository {
     @NonNull
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public Chat queryChat(Number chatId) {
-        return new Chat();
+    public NanoChat queryChat(Number chatId) {
+        return new NanoChat();
     }
 }

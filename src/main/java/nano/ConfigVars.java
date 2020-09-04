@@ -7,16 +7,17 @@ import lombok.Data;
  */
 @Data
 public class ConfigVars {
+
+    /**
+     * nano
+     */
+    private String nanoApi;
+    private String nanoApiToken;
+
     /**
      * Telegram API token
      */
     private String telegramApiToken;
-
-    /**
-     * nano相关配置
-     */
-    private String nanoApi;
-    private String nanoApiToken;
 
     /**
      * 百度翻译APP ID、secret key

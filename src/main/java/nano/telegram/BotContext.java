@@ -5,7 +5,7 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
 import lombok.Data;
 import lombok.NonNull;
-import nano.security.entity.Session;
+import nano.security.model.Session;
 import org.springframework.util.Assert;
 
 import java.time.Instant;

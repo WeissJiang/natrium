@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.Instant;
 
 @Data
-public class InitialSession {
+public class SessionSeed {
 
     private Number chatId;
     private Number userId;

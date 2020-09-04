@@ -4,8 +4,8 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nano.security.SessionService;
-import nano.security.entity.Session;
-import nano.security.model.InitialSession;
+import nano.security.model.Session;
+import nano.security.model.SessionSeed;
 import nano.support.Onion;
 import nano.telegram.BotContext;
 import org.springframework.stereotype.Component;
@@ -33,20 +33,20 @@ public class SessionInitializeHandler implements Onion.Middleware<BotContext> {
     }
 
     private Session buildSession(BotContext context) {
-        var session = new InitialSession();
+        var seed = new SessionSeed();
 
         var chatId = context.chatId();
         Assert.notNull(chatId, "chatId");
-        session.setChatId(chatId);
+        seed.setChatId(chatId);
 
         var userId = context.fromId();
         Assert.notNull(userId, "userId");
-        session.setUserId(userId);
+        seed.setUserId(userId);
 
         var date = context.date();
-        session.setLastAccessedTime(date);
+        seed.setLastAccessedTime(date);
 
-        return this.sessionService.createOrUpdateSessionIfExists(session);
+        return this.sessionService.getSession(seed);
     }
 
 }

@@ -1,6 +1,6 @@
 package nano.support;
 
-import nano.security.entity.User;
+import nano.security.entity.NanoUser;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class TestSqlUtils {
 
     @Test
     public void testEntityColumnNames() {
-        var names = SqlUtils.entityColumnNames(User.class);
+        var names = SqlUtils.entityColumnNames(NanoUser.class);
         assertIterableEquals(List.of("firstname", "id", "is_bot", "language_code", "username"), names);
     }
 }

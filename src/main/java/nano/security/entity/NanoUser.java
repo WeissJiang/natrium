@@ -2,8 +2,11 @@ package nano.security.entity;
 
 import lombok.Data;
 
+/**
+ * Telegram user
+ */
 @Data
-public class User {
+public class NanoUser {
 
     private Number id;
 
