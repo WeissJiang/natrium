@@ -20,7 +20,7 @@ import static nano.support.SqlUtils.slim;
 @RequiredArgsConstructor
 public class SessionRepository {
 
-    private final static String ALL_COLUMNS = String.join(" ", entityColumnNames(NanoSession.class));
+    private final static String ALL_COLUMNS = String.join(", ", entityColumnNames(NanoSession.class));
 
     @NonNull
     private final NamedParameterJdbcTemplate jdbcTemplate;
