@@ -2,7 +2,7 @@ package nano.security;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import nano.component.ConfigVars;
+import nano.ConfigVars;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 

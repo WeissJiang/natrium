@@ -7,6 +7,7 @@ import nano.support.Onion;
 import nano.telegram.BotContext;
 import nano.telegram.BotUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import javax.script.ScriptEngineManager;
@@ -36,7 +37,7 @@ public class EvalHandler implements Onion.Middleware<BotContext> {
     private static String eval(String script) {
         var manager = new ScriptEngineManager();
         var engine = manager.getEngineByName("graal.js");
-        Objects.requireNonNull(engine);
+        Assert.notNull(engine, "engine");
         return String.valueOf(engine.eval(script));
     }
 }

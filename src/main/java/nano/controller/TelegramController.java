@@ -5,7 +5,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nano.security.AuthenticationInterceptor;
 import nano.security.SecurityService;
-import nano.service.TelegramService;
+import nano.telegram.TelegramService;
+import nano.telegram.BotContext;
+import nano.telegram.BotHandler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,16 +27,22 @@ import java.util.Map;
 public class TelegramController {
 
     @NonNull
-    private final TelegramService telegramService;
+    private final SecurityService securityService;
 
     @NonNull
-    private final SecurityService securityService;
+    private final BotHandler botHandler;
+
+    @NonNull
+    private final TelegramService telegramService;
 
     @PostMapping("/webhook{token}")
     public ResponseEntity<?> webhook(@PathVariable("token") String token,
                                      @RequestBody Map<String, Object> parameterMap) {
+        // check token
         this.securityService.checkNanoToken(token);
-        this.telegramService.handleWebhook(parameterMap);
+        // handle request
+        this.botHandler.handle(parameterMap);
+        // always return ok
         return ResponseEntity.ok().build();
     }
 

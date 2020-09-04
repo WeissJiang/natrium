@@ -1,9 +1,7 @@
 package nano.telegram.handler;
 
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import nano.support.Onion;
-import nano.telegram.BotApi;
 import nano.telegram.BotContext;
 import org.springframework.stereotype.Component;
 

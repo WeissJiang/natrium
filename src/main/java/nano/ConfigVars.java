@@ -1,4 +1,4 @@
-package nano.component;
+package nano;
 
 import lombok.Data;
 
@@ -23,4 +23,11 @@ public class ConfigVars {
      */
     private String baiduTranslationAppId;
     private String baiduTranslationSecretKey;
+
+    /**
+     * Postgres
+     */
+    private String jdbcUrl;
+    private String username;
+    private String password;
 }

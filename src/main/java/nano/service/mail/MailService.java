@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Objects;
@@ -18,7 +19,8 @@ public class MailService {
 
     @SneakyThrows
     public void sendMail(Mail mail) {
-        var mailSender = Objects.requireNonNull(this.javaMailSender, "mail sender must be set");
+        Assert.notNull(this.javaMailSender, "this.javaMailSender");
+        var mailSender = this.javaMailSender;
         var withAttachment = !CollectionUtils.isEmpty(mail.getAttachmentList());
         // create mail message
         var message = mailSender.createMimeMessage();

@@ -2,7 +2,7 @@ package nano.telegram;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import nano.component.ConfigVars;
+import nano.ConfigVars;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Component;

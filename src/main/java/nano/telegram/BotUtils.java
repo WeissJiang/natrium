@@ -1,8 +1,7 @@
 package nano.telegram;
 
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-
-import java.util.Objects;
 
 /**
  * Telegram bot utils
@@ -10,7 +9,7 @@ import java.util.Objects;
 public abstract class BotUtils {
 
     public static String parseCommand(String command, String text) {
-        Objects.requireNonNull(command);
+        Assert.notNull(command, "command");
         if (StringUtils.isEmpty(text)) {
             return null;
         }

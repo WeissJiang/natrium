@@ -13,8 +13,7 @@ public class BotHandlerTest {
     public BotHandler botHandler;
 
     @Test
-    public void testHandle() throws Exception {
-        var context = new BotContext(new HashMap<>(), null);
-        this.botHandler.handle(context);
+    public void testHandle() {
+        this.botHandler.handle(new HashMap<>());
     }
 }

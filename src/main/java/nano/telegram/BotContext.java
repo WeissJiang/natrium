@@ -3,31 +3,50 @@ package nano.telegram;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NonNull;
+import nano.security.entity.Session;
+import org.springframework.util.Assert;
 
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+@Data
 public class BotContext {
 
-    @Getter
-    private final Map<String, Object> attributes = new HashMap<>();
-
-    @Getter
     private final Map<String, Object> parameters;
-
-    private final BotApi botApi;
-
     private final DocumentContext documentContext;
 
-    public BotContext(@NonNull Map<String, Object> parameters, BotApi botApi) {
-        this.botApi = botApi;
+    // -- context相关对象
+
+    private Session session;
+
+    private TelegramService telegramService;
+
+    public BotContext(@NonNull Map<String, Object> parameters) {
         this.parameters = parameters;
         this.documentContext = JsonPath.parse(parameters);
     }
+
+    public Number chatId() {
+        return this.read("$.message.chat.id");
+    }
+
+    public Number fromId() {
+        return this.read("$.message.from.id");
+    }
+
+    public String text() {
+        return this.read("$.message.text");
+    }
+
+    public Instant date() {
+        Number timestamp = this.read("$.date");
+        Assert.notNull(timestamp, "timestamp");
+        return Instant.ofEpochSecond(timestamp.longValue());
+    }
+
 
     /**
      * @param jsonPath JSON path
@@ -42,27 +61,11 @@ public class BotContext {
         }
     }
 
+    // -- proxy to TelegramService
+
     public void sendMessage(String text) {
-        Objects.requireNonNull(this.botApi);
-        var chatId = this.chatId();
-        Objects.requireNonNull(chatId);
-        var result = this.botApi.sendMessage(chatId, text);
-        this.appendLog("sendMessage", Map.of(
-                "text", text,
-                "chatId", chatId,
-                "result", result
-        ));
+        Assert.notNull(this.telegramService, "this.telegramService");
+        this.telegramService.sendMessage(this.chatId(), text);
     }
 
-    private void appendLog(String operation, Object body) {
-        this.attributes.put("%s-%s".formatted(operation, Instant.now()), body);
-    }
-
-    public Number chatId() {
-        return this.read("$.message.chat.id");
-    }
-
-    public String text() {
-        return this.read("$.message.text");
-    }
 }

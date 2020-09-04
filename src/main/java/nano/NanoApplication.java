@@ -1,6 +1,6 @@
 package nano;
 
-import nano.component.ConfigVars;
+import com.zaxxer.hikari.HikariDataSource;
 import nano.security.AuthenticationInterceptor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,11 +9,12 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
+import org.springframework.lang.NonNull;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.Objects;
+import javax.sql.DataSource;
 
 @SpringBootApplication
 public class NanoApplication implements WebMvcConfigurer, ApplicationContextAware {
@@ -37,7 +38,7 @@ public class NanoApplication implements WebMvcConfigurer, ApplicationContextAwar
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        var ctx = Objects.requireNonNull(this.applicationContext);
+        var ctx = this.applicationContext;
         var interceptor = ctx.getBean(AuthenticationInterceptor.class);
         var telegramApi = "/api/telegram/**";
         var telegramWebhookApi = "/api/telegram/webhook*";
@@ -46,7 +47,17 @@ public class NanoApplication implements WebMvcConfigurer, ApplicationContextAwar
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) {
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
+    }
+
+    @Bean
+    public DataSource postgresDatasource(ConfigVars configVars) {
+        var dataSource = new HikariDataSource();
+        dataSource.setDriverClassName("org.postgresql.Driver");
+        dataSource.setJdbcUrl("");
+        dataSource.setUsername("");
+        dataSource.setPassword("");
+        return dataSource;
     }
 }
