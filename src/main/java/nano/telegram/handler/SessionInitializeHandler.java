@@ -3,9 +3,9 @@ package nano.telegram.handler;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nano.security.SessionService;
 import nano.security.entity.Session;
 import nano.security.model.InitialSession;
-import nano.security.repository.SessionRepository;
 import nano.support.Onion;
 import nano.telegram.BotContext;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ import org.springframework.util.Assert;
 public class SessionInitializeHandler implements Onion.Middleware<BotContext> {
 
     @NonNull
-    private final SessionRepository sessionRepository;
+    private final SessionService sessionService;
 
     @Override
     public void via(BotContext context, Onion.Next next) throws Exception {
@@ -33,19 +33,20 @@ public class SessionInitializeHandler implements Onion.Middleware<BotContext> {
     }
 
     private Session buildSession(BotContext context) {
-        var chatId = context.chatId();
-        var userId = context.fromId();
-        var date = context.date();
-
-        Assert.notNull(chatId, "chatId");
-        Assert.notNull(userId, "userId");
-
         var session = new InitialSession();
+
+        var chatId = context.chatId();
+        Assert.notNull(chatId, "chatId");
         session.setChatId(chatId);
+
+        var userId = context.fromId();
+        Assert.notNull(userId, "userId");
         session.setUserId(userId);
+
+        var date = context.date();
         session.setLastAccessedTime(date);
 
-        return this.sessionRepository.upsertSession(session);
+        return this.sessionService.createOrUpdateSessionIfExists(session);
     }
 
 }
