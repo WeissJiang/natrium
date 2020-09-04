@@ -17,10 +17,11 @@ public class SessionInitializeHandler implements Onion.Middleware<BotContext> {
     private final SessionRepository sessionRepository;
 
     @Override
-    public void via(BotContext context, Onion.Next next) {
+    public void via(BotContext context, Onion.Next next) throws Exception {
         // build session
         var session = this.buildSession(context);
         context.setSession(session);
+        next.next();
     }
 
     private Session buildSession(BotContext context) {
