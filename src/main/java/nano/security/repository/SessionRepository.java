@@ -14,25 +14,14 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Map;
 
+import static nano.support.SqlUtils.slim;
+
 @Repository
 @RequiredArgsConstructor
 public class SessionRepository {
 
     @NonNull
     private final NamedParameterJdbcTemplate jdbcTemplate;
-
-    public Integer createSessionAndReturnsPrimaryKey(Session session) {
-        var sql = """
-                INSERT INTO nano_session (chat_id, user_id, attributes, creation_time, last_accessed_time)
-                VALUES (:chatId, :userId, :attributes, :creationTime, :lastAccessedTime);
-                """;
-        var paramSource = new BeanPropertySqlParameterSource(session);
-        var keyHolder = new GeneratedKeyHolder();
-        this.jdbcTemplate.update(sql, paramSource, keyHolder);
-        var generatedKey = keyHolder.getKey();
-        Assert.notNull(generatedKey, "generatedKey");
-        return generatedKey.intValue();
-    }
 
     public Session querySession(Number chatId, Number userId) {
         var sql = """
@@ -48,11 +37,24 @@ public class SessionRepository {
                 "userId", userId
         );
         var rowMapper = new BeanPropertyRowMapper<>(Session.class);
-        var sessionList = this.jdbcTemplate.query(sql, paramMap, rowMapper);
+        var sessionList = this.jdbcTemplate.query(slim(sql), paramMap, rowMapper);
         if (CollectionUtils.isEmpty(sessionList)) {
             return null;
         }
         return sessionList.get(0);
+    }
+
+    public Integer createSessionAndReturnsPrimaryKey(Session session) {
+        var sql = """
+                INSERT INTO nano_session (chat_id, user_id, attributes, creation_time, last_accessed_time)
+                VALUES (:chatId, :userId, :attributes, :creationTime, :lastAccessedTime);
+                """;
+        var paramSource = new BeanPropertySqlParameterSource(session);
+        var keyHolder = new GeneratedKeyHolder();
+        this.jdbcTemplate.update(slim(sql), paramSource, keyHolder);
+        var generatedKey = keyHolder.getKey();
+        Assert.notNull(generatedKey, "generatedKey");
+        return generatedKey.intValue();
     }
 
     public void updateSession(Session session) {
@@ -64,7 +66,7 @@ public class SessionRepository {
                 WHERE id = :id;
                 """;
         var paramSource = new BeanPropertySqlParameterSource(session);
-        this.jdbcTemplate.update(sql, paramSource);
+        this.jdbcTemplate.update(slim(sql), paramSource);
     }
 
     @Transactional
