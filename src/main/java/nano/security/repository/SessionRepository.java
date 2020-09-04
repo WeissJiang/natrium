@@ -80,6 +80,7 @@ public class SessionRepository {
         var createNew = false;
         if (session == null) {
             session = new Session();
+            session.setAttributes("{}");
             session.setCreationTime(Timestamp.from(initial.getLastAccessedTime()));
             createNew = true;
         }
