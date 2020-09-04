@@ -2,6 +2,7 @@ package nano.telegram;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import nano.support.Onion;
 import nano.telegram.handler.ExceptionHandler;
 import nano.telegram.handler.LogHandler;
@@ -36,7 +37,8 @@ public class BotHandler {
         this.onion.use(textMessageHandler);
     }
 
-    public void handle(BotContext context) throws Exception {
+    @SneakyThrows
+    public void handle(BotContext context) {
         this.onion.handle(context);
     }
 

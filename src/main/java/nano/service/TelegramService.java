@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import nano.component.ConfigVars;
+import nano.security.SecurityService;
 import nano.telegram.BotApi;
 import nano.telegram.BotContext;
 import nano.telegram.BotHandler;
@@ -26,7 +27,6 @@ public class TelegramService {
     @NonNull
     private final ConfigVars configVars;
 
-    @SneakyThrows
     public void handleWebhook(Map<String, Object> parameters) {
         var context = new BotContext(parameters, this.botApi);
         this.botHandler.handle(context);
@@ -35,7 +35,7 @@ public class TelegramService {
     public Map<String, Object> setWebhook() {
         var nanoToken = this.configVars.getNanoApiToken();
         var nanoApi = this.configVars.getNanoApi();
-        var url = nanoApi + "/api/telegram/" + nanoToken;
+        var url = "%s/api/telegram/webhook%s".formatted(nanoApi, nanoToken);
         return this.botApi.setWebhook(url);
     }
 
