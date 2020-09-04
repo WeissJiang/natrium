@@ -10,7 +10,6 @@ import org.springframework.util.Assert;
 
 import java.time.Instant;
 import java.util.Map;
-import java.util.Objects;
 
 @Data
 public class BotContext {
@@ -46,7 +45,6 @@ public class BotContext {
         Assert.notNull(timestamp, "timestamp");
         return Instant.ofEpochSecond(timestamp.longValue());
     }
-
 
     /**
      * @param jsonPath JSON path

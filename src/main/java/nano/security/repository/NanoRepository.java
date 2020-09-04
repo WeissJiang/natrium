@@ -13,7 +13,7 @@ public class NanoRepository {
     @NonNull
     private final JdbcTemplate jdbcTemplate;
 
-    public String getVersion() {
+    public String getPostgresVersion() {
         var mapper = new SingleColumnRowMapper<String>();
         var version = this.jdbcTemplate.query("SELECT VERSION();", mapper);
         return String.join(", ", version);
