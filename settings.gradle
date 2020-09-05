@@ -1,1 +1,4 @@
 rootProject.name = 'nano-bot'
+include 'common'
+include 'web'
+include 'worker'
