@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS nano_session
 DROP TABLE IF EXISTS nano_chat;
 CREATE TABLE IF NOT EXISTS nano_chat
 (
-    id        SERIAL PRIMARY KEY,
+    id        BIGINT PRIMARY KEY,
     username  VARCHAR,
     title     VARCHAR,
     firstname VARCHAR,
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS nano_chat
 DROP TABLE IF EXISTS nano_user;
 CREATE TABLE IF NOT EXISTS nano_user
 (
-    id            SERIAL PRIMARY KEY,
+    id            BIGINT PRIMARY KEY,
     username      VARCHAR,
     firstname     VARCHAR,
     is_bot        BOOL,

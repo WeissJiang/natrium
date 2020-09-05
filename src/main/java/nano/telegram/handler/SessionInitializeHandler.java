@@ -4,14 +4,14 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nano.security.SessionService;
+import nano.security.entity.NanoChat;
+import nano.security.entity.NanoUser;
 import nano.security.model.Session;
 import nano.security.model.SessionKey;
 import nano.support.Onion;
 import nano.telegram.BotContext;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
-
-import java.util.Map;
 
 @Slf4j
 @Component
@@ -25,29 +25,50 @@ public class SessionInitializeHandler implements Onion.Middleware<BotContext> {
     public void via(BotContext context, Onion.Next next) throws Exception {
         try {
             // sync chat and user
-
+            NanoChat chat = this.readChat(context);
+            NanoUser user = this.readUser(context);
             // build session
-            var session = this.buildSession(context);
+            var session = this.buildSession(chat, user);
             context.setSession(session);
+            next.next();
+            // sync session at the end
+            this.sessionService.syncSession(session);
         } catch (Exception ex) {
             log.warn("build session failed: {}", ex.getMessage());
-        } finally {
             next.next();
         }
     }
 
-    private Session buildSession(BotContext context) {
-        var sessionKey = new SessionKey();
-
-        var chatId = context.chatId();
-        Assert.notNull(chatId, "chatId");
-        sessionKey.setChatId(chatId);
-
-        var userId = context.fromId();
+    private NanoUser readUser(BotContext context) {
+        var user = new NanoUser();
+        Number userId = context.read("$.message.from.id");
         Assert.notNull(userId, "userId");
-        sessionKey.setUserId(userId);
+        user.setId(userId);
+        user.setUsername(context.read("$.message.from.username"));
+        user.setFirstname(context.read("$.message.from.first_name"));
+        user.setIsBot(context.read("$.message.from.is_bot"));
+        user.setLanguageCode(context.read("$.message.from.language_code"));
+        return user;
+    }
 
-        return this.sessionService.getSession(sessionKey, Map.of("date", context.date()));
+    private NanoChat readChat(BotContext context) {
+        var chat = new NanoChat();
+        Number chatId = context.read("$.message.chat.id");
+        Assert.notNull(chatId, "chatId");
+        chat.setId(chatId);
+        chat.setUsername(context.read("$.message.chat.username"));
+        chat.setFirstname(context.read("$.message.chat.first_name"));
+        chat.setTitle(context.read("$.message.chat.title"));
+        chat.setType(context.read("$.message.chat.type"));
+        return chat;
+    }
+
+    private Session buildSession(NanoChat chat, NanoUser user) {
+        var sessionKey = new SessionKey();
+        sessionKey.setChatId(chat.getId());
+        sessionKey.setUserId(user.getId());
+
+        return this.sessionService.getSession(sessionKey, chat, user);
     }
 
 }

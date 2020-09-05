@@ -3,7 +3,7 @@ package nano.security.repository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import nano.security.entity.NanoSession;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import nano.support.jdbc.JdbcSelectAll;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -11,46 +11,33 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
+import java.sql.Timestamp;
 import java.util.Map;
 
-import static nano.support.SqlUtils.entityColumnNames;
-import static nano.support.SqlUtils.slim;
+import static nano.support.jdbc.SqlUtils.*;
 
 @Repository
 @RequiredArgsConstructor
 public class SessionRepository {
 
-    private final static String ALL_COLUMNS = String.join(", ", entityColumnNames(NanoSession.class));
-
     @NonNull
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public NanoSession querySession(Number chatId, Number userId) {
-        var sql = """
-                SELECT %s
-                FROM nano_session
-                WHERE TRUE
-                  AND chat_id = :chatId
-                  AND user_id = :userId
-                LIMIT 1;
-                """.formatted(ALL_COLUMNS);
-        var paramMap = Map.of(
-                "chatId", chatId,
-                "userId", userId
-        );
-        var rowMapper = new BeanPropertyRowMapper<>(NanoSession.class);
-        var sessionList = this.jdbcTemplate.query(slim(sql), paramMap, rowMapper);
+        var paramMap = Map.of("chatId", chatId, "userId", userId);
+        var sessionList = new JdbcSelectAll<>(NanoSession.class).withTableName("nano_session")
+                .whereEqual("chat_id", "user_id").limit(1).usesJdbcTemplate(this.jdbcTemplate).query(paramMap);
         if (CollectionUtils.isEmpty(sessionList)) {
             return null;
         }
         return sessionList.get(0);
     }
 
-    public Integer createSessionAndReturnsPrimaryKey(NanoSession nanoSession) {
+    public Integer createSessionAndReturnsKey(NanoSession nanoSession) {
         var sql = """
                 INSERT INTO nano_session (chat_id, user_id, attributes,
                                           creation_time, last_accessed_time)
-                VALUES (:chatId, :userId, :attributes,
+                VALUES (:chatId, :userId, :attributes::JSON,
                         :creationTime, :lastAccessedTime)
                 RETURNING id;
                 """;
@@ -62,14 +49,21 @@ public class SessionRepository {
         return generatedKey.intValue();
     }
 
-    public void updateSession(NanoSession nanoSession) {
+    public void updateLastAccessedTime(Integer id, Timestamp lastAccessedTime) {
         var sql = """
                 UPDATE nano_session
-                SET attributes         = :attributes,
-                    last_accessed_time = :lastAccessedTime
+                SET last_accessed_time = :lastAccessedTime
                 WHERE id = :id;
                 """;
-        var paramSource = new BeanPropertySqlParameterSource(nanoSession);
-        this.jdbcTemplate.update(slim(sql), paramSource);
+        this.jdbcTemplate.update(slim(sql), Map.of("id", id, "lastAccessedTime", lastAccessedTime));
+    }
+
+    public void updateAttributes(Integer id, String attributes) {
+        var sql = """
+                UPDATE nano_session
+                SET attributes         = :attributes
+                WHERE id = :id;
+                """;
+        this.jdbcTemplate.update(slim(sql), Map.of("id", id, "attributes", attributes));
     }
 }

@@ -2,8 +2,6 @@ package nano.security.model;
 
 import lombok.Data;
 
-import java.time.Instant;
-
 @Data
 public class SessionKey {
 

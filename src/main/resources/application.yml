@@ -6,8 +6,5 @@ spring:
     url: ${JDBC_DATABASE_URL}
     username: ${JDBC_DATABASE_USERNAME}
     password: ${JDBC_DATABASE_PASSWORD}
-    hikari:
-      data-source-properties:
-        stringtype: unspecified
 server:
   port: 8000

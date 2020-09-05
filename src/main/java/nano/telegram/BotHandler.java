@@ -9,6 +9,7 @@ import nano.telegram.handler.text.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.lang.NonNull;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -39,6 +40,7 @@ public class BotHandler implements ApplicationContextAware {
         this.onion.use(textMessageHandler);
     }
 
+    @Async
     @SneakyThrows
     public void handle(Map<String, Object> parameters) {
         var context = new BotContext(parameters);
