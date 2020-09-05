@@ -4,6 +4,7 @@ import lombok.Cleanup;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import org.graalvm.collections.Pair;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamSource;
 
@@ -93,7 +94,7 @@ public class FileCutter implements Closeable {
             is.transferTo(os);
         }
         this.tempFiles.put(filename, tempFile);
-        return new Pair<>(filename, new FileSystemResource(tempFile));
+        return Pair.create(filename, new FileSystemResource(tempFile));
     }
 
     /**

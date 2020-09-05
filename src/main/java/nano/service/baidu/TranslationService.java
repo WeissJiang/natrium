@@ -1,6 +1,7 @@
 package nano.service.baidu;
 
 import com.jayway.jsonpath.JsonPath;
+import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -42,7 +43,7 @@ public class TranslationService {
     private final ConfigVars configVars;
 
     public String autoTranslate(String input) {
-        var payload = new TranslationPayload();
+        var payload = new Payload();
         payload.setInput(input);
         if (chinese.test(input)) {
             // 中译英
@@ -57,7 +58,7 @@ public class TranslationService {
     }
 
     @SneakyThrows
-    public String translate(TranslationPayload payload) {
+    public String translate(Payload payload) {
         var input = payload.getInput();
         var from = payload.getFrom();
         var to = payload.getTo();
@@ -94,5 +95,14 @@ public class TranslationService {
         }
         return result.stream().map(it -> it.get("dst")).collect(Collectors.joining("\n"));
     }
+
+    @Data
+    public static class Payload {
+
+        private String input;
+        private String from;
+        private String to;
+    }
+
 
 }

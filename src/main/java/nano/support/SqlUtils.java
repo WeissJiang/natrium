@@ -8,21 +8,18 @@ import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 /**
  * SQL相关的小工具
  */
 public abstract class SqlUtils {
 
-    private static final Pattern slimPattern = Pattern.compile("\\s+");
-
     /**
      * @param sql SQL
      * @return slimmed SQL
      */
     public static String slim(@NonNull String sql) {
-        return slimPattern.matcher(sql).replaceAll(" ");
+        return sql.replaceAll("\\s+", " ");
     }
 
     /**

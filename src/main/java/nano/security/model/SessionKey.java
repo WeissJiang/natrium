@@ -5,10 +5,8 @@ import lombok.Data;
 import java.time.Instant;
 
 @Data
-public class SessionSeed {
+public class SessionKey {
 
     private Number chatId;
     private Number userId;
-
-    private Instant lastAccessedTime;
 }

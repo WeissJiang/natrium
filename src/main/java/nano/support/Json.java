@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.SneakyThrows;
+import org.springframework.core.ParameterizedTypeReference;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -18,7 +19,10 @@ import java.util.*;
 
 public abstract class Json {
 
-    static final ObjectMapper mapper = new ObjectMapper();
+    private static final TypeReference<Map<String, Object>> STRING_OBJECT_MAP_TYPE = new TypeReference<>() { };
+    private static final TypeReference<List<Object>> OBJECT_LIST_TYPE = new TypeReference<>() { };
+
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     static {
         mapper.registerModule(new JavaTimeModule());
@@ -55,6 +59,15 @@ public abstract class Json {
     public static <T> T decodeValue(ByteBuffer buf, Class<T> clazz) {
         return invoke(() -> mapper.readValue(buf.array(), clazz));
     }
+
+    public static  Map<String,Object> decodeValueAsMap(String str) {
+        return decodeValue(str, STRING_OBJECT_MAP_TYPE);
+    }
+
+    public static  List<Object> decodeValueAsList(String str) {
+        return decodeValue(str, OBJECT_LIST_TYPE);
+    }
+
 
     @SneakyThrows
     private static <T> T invoke(ATE<T> actionThrowsException) {

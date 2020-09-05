@@ -15,7 +15,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
-public class NanoApplication implements WebMvcConfigurer, ApplicationContextAware {
+public class NanoApplication implements ApplicationContextAware, WebMvcConfigurer {
 
     private ApplicationContext applicationContext;
 

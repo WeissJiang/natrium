@@ -3,7 +3,7 @@ package nano.controller;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nano.security.repository.NanoRepository;
+import nano.service.NanoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class NanoController {
 
     @NonNull
-    private final NanoRepository nanoRepository;
+    private final NanoService nanoService;
 
     @GetMapping("/ping")
     public ResponseEntity<?> ping() {
@@ -24,8 +24,8 @@ public class NanoController {
     }
 
     @GetMapping("/nano")
-    public ResponseEntity<?> version() {
-        var version = this.nanoRepository.getPostgresVersion();
-        return ResponseEntity.ok(version);
+    public ResponseEntity<?> nano() {
+        var nano = this.nanoService.nano();
+        return ResponseEntity.ok(nano);
     }
 }
