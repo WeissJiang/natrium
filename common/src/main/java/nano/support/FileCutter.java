@@ -4,7 +4,6 @@ import lombok.Cleanup;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.SneakyThrows;
-import nano.support.Pair;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamSource;
 
