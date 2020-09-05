@@ -6,8 +6,6 @@ import nano.support.Onion;
 import nano.telegram.BotContext;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor

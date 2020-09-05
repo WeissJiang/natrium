@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Objects;
-
 @Slf4j
 @Service
 public class MailService {
