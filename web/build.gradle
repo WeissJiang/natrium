@@ -33,15 +33,20 @@ tasks.withType(Test) {
 
 dependencies {
     implementation project(':common')
+    implementation 'com.jayway.jsonpath:json-path:2.4.0'
+    // javascript
     implementation 'org.graalvm.js:js:20.0.0'
     implementation 'org.graalvm.js:js-scriptengine:20.0.0'
-    implementation 'com.jayway.jsonpath:json-path:2.4.0'
+    // postgresql
     implementation 'org.postgresql:postgresql:42.2.16'
+    // spring
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    // lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+    // test
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
