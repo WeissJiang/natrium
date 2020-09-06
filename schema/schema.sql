@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS nano_session
     last_accessed_time TIMESTAMPTZ,
     UNIQUE (chat_id, user_id)
 );
--- nano chat
+-- nano_chat
 DROP TABLE IF EXISTS nano_chat;
 CREATE TABLE IF NOT EXISTS nano_chat
 (
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS nano_chat
     firstname VARCHAR,
     type      VARCHAR
 );
--- nano chat
+-- nano_chat
 DROP TABLE IF EXISTS nano_user;
 CREATE TABLE IF NOT EXISTS nano_user
 (
