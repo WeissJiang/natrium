@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class BaikeService {
 
-    private static final Pattern pattern = Pattern.compile("<meta name=\"description\" content=\"(.+)\">");
+    private static final Pattern pattern = Pattern.compile("<meta name=\"description\" content=\"(?<desc>.+)\">");
 
     private static final String QUERY_API = "https://baike.baidu.com/item/";
 
@@ -30,7 +30,7 @@ public class BaikeService {
         if (!m.find()) {
             return null;
         }
-        var extract = m.group(1);
+        var extract = m.group("desc");
         if (StringUtils.isEmpty(extract)) {
             return null;
         }

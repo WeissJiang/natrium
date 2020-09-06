@@ -5,10 +5,15 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
 import lombok.Data;
 import lombok.NonNull;
+import nano.support.Sugar;
 import nano.web.security.model.Session;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -46,6 +51,24 @@ public class BotContext {
         return Instant.ofEpochSecond(timestamp.longValue());
     }
 
+    public List<String> commands() {
+        List<Map<String, Object>> entities = this.read("$.message.entities");
+        var commandEntities = Sugar.filter(entities, it -> "bot_command".equals(it.get("type")));
+        if (CollectionUtils.isEmpty(commandEntities)) {
+            return Collections.emptyList();
+        }
+        var text = this.text();
+        var commands = new ArrayList<String>();
+        for (var entity : commandEntities) {
+            if (entity.get("offset") instanceof Integer offset
+                && entity.get("length") instanceof Integer length) {
+                var command = text.substring(offset, offset + length);
+                commands.add(command);
+            }
+        }
+        return commands;
+    }
+
     /**
      * @param jsonPath JSON path
      * @param <T>      result type
@@ -65,5 +88,4 @@ public class BotContext {
         Assert.notNull(this.telegramService, "this.telegramService");
         this.telegramService.sendMessage(this.chatId(), text);
     }
-
 }

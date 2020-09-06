@@ -93,7 +93,7 @@ public class FileCutter implements Closeable {
             is.transferTo(os);
         }
         this.tempFiles.put(filename, tempFile);
-        return Pair.create(filename, new FileSystemResource(tempFile));
+        return Pair.of(filename, new FileSystemResource(tempFile));
     }
 
     /**

@@ -26,7 +26,7 @@ public final class Pair<L, R> {
      *
      * @return the constructed pair or an empty pair if {@code left} is null.
      */
-    public static <L, R> Pair<L, R> createLeft(L left) {
+    public static <L, R> Pair<L, R> ofLeft(L left) {
         if (left == null) {
             return empty();
         } else {
@@ -40,7 +40,7 @@ public final class Pair<L, R> {
      *
      * @return the constructed pair or an empty pair if {@code right} is null.
      */
-    public static <L, R> Pair<L, R> createRight(R right) {
+    public static <L, R> Pair<L, R> ofRight(R right) {
         if (right == null) {
             return empty();
         } else {
@@ -54,7 +54,7 @@ public final class Pair<L, R> {
      *
      * @return the constructed pair or an empty pair if both inputs are null.
      */
-    public static <L, R> Pair<L, R> create(L left, R right) {
+    public static <L, R> Pair<L, R> of(L left, R right) {
         if (right == null && left == null) {
             return empty();
         } else {
