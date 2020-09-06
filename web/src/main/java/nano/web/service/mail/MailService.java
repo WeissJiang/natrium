@@ -17,7 +17,7 @@ public class MailService {
 
     @SneakyThrows
     public void sendMail(Mail mail) {
-        Assert.notNull(this.javaMailSender, "this.javaMailSender");
+        Assert.notNull(this.javaMailSender, "this.javaMailSender is null");
         var mailSender = this.javaMailSender;
         var withAttachment = !CollectionUtils.isEmpty(mail.getAttachmentList());
         // create mail message

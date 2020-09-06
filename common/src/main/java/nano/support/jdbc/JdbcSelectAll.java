@@ -101,7 +101,7 @@ public class JdbcSelectAll<T> {
     }
 
     private void jdbcTemplateProvided() {
-        Assert.notNull(this.jdbcTemplate, "this.jdbcTemplate");
+        Assert.notNull(this.jdbcTemplate, "this.jdbcTemplate is null");
     }
 
 }

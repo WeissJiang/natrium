@@ -1,4 +1,4 @@
-package nano.web.telegram.handler.text;
+package nano.web.telegram.handler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +11,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class StartHandler implements Onion.Middleware<BotContext> {
 
-    private static final String START = "/start";
-
     private static final String HELP = """
             /babel - 中英互译
             /baike - 百度百科
@@ -23,13 +21,11 @@ public class StartHandler implements Onion.Middleware<BotContext> {
 
     @Override
     public void via(BotContext context, Onion.Next next) throws Exception {
-        var text = context.text();
-        if (text != null && text.startsWith(START)) {
+        if (context.commands().contains("start")) {
             context.sendMessage(HELP);
             return;
         }
         // next
         next.next();
     }
-
 }

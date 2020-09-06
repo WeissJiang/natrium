@@ -47,7 +47,7 @@ public class BotContext {
 
     public Instant date() {
         Number timestamp = this.read("$.message.date");
-        Assert.notNull(timestamp, "timestamp");
+        Assert.notNull(timestamp, "timestamp is null");
         return Instant.ofEpochSecond(timestamp.longValue());
     }
 
@@ -85,7 +85,7 @@ public class BotContext {
     // -- proxy to TelegramService
 
     public void sendMessage(String text) {
-        Assert.notNull(this.telegramService, "this.telegramService");
+        Assert.notNull(this.telegramService, "this.telegramService is null");
         this.telegramService.sendMessage(this.chatId(), text);
     }
 }

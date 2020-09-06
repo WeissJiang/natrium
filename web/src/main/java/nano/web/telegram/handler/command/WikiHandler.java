@@ -1,23 +1,19 @@
-package nano.web.telegram.handler.text;
+package nano.web.telegram.handler.command;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nano.web.service.mediawiki.WikiService;
-import nano.support.Onion;
 import nano.web.telegram.BotContext;
-import nano.web.telegram.BotUtils;
+import nano.web.telegram.handler.AbstractCommandHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class WikiHandler implements Onion.Middleware<BotContext> {
-
-    private static final String COMMAND = "wiki";
+public class WikiHandler  extends AbstractCommandHandler {
 
     // wikipedia language list
     private static final List<String> LANGUAGE_LIST = List.of("zh", "en", "ja");
@@ -26,18 +22,12 @@ public class WikiHandler implements Onion.Middleware<BotContext> {
     private final WikiService wikiService;
 
     @Override
-    public void via(BotContext context, Onion.Next next) throws Exception {
-        var text = context.text();
-
-        var content = BotUtils.parseCommand(COMMAND, text);
-        if (StringUtils.isEmpty(content)) {
-            next.next();
-            return;
-        }
-
-        var extract = this.fetchExtract(content);
+    public void handle(BotContext context, String title) {
+        var extract = this.fetchExtract(title);
         context.sendMessage(extract);
     }
+
+
 
     private String fetchExtract(String title) {
         for (var language : LANGUAGE_LIST) {
@@ -49,4 +39,8 @@ public class WikiHandler implements Onion.Middleware<BotContext> {
         return "nano没有找到：" + title;
     }
 
+    @Override
+    protected String command() {
+        return "wiki";
+    }
 }

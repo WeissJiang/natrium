@@ -45,7 +45,7 @@ public class SessionRepository {
         var keyHolder = new GeneratedKeyHolder();
         this.jdbcTemplate.update(slim(sql), paramSource, keyHolder);
         var generatedKey = keyHolder.getKey();
-        Assert.notNull(generatedKey, "generatedKey");
+        Assert.notNull(generatedKey, "generatedKey is null");
         return generatedKey.intValue();
     }
 

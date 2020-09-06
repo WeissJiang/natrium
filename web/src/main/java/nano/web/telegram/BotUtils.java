@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  */
 public abstract class BotUtils {
 
-    private final static Pattern commandPattern = Pattern.compile("^/(?<cmd>\\w+)(\\s+(?<args>(.|\n)*))?$");
+    private final static Pattern commandPattern = Pattern.compile("^/(?<cmd>\\w+)(\\s+(?<tail>(.|\n)*))?$");
 
     public static Pair<String, String> parseCommand(String text) {
         if (StringUtils.isEmpty(text)) {
@@ -22,12 +22,12 @@ public abstract class BotUtils {
             return Pair.empty();
         }
         var cmd = matcher.group("cmd");
-        var args = matcher.group("args");
-        return Pair.of(cmd, args);
+        var tail = matcher.group("tail");
+        return Pair.of(cmd, tail);
     }
 
     public static String parseCommand(String command, String text) {
-        Assert.notNull(command, "command");
+        Assert.notNull(command, "command is null");
         if (StringUtils.isEmpty(text)) {
             return null;
         }
