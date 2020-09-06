@@ -26,7 +26,7 @@ public class BotHandlerTests {
     public SessionService sessionService;
 
     @Test
-    public void testHandle() throws Exception {
+    public void testHandleStartCommand() throws Exception {
         var payload = """
                 {
                     "update_id": 1,

@@ -25,8 +25,9 @@ public class SessionRepository {
 
     public NanoSession querySession(Number chatId, Number userId) {
         var paramMap = Map.of("chatId", chatId, "userId", userId);
-        var sessionList = new JdbcSelectAll<>(NanoSession.class).withTableName("nano_session")
-                .whereEqual("chat_id", "user_id").limit(1).usesJdbcTemplate(this.jdbcTemplate).query(paramMap);
+        var selectAll = new JdbcSelectAll<>(NanoSession.class)
+                .withTableName("nano_session").whereEqual("chat_id", "user_id").limit(1);
+        var sessionList = selectAll.usesJdbcTemplate(this.jdbcTemplate).query(paramMap);
         if (CollectionUtils.isEmpty(sessionList)) {
             return null;
         }
