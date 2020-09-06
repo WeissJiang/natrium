@@ -21,7 +21,7 @@ public class StartHandler implements Onion.Middleware<BotContext> {
 
     @Override
     public void via(BotContext context, Onion.Next next) throws Exception {
-        if (context.commands().contains("start")) {
+        if (context.commands().contains("/start")) {
             context.sendMessage(HELP);
             return;
         }

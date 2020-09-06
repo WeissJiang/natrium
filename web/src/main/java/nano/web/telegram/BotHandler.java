@@ -33,15 +33,32 @@ public class BotHandler implements ApplicationContextAware {
     }
 
     @Async
-    @SneakyThrows
+    public void handleAsync(Map<String, Object> parameters) {
+        this.internalHandle(this.buildContext(parameters));
+    }
+
     public void handle(Map<String, Object> parameters) {
+        this.internalHandle(this.buildContext(parameters));
+    }
+
+    /**
+     * handle context
+     */
+    @SneakyThrows
+    private void internalHandle(BotContext context) {
+        this.onion.handle(context);
+    }
+
+    /**
+     * build context
+     */
+    private BotContext buildContext(Map<String, Object> parameters) {
         var context = new BotContext(parameters);
         // build context
         var ctx = this.applicationContext;
         var telegramService = ctx.getBean(TelegramService.class);
         context.setTelegramService(telegramService);
-        // handle context
-        this.onion.handle(context);
+        return context;
     }
 
     @Override

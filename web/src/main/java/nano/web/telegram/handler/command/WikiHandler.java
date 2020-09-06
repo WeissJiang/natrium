@@ -15,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WikiHandler  extends AbstractCommandHandler {
 
-    // wikipedia language list
+    // language list
     private static final List<String> LANGUAGE_LIST = List.of("zh", "en", "ja");
 
     @NonNull
@@ -26,8 +26,6 @@ public class WikiHandler  extends AbstractCommandHandler {
         var extract = this.fetchExtract(title);
         context.sendMessage(extract);
     }
-
-
 
     private String fetchExtract(String title) {
         for (var language : LANGUAGE_LIST) {

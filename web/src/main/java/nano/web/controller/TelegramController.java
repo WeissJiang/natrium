@@ -40,7 +40,7 @@ public class TelegramController {
         // check token
         this.securityService.checkNanoToken(token);
         // handle request
-        this.botHandler.handle(parameterMap);
+        this.botHandler.handleAsync(parameterMap);
         // always return ok
         return ResponseEntity.ok().build();
     }
