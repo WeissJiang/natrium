@@ -8,6 +8,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.lang.NonNull;
 
+import java.util.concurrent.TimeUnit;
+
 @Slf4j
 @SpringBootApplication
 public class Application implements ApplicationContextAware, CommandLineRunner {
@@ -21,12 +23,6 @@ public class Application implements ApplicationContextAware, CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         log.info("Worker app: {}", this.applicationContext);
-        var count = 100;
-        while (count-- > 0) {
-            var read = System.in.read();
-            log.info("{} read: {}", count, read);
-            Thread.sleep(1000);
-        }
         log.info("Bye");
     }
 
