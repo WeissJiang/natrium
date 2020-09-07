@@ -26,4 +26,9 @@ public class BabelHandler extends AbstractCommandHandler {
     protected String command() {
         return "babel";
     }
+
+    @Override
+    protected String help() {
+        return "Usage: /babel text";
+    }
 }

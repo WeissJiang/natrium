@@ -11,21 +11,23 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class StartHandler implements Onion.Middleware<BotContext> {
 
-    private static final String HELP = """
-            /babel - 中英互译
-            /baike - 百度百科
-            /eval - Evaluate JavaScript
-            /wiki - Wikipedia
-            /moe - 萌娘百科
-            """;
-
     @Override
     public void via(BotContext context, Onion.Next next) throws Exception {
         if (context.commands().contains("/start")) {
-            context.sendMessage(HELP);
+            context.sendMessage(this.help());
             return;
         }
         // next
         next.next();
+    }
+
+    private String help() {
+        return """
+                /babel - 中英互译
+                /baike - 百度百科
+                /eval - Evaluate JavaScript
+                /wiki - Wikipedia
+                /moe - 萌娘百科
+                """;
     }
 }

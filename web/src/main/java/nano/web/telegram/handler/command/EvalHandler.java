@@ -34,4 +34,9 @@ public class EvalHandler extends AbstractCommandHandler {
         return "eval";
     }
 
+    @Override
+    protected String help() {
+        return "Usage: /eval script";
+    }
+
 }

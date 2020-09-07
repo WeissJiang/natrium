@@ -27,4 +27,9 @@ public class BaikeHandler extends AbstractCommandHandler {
     protected String command() {
         return "baike";
     }
+
+    @Override
+    protected String help() {
+        return "Usage: /baike title";
+    }
 }

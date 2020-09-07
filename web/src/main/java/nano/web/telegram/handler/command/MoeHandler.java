@@ -28,4 +28,9 @@ public class MoeHandler extends AbstractCommandHandler {
     protected String command() {
         return "moe";
     }
+
+    @Override
+    protected String help() {
+        return "Usage: /moe title";
+    }
 }

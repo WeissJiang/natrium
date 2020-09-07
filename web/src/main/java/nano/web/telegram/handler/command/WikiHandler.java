@@ -41,4 +41,9 @@ public class WikiHandler  extends AbstractCommandHandler {
     protected String command() {
         return "wiki";
     }
+
+    @Override
+    protected String help() {
+        return "Usage: /wiki title";
+    }
 }
