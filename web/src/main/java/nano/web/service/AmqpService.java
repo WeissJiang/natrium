@@ -19,14 +19,23 @@ public class AmqpService {
     private final AmqpAdmin amqpAdmin;
 
     @NonNull
-    private final RabbitMessagingTemplate messagingTemplate;
+    private final RabbitMessagingTemplate rabbitMessagingTemplate;
+
 
     @PostConstruct
     public void init() {
+        if (this.brokerNotDefined()) {
+            return;
+        }
         this.amqpAdmin.declareExchange(new DirectExchange("nano"));
     }
 
     public void send(String exchange, String routingKey, Object payload) {
-        this.messagingTemplate.convertAndSend(exchange, routingKey, payload);
+        this.rabbitMessagingTemplate.convertAndSend(exchange, routingKey, payload);
+    }
+
+    private boolean brokerNotDefined() {
+        var host = this.rabbitMessagingTemplate.getRabbitTemplate().getConnectionFactory().getHost();
+        return "?".equals(host);
     }
 }

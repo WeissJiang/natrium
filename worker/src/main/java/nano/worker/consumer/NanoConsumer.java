@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class NanoConsumer {
 
     @RabbitListener(queuesToDeclare = @Queue("nano"))
-    public void consume(Message message) {
-        log.info(message.toString());
+    public void consume(String message) {
+        log.info(message);
     }
 }

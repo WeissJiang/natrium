@@ -2,4 +2,4 @@ spring:
   application:
     name: nano-worker
   rabbitmq:
-    addresses: ${CLOUDAMQP_URL}
+    addresses: ${CLOUDAMQP_URL:?}
