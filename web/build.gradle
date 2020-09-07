@@ -41,12 +41,14 @@ dependencies {
     implementation 'org.postgresql:postgresql:42.2.16'
     // spring
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
     // lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     // test
+    testImplementation 'org.springframework.amqp:spring-rabbit-test'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
@@ -58,8 +60,8 @@ test {
     environment([
             // nano
             '--nano.nanoApi'              : 'http://localhost:8000',
-            '--nano.nanoApiToken'         : 'token',
-            // jdbc
+            '--nano.nanoToken'         : 'token',
+            // postgres
             '--spring.datasource.url'     : 'jdbc:postgresql://localhost:5432/postgres',
             '--spring.datasource.username': 'postgres',
             '--spring.datasource.password': 'password'

@@ -8,5 +8,5 @@ spring:
     password: ${JDBC_DATABASE_PASSWORD}
   profiles:
     include: nano
-server:
-  port: 8000
+  rabbitmq:
+    addresses: ${CLOUDAMQP_URL}
