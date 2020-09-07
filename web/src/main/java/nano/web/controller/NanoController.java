@@ -3,8 +3,8 @@ package nano.web.controller;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nano.web.service.AmqpService;
 import nano.web.service.NanoService;
-import org.springframework.amqp.rabbit.core.RabbitMessagingTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +19,7 @@ public class NanoController {
     private final NanoService nanoService;
 
     @NonNull
-    private final RabbitMessagingTemplate rabbitMessagingTemplate;
+    private final AmqpService amqpService;
 
     @GetMapping("/ping")
     public ResponseEntity<?> ping() {
@@ -34,7 +34,7 @@ public class NanoController {
 
     @PostMapping("/message")
     public ResponseEntity<?> message(@RequestParam("m") String m) {
-        this.rabbitMessagingTemplate.convertAndSend("nano", "nano", m);
+        this.amqpService.send("nano", "nano", m);
         return ResponseEntity.ok("OK");
     }
 }
