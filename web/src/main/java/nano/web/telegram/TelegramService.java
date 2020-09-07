@@ -49,7 +49,7 @@ public class TelegramService {
      * Telegram API caller
      */
     public Map<String, Object> call(@NonNull String method, @NonNull Map<String, Object> parameters) {
-        var token = this.configVars.getTelegramApiToken();
+        var token = this.configVars.getTelegramBotToken();
         var telegramApi = TELEGRAM_API.formatted(token, method);
         var url = URI.create(telegramApi);
         var request = RequestEntity.post(url).body(parameters);

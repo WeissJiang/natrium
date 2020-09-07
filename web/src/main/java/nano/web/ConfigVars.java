@@ -15,9 +15,9 @@ public class ConfigVars {
     private String nanoToken;
 
     /**
-     * Telegram API token
+     * Telegram Bot token
      */
-    private String telegramApiToken;
+    private String telegramBotToken;
 
     /**
      * 百度翻译APP ID、secret key
