@@ -33,6 +33,7 @@ public class MoeHandler extends AbstractCommandHandler {
     protected String help() {
         return """
                 Usage: /moe title
+                
                 https://mzh.moegirl.org.cn/
                 """;
     }

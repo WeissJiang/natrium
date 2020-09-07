@@ -31,6 +31,7 @@ public class BabelHandler extends AbstractCommandHandler {
     protected String help() {
         return """
                 Usage: /babel text
+                
                 https://fanyi.baidu.com/
                 """;
     }

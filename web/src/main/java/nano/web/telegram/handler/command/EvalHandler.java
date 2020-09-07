@@ -38,6 +38,7 @@ public class EvalHandler extends AbstractCommandHandler {
     protected String help() {
         return """
                 Usage: /eval script
+                
                 https://github.com/graalvm/graaljs
                 """;
     }
