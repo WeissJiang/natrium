@@ -34,7 +34,7 @@ public class NanoController {
 
     @PostMapping("/message")
     public ResponseEntity<?> message(@RequestParam("m") String m) {
-        this.rabbitMessagingTemplate.convertAndSend("nano", m);
+        this.rabbitMessagingTemplate.convertAndSend("nano", "nano", m);
         return ResponseEntity.ok("OK");
     }
 }
