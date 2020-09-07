@@ -26,8 +26,7 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     }
 
     @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder,ConfigVars configVars) {
-        System.out.println(configVars);
+    public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder.build();
     }
 
