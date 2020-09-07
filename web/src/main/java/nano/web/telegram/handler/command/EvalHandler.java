@@ -36,7 +36,10 @@ public class EvalHandler extends AbstractCommandHandler {
 
     @Override
     protected String help() {
-        return "Usage: /eval script";
+        return """
+                Usage: /eval script
+                https://github.com/graalvm/graaljs
+                """;
     }
 
 }

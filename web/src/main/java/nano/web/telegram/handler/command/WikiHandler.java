@@ -13,7 +13,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class WikiHandler  extends AbstractCommandHandler {
+public class WikiHandler extends AbstractCommandHandler {
 
     // language list
     private static final List<String> LANGUAGE_LIST = List.of("zh", "en", "ja");
@@ -44,6 +44,9 @@ public class WikiHandler  extends AbstractCommandHandler {
 
     @Override
     protected String help() {
-        return "Usage: /wiki title";
+        return """
+                Usage: /wiki title
+                https://zh.m.wikipedia.org/
+                """;
     }
 }

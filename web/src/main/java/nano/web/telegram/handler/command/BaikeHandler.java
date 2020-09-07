@@ -30,6 +30,9 @@ public class BaikeHandler extends AbstractCommandHandler {
 
     @Override
     protected String help() {
-        return "Usage: /baike title";
+        return """
+                Usage: /baike title
+                https://baike.baidu.com/
+                """;
     }
 }

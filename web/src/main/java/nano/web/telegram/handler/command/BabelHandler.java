@@ -29,6 +29,9 @@ public class BabelHandler extends AbstractCommandHandler {
 
     @Override
     protected String help() {
-        return "Usage: /babel text";
+        return """
+                Usage: /babel text
+                https://fanyi.baidu.com/
+                """;
     }
 }
