@@ -21,7 +21,9 @@ public class Application implements ApplicationContextAware, CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         log.info("Worker app: {}", this.applicationContext);
+        var ignore = System.in.read();
     }
+
 
     @Override
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) {
