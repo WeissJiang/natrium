@@ -1,9 +1,8 @@
-package nano.web.controller;
+package nano.web.controller.telegram;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nano.web.security.AuthenticationInterceptor;
 import nano.web.security.SecurityService;
 import nano.web.telegram.BotHandler;
 import nano.web.telegram.TelegramService;
@@ -13,17 +12,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 /**
- * Handle telegram request
+ * Handle webhook request
  *
  * @see TelegramService
- * @see AuthenticationInterceptor
  */
 @Slf4j
 @CrossOrigin
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/telegram")
-public class TelegramController {
+public class WebhookController {
 
     @NonNull
     private final SecurityService securityService;
@@ -31,10 +29,7 @@ public class TelegramController {
     @NonNull
     private final BotHandler botHandler;
 
-    @NonNull
-    private final TelegramService telegramService;
-
-    @PostMapping("/webhook{token}")
+    @PostMapping("/webhook/{token}")
     public ResponseEntity<?> webhook(@PathVariable("token") String token,
                                      @RequestBody Map<String, Object> parameterMap) {
         // check token
@@ -43,18 +38,5 @@ public class TelegramController {
         this.botHandler.handleAsync(parameterMap);
         // always return ok
         return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/setWebhook")
-    public ResponseEntity<?> setWebhook() {
-        var result = this.telegramService.setWebhook();
-        return ResponseEntity.ok(result);
-    }
-
-    @PostMapping("/sendMessage")
-    public ResponseEntity<?> sendMessage(@RequestParam("chatId") Integer chatId,
-                                         @RequestParam("text") String text) {
-        var result = this.telegramService.sendMessage(chatId, text);
-        return ResponseEntity.ok(result);
     }
 }

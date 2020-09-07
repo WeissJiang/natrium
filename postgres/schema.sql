@@ -6,8 +6,8 @@ CREATE TABLE IF NOT EXISTS nano_session
     chat_id            BIGINT,
     user_id            BIGINT,
     attributes         JSON,
-    creation_time      TIMESTAMPTZ,
     last_accessed_time TIMESTAMPTZ,
+    creation_time      TIMESTAMPTZ,
     UNIQUE (chat_id, user_id)
 );
 -- nano_chat
@@ -29,4 +29,15 @@ CREATE TABLE IF NOT EXISTS nano_user
     firstname     VARCHAR,
     is_bot        BOOL,
     language_code VARCHAR
+);
+-- nano_token
+DROP TABLE IF EXISTS nano_token;
+CREATE TABLE IF NOT EXISTS nano_token
+(
+    token            VARCHAR PRIMARY KEY,
+    name             VARCHAR,
+    chat_id          BIGINT,
+    user_id          BIGINT,
+    last_active_time TIMESTAMPTZ,
+    creation_time    TIMESTAMPTZ
 );

@@ -18,7 +18,7 @@ public class SecurityService {
             throw new AuthenticationException("Missing token");
         }
 
-        var nanoToken = this.configVars.getNanoApiToken();
+        var nanoToken = this.configVars.getNanoToken();
         if (!token.equals(nanoToken)) {
             throw new AuthenticationException("Illegal token");
         }

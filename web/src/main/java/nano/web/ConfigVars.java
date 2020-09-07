@@ -12,7 +12,7 @@ public class ConfigVars {
      * nano
      */
     private String nanoApi;
-    private String nanoApiToken;
+    private String nanoToken;
 
     /**
      * Telegram API token

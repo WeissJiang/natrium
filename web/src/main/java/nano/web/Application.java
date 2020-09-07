@@ -26,7 +26,8 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     }
 
     @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+    public RestTemplate restTemplate(RestTemplateBuilder builder,ConfigVars configVars) {
+        System.out.println(configVars);
         return builder.build();
     }
 
@@ -41,8 +42,8 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
         var ctx = this.applicationContext;
         var securityService = ctx.getBean(SecurityService.class);
         var interceptor = new AuthenticationInterceptor(securityService);
-        var telegramApi = "/api/telegram/**";
         var telegramWebhookApi = "/api/telegram/webhook*";
+        var telegramApi = "/api/telegram/**";
         // Telegram API interceptor, exclude Telegram webhook API
         registry.addInterceptor(interceptor).addPathPatterns(telegramApi).excludePathPatterns(telegramWebhookApi);
     }
