@@ -22,6 +22,7 @@ public class Application implements ApplicationContextAware, CommandLineRunner {
     public void run(String... args) throws Exception {
         log.info("Worker app: {}", this.applicationContext);
         var ignore = System.in.read();
+        log.info("Bye");
     }
 
 
