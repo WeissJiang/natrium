@@ -42,7 +42,7 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
         var ctx = this.applicationContext;
         var securityService = ctx.getBean(SecurityService.class);
         var interceptor = new AuthenticationInterceptor(securityService);
-        var telegramWebhookApi = "/api/telegram/webhook*";
+        var telegramWebhookApi = "/api/telegram/webhook/*";
         var telegramApi = "/api/telegram/**";
         // Telegram API interceptor, exclude Telegram webhook API
         registry.addInterceptor(interceptor).addPathPatterns(telegramApi).excludePathPatterns(telegramWebhookApi);
