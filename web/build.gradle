@@ -19,16 +19,16 @@ repositories {
     mavenCentral()
 }
 
-tasks.withType(JavaCompile).each {
-    it.options.compilerArgs += '--enable-preview'
+tasks.withType(JavaCompile) {
+    options.compilerArgs += '--enable-preview'
 }
 
-tasks.withType(JavaExec).each {
-    it.jvmArgs += '--enable-preview'
+tasks.withType(JavaExec) {
+    jvmArgs += '--enable-preview'
 }
 
-tasks.withType(Test).each {
-    it.jvmArgs += '--enable-preview'
+tasks.withType(Test) {
+    jvmArgs += '--enable-preview'
 }
 
 dependencies {
@@ -60,7 +60,7 @@ test {
     environment([
             // nano
             '--nano.nanoApi'              : 'http://localhost:8000',
-            '--nano.nanoToken'         : 'token',
+            '--nano.nanoToken'            : 'token',
             // postgres
             '--spring.datasource.url'     : 'jdbc:postgresql://localhost:5432/postgres',
             '--spring.datasource.username': 'postgres',
