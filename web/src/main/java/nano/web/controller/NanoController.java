@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/nano")
+@RequestMapping("/api/nano")
 public class NanoController {
 
     @NonNull
@@ -26,8 +26,8 @@ public class NanoController {
         return ResponseEntity.ok("pong\n");
     }
 
-    @GetMapping("/nano")
-    public ResponseEntity<?> nano() {
+    @GetMapping("/system")
+    public ResponseEntity<?> system() {
         var nano = this.nanoService.nano();
         return ResponseEntity.ok(nano);
     }

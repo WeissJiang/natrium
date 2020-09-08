@@ -34,6 +34,10 @@ tasks.withType(Test) {
 dependencies {
     implementation project(':common')
     implementation 'com.jayway.jsonpath:json-path:2.4.0'
+    // web jars
+    implementation 'org.webjars.npm:react:16.13.1'
+    implementation 'org.webjars.npm:react-dom:16.13.1'
+    implementation 'org.webjars.npm:js-tokens:5.0.0'
     // javascript
     implementation 'org.graalvm.js:js:20.0.0'
     implementation 'org.graalvm.js:js-scriptengine:20.0.0'
