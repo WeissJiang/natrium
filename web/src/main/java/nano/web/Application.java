@@ -9,9 +9,11 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -45,6 +47,13 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
         var telegramWebhookApi = "/api/telegram/webhook/*";
         // Telegram API interceptor, exclude Telegram webhook API
         registry.addInterceptor(interceptor).addPathPatterns(telegramApi).excludePathPatterns(telegramWebhookApi);
+    }
+
+    @Override
+    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+        // https://html.spec.whatwg.org/multipage/scripting.html#scriptingLanguages
+        var javascript = MediaType.parseMediaType("text/javascript");
+        configurer.mediaType("mjs", javascript).mediaType("jsx", javascript);
     }
 
     @Override

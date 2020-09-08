@@ -4,13 +4,9 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nano.web.security.AuthenticationInterceptor;
-import nano.web.security.SecurityService;
-import nano.web.telegram.BotHandler;
 import nano.web.telegram.TelegramService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 /**
  * Handle telegram request

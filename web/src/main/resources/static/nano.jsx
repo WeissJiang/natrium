@@ -1,8 +1,10 @@
-import React from '/webjars/react/16.13.1/index.js'
-import ReactDOM from '/webjars/react-dom/16.13.1/index.js'
+import '/webjars/react/16.13.1/umd/react.development.js'
+import '/webjars/react-dom/16.13.1/umd/react-dom.development.js'
 
 function Nano() {
-    return (<div>nano-bot</div>)
+    return (React.createElement("div", { className: "container" },
+        React.createElement("div", { className: "title" }, "nano-bot")));
 }
 
-ReactDOM.render(<Nano/>, document.getElementById('app'))
+
+ReactDOM.render(React.createElement(Nano, null), document.getElementById('app'));
