@@ -6,6 +6,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.resource.ResourceTransformer;
 import org.springframework.web.servlet.resource.ResourceTransformerChain;
 import org.springframework.web.servlet.resource.TransformedResource;
@@ -30,7 +31,21 @@ public class ScriptResourceTransformer implements ResourceTransformer {
                               @NonNull ResourceTransformerChain transformerChain) throws IOException {
         @Cleanup var inputStream = resource.getInputStream();
         var origin = StreamUtils.copyToString(inputStream, utf8);
-        var transpiled = this.scriptService.transpileScriptModule(origin);
+        var filename = resource.getFilename();
+        var suffix = StringUtils.getFilenameExtension(filename);
+        String transpiled;
+        // script
+        if (Scripting.SCRIPT_SUFFIX.contains(suffix)) {
+            transpiled = this.scriptService.transpileScriptModule(origin);
+        }
+        // style
+        else if (Scripting.STYLE_SUFFIX.contains(suffix)) {
+            transpiled = this.scriptService.transpileStyleModule(origin);
+        }
+        // others
+        else {
+            throw new IllegalStateException("Illegal suffix");
+        }
         return new TransformedResource(resource, transpiled.getBytes(utf8));
     }
 }

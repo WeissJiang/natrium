@@ -3,6 +3,7 @@ package nano.web;
 import nano.web.security.AuthenticationInterceptor;
 import nano.web.security.SecurityService;
 import nano.web.service.scripting.ScriptResourceTransformer;
+import nano.web.service.scripting.Scripting;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
@@ -12,12 +13,13 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.CacheControl;
-import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.time.Duration;
 
@@ -55,12 +57,7 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
 
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-        // https://html.spec.whatwg.org/multipage/scripting.html#scriptingLanguages
-        var javascript = MediaType.parseMediaType("text/javascript");
-        configurer.mediaType("mjs", javascript)
-                .mediaType("jsx", javascript)
-                .mediaType("ts", javascript)
-                .mediaType("tsx", javascript);
+        configurer.mediaTypes(Scripting.MEDIA_TYPE);
     }
 
     /**
@@ -70,9 +67,9 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         var ctx = this.applicationContext;
         var resourceProperties = ctx.getBean(ResourceProperties.class);
-        Duration cachePeriod = resourceProperties.getCache().getPeriod();
-        CacheControl cacheControl = resourceProperties.getCache().getCachecontrol().toHttpCacheControl();
-        var registration = registry.addResourceHandler("/**/*.mjs", "/**/*.jsx", "/**/*.ts", "/**/*.tsx")
+        var cachePeriod = resourceProperties.getCache().getPeriod();
+        var cacheControl = resourceProperties.getCache().getCachecontrol().toHttpCacheControl();
+        var registration = registry.addResourceHandler("/**/*.mjs", "/**/*.jsx", "/**/*.ts", "/**/*.tsx", "/**/*.less")
                 .addResourceLocations(resourceProperties.getStaticLocations())
                 .setCachePeriod(getSeconds(cachePeriod)).setCacheControl(cacheControl);
         var resourceChain = registration.resourceChain(true);

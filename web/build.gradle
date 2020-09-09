@@ -39,8 +39,10 @@ dependencies {
     implementation('org.webjars.npm:react-dom:16.13.1') {
         exclude group: 'org.webjars.npm'
     }
+    implementation('org.webjars.npm:less:3.11.3') {
+        exclude group: 'org.webjars.npm'
+    }
     implementation 'org.webjars.npm:typescript:3.9.5'
-//    implementation('org.webjars.npm:less:3.11.3')
     // json path
     implementation 'com.jayway.jsonpath:json-path:2.4.0'
     // javascript
