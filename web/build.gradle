@@ -32,12 +32,17 @@ tasks.withType(Test) {
 }
 
 dependencies {
-    implementation project(':common')
-    implementation 'com.jayway.jsonpath:json-path:2.4.0'
     // web jars
-    implementation 'org.webjars.npm:react:16.13.1'
-    implementation 'org.webjars.npm:react-dom:16.13.1'
-    implementation 'org.webjars.npm:js-tokens:5.0.0'
+    implementation('org.webjars.npm:react:16.13.1') {
+        exclude group: 'org.webjars.npm'
+    }
+    implementation('org.webjars.npm:react-dom:16.13.1') {
+        exclude group: 'org.webjars.npm'
+    }
+    implementation 'org.webjars.npm:typescript:3.9.5'
+//    implementation('org.webjars.npm:less:3.11.3')
+    // json path
+    implementation 'com.jayway.jsonpath:json-path:2.4.0'
     // javascript
     implementation 'org.graalvm.js:js:20.0.0'
     implementation 'org.graalvm.js:js-scriptengine:20.0.0'
@@ -48,6 +53,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+    // project common
+    implementation project(':common')
     // lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

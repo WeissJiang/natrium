@@ -3,7 +3,7 @@ package nano.web.telegram.handler.command;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nano.web.service.ScriptService;
+import nano.web.service.scripting.ScriptService;
 import nano.web.telegram.BotContext;
 import nano.web.telegram.handler.AbstractCommandHandler;
 import org.springframework.stereotype.Component;
@@ -31,8 +31,6 @@ public class EvalHandler extends AbstractCommandHandler {
     protected String help() {
         return """
                 Usage: /eval script
-                
-                https://github.com/graalvm/graaljs
                 """;
     }
 

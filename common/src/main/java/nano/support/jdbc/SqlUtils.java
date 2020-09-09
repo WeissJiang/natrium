@@ -19,7 +19,7 @@ public abstract class SqlUtils {
      * @return slimmed SQL
      */
     public static String slim(@NonNull String sql) {
-        return sql.replaceAll("\\s+", " ");
+        return sql.replaceAll("\\s+", " ").trim();
     }
 
     /**

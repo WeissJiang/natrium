@@ -1,10 +1,11 @@
-import '/webjars/react/16.13.1/umd/react.development.js'
-import '/webjars/react-dom/16.13.1/umd/react-dom.development.js'
+import { React } from './deps.mjs'
 
 function Nano() {
-    return (React.createElement("div", { className: "container" },
-        React.createElement("div", { className: "title" }, "nano-bot")));
+    return (
+        <div className="container">
+            <div className="title">nano-bot</div>
+        </div>
+    );
 }
 
-
-ReactDOM.render(React.createElement(Nano, null), document.getElementById('app'));
+export default Nano

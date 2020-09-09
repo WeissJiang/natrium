@@ -46,8 +46,6 @@ public class WikiHandler extends AbstractCommandHandler {
     protected String help() {
         return """
                 Usage: /wiki title
-                
-                https://zh.m.wikipedia.org/
                 """;
     }
 }
