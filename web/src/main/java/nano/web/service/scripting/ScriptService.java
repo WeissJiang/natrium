@@ -1,9 +1,6 @@
 package nano.web.service.scripting;
 
-import lombok.Cleanup;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
+import lombok.*;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
@@ -68,8 +65,12 @@ public class ScriptService {
         if (StringUtils.isEmpty(origin)) {
             return origin;
         }
-        var scriptValue = this.transpileModule.execute(origin);
-        return scriptValue.getMember("outputText").asString();
+        try {
+            var scriptValue = this.transpileModule.execute(origin);
+            return scriptValue.getMember("outputText").asString();
+        } catch (Exception ex) {
+            return ex.getMessage();
+        }
     }
 
     @SneakyThrows
