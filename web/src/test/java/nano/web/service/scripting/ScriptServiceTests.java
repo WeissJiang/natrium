@@ -19,7 +19,7 @@ public class ScriptServiceTests {
         var js = """
                 const hi = (props) => <div>hello world<div>'
                 """;
-        var compiled = this.scriptService.transpileModule(js);
+        var compiled = this.scriptService.transpileScriptModule(js);
         assertNotNull(compiled);
         var expected = """
                 const hi = (props) => React.createElement("div", null, "hello world", React.createElement("div", null, "'"));

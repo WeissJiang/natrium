@@ -1,16 +1,15 @@
 package nano.web.service.scripting;
 
-import lombok.*;
+import lombok.Cleanup;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
-import javax.script.ScriptEngineManager;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -61,10 +60,7 @@ public class ScriptService {
      * @param origin original script
      * @return javascript
      */
-    public synchronized String transpileModule(String origin) {
-        if (StringUtils.isEmpty(origin)) {
-            return origin;
-        }
+    public synchronized String transpileScriptModule(@NonNull String origin) {
         try {
             var scriptValue = this.transpileModule.execute(origin);
             return scriptValue.getMember("outputText").asString();
@@ -73,11 +69,7 @@ public class ScriptService {
         }
     }
 
-    @SneakyThrows
     public String eval(@NonNull String script) {
-        var manager = new ScriptEngineManager();
-        var engine = manager.getEngineByName("graal.js");
-        Assert.notNull(engine, "engine is null");
-        return String.valueOf(engine.eval(script));
+        return Context.create("js").eval("js", script).asString();
     }
 }

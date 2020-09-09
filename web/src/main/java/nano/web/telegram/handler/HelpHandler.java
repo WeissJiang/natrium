@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class StartHandler implements Onion.Middleware<BotContext> {
+public class HelpHandler implements Onion.Middleware<BotContext> {
 
     @NonNull
     private final ConfigVars configVars;
@@ -21,9 +21,9 @@ public class StartHandler implements Onion.Middleware<BotContext> {
         var commands = context.commands();
         var chatType = context.chatType();
 
-        if ("supergroup".equals(chatType) && commands.contains("/start@" + configVars.getBotName())) {
+        if ("supergroup".equals(chatType) && commands.contains("/help@" + configVars.getBotName())) {
             context.sendMessage(this.help());
-        } else if ("private".equals(chatType) && commands.contains("/start")) {
+        } else if ("private".equals(chatType) && commands.contains("/help")) {
             context.sendMessage(this.help());
         } else {
             next.next();
@@ -32,6 +32,9 @@ public class StartHandler implements Onion.Middleware<BotContext> {
 
     private String help() {
         return """
+                nano Telegram Bot
+                指令列表:
+                   
                 /babel - 中英互译
                 /baike - 百度百科
                 /eval - Evaluate JavaScript

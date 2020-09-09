@@ -3,7 +3,7 @@ package nano.web.telegram;
 import nano.support.Json;
 import nano.support.Onion;
 import nano.web.security.SessionService;
-import nano.web.telegram.handler.StartHandler;
+import nano.web.telegram.handler.HelpHandler;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class BotHandlerTests {
     public BotHandler botHandler;
 
     @MockBean
-    public StartHandler startHandler;
+    public HelpHandler helpHandler;
 
     @MockBean
     public SessionService sessionService;
@@ -63,9 +63,9 @@ public class BotHandlerTests {
             var next = invocation.getArgument(1, Onion.Next.class);
             next.next();
             return null;
-        }).when(this.startHandler).via(Mockito.any(), Mockito.any());
+        }).when(this.helpHandler).via(Mockito.any(), Mockito.any());
         // test handle
         this.botHandler.handle(Json.decodeValueAsMap(payload));
-        verify(this.startHandler, times(1)).via(Mockito.any(), Mockito.any());
+        verify(this.helpHandler, times(1)).via(Mockito.any(), Mockito.any());
     }
 }

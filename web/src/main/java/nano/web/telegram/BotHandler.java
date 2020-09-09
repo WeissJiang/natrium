@@ -29,7 +29,7 @@ public class BotHandler implements ApplicationContextAware {
         var commandHandlers = ctx.getBeansOfType(AbstractCommandHandler.class);
         commandHandlers.values().forEach(this.onion::use);
         // start handler
-        this.onion.use(ctx.getBean(StartHandler.class));
+        this.onion.use(ctx.getBean(HelpHandler.class));
     }
 
     @Async
