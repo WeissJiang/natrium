@@ -45,11 +45,16 @@ public class BotContext {
         return this.read("$.message.text");
     }
 
+    public String chatType() {
+        return this.read("$.message.chat.type");
+    }
+
     public Instant date() {
         Number timestamp = this.read("$.message.date");
         Assert.notNull(timestamp, "timestamp is null");
         return Instant.ofEpochSecond(timestamp.longValue());
     }
+
 
     public List<String> commands() {
         List<Map<String, Object>> entities = this.read("$.message.entities");

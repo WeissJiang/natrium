@@ -1,10 +1,14 @@
 package nano.web.telegram.handler;
 
 import nano.support.Onion;
+import nano.web.ConfigVars;
 import nano.web.telegram.BotContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 public abstract class AbstractCommandHandler implements Onion.Middleware<BotContext> {
+
+    private ConfigVars configVars;
 
     @Override
     public void via(BotContext context, Onion.Next next) throws Exception {
@@ -15,23 +19,27 @@ public abstract class AbstractCommandHandler implements Onion.Middleware<BotCont
             return;
         }
 
-        var tail = this.parseCommand(text);
+        var tail = this.parseCommand(context.chatType(), text);
 
         if (StringUtils.hasText(tail)) {
             this.handle(context, tail);
         } else if (text.startsWith("/" + this.command())) {
             context.sendMessage(this.help());
-        }else {
+        } else {
             next.next();
         }
     }
 
-    public String parseCommand(String text) {
-        var command = this.command();
-        if (StringUtils.isEmpty(text)) {
+    private String parseCommand(String chatType, String text) {
+        var cmd = this.command().trim();
+        String regex = switch (chatType) {
+            case "supergroup" -> "(?i)/%s@%s\\s".formatted(cmd, this.configVars.getBotName());
+            case "private" -> "(?i)^/?%s\\s".formatted(cmd);
+            default -> null;
+        };
+        if (regex == null) {
             return null;
         }
-        var regex = "(?i)^/?" + command.trim() + "\\s";
         var split = text.trim().split(regex);
         if (split.length < 2) {
             return null;
@@ -44,4 +52,9 @@ public abstract class AbstractCommandHandler implements Onion.Middleware<BotCont
     protected abstract String command();
 
     protected abstract String help();
+
+    @Autowired
+    public void setConfigVars(ConfigVars configVars) {
+        this.configVars = configVars;
+    }
 }
