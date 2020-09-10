@@ -31,6 +31,23 @@ tasks.withType(Test) {
     jvmArgs += '--enable-preview'
 }
 
+def staticModulesDir = "${buildDir}/static-modules"
+task staticModules {
+
+    doLast {
+        def destDir = mkdir(staticModulesDir)
+        ant.get(src: 'https://cdnjs.cloudflare.com/ajax/libs/less.js/3.12.2/less.js', dest: destDir, skipexisting: true)
+        ant.get(src: 'https://cdnjs.cloudflare.com/ajax/libs/typescript/4.0.2/typescript.js', dest: destDir, skipexisting: true)
+    }
+}
+
+processResources {
+    dependsOn staticModules
+    from(staticModulesDir) {
+        into 'static/modules'
+    }
+}
+
 dependencies {
     // web jars
     implementation('org.webjars.npm:react:16.13.1') {
