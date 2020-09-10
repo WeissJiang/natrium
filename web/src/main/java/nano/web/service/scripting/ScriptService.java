@@ -62,6 +62,7 @@ public class ScriptService {
                 """);
         // less
         @Cleanup var less = this.resourceLoader.getResource(LESS_PATH).getInputStream();
+        // shim browser api
         context.eval("js", """
                 const document = {
                     getElementsByTagName() {
@@ -73,7 +74,7 @@ public class ScriptService {
                         }
                     },
                     createTextNode() { },
-                    currentScript: 'less',
+                    currentScript: '?',
                     head: {
                         appendChild() { },
                         removeChild() { }
@@ -86,7 +87,7 @@ public class ScriptService {
                 """);
         context.eval(Source.newBuilder("js", new InputStreamReader(less), "less").buildLiteral());
         this.lessc = context.eval("js", """
-                function lessc(style) {
+                ; function lessc(style) {
                     return less.render(style)
                 }
                 lessc
@@ -106,10 +107,6 @@ public class ScriptService {
         } catch (Exception ex) {
             return ex.getMessage();
         }
-    }
-
-    public String eval(@NonNull String script) {
-        return Context.create("js").eval("js", script).asString();
     }
 
     @SneakyThrows
@@ -138,7 +135,7 @@ public class ScriptService {
                 """.formatted(escaped);
     }
 
-    public static void main(String[] args) throws NoSuchMethodException {
-        System.out.println(Consumer.class.getMethod("accept", Object.class));
+    public String eval(@NonNull String script) {
+        return Context.create("js").eval("js", script).asString();
     }
 }
