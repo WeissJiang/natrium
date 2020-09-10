@@ -28,8 +28,8 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class ScriptService {
 
-    private static final String TYPESCRIPT_PATH = "classpath:/META-INF/resources/webjars/typescript/3.9.5/lib/typescript.js";
-    private static final String LESS_PATH = "classpath:/META-INF/resources/webjars/less/3.11.3/dist/less.js";
+    private static final String TYPESCRIPT_PATH = "classpath:/scripting/typescript/lib/typescript.js";
+    private static final String LESS_PATH = "classpath:/scripting/less/dist/less.js";
 
     private Value tsc;
     private Value lessc;

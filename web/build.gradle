@@ -1,6 +1,7 @@
 plugins {
     id 'org.springframework.boot' version '2.3.3.RELEASE'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id "com.github.node-gradle.node" version "2.2.4"
     id 'java'
 }
 
@@ -31,35 +32,34 @@ tasks.withType(Test) {
     jvmArgs += '--enable-preview'
 }
 
-def staticModulesDir = "${buildDir}/static-modules"
-task staticModules {
+task installNodeModules(type: YarnTask) {
+    args = ['i']
+}
 
-    doLast {
-        def destDir = mkdir(staticModulesDir)
-        ant.get(src: 'https://cdnjs.cloudflare.com/ajax/libs/less.js/3.12.2/less.js', dest: destDir, skipexisting: true)
-        ant.get(src: 'https://cdnjs.cloudflare.com/ajax/libs/typescript/4.0.2/typescript.js', dest: destDir, skipexisting: true)
-    }
+node {
+    download = false
+    version = '14.9.0'
+    yarnVersion = '1.22.5'
 }
 
 processResources {
-    dependsOn staticModules
-    from(staticModulesDir) {
+    def nodeModulesDir = "${rootDir}/node_modules"
+    if (!file(nodeModulesDir).exists()) {
+        dependsOn installNodeModules
+    }
+    from(nodeModulesDir) {
+        include "typescript/lib/typescript.js"
+        include "less/dist/less.js"
+        into 'scripting'
+    }
+    from(nodeModulesDir) {
+        include "react/umd/*.js"
+        include "react-dom/umd/*.js"
         into 'static/modules'
     }
 }
 
 dependencies {
-    // web jars
-    implementation('org.webjars.npm:react:16.13.1') {
-        exclude group: 'org.webjars.npm'
-    }
-    implementation('org.webjars.npm:react-dom:16.13.1') {
-        exclude group: 'org.webjars.npm'
-    }
-    implementation('org.webjars.npm:less:3.11.3') {
-        exclude group: 'org.webjars.npm'
-    }
-    implementation 'org.webjars.npm:typescript:3.9.5'
     // json path
     implementation 'com.jayway.jsonpath:json-path:2.4.0'
     // javascript
@@ -97,3 +97,4 @@ test {
             '--spring.datasource.password': 'password'
     ])
 }
+

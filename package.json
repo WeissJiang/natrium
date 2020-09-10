@@ -1,0 +1,31 @@
+{
+  "name": "nano-bot",
+  "version": "1.0.0",
+  "description": "nano nano nano",
+  "main": "index.js",
+  "scripts": {
+    "i": "yarn --ignore-optional"
+  },
+  "engines": {
+    "node": ">=14",
+    "yarn": "^1.22.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cbdyzj/nano-bot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cbdyzj/nano-bot/issues"
+  },
+  "homepage": "https://github.com/cbdyzj/nano-bot#readme",
+  "devDependencies": {
+    "less": "^3.12.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "typescript": "^4.0.2"
+  },
+  "dependencies": {}
+}
