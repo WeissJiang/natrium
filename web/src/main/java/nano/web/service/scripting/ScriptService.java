@@ -4,17 +4,16 @@ import lombok.Cleanup;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import nano.support.SimpleResourceLoader;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.HostAccess;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
@@ -24,6 +23,7 @@ import java.util.function.Consumer;
  *
  * @see <a href="https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API">Using the Compiler API</a>
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ScriptService {
@@ -34,64 +34,30 @@ public class ScriptService {
     private Value tsc;
     private Value lessc;
 
-    private final ResourceLoader resourceLoader;
+    @NonNull
+    private final SimpleResourceLoader resourceLoader;
 
     /**
      * Init script engine
      */
     @PostConstruct
-    public synchronized void init() throws IOException, NoSuchMethodException {
+    public synchronized void init() throws Exception {
+        // create js context
         var callback = Consumer.class.getMethod("accept", Object.class);
         var hostAccess = HostAccess.newBuilder().allowAccess(callback).build();
         var context = Context.newBuilder("js").allowHostAccess(hostAccess).build();
+        // eval script
+        var rl = this.resourceLoader;
         // typescript
-        @Cleanup var typescript = this.resourceLoader.getResource(TYPESCRIPT_PATH).getInputStream();
-        context.eval(Source.newBuilder("js", new InputStreamReader(typescript), "typescript").buildLiteral());
-        this.tsc = context.eval("js", """
-                function tsc(script) {
-                    return ts.transpileModule(script, {
-                        compilerOptions: {
-                            lib: ['es2018', 'dom'],
-                            allowJs: true,
-                            target: 'es2018',
-                            jsx: ts.JsxEmit.React,
-                        }
-                    })
-                }
-                tsc
-                """);
-        // less
-        @Cleanup var less = this.resourceLoader.getResource(LESS_PATH).getInputStream();
+        @Cleanup var typescript = rl.getResourceAsReader(TYPESCRIPT_PATH);
+        context.eval(Source.newBuilder("js", typescript, "typescript").buildLiteral());
+        this.tsc = context.eval("js", rl.getResourceAsString("classpath:/scripting/tsc.js"));
         // shim browser api
-        context.eval("js", """
-                const document = {
-                    getElementsByTagName() {
-                        return []
-                    },
-                    createElement() {
-                        return {
-                            appendChild() { }
-                        }
-                    },
-                    createTextNode() { },
-                    currentScript: '?',
-                    head: {
-                        appendChild() { },
-                        removeChild() { }
-                    }
-                }
-                const window = {
-                    location: {},
-                    document,
-                }
-                """);
-        context.eval(Source.newBuilder("js", new InputStreamReader(less), "less").buildLiteral());
-        this.lessc = context.eval("js", """
-                ; function lessc(style) {
-                    return less.render(style)
-                }
-                lessc
-                """);
+        context.eval("js", rl.getResourceAsString("classpath:/scripting/browser_shim.js"));
+        // less
+        @Cleanup var less = rl.getResourceAsReader(LESS_PATH);
+        context.eval(Source.newBuilder("js", less, "less").buildLiteral());
+        this.lessc = context.eval("js", rl.getResourceAsString("classpath:/scripting/lessc.js"));
     }
 
     /**

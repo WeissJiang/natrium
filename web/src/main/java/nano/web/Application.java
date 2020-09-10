@@ -1,5 +1,6 @@
 package nano.web;
 
+import nano.support.SimpleResourceLoader;
 import nano.web.security.AuthenticationInterceptor;
 import nano.web.security.SecurityService;
 import nano.web.service.scripting.ScriptResourceTransformer;
@@ -13,6 +14,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.lang.NonNull;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.client.RestTemplate;
@@ -42,6 +44,11 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     @ConfigurationProperties("nano")
     public ConfigVars configVars() {
         return new ConfigVars();
+    }
+
+    @Bean
+    public SimpleResourceLoader simpleResourceLoader(ResourceLoader resourceLoader) {
+        return new SimpleResourceLoader(resourceLoader);
     }
 
     @Override
