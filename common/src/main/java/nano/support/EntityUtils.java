@@ -1,4 +1,4 @@
-package nano.support.jdbc;
+package nano.support;
 
 import lombok.NonNull;
 import org.springframework.beans.BeanUtils;
@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * SQL相关的小工具
+ * 实体相关的小工具
  */
-public abstract class SqlUtils {
+public abstract class EntityUtils {
 
     /**
      * @param sql SQL

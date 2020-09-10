@@ -14,7 +14,7 @@ import org.springframework.util.CollectionUtils;
 import java.sql.Timestamp;
 import java.util.Map;
 
-import static nano.support.jdbc.SqlUtils.*;
+import static nano.support.EntityUtils.*;
 
 @Repository
 @RequiredArgsConstructor

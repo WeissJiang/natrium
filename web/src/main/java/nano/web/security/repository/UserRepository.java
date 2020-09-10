@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import static nano.support.jdbc.SqlUtils.slim;
+import static nano.support.EntityUtils.slim;
 
 @Repository
 @RequiredArgsConstructor

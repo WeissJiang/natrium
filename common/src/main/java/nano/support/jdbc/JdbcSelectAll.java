@@ -10,7 +10,7 @@ import org.springframework.util.Assert;
 import java.util.List;
 import java.util.Map;
 
-import static nano.support.jdbc.SqlUtils.*;
+import static nano.support.EntityUtils.*;
 
 public class JdbcSelectAll<T> {
 
