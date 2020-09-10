@@ -40,15 +40,16 @@ node {
     version = '14.9.0'
     yarnVersion = '1.22.5'
 
-    def os = new ByteArrayOutputStream()
-    download = exec {
-        ignoreExitValue = true
+    def devNull = OutputStream.nullOutputStream()
+    def nodeAbsent = exec {
         executable 'bash'
-        args '-l', '-c', 'node --version'
-        standardOutput os
-    }.getExitValue() != 0
+        args '-l', '-c', 'command -v node'
+        ignoreExitValue = true
+        standardOutput = devNull
+        errorOutput = devNull
+    }.exitValue != 0
 
-    println("Node.js: ${os.toString()}")
+    download = nodeAbsent
 
 }
 
