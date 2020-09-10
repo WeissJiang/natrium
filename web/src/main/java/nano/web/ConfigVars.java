@@ -11,9 +11,9 @@ public class ConfigVars {
     /**
      * nano
      */
-    private String nanoToken;
     private String botName;
     private String nanoApi;
+    private String nanoToken;
 
     /**
      * Telegram Bot token

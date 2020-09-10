@@ -26,7 +26,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.time.Duration;
 
 @EnableAsync
-@SpringBootApplication
+@SpringBootApplication(proxyBeanMethods = false)
 public class Application implements ApplicationContextAware, WebMvcConfigurer {
 
     private ApplicationContext applicationContext;
