@@ -37,9 +37,14 @@ task installNodeModules(type: YarnTask) {
 }
 
 node {
-    download = false
     version = '14.9.0'
     yarnVersion = '1.22.5'
+
+    download = exec {
+        ignoreExitValue = true
+        executable '/bin/sh'
+        args '-l', '-c', 'command -v node'
+    }.getExitValue() != 0
 }
 
 processResources {
@@ -97,4 +102,3 @@ test {
             '--spring.datasource.password': 'password'
     ])
 }
-
