@@ -1,5 +1,16 @@
+plugins {
+    id "com.github.node-gradle.node" version "3.0.0-rc2"
+}
+
+/**
+ * @see package.json
+ */
+task installNodeModules(type: YarnTask) {
+    args = ['i']
+}
+
 task stage {
-    dependsOn(subprojects.collect { ":${it.name}:build" })
+    dependsOn subprojects.collect { ":${it.name}:build" }
 }
 
 // stage skip tests
@@ -9,3 +20,20 @@ gradle.taskGraph.whenReady { graph ->
                 .each { it.enabled = false }
     }
 }
+
+node {
+    version = '14.9.0'
+    yarnVersion = '1.22.5'
+
+    def devNull = OutputStream.nullOutputStream()
+    def nodeAbsent = exec {
+        executable 'bash'
+        args '-l', '-c', 'command -v node'
+        ignoreExitValue = true
+        standardOutput = devNull
+        errorOutput = devNull
+    }.exitValue != 0
+
+    download = nodeAbsent
+}
+

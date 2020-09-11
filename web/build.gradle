@@ -1,7 +1,6 @@
 plugins {
     id 'org.springframework.boot' version '2.3.3.RELEASE'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
-    id "com.github.node-gradle.node" version "2.2.4"
     id 'java'
 }
 
@@ -32,32 +31,12 @@ tasks.withType(Test) {
     jvmArgs += '--enable-preview'
 }
 
-task installNodeModules(type: YarnTask) {
-    args = ['i']
-}
-
-node {
-    version = '14.9.0'
-    yarnVersion = '1.22.5'
-
-    def devNull = OutputStream.nullOutputStream()
-    def nodeAbsent = exec {
-        executable 'bash'
-        args '-l', '-c', 'command -v node'
-        ignoreExitValue = true
-        standardOutput = devNull
-        errorOutput = devNull
-    }.exitValue != 0
-
-    download = nodeAbsent
-
-}
-
 processResources {
     def nodeModulesDir = "${rootDir}/node_modules"
     if (!file(nodeModulesDir).exists()) {
-        dependsOn installNodeModules
+        dependsOn rootProject.installNodeModules
     }
+
     from(nodeModulesDir) {
         include "typescript/lib/typescript.js"
         include "less/dist/less.js"
