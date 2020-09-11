@@ -91,8 +91,10 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     private void configureResourceChain(ResourceHandlerRegistration registration,
                                         ResourceProperties.Chain resourceChainProperties) {
         var cacheResource = resourceChainProperties.isCache();
-        var resourceChain = registration.resourceChain(cacheResource);
-        resourceChain.addTransformer(this.applicationContext.getBean(ScriptResourceTransformer.class));
+        var transformer = this.applicationContext.getBean(ScriptResourceTransformer.class);
+        var sharedCache = transformer.getCache();
+        var resourceChain = registration.resourceChain(cacheResource, sharedCache);
+        resourceChain.addTransformer(transformer);
     }
 
     @Override

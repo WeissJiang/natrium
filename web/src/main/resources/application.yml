@@ -11,6 +11,3 @@ spring:
     active: dev
   rabbitmq:
     addresses: ${CLOUDAMQP_URL:?}
-  devtools:
-    # see DevToolsPropertyDefaultsPostProcessor.java
-    add-properties: false
