@@ -13,7 +13,6 @@ import org.graalvm.polyglot.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import javax.annotation.PostConstruct;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
@@ -31,6 +30,10 @@ public class ScriptService {
     private static final String TYPESCRIPT_PATH = "classpath:/scripting/typescript/lib/typescript.js";
     private static final String LESS_PATH = "classpath:/scripting/less/dist/less.js";
 
+    private boolean initialized = false;
+
+    private Context context;
+
     private Value tsc;
     private Value lessc;
 
@@ -40,18 +43,39 @@ public class ScriptService {
     /**
      * Init script engine
      */
-    @PostConstruct
-    public synchronized void init() throws Exception {
-        // create js context
+    @SneakyThrows
+    private synchronized void initScriptEngine() {
+        if (log.isInfoEnabled()) {
+            log.info("Initializing {}", this.getClass().getSimpleName());
+        }
+        long startTime = System.currentTimeMillis();
+        this.initContext();
+        this.initTypeScript();
+        this.initLess();
+        if (log.isInfoEnabled()) {
+            log.info("Completed initialization in {} seconds", (System.currentTimeMillis() - startTime) / 1000.0);
+        }
+    }
+
+    @SneakyThrows
+    private synchronized void initContext() {
         var callback = Consumer.class.getMethod("accept", Object.class);
         var hostAccess = HostAccess.newBuilder().allowAccess(callback).build();
-        var context = Context.newBuilder("js").allowHostAccess(hostAccess).build();
-        // eval script
+        this.context = Context.newBuilder("js").allowHostAccess(hostAccess).build();
+    }
+
+    @SneakyThrows
+    private synchronized void initTypeScript() {
         var rl = this.resourceLoader;
         // typescript
         @Cleanup var typescript = rl.getResourceAsReader(TYPESCRIPT_PATH);
-        context.eval(Source.newBuilder("js", typescript, "typescript").buildLiteral());
-        this.tsc = context.eval("js", rl.getResourceAsString("classpath:/scripting/tsc.js"));
+        this.context.eval(Source.newBuilder("js", typescript, "typescript").buildLiteral());
+        this.tsc = this.context.eval("js", rl.getResourceAsString("classpath:/scripting/tsc.js"));
+    }
+
+    @SneakyThrows
+    private synchronized void initLess() {
+        var rl = this.resourceLoader;
         // shim browser api
         context.eval("js", rl.getResourceAsString("classpath:/scripting/browser_shim.js"));
         // less
@@ -60,6 +84,7 @@ public class ScriptService {
         this.lessc = context.eval("js", rl.getResourceAsString("classpath:/scripting/lessc.js"));
     }
 
+
     /**
      * Uses TypeScript
      *
@@ -67,6 +92,7 @@ public class ScriptService {
      * @return javascript
      */
     public synchronized String transpileScriptModule(@NonNull String origin) {
+        this.ensureInitialized();
         try {
             var scriptValue = this.tsc.execute(origin);
             return scriptValue.getMember("outputText").asString();
@@ -75,8 +101,10 @@ public class ScriptService {
         }
     }
 
+
     @SneakyThrows
     public synchronized String transpileStyleModule(@NonNull String origin) {
+        this.ensureInitialized();
         var promise = this.lessc.execute(origin);
         var latch = new CountDownLatch(1);
         var ref = new String[2];
@@ -99,6 +127,13 @@ public class ScriptService {
                     document.head.appendChild(style);
                 })('%s')
                 """.formatted(escaped);
+    }
+
+    private synchronized void ensureInitialized() {
+        if (!this.initialized) {
+            this.initScriptEngine();
+            this.initialized = true;
+        }
     }
 
     public String eval(@NonNull String script) {

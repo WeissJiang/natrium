@@ -18,10 +18,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.lang.NonNull;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 import java.time.Duration;
 
@@ -62,25 +59,40 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
         registry.addInterceptor(interceptor).addPathPatterns(telegramApi).excludePathPatterns(telegramWebhookApi);
     }
 
+    /**
+     * 增加Scripting相关静态资源的content type
+     */
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
         configurer.mediaTypes(Scripting.MEDIA_TYPE);
     }
 
     /**
+     * 增加Scripting相关静态资源的resource handler
+     *
      * @see WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter#addResourceHandlers
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        var ctx = this.applicationContext;
-        var resourceProperties = ctx.getBean(ResourceProperties.class);
+        var resourceProperties = this.applicationContext.getBean(ResourceProperties.class);
         var cachePeriod = resourceProperties.getCache().getPeriod();
+        var resourceChainProperties = resourceProperties.getChain();
         var cacheControl = resourceProperties.getCache().getCachecontrol().toHttpCacheControl();
         var registration = registry.addResourceHandler("/**/*.mjs", "/**/*.jsx", "/**/*.ts", "/**/*.tsx", "/**/*.less")
                 .addResourceLocations(resourceProperties.getStaticLocations())
                 .setCachePeriod(getSeconds(cachePeriod)).setCacheControl(cacheControl);
-        var resourceChain = registration.resourceChain(true);
-        resourceChain.addTransformer(ctx.getBean(ScriptResourceTransformer.class));
+        this.configureResourceChain(registration, resourceChainProperties);
+    }
+
+    /**
+     * 无论resource chain有没有enable，都增加一个用于处理Scripting相关静态资源编译的transformer
+     * resource chain cache默认为true
+     */
+    private void configureResourceChain(ResourceHandlerRegistration registration,
+                                        ResourceProperties.Chain resourceChainProperties) {
+        var cacheResource = resourceChainProperties.isCache();
+        var resourceChain = registration.resourceChain(cacheResource);
+        resourceChain.addTransformer(this.applicationContext.getBean(ScriptResourceTransformer.class));
     }
 
     @Override
@@ -91,6 +103,4 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     private static Integer getSeconds(Duration cachePeriod) {
         return (cachePeriod != null) ? (int) cachePeriod.getSeconds() : null;
     }
-
-
 }
