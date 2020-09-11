@@ -21,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.*;
 
 import java.time.Duration;
+import java.util.Objects;
 
 @EnableAsync
 @SpringBootApplication(proxyBeanMethods = false)
@@ -90,7 +91,8 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
      */
     private void configureResourceChain(ResourceHandlerRegistration registration,
                                         ResourceProperties.Chain resourceChainProperties) {
-        var cacheResource = resourceChainProperties.isCache();
+        var chainEnabled = Objects.requireNonNullElse(resourceChainProperties.getEnabled(), false);
+        var cacheResource = chainEnabled && resourceChainProperties.isCache();
         var transformer = this.applicationContext.getBean(ScriptResourceTransformer.class);
         var sharedCache = transformer.getCache();
         var resourceChain = registration.resourceChain(cacheResource, sharedCache);
