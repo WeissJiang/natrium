@@ -2,23 +2,20 @@ plugins {
     id 'com.github.node-gradle.node' version '3.0.0-rc2'
 }
 
-/**
- * @see package.json
- */
-task installNodeModules(type: YarnTask) {
-    args = ['i']
-}
-
 task stage {
     dependsOn subprojects.collect { ":${it.name}:build" }
 }
 
-// stage skip tests
+// skip tests when stage
 gradle.taskGraph.whenReady { graph ->
     if (graph.hasTask(stage)) {
         graph.allTasks.findAll { it instanceof Test }
                 .each { it.enabled = false }
     }
+}
+
+task installNodeModules(type: YarnTask) {
+    args = ['i']
 }
 
 node {
