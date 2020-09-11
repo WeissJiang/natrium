@@ -53,7 +53,13 @@ function TypeSelect(props) {
 function OpenJDK() {
     function getUrl(ev) {
         ev.preventDefault()
-        console.log(ev.target)
+        const form = new FormData(ev.target)
+        // get form data
+        console.log('type', form.get('type'))
+        console.log('version', form.get('version'))
+        console.log('arch', form.get('arch'))
+        console.log('os', form.get('os'))
+        console.log('openjdk_impl', form.get('openjdk_impl'))
     }
 
     return (
