@@ -54,8 +54,8 @@ dependencies {
     // json path
     implementation 'com.jayway.jsonpath:json-path:2.4.0'
     // javascript
-    implementation 'org.graalvm.js:js:20.0.0'
-    implementation 'org.graalvm.js:js-scriptengine:20.0.0'
+    implementation 'org.graalvm.js:js:20.2.0'
+    implementation 'org.graalvm.js:js-scriptengine:20.2.0'
     // postgresql
     implementation 'org.postgresql:postgresql:42.2.16'
     // spring
