@@ -18,10 +18,6 @@ task yarnInstallProduction(type: YarnTask) {
     args = ['ip']
 }
 
-task yarnInstall(type: YarnTask) {
-    args = ['i']
-}
-
 node {
     version = '14.9.0'
     yarnVersion = '1.22.5'

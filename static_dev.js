@@ -16,7 +16,7 @@ async function readFileAsString(filePath) {
             if (err) {
                 reject(err)
             } else {
-                resolve(data)
+                resolve(data.toString('utf8'))
             }
         })
     })
@@ -76,11 +76,13 @@ async function getTransformer() {
 async function main() {
     const app = express()
     app.use(await getTransformer())
-    // app.use(forwardModule)
     app.use(express.static(staticPath))
     // forward module from modules to node_modules if module absent
     app.use('/modules', express.static(nodeModulesPath))
     createServer(app).listen(3000, () => console.log('serving on 3000'))
 }
 
-main().catch(err => console.error(err))
+if (require.main === module) {
+    main().catch(err => console.error(err))
+}
+
