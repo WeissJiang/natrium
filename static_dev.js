@@ -56,12 +56,13 @@ async function getTransformer() {
         else if (/.+\.(less)$/.test(req.path)) {
             const transformed = await transformCss(resolveFilePath(req.path))
             const injection = `
-                ; (function (text) {
-                        var style = document.createElement('style');
-                        style.innerHTML = text;
-                        document.head.appendChild(style);
-                    })('${transformed.replace(/\r|\n|\r\n/g, '\\n')}')
-                `
+            ; (function (encoded) {
+                    var text = decodeURIComponent(encoded)
+                    var style = document.createElement('style')
+                    style.innerHTML = text
+                    document.head.appendChild(style)
+                })("${encodeURIComponent(transformed)}")
+            `
             res.contentType('text/javascript')
             res.send(injection)
         }

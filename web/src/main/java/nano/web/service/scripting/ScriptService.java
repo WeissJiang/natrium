@@ -13,7 +13,6 @@ import org.graalvm.polyglot.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 
@@ -101,17 +100,14 @@ public class ScriptService {
         }
     }
 
-
     @SneakyThrows
     public synchronized String transpileStyleModule(@NonNull String origin) {
         this.ensureInitialized();
         var promise = this.lessc.execute(origin);
         var latch = new CountDownLatch(1);
         var ref = new String[2];
-        promise.invokeMember("then", (Consumer<Map<String, Object>>) (result) -> {
-            var css = result.get("css");
-            Assert.notNull(css, "css is null");
-            ref[0] = String.valueOf(css);
+        promise.invokeMember("then", (Consumer<String>) (injection) -> {
+            ref[0] = injection;
             latch.countDown();
         }).invokeMember("catch", (Consumer<Throwable>) (ex) -> {
             ref[1] = ex.getMessage();
@@ -119,14 +115,7 @@ public class ScriptService {
         });
         latch.await();
         Assert.notNull(ref[0], ref[1]);
-        var escaped = ref[0].replaceAll("\r|\n|\r\n", "\\\\n");
-        return """
-                ; (function (text) {
-                    var style = document.createElement('style');
-                    style.innerHTML = text;
-                    document.head.appendChild(style);
-                })('%s')
-                """.formatted(escaped);
+        return ref[0];
     }
 
     private synchronized void ensureInitialized() {
