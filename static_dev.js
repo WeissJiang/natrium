@@ -1,10 +1,9 @@
-const { createServer } = require('http')
-const { join: joinPath } = require('path')
 const { readFile } = require('fs')
+const { join: joinPath } = require('path')
+const { createServer } = require('http')
 const { render: renderLess } = require('less')
-const express = require('express')
-
 const { startService } = require('esbuild')
+const express = require('express')
 
 const staticPath = joinPath(__dirname, 'web/src/main/resources/static')
 const resolveFilePath = (path) => joinPath(staticPath, path)
