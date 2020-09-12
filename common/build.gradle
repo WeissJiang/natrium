@@ -19,10 +19,11 @@ repositories {
 
 dependencies {
     // spring
-    compileOnly 'org.springframework.boot:spring-boot-starter-data-jdbc:2.3.3.RELEASE'
+    implementation 'org.springframework:spring-jdbc:5.2.8.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure:2.3.3.RELEASE'
     //json
-    compileOnly 'com.fasterxml.jackson.core:jackson-databind:2.11.2'
-    compileOnly 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.2'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.2'
     // lombok
     compileOnly 'org.projectlombok:lombok:1.18.12'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
