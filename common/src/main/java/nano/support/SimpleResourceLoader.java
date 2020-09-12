@@ -11,6 +11,12 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Make it simple to get resource
+ *
+ * @author cbdyzj
+ * @since 2020.9.12
+ */
 public class SimpleResourceLoader {
 
     private static final Charset utf8 = StandardCharsets.UTF_8;
@@ -36,8 +42,7 @@ public class SimpleResourceLoader {
     }
 
     public Reader getResourceAsReader(String location) {
-        var inputStream = this.getResourceAsInputStream(location);
-        return new InputStreamReader(inputStream, utf8);
+      return   this.getResourceAsReader(location,utf8);
     }
 
     @SneakyThrows

@@ -36,12 +36,13 @@ processResources {
     if (!file(nodeModulesDir).exists()) {
         dependsOn rootProject.yarnInstallProduction
     }
-
+    // scripting
     from(nodeModulesDir) {
         include "typescript/lib/typescript.js"
         include "less/dist/less.js"
         into 'scripting'
     }
+    // modules
     from(nodeModulesDir) {
         include "react/umd/*.js"
         include "react-dom/umd/*.js"
