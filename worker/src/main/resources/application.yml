@@ -2,10 +2,5 @@ spring:
   application:
     name: nano-worker
   rabbitmq:
-    addresses: ${CLOUDAMQP_URL}
-  mail:
-    host: smtp.office365.com
-    port: 587
-    username: shinonome-research-institute@outlook.com
-    properties:
-      mail.smtp.starttls.enable: true
+    addresses: ${CLOUDAMQP_URL:}
+

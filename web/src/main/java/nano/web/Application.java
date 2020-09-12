@@ -1,7 +1,7 @@
 package nano.web;
 
 import nano.support.SimpleResourceLoader;
-import nano.support.configuration.ConditionalOnRabbitProperty;
+import nano.support.configuration.ConditionalOnRabbit;
 import nano.web.security.AuthenticationInterceptor;
 import nano.web.service.messageing.ExchangeDeclarer;
 import nano.web.service.scripting.ScriptResourceTransformer;
@@ -15,6 +15,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.lang.NonNull;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -63,8 +64,8 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
      * Declare exchanges on rabbit property set
      */
     @Bean
-    @ConditionalOnRabbitProperty
-    public ExchangeDeclarer exchangeDeclarer() {
+    @ConditionalOnRabbit
+    public ExchangeDeclarer exchangeDeclarer(Environment env) {
         return new ExchangeDeclarer();
     }
 

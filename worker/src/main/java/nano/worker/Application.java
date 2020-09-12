@@ -1,7 +1,7 @@
 package nano.worker;
 
 import lombok.extern.slf4j.Slf4j;
-import nano.support.configuration.ConditionalOnRabbitProperty;
+import nano.support.configuration.ConditionalOnRabbit;
 import nano.worker.consumer.MailConsumer;
 import nano.worker.consumer.NanoConsumer;
 import org.springframework.boot.SpringApplication;
@@ -21,7 +21,7 @@ public class Application {
      * nano message consumer
      */
     @Bean
-    @ConditionalOnRabbitProperty
+    @ConditionalOnRabbit
     public NanoConsumer nanoConsumer() {
         return new NanoConsumer();
     }
@@ -30,7 +30,7 @@ public class Application {
      * For consuming sending mail message
      */
     @Bean
-    @ConditionalOnRabbitProperty
+    @ConditionalOnRabbit
     @ConditionalOnProperty("spring.mail.host")
     public MailConsumer mailConsumer() {
         return new MailConsumer();

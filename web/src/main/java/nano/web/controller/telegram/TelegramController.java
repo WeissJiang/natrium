@@ -3,7 +3,6 @@ package nano.web.controller.telegram;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nano.web.security.AuthenticationInterceptor;
 import nano.web.security.Authorized;
 import nano.web.telegram.TelegramService;
 import org.springframework.http.ResponseEntity;

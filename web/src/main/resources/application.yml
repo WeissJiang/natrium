@@ -10,4 +10,4 @@ spring:
     include: nano
     active: dev
   rabbitmq:
-    addresses: ${CLOUDAMQP_URL}
+    addresses: ${CLOUDAMQP_URL:}
