@@ -11,11 +11,9 @@
 <div id="app"></div>
 </body>
 <script type="module">
-    import { React } from '/deps.mjs'
-    import { ReactDOM } from '/deps.mjs'
+    import { renderApp } from '/modules/utils.jsx'
+    import Nano from '/pages/nano/nano.jsx'
 
-    import Nano from './nano.jsx'
-
-    ReactDOM.render(React.createElement(Nano, null), document.getElementById('app'))
+    renderApp(Nano, 'app')
 </script>
 </html>

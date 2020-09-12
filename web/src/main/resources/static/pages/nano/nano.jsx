@@ -1,4 +1,4 @@
-import { React } from './deps.mjs'
+import { React } from '/deps.mjs'
 
 import './style.less'
 

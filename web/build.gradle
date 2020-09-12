@@ -34,7 +34,7 @@ tasks.withType(Test) {
 processResources {
     def nodeModulesDir = "${rootDir}/node_modules"
     if (!file(nodeModulesDir).exists()) {
-        dependsOn rootProject.installNodeModules
+        dependsOn rootProject.yarnInstallProduction
     }
 
     from(nodeModulesDir) {

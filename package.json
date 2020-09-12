@@ -4,7 +4,9 @@
   "description": "nano nano nano",
   "main": "index.js",
   "scripts": {
-    "i": "yarn --ignore-optional"
+    "i": "yarn --ignore-optional install",
+    "ip": "yarn --ignore-optional install --production",
+    "static-dev": "node static_dev.js"
   },
   "engines": {
     "node": ">=14",
@@ -26,11 +28,14 @@
     "url": "https://github.com/cbdyzj/nano-bot/issues"
   },
   "homepage": "https://github.com/cbdyzj/nano-bot#readme",
-  "devDependencies": {
+  "dependencies": {
     "less": "^3.12.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "typescript": "^4.0.2"
   },
-  "dependencies": {}
+  "devDependencies": {
+    "express": "^4.17.1",
+    "esbuild": "^0.6.34"
+  }
 }

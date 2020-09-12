@@ -11,11 +11,9 @@
 <div id="app"></div>
 </body>
 <script type="module">
-    import { React } from '/deps.mjs'
-    import { ReactDOM } from '/deps.mjs'
+    import { renderApp } from '/modules/utils.jsx'
+    import OpenJDK from '/pages/openjdk/openjdk.jsx'
 
-    import OpenJDK from './pages/openjdk/openjdk.jsx'
-
-    ReactDOM.render(React.createElement(OpenJDK, null), document.getElementById('app'))
+    renderApp(OpenJDK, 'app')
 </script>
 </html>

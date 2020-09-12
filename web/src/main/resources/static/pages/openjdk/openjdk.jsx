@@ -6,8 +6,7 @@ function VersionSelect() {
         <select name="version" defaultValue="11">
             <option value="8">OpenJDK 8 (LTS)</option>
             <option value="11">OpenJDK 11 (LTS)</option>
-            <option value="14">JDK 14</option>
-            <option value="15">JDK 15</option>
+            <option value="14">OpenJDK 14 (Latest)</option>
         </select>
     )
 }
@@ -15,8 +14,8 @@ function VersionSelect() {
 function ImplSelect() {
     return (
         <select name="openjdk_impl" defaultValue="hotspot">
-            <option value="hotspot">hotspot</option>
-            <option value="openj9">j9</option>
+            <option value="hotspot">HotSpot</option>
+            <option value="openj9">OpenJ9</option>
         </select>
     )
 }
