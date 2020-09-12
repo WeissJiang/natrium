@@ -1,8 +1,9 @@
 package nano.web;
 
 import nano.support.SimpleResourceLoader;
+import nano.support.configuration.ConditionalOnRabbitProperty;
 import nano.web.security.AuthenticationInterceptor;
-import nano.web.security.SecurityService;
+import nano.web.service.messageing.ExchangeDeclarer;
 import nano.web.service.scripting.ScriptResourceTransformer;
 import nano.web.service.scripting.Scripting;
 import org.springframework.boot.SpringApplication;
@@ -33,31 +34,49 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
         SpringApplication.run(Application.class, args);
     }
 
-    @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
-        return builder.build();
-    }
-
+    /**
+     * App config vars
+     */
     @Bean
     @ConfigurationProperties("nano")
     public ConfigVars configVars() {
         return new ConfigVars();
     }
 
+    /**
+     * Rest template for sending HTTP request
+     */
+    @Bean
+    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+        return builder.build();
+    }
+
+    /**
+     * A simple resource loader
+     */
     @Bean
     public SimpleResourceLoader simpleResourceLoader(ResourceLoader resourceLoader) {
         return new SimpleResourceLoader(resourceLoader);
     }
 
+    /**
+     * Declare exchanges on rabbit property set
+     */
+    @Bean
+    @ConditionalOnRabbitProperty
+    public ExchangeDeclarer exchangeDeclarer() {
+        return new ExchangeDeclarer();
+    }
+
+    /**
+     * 为API增加鉴权
+     *
+     * @see nano.web.security.Authorized
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        var ctx = this.applicationContext;
-        var securityService = ctx.getBean(SecurityService.class);
-        var interceptor = new AuthenticationInterceptor(securityService);
-        var telegramApi = "/api/telegram/**";
-        var telegramWebhookApi = "/api/telegram/webhook/*";
-        // Telegram API interceptor, exclude Telegram webhook API
-        registry.addInterceptor(interceptor).addPathPatterns(telegramApi).excludePathPatterns(telegramWebhookApi);
+        var interceptor = this.applicationContext.getBean(AuthenticationInterceptor.class);
+        registry.addInterceptor(interceptor).addPathPatterns("/api/**");
     }
 
     /**
@@ -99,12 +118,16 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
         resourceChain.addTransformer(transformer);
     }
 
+    /**
+     * Duration -> seconds
+     */
+    private static Integer getSeconds(Duration cachePeriod) {
+        return (cachePeriod != null) ? (int) cachePeriod.getSeconds() : null;
+    }
+
     @Override
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 
-    private static Integer getSeconds(Duration cachePeriod) {
-        return (cachePeriod != null) ? (int) cachePeriod.getSeconds() : null;
-    }
 }

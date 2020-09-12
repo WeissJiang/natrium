@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nano.web.security.AuthenticationInterceptor;
+import nano.web.security.Authorized;
 import nano.web.telegram.TelegramService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +13,10 @@ import org.springframework.web.bind.annotation.*;
  * Handle telegram request
  *
  * @see TelegramService
- * @see AuthenticationInterceptor
+ * @see Authorized
  */
 @Slf4j
+@Authorized
 @CrossOrigin
 @RestController
 @RequiredArgsConstructor
