@@ -6,6 +6,7 @@ import nano.web.security.AuthenticationInterceptor;
 import nano.web.service.messageing.ExchangeDeclarer;
 import nano.web.service.scripting.ScriptResourceTransformer;
 import nano.web.service.scripting.Scripting;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
@@ -67,6 +68,14 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     @ConditionalOnRabbit
     public ExchangeDeclarer exchangeDeclarer(Environment env) {
         return new ExchangeDeclarer();
+    }
+
+    /**
+     * Convert message to JSON
+     */
+    @Bean
+    public Jackson2JsonMessageConverter jackson2JsonMessageConverter() {
+        return new Jackson2JsonMessageConverter();
     }
 
     /**
