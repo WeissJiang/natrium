@@ -6,7 +6,8 @@
   "scripts": {
     "i": "yarn --ignore-optional install",
     "ip": "yarn --ignore-optional install --production",
-    "static-dev": "node static_dev.js"
+    "static-dev": "node static_dev.js",
+    "static-build": "node static_build.js"
   },
   "engines": {
     "node": ">=14",
@@ -29,13 +30,13 @@
   },
   "homepage": "https://github.com/cbdyzj/nano-bot#readme",
   "dependencies": {
-    "less": "^3.12.2",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "typescript": "^4.0.2"
+    "react-dom": "^16.13.1"
   },
   "devDependencies": {
     "express": "^4.17.1",
-    "esbuild": "^0.6.34"
+    "esbuild": "^0.6.34",
+    "less": "^3.12.2",
+    "typescript": "^4.0.2"
   }
 }

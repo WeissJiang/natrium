@@ -11,6 +11,5 @@ spring:
     password: ${JDBC_DATABASE_PASSWORD:password}
   profiles:
     include: nano
-    active: dev
   rabbitmq:
     addresses: ${CLOUDAMQP_URL:}

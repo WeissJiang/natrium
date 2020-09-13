@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const { readFile } = require('fs')
 const { join: joinPath } = require('path')
 const { createServer } = require('http')
@@ -5,7 +6,7 @@ const { render: renderLess } = require('less')
 const { startService } = require('esbuild')
 const express = require('express')
 
-const staticPath = joinPath(__dirname, 'web/src/main/resources/static')
+const staticPath = joinPath(__dirname, '..', 'web/static')
 const resolveFilePath = (path) => joinPath(staticPath, path)
 
 async function readFileAsString(filePath) {
@@ -77,7 +78,7 @@ async function main() {
     app.use(await getTransformer())
     app.use(express.static(staticPath))
     // forward module from modules to node_modules if module absent
-    app.use('/modules', express.static(joinPath(__dirname, 'node_modules')))
+    app.use('/modules', express.static(joinPath(__dirname, '..', 'node_modules')))
     createServer(app).listen(3000, () => console.log('serving on 3000'))
 }
 
