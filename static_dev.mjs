@@ -1,9 +1,14 @@
-const { readFile } = require('fs')
-const { join: joinPath } = require('path')
-const { createServer } = require('http')
-const { render: renderLess } = require('less')
-const { startService } = require('esbuild')
-const express = require('express')
+import { fileURLToPath } from 'url'
+import { join as joinPath, dirname } from 'path'
+import { readFile } from 'fs'
+import { createServer } from 'http'
+
+import build from 'esbuild'
+import less from 'less'
+import express from 'express'
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const staticPath = joinPath(__dirname, 'web/src/main/resources/static')
 const resolveFilePath = (path) => joinPath(staticPath, path)
@@ -24,7 +29,7 @@ async function readFileAsString(filePath) {
  * Transformer to transform javascript, less
  */
 async function getTransformer() {
-    const service = await startService()
+    const service = await build.startService()
 
     async function transformEsm(filePath) {
         const input = await readFileAsString(filePath)
@@ -40,7 +45,7 @@ async function getTransformer() {
 
     async function transformCss(filePath) {
         const input = await readFileAsString(filePath)
-        const output = await renderLess(input)
+        const output = await less.render(input)
         return output.css
     }
 
@@ -81,7 +86,4 @@ async function main() {
     createServer(app).listen(3000, () => console.log('serving on 3000'))
 }
 
-if (require.main === module) {
-    main().catch(err => console.error(err))
-}
-
+main().catch(err => console.error(err))
