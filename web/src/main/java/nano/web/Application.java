@@ -1,6 +1,5 @@
 package nano.web;
 
-import nano.support.SimpleResourceLoader;
 import nano.support.configuration.ConditionalOnRabbit;
 import nano.web.security.AuthenticationInterceptor;
 import nano.web.service.messageing.ExchangeDeclarer;
@@ -17,10 +16,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.lang.NonNull;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
 import org.springframework.web.servlet.config.annotation.*;
 
 import java.time.Duration;
@@ -43,6 +42,14 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     @ConfigurationProperties("nano")
     public ConfigVars configVars() {
         return new ConfigVars();
+    }
+
+    /**
+     * Cache resources with Etag
+     */
+    @Bean
+    public ShallowEtagHeaderFilter shallowEtagHeaderFilter(){
+        return new ShallowEtagHeaderFilter();
     }
 
     /**
