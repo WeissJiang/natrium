@@ -50,29 +50,21 @@ function TypeSelect() {
 }
 
 function InfoTable(props) {
-    const link = url => <a href={url}>{url}</a>
-    const b2mb = size => ((size | 0) / 1024 / 1024).toFixed(2) + 'MB'
+    const link = (url, name) => <a href={url}>{name || url && new URL(url).pathname.split('/').pop()}</a>
+    const b2mb = size => size && (((size | 0) / 1024 / 1024).toFixed(2) + 'MB')
     return (
         <table>
             <tbody>
             <tr>
-                <td>Release name:</td>
-                <td>{props.release_name}</td>
+                <td>Release:</td>
+                <td>{link(props.release_link, props.release_name)}</td>
             </tr>
             <tr>
-                <td>Release link:</td>
-                <td>{link(props.release_link)}</td>
+                <td>Binary:</td>
+                <td>{link(props.binary_link, props.binary_name)}</td>
             </tr>
             <tr>
-                <td>Binary name:</td>
-                <td>{props.binary_name}</td>
-            </tr>
-            <tr>
-                <td>Binary link:</td>
-                <td>{link(props.binary_link)}</td>
-            </tr>
-            <tr>
-                <td>Checksum link:</td>
+                <td>Binary checksum:</td>
                 <td>{link(props.checksum_link)}</td>
             </tr>
             <tr>
@@ -80,15 +72,11 @@ function InfoTable(props) {
                 <td>{b2mb(props.binary_size)}</td>
             </tr>
             <tr>
-                <td>Installer name:</td>
-                <td>{props.installer_name}</td>
+                <td>Installer:</td>
+                <td>{link(props.installer_link, props.installer_name)}</td>
             </tr>
             <tr>
-                <td>Installer link:</td>
-                <td>{link(props.installer_link)}</td>
-            </tr>
-            <tr>
-                <td>Installer checksum link:</td>
+                <td>Installer checksum:</td>
                 <td>{link(props.installer_checksum_link)}</td>
             </tr>
             <tr>

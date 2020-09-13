@@ -45,7 +45,7 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     }
 
     /**
-     * Cache resources with Etag
+     * Cache resources with ETag
      */
     @Bean
     public ShallowEtagHeaderFilter shallowEtagHeaderFilter(){
