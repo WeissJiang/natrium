@@ -3,4 +3,3 @@ spring:
     name: nano-worker
   rabbitmq:
     addresses: ${CLOUDAMQP_URL:}
-

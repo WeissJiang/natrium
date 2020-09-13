@@ -54,14 +54,6 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     }
 
     /**
-     * A simple resource loader
-     */
-    @Bean
-    public SimpleResourceLoader simpleResourceLoader(ResourceLoader resourceLoader) {
-        return new SimpleResourceLoader(resourceLoader);
-    }
-
-    /**
      * Declare exchanges on rabbit property set
      */
     @Bean

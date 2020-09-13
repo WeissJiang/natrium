@@ -5,14 +5,17 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import nano.support.SimpleResourceLoader;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.HostAccess;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 
@@ -26,9 +29,6 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class ScriptService {
 
-    private static final String TYPESCRIPT_PATH = "classpath:/scripting/typescript/lib/typescript.js";
-    private static final String LESS_PATH = "classpath:/scripting/less/dist/less.js";
-
     private boolean initialized = false;
 
     private Context context;
@@ -37,7 +37,7 @@ public class ScriptService {
     private Value lessc;
 
     @NonNull
-    private final SimpleResourceLoader resourceLoader;
+    private final Scripting scripting;
 
     /**
      * Init script engine
@@ -65,24 +65,21 @@ public class ScriptService {
 
     @SneakyThrows
     private synchronized void initTypeScript() {
-        var rl = this.resourceLoader;
         // typescript
-        @Cleanup var typescript = rl.getResourceAsReader(TYPESCRIPT_PATH);
+        @Cleanup var typescript = getReader(this.scripting.getTypescript());
         this.context.eval(Source.newBuilder("js", typescript, "typescript").buildLiteral());
-        this.tsc = this.context.eval("js", rl.getResourceAsString("classpath:/scripting/tsc.js"));
+        this.tsc = this.context.eval("js", getString(this.scripting.getTsc()));
     }
 
     @SneakyThrows
     private synchronized void initLess() {
-        var rl = this.resourceLoader;
         // shim browser api
-        context.eval("js", rl.getResourceAsString("classpath:/scripting/browser_shim.js"));
+        context.eval("js", getString(this.scripting.getBrowserShim()));
         // less
-        @Cleanup var less = rl.getResourceAsReader(LESS_PATH);
+        @Cleanup var less = getReader(this.scripting.getLess());
         context.eval(Source.newBuilder("js", less, "less").buildLiteral());
-        this.lessc = context.eval("js", rl.getResourceAsString("classpath:/scripting/lessc.js"));
+        this.lessc = context.eval("js", getString(this.scripting.getLessc()));
     }
-
 
     /**
      * Uses TypeScript
@@ -127,5 +124,16 @@ public class ScriptService {
 
     public String eval(@NonNull String script) {
         return Context.create("js").eval("js", script).asString();
+    }
+
+    @SneakyThrows
+    private static String getString(Resource resource) {
+        @Cleanup var inputStream = resource.getInputStream();
+        return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+    }
+
+    @SneakyThrows
+    private static Reader getReader(Resource resource) {
+        return new InputStreamReader(resource.getInputStream());
     }
 }
