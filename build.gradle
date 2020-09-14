@@ -22,7 +22,7 @@ task staticBuild(type: YarnTask) {
     if (!file("${rootDir}/node_modules").exists()) {
         dependsOn installProductionNodeModules
     }
-    args = ['static-build']
+    args = ['build']
 }
 
 node {

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { fileURLToPath } from 'url'
 import { join as joinPath, dirname } from 'path'
-import { readFile } from 'fs'
+import { readFile } from 'fs/promises'
 import { createServer } from 'http'
 import build from 'esbuild'
 import less from 'less'
@@ -13,15 +13,8 @@ const staticPath = joinPath(__dirname, '..', 'web/static')
 const resolveFilePath = (path) => joinPath(staticPath, path)
 
 async function readFileAsString(filePath) {
-    return new Promise((resolve, reject) => {
-        readFile(filePath, { encoding: 'utf-8' }, (err, data) => {
-            if (err) {
-                reject(err)
-            } else {
-                resolve(data.toString('utf8'))
-            }
-        })
-    })
+    const data = await readFile(filePath, { encoding: 'utf8' })
+    return data.toString('utf8')
 }
 
 /**

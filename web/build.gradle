@@ -19,6 +19,7 @@ repositories {
     mavenCentral()
 }
 
+// enable-preview
 tasks.withType(JavaCompile) {
     options.compilerArgs += '--enable-preview'
 }

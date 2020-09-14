@@ -1,4 +1,8 @@
 #!/usr/bin/env node
-import ReactDOMServer from 'react-dom/server.js'
 
-console.log(ReactDOMServer)
+// what to do
+// what to do
+
+console.log('what to do')
+
+
