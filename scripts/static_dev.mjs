@@ -18,61 +18,59 @@ async function readFileAsString(filePath) {
     return data.toString('utf8')
 }
 
+const service = await build.startService()
+
+async function transformEsm(filePath) {
+    const input = await readFileAsString(filePath)
+    const { js, warnings } = await service.transform(input, {
+        target: 'es2018',
+        loader: 'jsx'
+    })
+    if (warnings.length) {
+        console.warn(...warnings)
+    }
+    return js
+}
+
+async function transformCss(filePath) {
+    const input = await readFileAsString(filePath)
+    const output = await less.render(input)
+    return output.css
+}
+
 /**
- * Transformer to transform javascript, less
+ *  transform javascript, less
  */
-async function getTransformer() {
-    const service = await build.startService()
-
-    async function transformEsm(filePath) {
-        const input = await readFileAsString(filePath)
-        const { js, warnings } = await service.transform(input, {
-            target: 'es2018',
-            loader: 'jsx'
-        })
-        if (warnings.length) {
-            console.warn(...warnings)
-        }
-        return js
+async function transform(req, res, next) {
+    // js module
+    if (/.+\.(mjs|jsx|ts|tsx)$/.test(req.path)) {
+        const transformed = await transformEsm(resolveFilePath(req.path))
+        res.contentType('text/javascript')
+        res.send(transformed)
     }
-
-    async function transformCss(filePath) {
-        const input = await readFileAsString(filePath)
-        const output = await less.render(input)
-        return output.css
-    }
-
-    return async function (req, res, next) {
-        // js module
-        if (/.+\.(mjs|jsx|ts|tsx)$/.test(req.path)) {
-            const transformed = await transformEsm(resolveFilePath(req.path))
-            res.contentType('text/javascript')
-            res.send(transformed)
-        }
-        // css module
-        else if (/.+\.(less)$/.test(req.path)) {
-            const transformed = await transformCss(resolveFilePath(req.path))
-            const injection = `
-            ;(function (encoded) {
-                    var text = decodeURIComponent(encoded);
-                    var style = document.createElement('style');
-                    style.innerHTML = text;
-                    document.head.appendChild(style);
-                })("${encodeURIComponent(transformed)}");
+    // css module
+    else if (/.+\.(less)$/.test(req.path)) {
+        const transformed = await transformCss(resolveFilePath(req.path))
+        const injection = `
+        ;(function (encoded) {
+                var text = decodeURIComponent(encoded);
+                var style = document.createElement('style');
+                style.innerHTML = text;
+                document.head.appendChild(style);
+            })("${encodeURIComponent(transformed)}");
             `
-            res.contentType('text/javascript')
-            res.send(injection.replace(/\s+/g, ' ').trim())
-        }
-        // others
-        else {
-            next()
-        }
+        res.contentType('text/javascript')
+        res.send(injection.replace(/\s+/g, ' ').trim())
+    }
+    // others
+    else {
+        next()
     }
 }
 
 async function main() {
     const app = express()
-    app.use(await getTransformer())
+    app.use(transform)
     app.use(express.static(staticPath))
     // forward module from modules to node_modules if module absent
     app.use('/modules', express.static(nodeModulesPath))
