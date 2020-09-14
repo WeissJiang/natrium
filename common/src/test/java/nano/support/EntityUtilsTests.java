@@ -1,6 +1,5 @@
-package nano.support.jdbc;
+package nano.support;
 
-import nano.support.EntityUtils;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

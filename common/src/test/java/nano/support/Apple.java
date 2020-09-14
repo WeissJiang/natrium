@@ -1,4 +1,4 @@
-package nano.support.jdbc;
+package nano.support;
 
 import lombok.Data;
 

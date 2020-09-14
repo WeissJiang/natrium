@@ -96,7 +96,11 @@ async function copyDeps() {
         return
     }
     for (const dep of deps) {
-        const path = dep.replace(/^\/modules\//, '')
+        const r = /^\/modules\//
+        if (!r.test(dep)) {
+            continue
+        }
+        const path = dep.replace(r, '')
         const srcPath = joinPath(nodeModulesPath, path)
         const destPath = joinPath(distPath, 'modules', path)
         await mkdir(dirname(destPath), { recursive: true })
