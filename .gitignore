@@ -26,3 +26,5 @@ out/
 .vscode/
 node_modules/
 yarn.lock
+web/dist/
+*.log

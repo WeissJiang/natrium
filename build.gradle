@@ -14,8 +14,15 @@ gradle.taskGraph.whenReady { graph ->
     }
 }
 
-task yarnInstallProduction(type: YarnTask) {
+task installProductionNodeModules(type: YarnTask) {
     args = ['ip']
+}
+
+task staticBuild(type: YarnTask) {
+    if (!file("${rootDir}/node_modules").exists()) {
+        dependsOn installProductionNodeModules
+    }
+    args = ['build']
 }
 
 node {

@@ -1,30 +1,28 @@
-const { readFile } = require('fs')
-const { join: joinPath } = require('path')
-const { createServer } = require('http')
-const { render: renderLess } = require('less')
-const { startService } = require('esbuild')
-const express = require('express')
+#!/usr/bin/env node
+import { fileURLToPath } from 'url'
+import { join as joinPath, dirname } from 'path'
+import { readFile } from 'fs/promises'
+import { createServer } from 'http'
+import build from 'esbuild'
+import less from 'less'
+import express from 'express'
 
-const staticPath = joinPath(__dirname, 'web/src/main/resources/static')
+const __dirname = dirname(fileURLToPath(import.meta.url))
+
+const staticPath = joinPath(__dirname, '..', 'web/static')
+const nodeModulesPath = joinPath(__dirname, '..', 'node_modules')
 const resolveFilePath = (path) => joinPath(staticPath, path)
 
 async function readFileAsString(filePath) {
-    return new Promise((resolve, reject) => {
-        readFile(filePath, { encoding: 'utf-8' }, (err, data) => {
-            if (err) {
-                reject(err)
-            } else {
-                resolve(data.toString('utf8'))
-            }
-        })
-    })
+    const data = await readFile(filePath, { encoding: 'utf8' })
+    return data.toString('utf8')
 }
 
 /**
  * Transformer to transform javascript, less
  */
 async function getTransformer() {
-    const service = await startService()
+    const service = await build.startService()
 
     async function transformEsm(filePath) {
         const input = await readFileAsString(filePath)
@@ -40,7 +38,7 @@ async function getTransformer() {
 
     async function transformCss(filePath) {
         const input = await readFileAsString(filePath)
-        const output = await renderLess(input)
+        const output = await less.render(input)
         return output.css
     }
 
@@ -55,15 +53,15 @@ async function getTransformer() {
         else if (/.+\.(less)$/.test(req.path)) {
             const transformed = await transformCss(resolveFilePath(req.path))
             const injection = `
-            ; (function (encoded) {
-                    var text = decodeURIComponent(encoded)
-                    var style = document.createElement('style')
-                    style.innerHTML = text
-                    document.head.appendChild(style)
-                })("${encodeURIComponent(transformed)}")
+            ;(function (encoded) {
+                    var text = decodeURIComponent(encoded);
+                    var style = document.createElement('style');
+                    style.innerHTML = text;
+                    document.head.appendChild(style);
+                })("${encodeURIComponent(transformed)}");
             `
             res.contentType('text/javascript')
-            res.send(injection)
+            res.send(injection.replace(/\s+/g, ' ').trim())
         }
         // others
         else {
@@ -77,11 +75,9 @@ async function main() {
     app.use(await getTransformer())
     app.use(express.static(staticPath))
     // forward module from modules to node_modules if module absent
-    app.use('/modules', express.static(joinPath(__dirname, 'node_modules')))
+    app.use('/modules', express.static(nodeModulesPath))
     createServer(app).listen(3000, () => console.log('serving on 3000'))
 }
 
-if (require.main === module) {
-    main().catch(err => console.error(err))
-}
+main().catch(err => console.error(err))
 
