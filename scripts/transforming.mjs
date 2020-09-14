@@ -33,7 +33,7 @@ export async function transformCss(filePath) {
                 style.innerHTML = text;
                 document.head.appendChild(style);
             })("${encodeURIComponent(css)}");
-        export default ${JSON.stringify(exports)}`
+        export default ${JSON.stringify(exports)};`
         return injection.replace(/\s+/g, ' ').trim()
     }
 
