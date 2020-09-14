@@ -40,7 +40,7 @@ export async function transformCss(filePath) {
     const input = await readFileAsString(filePath)
     const { css } = await less.render(input)
     // modular css
-    if (/.*\.module.less$/.test(filePath)) {
+    if (/.+\.module\.less$/.test(filePath)) {
         const exports = {}
         const plugins = [
             modules({
