@@ -12,7 +12,7 @@
     "clean": "node scripts/static_clean.mjs"
   },
   "engines": {
-    "node": ">=14",
+    "node": ">=14.9.0",
     "yarn": "^1.22.5"
   },
   "os": [
