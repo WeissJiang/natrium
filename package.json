@@ -6,8 +6,8 @@
   "scripts": {
     "i": "yarn --ignore-optional install",
     "ip": "yarn --ignore-optional install --production",
-    "static-dev": "node static_dev.js",
-    "static-build": "node static_build.js"
+    "static-dev": "node scripts/static_dev.js",
+    "static-build": "node scripts/static_build.js"
   },
   "engines": {
     "node": ">=14",
