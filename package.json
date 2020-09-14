@@ -6,8 +6,9 @@
   "scripts": {
     "i": "yarn --ignore-optional install",
     "ip": "yarn --ignore-optional install --production",
-    "static-dev": "node scripts/static_dev.js",
-    "static-build": "node scripts/static_build.js"
+    "dev": "node scripts/static_dev.mjs",
+    "build": "node scripts/static_build.mjs",
+    "render": "node scripts/static_render.mjs"
   },
   "engines": {
     "node": ">=14",
@@ -22,6 +23,7 @@
     "type": "git",
     "url": "git+https://github.com/cbdyzj/nano-bot.git"
   },
+  "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
