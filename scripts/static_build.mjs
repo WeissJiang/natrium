@@ -17,6 +17,12 @@ async function readFileAsString(filePath) {
 
 const service = await build.startService()
 
+async function transformCss(filePath) {
+    const input = await readFileAsString(filePath)
+    const output = await less.render(input)
+    return output.css
+}
+
 async function transformEsm(filePath) {
     const input = await readFileAsString(filePath)
     const { js, warnings } = await service.transform(input, {
@@ -27,12 +33,6 @@ async function transformEsm(filePath) {
         console.warn(...warnings)
     }
     return js
-}
-
-async function transformCss(filePath) {
-    const input = await readFileAsString(filePath)
-    const output = await less.render(input)
-    return output.css
 }
 
 async function compileFile(srcFilePath, destFilePath) {
@@ -58,8 +58,6 @@ async function compileFile(srcFilePath, destFilePath) {
     else {
         await copyFile(srcFilePath, destFilePath)
     }
-
-
 }
 
 async function traverseDir(srcPath, destPath) {
