@@ -54,14 +54,14 @@ async function compileFile(srcFilePath, destFilePath) {
     else if (/.+\.(less)$/.test(srcFilePath)) {
         const transformed = await transformCss(srcFilePath)
         const injection = `
-        ; (function (encoded) {
-                var text = decodeURIComponent(encoded)
-                var style = document.createElement('style')
-                style.innerHTML = text
-                document.head.appendChild(style)
-            })("${encodeURIComponent(transformed)}")
+        ;(function (encoded) {
+                var text = decodeURIComponent(encoded);
+                var style = document.createElement('style');
+                style.innerHTML = text;
+                document.head.appendChild(style);
+            })("${encodeURIComponent(transformed)}");
         `
-        await writeFile(destFilePath, transformed)
+        await writeFile(destFilePath, injection.replace(/\s+/g, ' ').trim())
     }
     // others
     else {

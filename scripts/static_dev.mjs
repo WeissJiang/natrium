@@ -52,15 +52,15 @@ async function getTransformer() {
         else if (/.+\.(less)$/.test(req.path)) {
             const transformed = await transformCss(resolveFilePath(req.path))
             const injection = `
-            ; (function (encoded) {
-                    var text = decodeURIComponent(encoded)
-                    var style = document.createElement('style')
-                    style.innerHTML = text
-                    document.head.appendChild(style)
-                })("${encodeURIComponent(transformed)}")
+            ;(function (encoded) {
+                    var text = decodeURIComponent(encoded);
+                    var style = document.createElement('style');
+                    style.innerHTML = text;
+                    document.head.appendChild(style);
+                })("${encodeURIComponent(transformed)}");
             `
             res.contentType('text/javascript')
-            res.send(injection)
+            res.send(injection.replace(/\s+/g, ' ').trim())
         }
         // others
         else {
