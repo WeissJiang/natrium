@@ -1,40 +1,15 @@
 #!/usr/bin/env node
 import { fileURLToPath } from 'url'
 import { join as joinPath, dirname, basename } from 'path'
-import { readFile, readdir, stat, mkdir, copyFile, writeFile } from 'fs/promises'
-import build from 'esbuild'
-import less from 'less'
+import { readdir, stat, mkdir, copyFile, writeFile } from 'fs/promises'
+
+import { transformCss, transformEsm } from './transforming.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const staticPath = joinPath(__dirname, '..', 'web/static')
 const nodeModulesPath = joinPath(__dirname, '..', 'node_modules')
 const distPath = joinPath(__dirname, '..', 'web/dist')
-
-async function readFileAsString(filePath) {
-    const data = await readFile(filePath, { encoding: 'utf8' })
-    return data.toString('utf8')
-}
-
-async function transformCss(filePath) {
-    const input = await readFileAsString(filePath)
-    const output = await less.render(input)
-    return output.css
-}
-
-const service = await build.startService()
-
-async function transformEsm(filePath) {
-    const input = await readFileAsString(filePath)
-    const { js, warnings } = await service.transform(input, {
-        target: 'es2018',
-        loader: 'jsx'
-    })
-    if (warnings.length) {
-        console.warn(...warnings)
-    }
-    return js
-}
 
 const deps = []
 
@@ -58,15 +33,7 @@ async function compileFile(srcFilePath, destFilePath) {
     // css module
     else if (/.+\.(less)$/.test(srcFilePath)) {
         const transformed = await transformCss(srcFilePath)
-        const injection = `
-        ;(function (encoded) {
-                var text = decodeURIComponent(encoded);
-                var style = document.createElement('style');
-                style.innerHTML = text;
-                document.head.appendChild(style);
-            })("${encodeURIComponent(transformed)}");
-        `
-        await writeFile(destFilePath, injection.replace(/\s+/g, ' ').trim())
+        await writeFile(destFilePath, transformed)
     }
     // others
     else {
@@ -114,7 +81,7 @@ async function main() {
     await traverseDir(staticPath, distPath)
     // copy modules if required
     await copyDeps()
-    service.stop()
+    transformEsm.service.stop()
 }
 
 main().catch(err => console.error(err))

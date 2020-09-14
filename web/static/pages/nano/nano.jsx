@@ -1,11 +1,11 @@
 import { React } from '/deps.mjs'
 
-import './style.less'
+import style from './nano.module.less'
 
 function Nano() {
     return (
-        <div className="container">
-            <div className="title">nano-bot</div>
+        <div className={style.container}>
+            <div className={style.title}>nano-bot</div>
         </div>
     );
 }
