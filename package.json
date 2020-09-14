@@ -8,7 +8,8 @@
     "ip": "yarn --ignore-optional install --production",
     "dev": "node scripts/static_dev.mjs",
     "build": "node scripts/static_build.mjs",
-    "render": "node scripts/static_render.mjs"
+    "render": "node scripts/static_render.mjs",
+    "clean": "node scripts/static_clean.mjs"
   },
   "engines": {
     "node": ">=14",

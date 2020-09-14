@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { fileURLToPath } from 'url'
-import { join as joinPath, dirname } from 'path'
+import { join as joinPath, dirname, basename } from 'path'
 import { readFile, readdir, stat, mkdir, copyFile, writeFile } from 'fs/promises'
 import build from 'esbuild'
 import less from 'less'
@@ -15,13 +15,13 @@ async function readFileAsString(filePath) {
     return data.toString('utf8')
 }
 
-const service = await build.startService()
-
 async function transformCss(filePath) {
     const input = await readFileAsString(filePath)
     const output = await less.render(input)
     return output.css
 }
+
+const service = await build.startService()
 
 async function transformEsm(filePath) {
     const input = await readFileAsString(filePath)
@@ -35,10 +35,19 @@ async function transformEsm(filePath) {
     return js
 }
 
+const deps = []
+
+function collectDeps(js) {
+    // todo
+}
+
 async function compileFile(srcFilePath, destFilePath) {
     // js module
     if (/.+\.(mjs|jsx|ts|tsx)$/.test(srcFilePath)) {
         const transformed = await transformEsm(srcFilePath)
+        if (/deps.*.mjs/.test(basename(srcFilePath))) {
+            collectDeps(transformed)
+        }
         await writeFile(destFilePath, transformed)
     }
     // css module
