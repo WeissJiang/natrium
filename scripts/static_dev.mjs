@@ -10,6 +10,7 @@ import express from 'express'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const staticPath = joinPath(__dirname, '..', 'web/static')
+const nodeModulesPath = joinPath(__dirname, '..', 'node_modules')
 const resolveFilePath = (path) => joinPath(staticPath, path)
 
 async function readFileAsString(filePath) {
@@ -74,7 +75,7 @@ async function main() {
     app.use(await getTransformer())
     app.use(express.static(staticPath))
     // forward module from modules to node_modules if module absent
-    app.use('/modules', express.static(joinPath(__dirname, '..', 'node_modules')))
+    app.use('/modules', express.static(nodeModulesPath))
     createServer(app).listen(3000, () => console.log('serving on 3000'))
 }
 

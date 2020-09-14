@@ -8,6 +8,7 @@ import less from 'less'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const staticPath = joinPath(__dirname, '..', 'web/static')
+const nodeModulesPath = joinPath(__dirname, '..', 'node_modules')
 const distPath = joinPath(__dirname, '..', 'web/dist')
 
 async function readFileAsString(filePath) {
@@ -37,8 +38,12 @@ async function transformEsm(filePath) {
 
 const deps = []
 
-function collectDeps(js) {
-    // todo
+function collectDeps(text) {
+    const r = /\s*import\s+("(.+?)"|'(.+?)')\s*/g
+    let a
+    while (a = r.exec(text)) {
+        deps.push(a[2] || a[3])
+    }
 }
 
 async function compileFile(srcFilePath, destFilePath) {
@@ -86,11 +91,26 @@ async function traverseDir(srcPath, destPath) {
     }
 }
 
+async function copyDeps() {
+    if (!deps.length) {
+        return
+    }
+    for (const dep of deps) {
+        const path = dep.replace(/^\/modules\//, '')
+        const srcPath = joinPath(nodeModulesPath, path)
+        const destPath = joinPath(distPath, 'modules', path)
+        await mkdir(dirname(destPath), { recursive: true })
+        await copyFile(srcPath, destPath)
+    }
+
+}
+
 async function main() {
     await mkdir(distPath, { recursive: true })
     await traverseDir(staticPath, distPath)
+    // copy modules if required
+    await copyDeps()
     service.stop()
-    console.log('Static files built')
 }
 
 main().catch(err => console.error(err))
