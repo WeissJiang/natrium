@@ -44,7 +44,7 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
      * Cache resources with ETag
      */
     @Bean
-    public ShallowEtagHeaderFilter shallowEtagHeaderFilter(){
+    public ShallowEtagHeaderFilter shallowEtagHeaderFilter() {
         return new ShallowEtagHeaderFilter();
     }
 
@@ -69,6 +69,7 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
      * Convert message to JSON
      */
     @Bean
+    @ConditionalOnRabbit
     public Jackson2JsonMessageConverter jackson2JsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
