@@ -3,11 +3,10 @@ package nano.web.controller.user;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nano.web.controller.Result;
 import nano.web.security.SecurityService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Objects;
 
 @Slf4j
 @CrossOrigin
@@ -22,19 +21,19 @@ public class UserController {
     @GetMapping("/user")
     public ResponseEntity<?> getUser(@RequestHeader("X-Token") String token) {
         var userDTO = this.securityService.getUserByToken(token);
-        return ResponseEntity.ok(userDTO);
+        return ResponseEntity.ok(Result.of(userDTO));
     }
 
     @PostMapping("/token/createVerificatingToken")
     public ResponseEntity<?> createVerificatingToken(@RequestHeader("User-Agent") String ua,
                                                      @RequestParam("username") String username) {
         var result = this.securityService.createVerificatingToken(username, ua);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(Result.of(result));
     }
 
-    @GetMapping("/token/verification")
+    @PostMapping("/token/verification")
     public ResponseEntity<?> tokenVerification(@RequestHeader("X-Token") String token) {
-        var userDTO = this.securityService.checkTokenVerification(token);
-        return ResponseEntity.ok(Objects.requireNonNullElse(userDTO, "Verificating"));
+        var result = this.securityService.checkTokenVerification(token);
+        return ResponseEntity.ok(Result.of(result));
     }
 }

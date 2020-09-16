@@ -9,7 +9,6 @@ import nano.web.controller.user.UserDTO;
 import nano.web.security.entity.NanoToken;
 import nano.web.security.repository.TokenRepository;
 import nano.web.security.repository.UserRepository;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -17,9 +16,12 @@ import ua_parser.Parser;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
+
+import static nano.support.Sugar.forEach;
+import static nano.web.security.TokenCode.generateToken;
+import static nano.web.security.TokenCode.generateVerificationCode;
 
 @Slf4j
 @Service
@@ -43,11 +45,26 @@ public class SecurityService {
         if (StringUtils.isEmpty(token)) {
             throw new AuthenticationException("Missing token");
         }
-
         var nanoToken = this.configVars.getNanoToken();
         if (!token.equals(nanoToken)) {
             throw new AuthenticationException("Illegal token");
         }
+    }
+
+    /**
+     * 根据Token获取关联的User
+     */
+    public UserDTO getUserByToken(String token) {
+        var user = this.userRepository.queryUserByToken(token);
+        if (user == null) {
+            return null;
+        }
+        // copy properties
+        var userDTO = new UserDTO();
+        userDTO.setId(String.valueOf(user.getId().longValue()));
+        userDTO.setUsername(user.getUsername());
+        userDTO.setFirstname(user.getFirstname());
+        return userDTO;
     }
 
     /**
@@ -70,39 +87,64 @@ public class SecurityService {
      * 检查Token验证状态
      * 如果状态为VALID，返回Token关联的用户
      */
-    public UserDTO checkTokenVerification(String token) {
+    public Map<String, Object> checkTokenVerification(String token) {
         var nanoToken = this.tokenRepository.queryToken(token);
         Assert.state(nanoToken != null, "Token not found");
         var status = nanoToken.getStatus();
-        Assert.hasText(status, "status requires not empty");
+        Assert.hasText(status, "Token status requires not empty");
+        var result = new HashMap<String, Object>();
         switch (status) {
             case NanoToken.INVALID -> throw new IllegalStateException("Token is invalid");
             case NanoToken.VALID -> {
-                return this.getUserByToken(token);
+                result.put("verificating", "done");
+                result.put("user", this.getUserByToken(token));
             }
             default -> {
                 // 验证中
                 if (status.startsWith(NanoToken.VERIFICATING)) {
-                    return null;
+                    if (verificatingTimeout(nanoToken)) {
+                        result.put("verificating", "timeout");
+                        // 超时删除Token
+                        this.tokenRepository.deleteToken(nanoToken.getToken());
+                    } else {
+                        result.put("verificating", "pending");
+                    }
                 } else {
                     throw new IllegalStateException("Illegal token status");
                 }
             }
         }
+        return result;
     }
 
     /**
-     * 根据Token获取关联的User
+     * 验证Token
      */
-    public UserDTO getUserByToken(String token) {
-        var user = this.userRepository.queryUserByToken(token);
-        if (user == null) {
-            return null;
-        }
-        var userDTO = new UserDTO();
-        // same properties
-        BeanUtils.copyProperties(user, userDTO);
-        return userDTO;
+    public Map<NanoToken, String> verificateToken(String username, String verificationCode) {
+        var nanoTokenList = this.tokenRepository.queryVerificatingToken(username, verificationCode);
+        var result = new HashMap<NanoToken, String>();
+        forEach(nanoTokenList, nanoToken -> {
+            // verification timeout
+            if (verificatingTimeout(nanoToken)) {
+                result.put(nanoToken, NanoToken.VERIFICATION_TIMEOUT);
+            }
+            // verificated
+            else {
+                nanoToken.setStatus(NanoToken.VALID);
+                this.tokenRepository.updateTokenStatus(nanoToken.getToken(), NanoToken.VALID);
+                result.put(nanoToken, NanoToken.VERIFICATED);
+            }
+        });
+        return result;
+    }
+
+    /**
+     * 接口验证是否超时，5分钟超时时间
+     */
+    private boolean verificatingTimeout(NanoToken nanoToken) {
+        var creationTime = nanoToken.getCreationTime();
+        var now = Timestamp.from(Instant.now().minusSeconds(300));
+        return now.after(creationTime);
     }
 
 
@@ -123,21 +165,6 @@ public class SecurityService {
         }
     }
 
-    /**
-     * 生成随机Token
-     */
-    private static String generateToken() {
-        return UUID.randomUUID().toString().replaceAll("-", "");
-    }
-
-    /**
-     * 生成随机6位验证码
-     */
-    private static String generateVerificationCode() {
-        var randomInt = ThreadLocalRandom.current().nextInt(1_000_000);
-        // left pad with '0'
-        return String.format("%6d", randomInt).replaceAll(" ", "0");
-    }
 
     @SneakyThrows
     private static Parser createUserAgentParser() {

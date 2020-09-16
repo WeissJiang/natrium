@@ -46,7 +46,7 @@ public class UserRepository {
                 WHERE nt.status = 'VALID'
                   AND nt.token = :token;
                 """;
-        var rowMapper = new BeanPropertyRowMapper<NanoUser>();
+        var rowMapper = new BeanPropertyRowMapper<>(NanoUser.class);
         var paramMap = Map.of("token", token);
         var userList = this.jdbcTemplate.query(slim(sql), paramMap, rowMapper);
         return getFirst(userList);

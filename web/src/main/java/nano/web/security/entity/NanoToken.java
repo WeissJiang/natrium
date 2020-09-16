@@ -7,9 +7,13 @@ import java.sql.Timestamp;
 @Data
 public class NanoToken {
 
+    // statue
     public static final String VALID = "VALID";
     public static final String INVALID = "INVALID";
     public static final String VERIFICATING = "VERIFICATING";
+    // verificating result
+    public static final String VERIFICATION_TIMEOUT = "VERIFICATION_TIMEOUT";
+    public static final String VERIFICATED = "VERIFICATED";
 
     /**
      * 拼接verificating status

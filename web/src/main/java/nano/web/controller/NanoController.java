@@ -36,6 +36,6 @@ public class NanoController {
     @PostMapping("/message")
     public ResponseEntity<?> message(@RequestParam("m") String m) {
         this.messagingTemplate.convertAndSend(Exchanges.NANO, "nano", m);
-        return ResponseEntity.ok("OK");
+        return ResponseEntity.ok(Result.of("OK"));
     }
 }
