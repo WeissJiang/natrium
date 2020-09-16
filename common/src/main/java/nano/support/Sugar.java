@@ -74,8 +74,15 @@ public abstract class Sugar {
         return list.stream().anyMatch(predicate);
     }
 
+    public static <T> T getFirst(Collection<T> collection) {
+        if (collection == null) {
+            return null;
+        }
+        var first = collection.stream().findFirst();
+        return first.orElse(null);
+    }
+
     public static boolean isEmpty(Collection<?> collection) {
         return collection == null || collection.isEmpty();
     }
-
 }
