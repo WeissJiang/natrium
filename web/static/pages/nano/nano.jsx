@@ -5,7 +5,7 @@ import style from './style.module.less'
 function Nano() {
     return (
         <div className={style.container}>
-            <div className={style.title}>nano-bot</div>
+            <div className={style.title}>Shinonome Research Institute</div>
         </div>
     );
 }
