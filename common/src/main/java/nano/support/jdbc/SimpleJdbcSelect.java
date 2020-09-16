@@ -12,7 +12,7 @@ import java.util.Map;
 
 import static nano.support.EntityUtils.*;
 
-public class JdbcSelectAll<T> {
+public class SimpleJdbcSelect<T> {
 
     private final Class<T> entityClass;
     private final RowMapper<T> rowMapper;
@@ -23,17 +23,17 @@ public class JdbcSelectAll<T> {
     private Integer limit;
     private Integer offset;
 
-    public JdbcSelectAll(@NonNull Class<T> entityClass) {
+    public SimpleJdbcSelect(@NonNull Class<T> entityClass) {
         this.entityClass = entityClass;
         this.rowMapper = new BeanPropertyRowMapper<>(entityClass);
     }
 
-    public JdbcSelectAll<T> usesJdbcTemplate(NamedParameterJdbcTemplate jdbcTemplate) {
+    public SimpleJdbcSelect<T> usesJdbcTemplate(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         return this;
     }
 
-    public JdbcSelectAll<T> withTableName(String tableName) {
+    public SimpleJdbcSelect<T> withTableName(String tableName) {
         this.tableName = tableName;
         return this;
     }
@@ -41,18 +41,18 @@ public class JdbcSelectAll<T> {
     /**
      * just equals
      */
-    public JdbcSelectAll<T> whereEqual(String... whereEqualsColumns) {
+    public SimpleJdbcSelect<T> whereEqual(String... whereEqualsColumns) {
         this.whereEqualsColumns = whereEqualsColumns;
         return this;
     }
 
-    public JdbcSelectAll<T> limit(int limit) {
+    public SimpleJdbcSelect<T> limit(int limit) {
         Assert.isTrue(limit >= 0, "limit < 0");
         this.limit = limit;
         return this;
     }
 
-    public JdbcSelectAll<T> offset(int offset) {
+    public SimpleJdbcSelect<T> offset(int offset) {
         Assert.isTrue(offset >= 0, "offset < 0");
         this.offset = offset;
         return this;

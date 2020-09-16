@@ -6,14 +6,22 @@ import java.sql.Timestamp;
 
 @Data
 public class NanoToken {
-    String token;
 
-    String name;
+    private String token;
 
-    Number chatId;
-    Number userId;
+    private String name;
 
-    Timestamp lastActiveTime;
-    Timestamp creationTime;
+    private Number chatId;
+    private Number userId;
+
+    /**
+     * VALID
+     * INVALID
+     * VERIFICATING:{username}:{code}
+     */
+    private String status;
+
+    private Timestamp lastActiveTime;
+    private Timestamp creationTime;
 
 }

@@ -3,7 +3,7 @@ package nano.web.security.repository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import nano.web.security.entity.NanoSession;
-import nano.support.jdbc.JdbcSelectAll;
+import nano.support.jdbc.SimpleJdbcSelect;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -25,9 +25,9 @@ public class SessionRepository {
 
     public NanoSession querySession(Number chatId, Number userId) {
         var paramMap = Map.of("chatId", chatId, "userId", userId);
-        var selectAll = new JdbcSelectAll<>(NanoSession.class)
+        var select = new SimpleJdbcSelect<>(NanoSession.class)
                 .withTableName("nano_session").whereEqual("chat_id", "user_id").limit(1);
-        var sessionList = selectAll.usesJdbcTemplate(this.jdbcTemplate).query(paramMap);
+        var sessionList = select.usesJdbcTemplate(this.jdbcTemplate).query(paramMap);
         if (CollectionUtils.isEmpty(sessionList)) {
             return null;
         }
