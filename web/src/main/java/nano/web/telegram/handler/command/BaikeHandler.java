@@ -7,6 +7,9 @@ import nano.web.telegram.BotContext;
 import nano.web.telegram.handler.AbstractCommandHandler;
 import org.springframework.stereotype.Service;
 
+/**
+ * 百度百科
+ */
 @Service
 @RequiredArgsConstructor
 public class BaikeHandler extends AbstractCommandHandler {

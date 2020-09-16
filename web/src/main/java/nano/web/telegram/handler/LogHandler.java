@@ -6,6 +6,9 @@ import nano.support.Onion;
 import nano.web.telegram.BotContext;
 import org.springframework.stereotype.Component;
 
+/**
+ * 记日志
+ */
 @Slf4j
 @Component
 public class LogHandler implements Onion.Middleware<BotContext> {

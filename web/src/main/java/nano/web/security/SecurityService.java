@@ -26,7 +26,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @RequiredArgsConstructor
 public class SecurityService {
 
-    private static final Parser userAgentParser = createUserAgent();
+    private static final Parser userAgentParser = createUserAgentParser();
 
     @NonNull
     private final TokenRepository tokenRepository;
@@ -58,7 +58,7 @@ public class SecurityService {
         token.setToken(generateToken());
         token.setName(parseUserAgent(ua));
         var verificationCode = generateVerificationCode();
-        token.setStatus("VERIFICATING:%s:%s".formatted(username, verificationCode));
+        token.setStatus(NanoToken.verificatingStatus(username, verificationCode));
         var now = Timestamp.from(Instant.now());
         token.setCreationTime(now);
         token.setLastActiveTime(now);
@@ -68,6 +68,7 @@ public class SecurityService {
 
     /**
      * 检查Token验证状态
+     * 如果状态为VALID，返回Token关联的用户
      */
     public UserDTO checkTokenVerification(String token) {
         var nanoToken = this.tokenRepository.queryToken(token);
@@ -139,7 +140,7 @@ public class SecurityService {
     }
 
     @SneakyThrows
-    private static Parser createUserAgent() {
+    private static Parser createUserAgentParser() {
         return new Parser();
     }
 

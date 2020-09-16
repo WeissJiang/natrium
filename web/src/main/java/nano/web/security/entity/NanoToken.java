@@ -11,6 +11,13 @@ public class NanoToken {
     public static final String INVALID = "INVALID";
     public static final String VERIFICATING = "VERIFICATING";
 
+    /**
+     * 拼接verificating status
+     */
+    public static String verificatingStatus(String username, String verificationCode) {
+        return "%s:%s:%s".formatted(VERIFICATING, username, verificationCode);
+    }
+
     private String token;
 
     private String name;

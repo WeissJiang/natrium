@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * 维基百科
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor

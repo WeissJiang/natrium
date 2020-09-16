@@ -13,6 +13,9 @@ import nano.web.telegram.BotContext;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+/**
+ * 初始化会话
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor

@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 import static nano.support.EntityUtils.slim;
@@ -28,13 +29,12 @@ public class TokenRepository {
         return getFirst(tokenList);
     }
 
-    public NanoToken queryVerificatingToken(String username, String verificationCode) {
-        var status = "VERIFICATING:%s:%s".formatted(username, verificationCode);
+    public List<NanoToken> queryVerificatingToken(String username, String verificationCode) {
+        var status = NanoToken.verificatingStatus(username, verificationCode);
         var paramMap = Map.of("status", status);
         var select = new SimpleJdbcSelect<>(NanoToken.class)
-                .withTableName("nano_token").whereEqual("status").limit(1);
-        var tokenList = select.usesJdbcTemplate(this.jdbcTemplate).query(paramMap);
-        return getFirst(tokenList);
+                .withTableName("nano_token").whereEqual("status");
+        return select.usesJdbcTemplate(this.jdbcTemplate).query(paramMap);
     }
 
     public void createToken(NanoToken token) {

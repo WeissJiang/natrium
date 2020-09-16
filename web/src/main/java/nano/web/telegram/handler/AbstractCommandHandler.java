@@ -6,6 +6,9 @@ import nano.web.telegram.BotContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
+/**
+ * CommandHandler通用处理
+ */
 public abstract class AbstractCommandHandler implements Onion.Middleware<BotContext> {
 
     private ConfigVars configVars;
