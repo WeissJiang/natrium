@@ -1,15 +1,14 @@
 {
   "name": "nano-bot",
   "version": "1.0.0",
-  "description": "nano nano nano",
+  "description": " Shinonome Research Institute ",
   "main": "index.js",
   "scripts": {
     "i": "yarn --ignore-optional install",
     "ip": "yarn --ignore-optional install --production",
     "dev": "node scripts/static_dev.mjs",
     "clean": "node scripts/static_clean.mjs",
-    "build": "node scripts/static_build.mjs",
-    "render": "node scripts/static_render.mjs"
+    "build": "node scripts/static_build.mjs"
   },
   "engines": {
     "node": ">=14.9.0",

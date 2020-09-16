@@ -1,6 +1,6 @@
 import { React } from '/deps.mjs'
 
-import style from './nano.module.less'
+import style from './style.module.less'
 
 function Nano() {
     return (
