@@ -72,6 +72,7 @@ public class SecurityService {
         userDTO.setId(String.valueOf(user.getId().longValue()));
         userDTO.setUsername(user.getUsername());
         userDTO.setFirstname(user.getFirstname());
+        this.tokenRepository.updateLastActiveTime(token, Timestamp.from(Instant.now()));
         return userDTO;
     }
 
@@ -126,8 +127,10 @@ public class SecurityService {
     public Map<NanoToken, String> verificateToken(Number userId, String username, String verificationCode) {
         var nanoTokenList = this.tokenRepository.queryVerificatingToken(username, verificationCode);
         var result = new HashMap<NanoToken, String>();
+        var now = Timestamp.from(Instant.now());
         forEach(nanoTokenList, nanoToken -> {
             nanoToken.setUserId(userId);
+            nanoToken.setLastActiveTime(now);
             // verification timeout
             if (verificatingTimeout(nanoToken)) {
                 result.put(nanoToken, NanoToken.VERIFICATION_TIMEOUT);
@@ -135,7 +138,7 @@ public class SecurityService {
             // verificated
             else {
                 nanoToken.setStatus(NanoToken.VALID);
-                this.tokenRepository.updateTokenStatus(nanoToken.getToken(), NanoToken.VALID);
+                this.tokenRepository.updateToken(nanoToken);
                 result.put(nanoToken, NanoToken.VERIFICATED);
             }
         });

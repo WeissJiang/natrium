@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +18,6 @@ import static nano.support.Sugar.getFirst;
 @Repository
 @RequiredArgsConstructor
 public class TokenRepository {
-
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -44,13 +44,26 @@ public class TokenRepository {
         insert.execute(paramSource);
     }
 
-    public void updateTokenStatus(String token, String status) {
+    public void updateToken(NanoToken token) {
         var sql = """
                 UPDATE nano_token
-                SET status = :status
+                SET chat_id          = :chatId,
+                    user_id          = :userId,
+                    status           = :status,
+                    last_active_time = :lastActiveTime
                 WHERE token = :token;
                 """;
-        this.jdbcTemplate.update(slim(sql), Map.of("token", token, "status", status));
+        var paramSource = new BeanPropertySqlParameterSource(token);
+        this.jdbcTemplate.update(slim(sql), paramSource);
+    }
+
+    public void updateLastActiveTime(String token, Timestamp lastActiveTime) {
+        var sql = """
+                UPDATE nano_token
+                SET last_active_time = :lastActiveTime
+                WHERE token = :token;
+                """;
+        this.jdbcTemplate.update(slim(sql), Map.of("token", token, "lastActiveTime", lastActiveTime));
     }
 
     public void deleteToken(String token) {
