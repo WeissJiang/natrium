@@ -32,8 +32,14 @@ public class UserController {
     }
 
     @PostMapping("/token/verification")
-    public ResponseEntity<?> tokenVerification(@RequestHeader("X-Token") String token) {
+    public ResponseEntity<?> checkTokenVerification(@RequestHeader("X-Token") String token) {
         var result = this.securityService.checkTokenVerification(token);
         return ResponseEntity.ok(Result.of(result));
+    }
+
+    @PostMapping("/token/delete")
+    public ResponseEntity<?> deleteToken(@RequestHeader("X-Token") String token) {
+        this.securityService.deleteToken(token);
+        return ResponseEntity.ok(Result.empty());
     }
 }

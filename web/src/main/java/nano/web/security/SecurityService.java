@@ -39,16 +39,24 @@ public class SecurityService {
     private final ConfigVars configVars;
 
     /**
-     * 检查Token权限
+     * 检查API Token权限
      */
-    public void checkNanoToken(String token) {
+    public void checkNanoApiToken(String token) {
         if (StringUtils.isEmpty(token)) {
             throw new AuthenticationException("Missing token");
         }
-        var nanoToken = this.configVars.getNanoToken();
-        if (!token.equals(nanoToken)) {
+        var apiToken = this.configVars.getNanoApiToken();
+        if (!token.equals(apiToken)) {
             throw new AuthenticationException("Illegal token");
         }
+    }
+
+    /**
+     * 删除Token
+     */
+    public void deleteToken(String token) {
+        Assert.hasText(token, "Illegal token");
+        this.tokenRepository.deleteToken(token);
     }
 
     /**
@@ -87,25 +95,20 @@ public class SecurityService {
      * 检查Token验证状态
      * 如果状态为VALID，返回Token关联的用户
      */
-    public Map<String, Object> checkTokenVerification(String token) {
+    public Map<String, String> checkTokenVerification(String token) {
         var nanoToken = this.tokenRepository.queryToken(token);
         Assert.state(nanoToken != null, "Token not found");
         var status = nanoToken.getStatus();
         Assert.hasText(status, "Token status requires not empty");
-        var result = new HashMap<String, Object>();
+        var result = new HashMap<String, String>();
         switch (status) {
             case NanoToken.INVALID -> throw new IllegalStateException("Token is invalid");
-            case NanoToken.VALID -> {
-                result.put("verificating", "done");
-                result.put("user", this.getUserByToken(token));
-            }
+            case NanoToken.VALID -> result.put("verificating", "done");
             default -> {
                 // 验证中
                 if (status.startsWith(NanoToken.VERIFICATING)) {
                     if (verificatingTimeout(nanoToken)) {
                         result.put("verificating", "timeout");
-                        // 超时删除Token
-                        this.tokenRepository.deleteToken(nanoToken.getToken());
                     } else {
                         result.put("verificating", "pending");
                     }
@@ -147,7 +150,6 @@ public class SecurityService {
         return now.after(creationTime);
     }
 
-
     /**
      * 解析用户代理
      */
@@ -156,7 +158,7 @@ public class SecurityService {
             Assert.notNull(userAgentParser, "userAgentParser is null");
             Assert.hasText(ua, "Illegal user agent");
             var parsed = userAgentParser.parse(ua);
-            return "Website, %s on %s".formatted(parsed.os.family, parsed.userAgent.family);
+            return "Website, %s on %s".formatted(parsed.userAgent.family, parsed.os.family);
         } catch (Exception ex) {
             if (log.isDebugEnabled()) {
                 log.debug(ex.getMessage(), ex);
@@ -170,5 +172,6 @@ public class SecurityService {
     private static Parser createUserAgentParser() {
         return new Parser();
     }
+
 
 }

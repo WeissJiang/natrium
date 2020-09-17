@@ -14,25 +14,25 @@ async function fetchUser(token) {
     if (result.error) {
         alert(result.error)
     }
-    return result.data
+    return result.payload
 }
 
 export function useUser(token) {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
-    if (!token) {
-        return [false, null]
-    }
-
     useEffect(() => {
-        (async () => {
-            const user = await fetchUser(token)
-            if (user) {
-                setUser(user)
-            }
+        if (!token) {
             setLoading(false)
-        })()
+            setUser(null)
+        } else {
+            (async () => {
+                const user = await fetchUser(token)
+                if (user) {
+                    setUser(user)
+                }
+                setLoading(false)
+            })()
+        }
     }, [token])
-
     return [loading, user]
 }

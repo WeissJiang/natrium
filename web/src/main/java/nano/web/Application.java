@@ -4,6 +4,7 @@ import nano.support.configuration.ConditionalOnRabbit;
 import nano.web.security.AuthenticationInterceptor;
 import nano.web.service.messageing.ExchangeDeclarer;
 import nano.web.service.scripting.Scripting;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,7 +14,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
-import org.springframework.lang.NonNull;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.ShallowEtagHeaderFilter;
@@ -94,7 +94,7 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     }
 
     @Override
-    public void setApplicationContext(@NonNull ApplicationContext applicationContext) {
+    public void setApplicationContext(@NotNull ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 

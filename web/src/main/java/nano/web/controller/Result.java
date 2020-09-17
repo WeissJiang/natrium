@@ -1,21 +1,25 @@
 package nano.web.controller;
 
 import lombok.Data;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * HTTP 200 response body
  *
- * @param <T> body type
+ * @param <T> payload type
  */
 @Data
 public class Result<T> {
 
+    @Nullable
     private String error;
-    private T data;
 
-    public static <U> Result<U> of(U data) {
+    @Nullable
+    private T payload;
+
+    public static <U> Result<U> of(U payload) {
         var result = new Result<U>();
-        result.setData(data);
+        result.setPayload(payload);
         return result;
     }
 
@@ -23,5 +27,9 @@ public class Result<T> {
         var result = new Result<>();
         result.setError(error);
         return result;
+    }
+
+    public static <U> Result<U> empty() {
+        return new Result<>();
     }
 }
