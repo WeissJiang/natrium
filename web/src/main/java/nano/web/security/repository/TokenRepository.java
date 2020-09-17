@@ -3,6 +3,7 @@ package nano.web.security.repository;
 import lombok.RequiredArgsConstructor;
 import nano.support.jdbc.SimpleJdbcSelect;
 import nano.web.security.entity.NanoToken;
+import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -37,6 +38,17 @@ public class TokenRepository {
         return select.usesJdbcTemplate(this.jdbcTemplate).query(paramMap);
     }
 
+    public List<String> queryVerificatingTimeoutToken() {
+        var sql = """
+                SELECT token
+                FROM nano_token
+                WHERE status LIKE 'VERIFICATING%'
+                  AND creation_time + '360 sec' < NOW();
+                """;
+        var rowMapper = new SingleColumnRowMapper<>(String.class);
+        return this.jdbcTemplate.query(slim(sql), rowMapper);
+    }
+
     public void createToken(NanoToken token) {
         var paramSource = new BeanPropertySqlParameterSource(token);
         var insert = new SimpleJdbcInsert(this.jdbcTemplate.getJdbcTemplate())
@@ -67,11 +79,15 @@ public class TokenRepository {
     }
 
     public void deleteToken(String token) {
+        this.batchDeleteToken(List.of(token));
+    }
+
+    public void batchDeleteToken(List<String> tokens) {
         var sql = """
                 DELETE
                 FROM nano_token
-                WHERE token = :token;
+                WHERE token IN (:tokens);
                 """;
-        this.jdbcTemplate.update(slim(sql), Map.of("token", token));
+        this.jdbcTemplate.update(slim(sql), Map.of("tokens", tokens));
     }
 }

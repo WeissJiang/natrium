@@ -61,7 +61,7 @@ function Login(props) {
 
     if (user) {
         async function handleLogout() {
-            const response = await fetch('/api/user/token/delete', {
+            const response = await fetch('/api/token/delete', {
                 method: 'POST',
                 headers: { 'X-Token': token }
             })
@@ -83,8 +83,7 @@ function Login(props) {
         // 等5秒
         await sleep(5000)
         while (true) {
-            const response = await fetch('/api/user/token/verification', {
-                method: 'POST',
+            const response = await fetch('/api/token/verification', {
                 headers: { 'X-Token': token }
             })
             const result = await response.json()
@@ -110,7 +109,7 @@ function Login(props) {
     }
 
     async function createTokenAndWaitVerificating(username) {
-        const response = await fetch('/api/user/token/createVerificatingToken', {
+        const response = await fetch('/api/token/createVerificatingToken', {
             method: 'POST',
             body: new URLSearchParams({ username })
         })

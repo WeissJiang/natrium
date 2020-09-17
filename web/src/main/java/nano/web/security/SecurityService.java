@@ -5,12 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import nano.web.ConfigVars;
-import nano.web.controller.user.UserDTO;
 import nano.web.security.entity.NanoToken;
 import nano.web.security.repository.TokenRepository;
-import nano.web.security.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ua_parser.Parser;
 
@@ -31,23 +30,20 @@ public class SecurityService {
     private static final Parser userAgentParser = createUserAgentParser();
 
     @NonNull
-    private final TokenRepository tokenRepository;
-    @NonNull
-    private final UserRepository userRepository;
-
-    @NonNull
     private final ConfigVars configVars;
+    @NonNull
+    private final TokenRepository tokenRepository;
 
     /**
      * 检查API Token权限
      */
     public void checkNanoApiToken(String token) {
         if (StringUtils.isEmpty(token)) {
-            throw new AuthenticationException("Missing token");
+            throw new AuthenticationException("Missing API token");
         }
         var apiToken = this.configVars.getNanoApiToken();
         if (!token.equals(apiToken)) {
-            throw new AuthenticationException("Illegal token");
+            throw new AuthenticationException("Illegal API token");
         }
     }
 
@@ -57,23 +53,6 @@ public class SecurityService {
     public void deleteToken(String token) {
         Assert.hasText(token, "Illegal token");
         this.tokenRepository.deleteToken(token);
-    }
-
-    /**
-     * 根据Token获取关联的User
-     */
-    public UserDTO getUserByToken(String token) {
-        var user = this.userRepository.queryUserByToken(token);
-        if (user == null) {
-            return null;
-        }
-        // copy properties
-        var userDTO = new UserDTO();
-        userDTO.setId(String.valueOf(user.getId().longValue()));
-        userDTO.setUsername(user.getUsername());
-        userDTO.setFirstname(user.getFirstname());
-        this.tokenRepository.updateLastActiveTime(token, Timestamp.from(Instant.now()));
-        return userDTO;
     }
 
     /**
@@ -96,7 +75,7 @@ public class SecurityService {
      * 检查Token验证状态
      * 如果状态为VALID，返回Token关联的用户
      */
-    public Map<String, String> checkTokenVerification(String token) {
+    public Map<String, String> getTokenVerification(String token) {
         var nanoToken = this.tokenRepository.queryToken(token);
         Assert.state(nanoToken != null, "Token not found");
         var status = nanoToken.getStatus();
@@ -143,6 +122,21 @@ public class SecurityService {
             }
         });
         return result;
+    }
+
+    /**
+     * 清理验证超时的Token
+     *
+     * @return prune count
+     */
+    public int pruneVerificatingTimeoutToken() {
+        var tokens = this.tokenRepository.queryVerificatingTimeoutToken();
+        int count = 0;
+        if (!CollectionUtils.isEmpty(tokens)) {
+            count = tokens.size();
+            this.tokenRepository.batchDeleteToken(tokens);
+        }
+        return count;
     }
 
     /**
