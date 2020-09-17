@@ -17,11 +17,11 @@ public class BotHandler implements ApplicationContextAware {
 
     private final Onion<BotContext> onion = new Onion<>();
 
-    private ApplicationContext applicationContext;
+    private ApplicationContext context;
 
     @PostConstruct
     public void init() {
-        var ctx = this.applicationContext;
+        var ctx = this.context;
         this.onion.use(ctx.getBean(ExceptionHandler.class));
         this.onion.use(ctx.getBean(LogHandler.class));
         this.onion.use(ctx.getBean(SessionInitializeHandler.class));
@@ -56,7 +56,7 @@ public class BotHandler implements ApplicationContextAware {
     private BotContext buildContext(Map<String, Object> parameters) {
         var context = new BotContext(parameters);
         // build context
-        var ctx = this.applicationContext;
+        var ctx = this.context;
         var telegramService = ctx.getBean(TelegramService.class);
         context.setTelegramService(telegramService);
         return context;
@@ -64,6 +64,6 @@ public class BotHandler implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(@NotNull ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
+        this.context = applicationContext;
     }
 }

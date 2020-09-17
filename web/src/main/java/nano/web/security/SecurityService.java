@@ -73,7 +73,6 @@ public class SecurityService {
 
     /**
      * 检查Token验证状态
-     * 如果状态为VALID，返回Token关联的用户
      */
     public Map<String, String> getTokenVerification(String token) {
         var nanoToken = this.tokenRepository.queryToken(token);

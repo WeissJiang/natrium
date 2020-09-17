@@ -15,6 +15,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.ShallowEtagHeaderFilter;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
@@ -22,10 +23,11 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @EnableAsync
+@EnableScheduling
 @SpringBootApplication(proxyBeanMethods = false)
 public class Application implements ApplicationContextAware, WebMvcConfigurer {
 
-    private ApplicationContext applicationContext;
+    private ApplicationContext context;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
@@ -81,7 +83,7 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        var interceptor = this.applicationContext.getBean(AuthenticationInterceptor.class);
+        var interceptor = this.context.getBean(AuthenticationInterceptor.class);
         registry.addInterceptor(interceptor).addPathPatterns("/api/**");
     }
 
@@ -95,7 +97,7 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
 
     @Override
     public void setApplicationContext(@NotNull ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
+        this.context = applicationContext;
     }
 
 }
