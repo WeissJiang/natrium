@@ -1,4 +1,4 @@
-package nano.web;
+package nano.web.nano;
 
 import lombok.Data;
 

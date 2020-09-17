@@ -1,4 +1,4 @@
-package nano.web.service.scripting;
+package nano.web.scripting;
 
 import org.graalvm.polyglot.Context;
 import org.junit.jupiter.api.Assertions;

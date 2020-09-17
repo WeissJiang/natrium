@@ -3,8 +3,8 @@ package nano.web.controller;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nano.web.service.NanoService;
-import nano.web.service.messageing.Exchanges;
+import nano.web.nano.NanoService;
+import nano.web.messageing.Exchanges;
 import org.springframework.amqp.rabbit.core.RabbitMessagingTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +29,7 @@ public class NanoController {
 
     @GetMapping("/system")
     public ResponseEntity<?> system() {
-        var nano = this.nanoService.nano();
+        var nano = this.nanoService.system();
         return ResponseEntity.ok(nano);
     }
 

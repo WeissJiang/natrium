@@ -1,4 +1,4 @@
-package nano.web.service.messageing;
+package nano.web.messageing;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.PostConstruct;
 import java.util.List;
 
-import static nano.web.service.messageing.Exchanges.*;
+import static nano.web.messageing.Exchanges.*;
 
 /**
  * Declare exchanges on rabbit property set

@@ -3,7 +3,7 @@ package nano.web.telegram;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nano.web.ConfigVars;
+import nano.web.nano.ConfigVars;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package nano.web.service.mediawiki;
+package nano.web.mediawiki;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

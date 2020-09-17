@@ -1,4 +1,4 @@
-package nano.web.service.baidu;
+package nano.web.baidu;
 
 import com.jayway.jsonpath.JsonPath;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import nano.web.ConfigVars;
+import nano.web.nano.ConfigVars;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;

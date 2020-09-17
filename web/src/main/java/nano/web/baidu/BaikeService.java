@@ -1,4 +1,4 @@
-package nano.web.service.baidu;
+package nano.web.baidu;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

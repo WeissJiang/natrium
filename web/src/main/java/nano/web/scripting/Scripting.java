@@ -1,6 +1,8 @@
-package nano.web.service.scripting;
+package nano.web.scripting;
 
 import lombok.Data;
+import lombok.NonNull;
+import org.graalvm.polyglot.Context;
 import org.springframework.http.MediaType;
 
 import java.util.Map;
@@ -15,4 +17,8 @@ public class Scripting {
             "ts", TEXT_JAVASCRIPT, "tsx", TEXT_JAVASCRIPT,
             "less", TEXT_JAVASCRIPT
     );
+
+    public static String eval(@NonNull String script) {
+        return Context.create("js").eval("js", script).asString();
+    }
 }

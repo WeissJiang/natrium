@@ -4,7 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import nano.web.ConfigVars;
+import nano.web.nano.ConfigVars;
 import nano.web.security.entity.NanoToken;
 import nano.web.security.repository.TokenRepository;
 import org.springframework.stereotype.Service;

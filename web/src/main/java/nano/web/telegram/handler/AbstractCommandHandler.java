@@ -1,7 +1,7 @@
 package nano.web.telegram.handler;
 
 import nano.support.Onion;
-import nano.web.ConfigVars;
+import nano.web.nano.ConfigVars;
 import nano.web.telegram.BotContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;

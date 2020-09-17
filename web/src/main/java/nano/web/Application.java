@@ -1,9 +1,10 @@
 package nano.web;
 
 import nano.support.configuration.ConditionalOnRabbit;
+import nano.web.nano.ConfigVars;
 import nano.web.security.AuthenticationInterceptor;
-import nano.web.service.messageing.ExchangeDeclarer;
-import nano.web.service.scripting.Scripting;
+import nano.web.messageing.ExchangeDeclarer;
+import nano.web.scripting.Scripting;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.boot.SpringApplication;

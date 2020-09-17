@@ -4,7 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nano.support.Onion;
-import nano.web.ConfigVars;
+import nano.web.nano.ConfigVars;
 import nano.web.telegram.BotContext;
 import org.springframework.stereotype.Component;
 

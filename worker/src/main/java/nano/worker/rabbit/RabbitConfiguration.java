@@ -1,4 +1,4 @@
-package nano.worker;
+package nano.worker.rabbit;
 
 import nano.support.configuration.ConditionalOnRabbit;
 import nano.worker.consumer.MailConsumer;

@@ -1,4 +1,4 @@
-package nano.web;
+package nano.web.nano;
 
 import lombok.extern.slf4j.Slf4j;
 import nano.web.security.SecurityService;
@@ -17,6 +17,7 @@ public class Cron implements ApplicationContextAware {
     private ApplicationContext context;
 
     /**
+     * Prune verificating timeout token
      * Fixed delay 24h
      */
     @Scheduled(fixedDelay = 24 * 60 * 60 * 1000)

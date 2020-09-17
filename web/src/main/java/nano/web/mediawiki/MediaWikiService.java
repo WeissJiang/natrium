@@ -1,4 +1,4 @@
-package nano.web.service.mediawiki;
+package nano.web.mediawiki;
 
 import com.jayway.jsonpath.JsonPath;
 import org.springframework.util.CollectionUtils;

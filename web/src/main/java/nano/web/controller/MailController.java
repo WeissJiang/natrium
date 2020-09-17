@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import nano.support.mail.TextMail;
 import nano.web.security.AuthenticationInterceptor;
 import nano.web.security.Authorized;
-import nano.web.service.messageing.Exchanges;
+import nano.web.messageing.Exchanges;
 import org.springframework.amqp.rabbit.core.RabbitMessagingTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

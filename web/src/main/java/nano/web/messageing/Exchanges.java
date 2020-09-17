@@ -1,4 +1,4 @@
-package nano.web.service.messageing;
+package nano.web.messageing;
 
 public abstract class Exchanges {
 
