@@ -123,10 +123,11 @@ public class SecurityService {
     /**
      * 验证Token
      */
-    public Map<NanoToken, String> verificateToken(String username, String verificationCode) {
+    public Map<NanoToken, String> verificateToken(Number userId, String username, String verificationCode) {
         var nanoTokenList = this.tokenRepository.queryVerificatingToken(username, verificationCode);
         var result = new HashMap<NanoToken, String>();
         forEach(nanoTokenList, nanoToken -> {
+            nanoToken.setUserId(userId);
             // verification timeout
             if (verificatingTimeout(nanoToken)) {
                 result.put(nanoToken, NanoToken.VERIFICATION_TIMEOUT);
