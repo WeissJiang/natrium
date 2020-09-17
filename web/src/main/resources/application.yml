@@ -10,7 +10,7 @@ spring:
     username: ${JDBC_DATABASE_USERNAME:postgres}
     password: ${JDBC_DATABASE_PASSWORD:password}
     hikari:
-      maximum-pool-size: 15
+      maximum-pool-size: 8
   profiles:
     include: nano
     active: dev
