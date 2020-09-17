@@ -33,7 +33,7 @@ public class WebhookController {
     public ResponseEntity<?> webhook(@PathVariable("token") String token,
                                      @RequestBody Map<String, Object> parameterMap) {
         // check token
-        this.securityService.checkNanoToken(token);
+        this.securityService.checkNanoApiToken(token);
         // handle request
         this.botHandler.handleAsync(parameterMap);
         // always return ok

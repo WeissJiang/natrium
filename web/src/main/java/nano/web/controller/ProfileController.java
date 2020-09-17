@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Profile("prod")
 @Controller
-public class ViewController {
+public class ProfileController {
 
     @GetMapping("/deps.mjs")
     public String profileDeps() {

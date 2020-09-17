@@ -41,6 +41,8 @@ processResources {
 }
 
 dependencies {
+    // user agent parser
+    implementation 'com.github.ua-parser:uap-java:1.4.4'
     // json path
     implementation 'com.jayway.jsonpath:json-path:2.4.0'
     // javascript

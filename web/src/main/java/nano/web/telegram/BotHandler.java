@@ -3,9 +3,9 @@ package nano.web.telegram;
 import lombok.SneakyThrows;
 import nano.support.Onion;
 import nano.web.telegram.handler.*;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.lang.NonNull;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +25,7 @@ public class BotHandler implements ApplicationContextAware {
         this.onion.use(ctx.getBean(ExceptionHandler.class));
         this.onion.use(ctx.getBean(LogHandler.class));
         this.onion.use(ctx.getBean(SessionInitializeHandler.class));
+        this.onion.use(ctx.getBean(VerificationHandler.class));
         // command handler
         var commandHandlers = ctx.getBeansOfType(AbstractCommandHandler.class);
         commandHandlers.values().forEach(this.onion::use);
@@ -62,7 +63,7 @@ public class BotHandler implements ApplicationContextAware {
     }
 
     @Override
-    public void setApplicationContext(@NonNull ApplicationContext applicationContext) {
+    public void setApplicationContext(@NotNull ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 }

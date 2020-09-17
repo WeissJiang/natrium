@@ -5,6 +5,9 @@ import nano.support.Onion;
 import nano.web.telegram.BotContext;
 import org.springframework.stereotype.Component;
 
+/**
+ * 异常处理
+ */
 @Slf4j
 @Component
 public class ExceptionHandler implements Onion.Middleware<BotContext> {

@@ -11,10 +11,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Data
 public class BotContext {
@@ -89,8 +86,8 @@ public class BotContext {
 
     // -- proxy to TelegramService
 
-    public void sendMessage(String text) {
+    public void sendMessage(String text, Object... args) {
         Assert.notNull(this.telegramService, "this.telegramService is null");
-        this.telegramService.sendMessage(this.chatId(), text);
+        this.telegramService.sendMessage(this.chatId(), String.format(text, args));
     }
 }

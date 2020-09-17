@@ -8,6 +8,9 @@ import nano.web.telegram.BotContext;
 import nano.web.telegram.handler.AbstractCommandHandler;
 import org.springframework.stereotype.Component;
 
+/**
+ * 中英互译
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
