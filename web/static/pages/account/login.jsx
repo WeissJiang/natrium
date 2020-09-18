@@ -114,6 +114,7 @@ function Login(props) {
             throw new Error(result.error)
         }
         const { token, verificationCode } = result.payload
+        setLocalToken(token)
         setVerificating(true)
         setVerificationCode(verificationCode)
         try {
@@ -121,7 +122,6 @@ function Login(props) {
             // 登录成功，处理回调
             const backUrl = getBackUrl()
             if (backUrl) {
-                setLocalToken(token)
                 location.href = backUrl
             } else {
                 setVerificating(false)

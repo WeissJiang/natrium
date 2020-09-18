@@ -3,6 +3,8 @@ import { getLocalItem, setLocalItem } from '/modules/storage.mjs'
 
 const { useState, useEffect } = React
 
+const TOKEN = 'token'
+
 async function fetchUser(token) {
     const options = {
         cache: 'no-cache',
@@ -19,10 +21,10 @@ async function fetchUser(token) {
 }
 
 export function useToken() {
-    const [token, internalSetToken] = useState(() => getLocalItem('token'))
+    const [token, internalSetToken] = useState(() => getLocalItem(TOKEN))
 
     function setLocalToken(token) {
-        setLocalItem('token', token)
+        setLocalItem(TOKEN, token)
     }
 
     function setToken(token) {
