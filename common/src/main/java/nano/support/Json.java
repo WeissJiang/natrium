@@ -103,6 +103,4 @@ public abstract class Json {
             gen.writeString(BASE64.encodeToString(value));
         }
     }
-
-
 }

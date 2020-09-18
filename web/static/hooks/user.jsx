@@ -18,21 +18,24 @@ async function fetchUser(token) {
 }
 
 export function useUser(token) {
+    if (typeof token === 'function') {
+        token = token()
+    }
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
     useEffect(() => {
         if (!token) {
             setLoading(false)
             setUser(null)
-        } else {
-            (async () => {
-                const user = await fetchUser(token)
-                if (user) {
-                    setUser(user)
-                }
-                setLoading(false)
-            })()
+            return
         }
+        ;(async () => {
+            const user = await fetchUser(token)
+            if (user) {
+                setUser(user)
+            }
+            setLoading(false)
+        })()
     }, [token])
     return [loading, user]
 }

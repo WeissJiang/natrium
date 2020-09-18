@@ -11,9 +11,6 @@
 <div id="app"></div>
 </body>
 <script type="module">
-    import { renderApp } from '/modules/utils.jsx'
-    import Nano from '/pages/nano/nano.jsx'
-
-    renderApp(Nano, 'app')
+    import('/render.jsx').then(r => r.default('/pages/nano/nano.jsx', 'app'))
 </script>
 </html>

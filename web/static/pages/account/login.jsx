@@ -10,6 +10,7 @@ function loginCallback() {
     const backUrl = searchParams.get('backUrl')
     if (backUrl) {
         location.href = backUrl
+        return true
     }
 }
 
@@ -125,10 +126,11 @@ function Login(props) {
             await pollingTokenVerification(token)
             // 登录成功
             setLocalItem('token', token)
-            setToken(token)
-            setVerificating(false)
-            setVerificationCode('')
-            loginCallback()
+            if (!loginCallback()) {
+                setToken(token)
+                setVerificating(false)
+                setVerificationCode('')
+            }
         } catch (err) {
             if (err.message === 'timeout') {
                 alert('Verification timeout')
