@@ -28,6 +28,19 @@ async function fetchTokenList(token) {
     if (result.error) {
         alert(result.error)
     }
+    return result.payload || []
+}
+
+async function fetchDeleteToken(token, idList) {
+    const response = await fetch('/api/token/delete', {
+        method: 'POST',
+        headers: { 'X-Token': token },
+        body: new URLSearchParams([['id', ...idList]])
+    })
+    const result = await response.json()
+    if (result.error) {
+        alert(result.error)
+    }
     return result.payload
 }
 
@@ -42,9 +55,7 @@ function Token(props) {
         }
         ;(async () => {
             const tokenList = await fetchTokenList(token)
-            if (tokenList) {
-                setTokenList(tokenList)
-            }
+            setTokenList(tokenList)
         })()
     }, [user])
 
@@ -57,23 +68,41 @@ function Token(props) {
         return <div>Redirect to login page</div>
     }
 
+    async function handleDeleteToken(id, ev) {
+        ev.preventDefault()
+        if (!confirm('The following token will be permanently deleted, are you sure you want to continue?')) {
+            return
+        }
+        await fetchDeleteToken(token, [id])
+        const tokenList = await fetchTokenList(token)
+        if (!tokenList.length) {
+            redirectToLoginPage()
+            return
+        }
+        setTokenList(tokenList)
+    }
+
     return (
         <div>
             <span>hi, {user['firstname']}</span>
             <table className={style['t-table']}>
                 <thead>
                 <tr>
+                    <th/>
                     <th>NAME</th>
                     <th>LAST ACTIVE</th>
-                    <th>CURRENT</th>
+                    <th>OPERATION</th>
                 </tr>
                 </thead>
                 <tbody>
                 {tokenList.map(it => (
-                    <tr key={it['name'] + it['lastActiveTime']}>
+                    <tr key={it['id']}>
+                        <td>{it['current'] && '*'}</td>
                         <td>{it['name']}</td>
                         <td>{isoToLocal(it['lastActiveTime'])}</td>
-                        <td>{it['current'] && '*'}</td>
+                        <td className={style['operation']}>
+                            <a href="" onClick={(ev) => handleDeleteToken(it.id, ev)}>DELETE</a>
+                        </td>
                     </tr>
                 ))}
                 </tbody>

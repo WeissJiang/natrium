@@ -22,6 +22,7 @@ public class NanoToken {
         return "%s:%s:%s".formatted(VERIFICATING, username, verificationCode);
     }
 
+    private Integer id;
     private String token;
 
     private String name;

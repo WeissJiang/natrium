@@ -7,6 +7,7 @@ import java.time.Instant;
 @Data
 public class TokenDTO {
 
+    private Integer id;
     private String name;
     private Instant creationTime;
     private Instant lastActiveTime;

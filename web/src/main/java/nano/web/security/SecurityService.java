@@ -49,9 +49,23 @@ public class SecurityService {
     /**
      * 删除Token，也作登出使用
      */
-    public void deleteToken(String token) {
+    public void deleteTheToken(String token) {
         Assert.hasText(token, "Illegal token");
-        this.tokenRepository.deleteToken(token);
+        this.tokenRepository.batchDeleteByToken(List.of(token));
+    }
+
+    /**
+     * 删除Token，Token管理
+     */
+    public void deleteSpecificToken(String token, List<Integer> idList) {
+        var nanoTokenList = this.tokenRepository.queryTokenList(idList);
+        if (CollectionUtils.isEmpty(nanoTokenList)) {
+            return;
+        }
+        var currentToken = this.tokenRepository.queryToken(token);
+        Assert.notNull(currentToken, "Illegal token");
+        Assert.state(every(nanoTokenList, it -> Objects.equals(currentToken.getUserId(), it.getUserId())), "Abnormal operation permission");
+        this.tokenRepository.batchDeleteById(map(nanoTokenList, NanoToken::getId));
     }
 
     /**
@@ -62,6 +76,7 @@ public class SecurityService {
         var nanoTokenList = this.tokenRepository.queryTokenList(token);
         return map(nanoTokenList, it -> {
             var tokenDTO = new TokenDTO();
+            tokenDTO.setId(it.getId());
             tokenDTO.setName(it.getName());
             tokenDTO.setCreationTime(it.getCreationTime().toInstant());
             tokenDTO.setLastActiveTime(it.getLastActiveTime().toInstant());
@@ -148,7 +163,7 @@ public class SecurityService {
         int count = 0;
         if (!CollectionUtils.isEmpty(tokens)) {
             count = tokens.size();
-            this.tokenRepository.batchDeleteToken(tokens);
+            this.tokenRepository.batchDeleteByToken(tokens);
         }
         return count;
     }
@@ -184,6 +199,5 @@ public class SecurityService {
     private static Parser createUserAgentParser() {
         return new Parser();
     }
-
 
 }

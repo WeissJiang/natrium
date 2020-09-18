@@ -34,13 +34,15 @@ CREATE TABLE IF NOT EXISTS nano_user
 DROP TABLE IF EXISTS nano_token;
 CREATE TABLE IF NOT EXISTS nano_token
 (
-    token            VARCHAR PRIMARY KEY,
+    id               SERIAL PRIMARY KEY,
+    token            VARCHAR,
     name             VARCHAR,
     chat_id          BIGINT,
     user_id          BIGINT,
     status           VARCHAR DEFAULT 'VALID',
     last_active_time TIMESTAMPTZ,
-    creation_time    TIMESTAMPTZ
+    creation_time    TIMESTAMPTZ,
+    UNIQUE (token)
 );
 
 COMMENT ON COLUMN nano_token.status IS 'VALID,INVALID,VERIFICATING:{username}:{code}'

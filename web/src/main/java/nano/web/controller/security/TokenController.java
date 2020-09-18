@@ -9,6 +9,7 @@ import nano.web.security.SecurityService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -43,7 +44,14 @@ public class TokenController {
 
     @PostMapping("/self/delete")
     public ResponseEntity<?> deleteSelfToken(@RequestHeader("X-Token") String token) {
-        this.securityService.deleteToken(token);
+        this.securityService.deleteTheToken(token);
+        return ResponseEntity.ok(Result.empty());
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<?> deleteToken(@RequestHeader("X-Token") String token,
+                                         @RequestParam("id") List<Integer> idList) {
+        this.securityService.deleteSpecificToken(token, idList);
         return ResponseEntity.ok(Result.empty());
     }
 

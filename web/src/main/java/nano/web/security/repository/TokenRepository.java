@@ -31,6 +31,32 @@ public class TokenRepository {
         return getFirst(tokenList);
     }
 
+    public List<NanoToken> queryTokenList(String token) {
+        var sql = """
+                SELECT id, token, name, chat_id, user_id, status, last_active_time, creation_time
+                FROM nano_token
+                WHERE status = 'VALID'
+                  AND user_id = (
+                    SELECT nt.user_id
+                    FROM nano_token nt
+                    WHERE nt.status = 'VALID'
+                      AND nt.token = :token
+                );
+                """;
+        var rowMapper = new BeanPropertyRowMapper<>(NanoToken.class);
+        return this.jdbcTemplate.query(slim(sql), Map.of("token", token), rowMapper);
+    }
+
+    public List<NanoToken> queryTokenList(List<Integer> idList) {
+        var sql = """
+                SELECT id, token, name, chat_id, user_id, status, last_active_time, creation_time
+                FROM nano_token
+                WHERE id IN (:idList);
+                """;
+        var rowMapper = new BeanPropertyRowMapper<>(NanoToken.class);
+        return this.jdbcTemplate.query(slim(sql), Map.of("idList", idList), rowMapper);
+    }
+
     public List<NanoToken> queryVerificatingToken(String username, String verificationCode) {
         var status = NanoToken.verificatingStatus(username, verificationCode);
         var paramMap = Map.of("status", status);
@@ -53,7 +79,7 @@ public class TokenRepository {
     public void createToken(NanoToken token) {
         var paramSource = new BeanPropertySqlParameterSource(token);
         var insert = new SimpleJdbcInsert(this.jdbcTemplate.getJdbcTemplate())
-                .withTableName("nano_token");
+                .withTableName("nano_token").usingGeneratedKeyColumns("id");
         insert.execute(paramSource);
     }
 
@@ -79,32 +105,23 @@ public class TokenRepository {
         this.jdbcTemplate.update(slim(sql), Map.of("token", token, "lastActiveTime", lastActiveTime));
     }
 
-    public void deleteToken(String token) {
-        this.batchDeleteToken(List.of(token));
-    }
-
-    public void batchDeleteToken(List<String> tokens) {
+    public void batchDeleteById(List<Integer> idList) {
         var sql = """
                 DELETE
                 FROM nano_token
-                WHERE token IN (:tokens);
+                WHERE id IN (:idList);
                 """;
-        this.jdbcTemplate.update(slim(sql), Map.of("tokens", tokens));
+        this.jdbcTemplate.update(slim(sql), Map.of("idList", idList));
     }
 
-    public List<NanoToken> queryTokenList(String token) {
+
+    public void batchDeleteByToken(List<String> tokenList) {
         var sql = """
-                SELECT token, name, chat_id, user_id, status, last_active_time, creation_time
+                DELETE
                 FROM nano_token
-                WHERE status = 'VALID'
-                  AND user_id = (
-                    SELECT nt.user_id
-                    FROM nano_token nt
-                    WHERE nt.status = 'VALID'
-                      AND nt.token = :token
-                );
+                WHERE token IN (:tokenList);
                 """;
-        var rowMapper = new BeanPropertyRowMapper<>(NanoToken.class);
-        return this.jdbcTemplate.query(slim(sql), Map.of("token", token), rowMapper);
+        this.jdbcTemplate.update(slim(sql), Map.of("tokenList", tokenList));
     }
+
 }
