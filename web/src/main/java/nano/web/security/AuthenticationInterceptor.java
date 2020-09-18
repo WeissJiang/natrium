@@ -10,11 +10,11 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static nano.web.security.TokenCode.*;
+
 @Component
 @RequiredArgsConstructor
 public class AuthenticationInterceptor implements HandlerInterceptor {
-
-    public static final String TOKEN = "X-Token";
 
     @NonNull
     private final SecurityService securityService;
@@ -26,7 +26,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         if (handler instanceof HandlerMethod handlerMethod) {
             if (handlerMethod.hasMethodAnnotation(Authorized.class)
                 || handlerMethod.getBeanType().isAnnotationPresent(Authorized.class)) {
-                var token = request.getHeader(TOKEN);
+                var token = request.getHeader(X_TOKEN);
                 this.securityService.checkNanoApiToken(token);
             }
         }

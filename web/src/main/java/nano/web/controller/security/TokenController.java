@@ -7,10 +7,13 @@ import nano.web.controller.Result;
 import nano.web.security.Authorized;
 import nano.web.security.SecurityService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+
+import static nano.web.security.TokenCode.*;
 
 @Slf4j
 @CrossOrigin
@@ -30,9 +33,29 @@ public class TokenController {
     }
 
     @GetMapping("/verification")
-    public ResponseEntity<?> getTokenVerification(@RequestHeader("X-Token") String token) {
+    public ResponseEntity<?> getTokenVerification(@RequestAttribute(D_TOKEN) String token) {
         var result = this.securityService.getTokenVerification(token);
         return ResponseEntity.ok(Result.of(result));
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<?> deleteToken(@RequestAttribute(D_TOKEN) String token,
+                                         @RequestParam(name = "id", required = false) List<Integer> idList) {
+        // 登出删除Token
+        if (CollectionUtils.isEmpty(idList)) {
+            this.securityService.deleteTheToken(token);
+        }
+        // 管理删除Token
+        else {
+            this.securityService.deleteSpecificToken(token, idList);
+        }
+        return ResponseEntity.ok(Result.empty());
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<?> getTokenList(@RequestAttribute(D_TOKEN) String token) {
+        var tokenList = this.securityService.getTokenList(token);
+        return ResponseEntity.ok(Result.of(tokenList));
     }
 
     @Authorized
@@ -40,24 +63,5 @@ public class TokenController {
     public ResponseEntity<?> verificatingTimeoutToken() {
         var count = this.securityService.pruneVerificatingTimeoutToken();
         return ResponseEntity.ok(Result.of(Map.of("count", count)));
-    }
-
-    @PostMapping("/self/delete")
-    public ResponseEntity<?> deleteSelfToken(@RequestHeader("X-Token") String token) {
-        this.securityService.deleteTheToken(token);
-        return ResponseEntity.ok(Result.empty());
-    }
-
-    @PostMapping("/delete")
-    public ResponseEntity<?> deleteToken(@RequestHeader("X-Token") String token,
-                                         @RequestParam("id") List<Integer> idList) {
-        this.securityService.deleteSpecificToken(token, idList);
-        return ResponseEntity.ok(Result.empty());
-    }
-
-    @GetMapping("/list")
-    public ResponseEntity<?> getTokenList(@RequestHeader("X-Token") String token) {
-        var tokenList = this.securityService.getTokenList(token);
-        return ResponseEntity.ok(Result.of(tokenList));
     }
 }

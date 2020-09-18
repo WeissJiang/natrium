@@ -87,10 +87,12 @@ public class SecurityService {
 
     /**
      * 创建验证中的Token
+     * 不保存原始Token，保存脱敏后的Token
      */
     public Map<String, String> createVerificatingToken(String username, String ua) {
+        var originalToken = generateToken();
         var token = new NanoToken();
-        token.setToken(generateToken());
+        token.setToken(TokenCode.desensitizeToken(originalToken));
         token.setName(parseUserAgent(ua));
         var verificationCode = generateVerificationCode();
         token.setStatus(NanoToken.verificatingStatus(username, verificationCode));
@@ -98,7 +100,7 @@ public class SecurityService {
         token.setCreationTime(now);
         token.setLastActiveTime(now);
         this.tokenRepository.createToken(token);
-        return Map.of("token", token.getToken(), "verificationCode", verificationCode);
+        return Map.of("token", originalToken, "verificationCode", verificationCode);
     }
 
     /**

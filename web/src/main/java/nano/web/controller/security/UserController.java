@@ -8,6 +8,8 @@ import nano.web.security.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static nano.web.security.TokenCode.*;
+
 @Slf4j
 @CrossOrigin
 @RestController
@@ -19,7 +21,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/user")
-    public ResponseEntity<?> getUser(@RequestHeader("X-Token") String token) {
+    public ResponseEntity<?> getUser(@RequestAttribute(D_TOKEN) String token) {
         var userDTO = this.userService.getUserByToken(token);
         return ResponseEntity.ok(Result.of(userDTO));
     }

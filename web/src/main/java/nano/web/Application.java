@@ -5,6 +5,7 @@ import nano.web.nano.ConfigVars;
 import nano.web.security.AuthenticationInterceptor;
 import nano.web.messageing.ExchangeDeclarer;
 import nano.web.scripting.Scripting;
+import nano.web.security.TokenDesensitizationInterceptor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.boot.SpringApplication;
@@ -14,6 +15,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -84,8 +86,8 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        var interceptor = this.context.getBean(AuthenticationInterceptor.class);
-        registry.addInterceptor(interceptor).addPathPatterns("/api/**");
+        registry.addInterceptor(this.context.getBean(TokenDesensitizationInterceptor.class)).order(1).addPathPatterns("/api/**");
+        registry.addInterceptor(this.context.getBean(AuthenticationInterceptor.class)).order(2).addPathPatterns("/api/**");
     }
 
     /**

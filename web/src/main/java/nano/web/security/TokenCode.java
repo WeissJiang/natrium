@@ -1,5 +1,11 @@
 package nano.web.security;
 
+import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -7,6 +13,18 @@ import java.util.concurrent.ThreadLocalRandom;
  * Token相关
  */
 public abstract class TokenCode {
+
+    public static final String X_TOKEN = "X-Token";
+
+    /**
+     * desensitized token
+     */
+    public static final String D_TOKEN = "DESENSITIZED_TOKEN";
+
+    private static final char[] HEX_CHARS = {
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+            'a', 'b', 'c', 'd', 'e', 'f'
+    };
 
     /**
      * 生成随机6位验证码
@@ -31,4 +49,27 @@ public abstract class TokenCode {
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
 
+    /**
+     * 对Token生成摘要用于脱敏
+     */
+    @SneakyThrows
+    public static String desensitizeToken(@NotNull String originalToken) {
+        var algorithm = "Blowfish";
+        var tokenBytes = originalToken.getBytes(StandardCharsets.UTF_8);
+        var secretKeySpec = new SecretKeySpec(tokenBytes, algorithm);
+        var cipher = Cipher.getInstance(algorithm);
+        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
+        var decrypted = cipher.doFinal(tokenBytes);
+        return new String(encodeHex(decrypted));
+    }
+
+    private static char[] encodeHex(byte[] bytes) {
+        char[] chars = new char[32];
+        for (int i = 0; i < chars.length; i = i + 2) {
+            byte b = bytes[i / 2];
+            chars[i] = HEX_CHARS[(b >>> 0x4) & 0xf];
+            chars[i + 1] = HEX_CHARS[b & 0xf];
+        }
+        return chars;
+    }
 }
