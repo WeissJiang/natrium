@@ -5,7 +5,7 @@ import { sleep } from '/modules/schedule.mjs'
 const { useState } = React
 
 function getBackUrl() {
-    return new URL(location.href).searchParams.get('backUrl')
+    return new URLSearchParams(location.search).get('backUrl')
 }
 
 function VerificatingBox(props) {

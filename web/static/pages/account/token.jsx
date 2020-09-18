@@ -31,10 +31,12 @@ async function fetchTokenList(token) {
 }
 
 async function fetchDeleteToken(token, idList) {
+    const body = new URLSearchParams()
+    idList.forEach(id => body.append('id', id))
     const response = await fetch('/api/token/delete', {
         method: 'POST',
         headers: { 'X-Token': token },
-        body: new URLSearchParams([['id', ...idList]])
+        body,
     })
     const result = await response.json()
     if (result.error) {
