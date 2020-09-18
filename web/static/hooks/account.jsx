@@ -1,4 +1,5 @@
 import { React } from '/deps.mjs'
+import { getLocalItem, setLocalItem } from '/modules/storage.mjs'
 
 const { useState, useEffect } = React
 
@@ -17,10 +18,26 @@ async function fetchUser(token) {
     return result.payload
 }
 
-export function useUser(token) {
-    if (typeof token === 'function') {
-        token = token()
+export function useToken() {
+    const [token, internalSetToken] = useState(() => getLocalItem('token'))
+
+    function setLocalToken(token) {
+        setLocalItem('token', token)
     }
+
+    function setToken(token) {
+        setLocalToken(token)
+        internalSetToken(token)
+    }
+
+    return {
+        token,
+        setToken,
+        setLocalToken,
+    }
+}
+
+export function useUser(token) {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
     useEffect(() => {
@@ -37,5 +54,5 @@ export function useUser(token) {
             setLoading(false)
         })()
     }, [token])
-    return [loading, user]
+    return { loading, user }
 }

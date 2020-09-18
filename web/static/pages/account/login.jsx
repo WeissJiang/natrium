@@ -1,17 +1,11 @@
 import { React } from '/deps.mjs'
-import { getLocalItem, setLocalItem, removeLocalItem } from '/modules/storage.mjs'
-import { useUser } from '/hooks/user.jsx'
+import { useUser, useToken } from '/hooks/account.jsx'
 import { sleep } from '/modules/schedule.mjs'
 
 const { useState } = React
 
-function loginCallback() {
-    const searchParams = new URL(location.href).searchParams
-    const backUrl = searchParams.get('backUrl')
-    if (backUrl) {
-        location.href = backUrl
-        return true
-    }
+function getBackUrl() {
+    return new URL(location.href).searchParams.get('backUrl')
 }
 
 function VerificatingBox(props) {
@@ -48,11 +42,12 @@ function LoggedInBox(props) {
 }
 
 function Login(props) {
-    const [token, setToken] = useState(() => getLocalItem('token'))
+
     const [verificating, setVerificating] = useState(false)
     const [verificationCode, setVerificationCode] = useState('')
 
-    const [loading, user] = useUser(token)
+    const { token, setLocalToken, setToken } = useToken()
+    const { loading, user } = useUser(token)
 
     if (loading) {
         return <div>Loading...</div>
@@ -71,7 +66,6 @@ function Login(props) {
                 alert(result.error)
                 throw new Error(result.error)
             }
-            removeLocalItem(token)
             setToken(null)
         }
 
@@ -124,12 +118,15 @@ function Login(props) {
         setVerificationCode(verificationCode)
         try {
             await pollingTokenVerification(token)
-            // 登录成功
-            setLocalItem('token', token)
-            if (!loginCallback()) {
-                setToken(token)
+            // 登录成功，处理回调
+            const backUrl = getBackUrl()
+            if (backUrl) {
+                setLocalToken(token)
+                location.href = backUrl
+            } else {
                 setVerificating(false)
                 setVerificationCode('')
+                setToken(token)
             }
         } catch (err) {
             if (err.message === 'timeout') {

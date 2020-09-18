@@ -1,6 +1,5 @@
 import { React } from '/deps.mjs'
-import { useUser } from '/hooks/user.jsx'
-import { getLocalItem } from '/modules/storage.mjs'
+import { useUser, useToken } from '/hooks/account.jsx'
 
 import style from './style.module.less'
 
@@ -45,9 +44,10 @@ async function fetchDeleteToken(token, idList) {
 }
 
 function Token(props) {
-    const token = getLocalItem('token')
-    const [loading, user] = useUser(token)
     const [tokenList, setTokenList] = useState([])
+
+    const { token } = useToken()
+    const { loading, user } = useUser(token)
 
     useEffect(() => {
         if (!user) {
