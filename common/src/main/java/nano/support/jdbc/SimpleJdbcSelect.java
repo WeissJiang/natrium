@@ -12,6 +12,15 @@ import java.util.Map;
 
 import static nano.support.EntityUtils.*;
 
+/**
+ * 简易实体字段查询SQL生成器
+ *
+ * @param <T> 对应实体类
+ * @author cbdyzj
+ * @see org.springframework.jdbc.core.simple.SimpleJdbcInsert
+ * @see org.springframework.jdbc.core.simple.SimpleJdbcCall
+ * @since 2020.9.5
+ */
 public class SimpleJdbcSelect<T> {
 
     private final Class<T> entityClass;
@@ -19,7 +28,11 @@ public class SimpleJdbcSelect<T> {
 
     private NamedParameterJdbcTemplate jdbcTemplate;
     private String tableName;
-    private String[] whereEqualsColumns;
+
+    private String[] whereEqualColumns;
+    private String[] whereInColumns;
+    private String whereClause;
+
     private Integer limit;
     private Integer offset;
 
@@ -38,11 +51,18 @@ public class SimpleJdbcSelect<T> {
         return this;
     }
 
-    /**
-     * just equals
-     */
-    public SimpleJdbcSelect<T> whereEqual(String... whereEqualsColumns) {
-        this.whereEqualsColumns = whereEqualsColumns;
+    public SimpleJdbcSelect<T> whereEqual(String... whereEqualColumns) {
+        this.whereEqualColumns = whereEqualColumns;
+        return this;
+    }
+
+    public SimpleJdbcSelect<T> whereIn(String... whereInColumns) {
+        this.whereInColumns = whereInColumns;
+        return this;
+    }
+
+    public SimpleJdbcSelect<T> whereClause(String whereClause) {
+        this.whereClause = whereClause;
         return this;
     }
 
@@ -78,18 +98,33 @@ public class SimpleJdbcSelect<T> {
         var sb = new StringBuilder();
         var columns = String.join(", ", entityColumnNames(this.entityClass));
         sb.append("SELECT ").append(columns).append(" FROM ").append(tableName);
-        if (this.whereEqualsColumns != null && this.whereEqualsColumns.length > 0) {
-            sb.append(" WHERE ");
-            boolean first = true;
-            for (String where : this.whereEqualsColumns) {
+        boolean firstWhereClause = true;
+        if (notEmpty(this.whereEqualColumns)) {
+            Assert.state(this.whereClause == null, "\"whereEqualColumns\" and \"WhereClause\" cannot exist at the same time");
+            for (String where : this.whereEqualColumns) {
                 var sourceName = propertyName(where);
-                if (first) {
-                    sb.append(where).append(" = :").append(sourceName);
-                    first = false;
+                if (firstWhereClause) {
+                    sb.append(" WHERE ").append(where).append(" = :").append(sourceName);
+                    firstWhereClause = false;
                 } else {
                     sb.append(" AND ").append(where).append(" = :").append(sourceName);
                 }
             }
+        }
+        if (notEmpty(this.whereInColumns)) {
+            Assert.state(this.whereClause == null, "\"WhereInColumns\" and \"WhereClause\" cannot exist at the same time");
+            for (String where : this.whereInColumns) {
+                var sourceName = propertyName(where);
+                if (firstWhereClause) {
+                    sb.append(" WHERE ").append(where).append(" IN (:").append(sourceName).append(")");
+                    firstWhereClause = false;
+                } else {
+                    sb.append(" AND ").append(where).append(" IN (:").append(sourceName).append(")");
+                }
+            }
+        }
+        if (this.whereClause != null) {
+            sb.append(" ").append(slim(this.whereClause));
         }
         if (this.limit != null) {
             sb.append(" LIMIT ").append(this.limit);
@@ -102,6 +137,10 @@ public class SimpleJdbcSelect<T> {
 
     private void jdbcTemplateProvided() {
         Assert.notNull(this.jdbcTemplate, "this.jdbcTemplate is null");
+    }
+
+    private static boolean notEmpty(Object[] a) {
+        return a != null && a.length > 0;
     }
 
 }

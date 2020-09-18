@@ -73,7 +73,7 @@ public class SecurityService {
      */
     public List<TokenDTO> getTokenList(String token) {
         Assert.hasText(token, "Illegal token");
-        var nanoTokenList = this.tokenRepository.queryTokenList(token);
+        var nanoTokenList = this.tokenRepository.queryAssociatedTokenList(token);
         return map(nanoTokenList, it -> {
             var tokenDTO = new TokenDTO();
             tokenDTO.setId(it.getId());
@@ -161,11 +161,11 @@ public class SecurityService {
      * @return prune count
      */
     public int pruneVerificatingTimeoutToken() {
-        var tokens = this.tokenRepository.queryVerificatingTimeoutToken();
+        var tokenList = this.tokenRepository.queryVerificatingTimeoutToken();
         int count = 0;
-        if (!CollectionUtils.isEmpty(tokens)) {
-            count = tokens.size();
-            this.tokenRepository.batchDeleteByToken(tokens);
+        if (!CollectionUtils.isEmpty(tokenList)) {
+            count = tokenList.size();
+            this.tokenRepository.batchDeleteByToken(tokenList);
         }
         return count;
     }

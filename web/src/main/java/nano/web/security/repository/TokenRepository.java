@@ -24,37 +24,30 @@ public class TokenRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public NanoToken queryToken(String token) {
-        var paramMap = Map.of("token", token);
         var select = new SimpleJdbcSelect<>(NanoToken.class)
                 .withTableName("nano_token").whereEqual("token").limit(1);
-        var tokenList = select.usesJdbcTemplate(this.jdbcTemplate).query(paramMap);
+        var tokenList = select.usesJdbcTemplate(this.jdbcTemplate).query(Map.of("token", token));
         return getFirst(tokenList);
     }
 
-    public List<NanoToken> queryTokenList(String token) {
-        var sql = """
-                SELECT id, token, name, chat_id, user_id, status, last_active_time, creation_time
-                FROM nano_token
-                WHERE status = 'VALID'
-                  AND user_id = (
-                    SELECT nt.user_id
-                    FROM nano_token nt
-                    WHERE nt.status = 'VALID'
-                      AND nt.token = :token
-                );
-                """;
-        var rowMapper = new BeanPropertyRowMapper<>(NanoToken.class);
-        return this.jdbcTemplate.query(slim(sql), Map.of("token", token), rowMapper);
+    public List<NanoToken> queryTokenList(List<Integer> idList) {
+        var select = new SimpleJdbcSelect<>(NanoToken.class)
+                .withTableName("nano_token").whereIn("id");
+        return select.usesJdbcTemplate(this.jdbcTemplate).query(Map.of("id", idList));
     }
 
-    public List<NanoToken> queryTokenList(List<Integer> idList) {
-        var sql = """
-                SELECT id, token, name, chat_id, user_id, status, last_active_time, creation_time
-                FROM nano_token
-                WHERE id IN (:idList);
-                """;
-        var rowMapper = new BeanPropertyRowMapper<>(NanoToken.class);
-        return this.jdbcTemplate.query(slim(sql), Map.of("idList", idList), rowMapper);
+    public List<NanoToken> queryAssociatedTokenList(String token) {
+        var select = new SimpleJdbcSelect<>(NanoToken.class)
+                .withTableName("nano_token").whereClause("""
+                        WHERE status = 'VALID'
+                          AND user_id = (
+                            SELECT nt.user_id
+                            FROM nano_token nt
+                            WHERE nt.status = 'VALID'
+                              AND nt.token = :token
+                        )
+                        """);
+        return select.usesJdbcTemplate(this.jdbcTemplate).query(Map.of("token", token));
     }
 
     public List<NanoToken> queryVerificatingToken(String username, String verificationCode) {
