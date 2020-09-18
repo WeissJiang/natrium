@@ -30,6 +30,14 @@ public class TokenRepository {
         return getFirst(tokenList);
     }
 
+    public NanoToken queryValidToken(String token) {
+        var select = new SimpleJdbcSelect<>(NanoToken.class)
+                .withTableName("nano_token").whereEqual("token", "status").limit(1);
+        var paramMap = Map.of("token", token, "status", NanoToken.VALID);
+        var tokenList = select.usesJdbcTemplate(this.jdbcTemplate).query(paramMap);
+        return getFirst(tokenList);
+    }
+
     public List<NanoToken> queryTokenList(List<Integer> idList) {
         var select = new SimpleJdbcSelect<>(NanoToken.class)
                 .withTableName("nano_token").whereIn("id");
@@ -51,11 +59,10 @@ public class TokenRepository {
     }
 
     public List<NanoToken> queryVerificatingToken(String username, String verificationCode) {
-        var status = NanoToken.verificatingStatus(username, verificationCode);
-        var paramMap = Map.of("status", status);
         var select = new SimpleJdbcSelect<>(NanoToken.class)
                 .withTableName("nano_token").whereEqual("status");
-        return select.usesJdbcTemplate(this.jdbcTemplate).query(paramMap);
+        var status = NanoToken.verificatingStatus(username, verificationCode);
+        return select.usesJdbcTemplate(this.jdbcTemplate).query(Map.of("status", status));
     }
 
     public List<String> queryVerificatingTimeoutToken() {
@@ -70,9 +77,9 @@ public class TokenRepository {
     }
 
     public void createToken(NanoToken token) {
-        var paramSource = new BeanPropertySqlParameterSource(token);
         var insert = new SimpleJdbcInsert(this.jdbcTemplate.getJdbcTemplate())
                 .withTableName("nano_token").usingGeneratedKeyColumns("id");
+        var paramSource = new BeanPropertySqlParameterSource(token);
         insert.execute(paramSource);
     }
 

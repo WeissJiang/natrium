@@ -54,7 +54,7 @@ public class TokenController {
 
     @GetMapping("/list")
     public ResponseEntity<?> getTokenList(@RequestAttribute(D_TOKEN) String token) {
-        var tokenList = this.securityService.getTokenList(token);
+        var tokenList = this.securityService.getAssociatedTokenList(token);
         return ResponseEntity.ok(Result.of(tokenList));
     }
 

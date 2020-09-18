@@ -71,7 +71,7 @@ public class SecurityService {
     /**
      * 根据Token，获取Token列表
      */
-    public List<TokenDTO> getTokenList(String token) {
+    public List<TokenDTO> getAssociatedTokenList(String token) {
         Assert.hasText(token, "Illegal token");
         var nanoTokenList = this.tokenRepository.queryAssociatedTokenList(token);
         return map(nanoTokenList, it -> {
