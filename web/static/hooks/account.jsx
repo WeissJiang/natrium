@@ -42,13 +42,16 @@ export function useToken() {
 export function useUser(token) {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
+    if (!token) {
+        setLoading(false)
+        setUser(null)
+    } else {
+        setLoading(true)
+    }
     useEffect(() => {
         if (!token) {
-            setLoading(false)
-            setUser(null)
             return
         }
-        setLoading(true)
         ;(async () => {
             const user = await fetchUser(token)
             if (user) {
