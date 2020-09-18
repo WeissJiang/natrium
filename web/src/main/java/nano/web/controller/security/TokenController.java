@@ -1,4 +1,4 @@
-package nano.web.controller.user;
+package nano.web.controller.security;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -41,9 +41,15 @@ public class TokenController {
         return ResponseEntity.ok(Result.of(Map.of("count", count)));
     }
 
-    @PostMapping("/delete")
-    public ResponseEntity<?> deleteToken(@RequestHeader("X-Token") String token) {
+    @PostMapping("/self/delete")
+    public ResponseEntity<?> deleteSelfToken(@RequestHeader("X-Token") String token) {
         this.securityService.deleteToken(token);
         return ResponseEntity.ok(Result.empty());
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<?> getTokenList(@RequestHeader("X-Token") String token) {
+        var tokenList = this.securityService.getTokenList(token);
+        return ResponseEntity.ok(Result.of(tokenList));
     }
 }

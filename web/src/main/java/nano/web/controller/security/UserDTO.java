@@ -1,4 +1,4 @@
-package nano.web.controller.user;
+package nano.web.controller.security;
 
 import lombok.Data;
 

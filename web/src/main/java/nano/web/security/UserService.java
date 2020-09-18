@@ -3,7 +3,7 @@ package nano.web.security;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nano.web.controller.user.UserDTO;
+import nano.web.controller.security.UserDTO;
 import nano.web.security.repository.TokenRepository;
 import nano.web.security.repository.UserRepository;
 import org.springframework.stereotype.Service;

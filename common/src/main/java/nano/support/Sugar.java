@@ -9,6 +9,13 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+/**
+ * 一点语法糖
+ *
+ * @author cbdyzj
+ * @see <a href="https://github.com/cbdyzj/sugar">sugar</a>
+ * @since 2020.8.4
+ */
 public abstract class Sugar {
 
     public static <T> T findFirst(Collection<T> list, @NonNull Predicate<? super T> predicate) {

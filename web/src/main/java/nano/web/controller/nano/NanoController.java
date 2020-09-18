@@ -1,8 +1,9 @@
-package nano.web.controller;
+package nano.web.controller.nano;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nano.web.controller.Result;
 import nano.web.nano.NanoService;
 import nano.web.messageing.Exchanges;
 import org.springframework.amqp.rabbit.core.RabbitMessagingTemplate;

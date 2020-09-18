@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import nano.web.controller.security.TokenDTO;
 import nano.web.nano.ConfigVars;
 import nano.web.security.entity.NanoToken;
 import nano.web.security.repository.TokenRepository;
@@ -15,12 +16,10 @@ import ua_parser.Parser;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-import static nano.support.Sugar.forEach;
-import static nano.web.security.TokenCode.generateToken;
-import static nano.web.security.TokenCode.generateVerificationCode;
+import static nano.support.Sugar.*;
+import static nano.web.security.TokenCode.*;
 
 @Slf4j
 @Service
@@ -48,11 +47,27 @@ public class SecurityService {
     }
 
     /**
-     * 删除Token
+     * 删除Token，也作登出使用
      */
     public void deleteToken(String token) {
         Assert.hasText(token, "Illegal token");
         this.tokenRepository.deleteToken(token);
+    }
+
+    /**
+     * 根据Token，获取Token列表
+     */
+    public List<TokenDTO> getTokenList(String token) {
+        Assert.hasText(token, "Illegal token");
+        var nanoTokenList = this.tokenRepository.queryTokenList(token);
+        return map(nanoTokenList, it -> {
+            var tokenDTO = new TokenDTO();
+            tokenDTO.setName(it.getName());
+            tokenDTO.setCreationTime(it.getCreationTime().toInstant());
+            tokenDTO.setLastActiveTime(it.getLastActiveTime().toInstant());
+            tokenDTO.setCurrent(Objects.equals(token, it.getToken()));
+            return tokenDTO;
+        });
     }
 
     /**
@@ -106,18 +121,18 @@ public class SecurityService {
         var nanoTokenList = this.tokenRepository.queryVerificatingToken(username, verificationCode);
         var result = new HashMap<NanoToken, String>();
         var now = Timestamp.from(Instant.now());
-        forEach(nanoTokenList, nanoToken -> {
-            nanoToken.setUserId(userId);
-            nanoToken.setLastActiveTime(now);
+        forEach(nanoTokenList, it -> {
+            it.setUserId(userId);
+            it.setLastActiveTime(now);
             // verification timeout
-            if (verificatingTimeout(nanoToken)) {
-                result.put(nanoToken, NanoToken.VERIFICATION_TIMEOUT);
+            if (verificatingTimeout(it)) {
+                result.put(it, NanoToken.VERIFICATION_TIMEOUT);
             }
             // verificated
             else {
-                nanoToken.setStatus(NanoToken.VALID);
-                this.tokenRepository.updateToken(nanoToken);
-                result.put(nanoToken, NanoToken.VERIFICATED);
+                it.setStatus(NanoToken.VALID);
+                this.tokenRepository.updateToken(it);
+                result.put(it, NanoToken.VERIFICATED);
             }
         });
         return result;

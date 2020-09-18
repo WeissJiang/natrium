@@ -7,9 +7,7 @@ import lombok.SneakyThrows;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamSource;
 
-import java.io.Closeable;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,12 +23,10 @@ import java.util.zip.ZipOutputStream;
  * - 把一个大文件切割成一个个小文件
  * - 把若干个小文件合并成一个大文件
  */
-public class FileCutter implements Closeable {
+public class FileCutter {
 
     private static final int BUFFER_SIZE = 8192;
     private static final String TEMP_FILE_PREFIX = "file-cutter";
-
-    private final Map<String, Path> tempFiles = new HashMap<>();
 
     private final Options options = new Options() {{
         this.setFilename(getId());
@@ -56,6 +52,7 @@ public class FileCutter implements Closeable {
         @Cleanup var is = source.getInputStream();
         byte[] buffer = new byte[BUFFER_SIZE];
         int read;
+        var split = new HashMap<String, InputStreamSource>();
         for (int i = 1; ; i++) {
             var partFilename = this.options.getFilename() + this.options.getPartSuffix() + i;
             var tempFile = Files.createTempFile(TEMP_FILE_PREFIX, partFilename);
@@ -68,13 +65,12 @@ public class FileCutter implements Closeable {
                     break;
                 }
             }
-            this.tempFiles.put(partFilename, tempFile);
+            tempFile.toFile().deleteOnExit();
+            split.put(partFilename, new FileSystemResource(tempFile));
             if (read <= 0) {
                 break;
             }
         }
-        var split = new HashMap<String, InputStreamSource>();
-        this.tempFiles.forEach((filename, path) -> split.put(filename, new FileSystemResource(path)));
         return split;
     }
 
@@ -85,6 +81,7 @@ public class FileCutter implements Closeable {
     public Pair<String, InputStreamSource> merge(@NonNull Map<String, InputStreamSource> partSourceMap) {
         var filename = this.options.getFilename();
         var tempFile = Files.createTempFile(TEMP_FILE_PREFIX, filename);
+        tempFile.toFile().deleteOnExit();
         @Cleanup var os = Files.newOutputStream(tempFile);
         var partFilenameList = new ArrayList<>(partSourceMap.keySet());
         partFilenameList.sort(String::compareTo);
@@ -92,7 +89,6 @@ public class FileCutter implements Closeable {
             @Cleanup var is = partSourceMap.get(partFilename).getInputStream();
             is.transferTo(os);
         }
-        this.tempFiles.put(filename, tempFile);
         return Pair.of(filename, new FileSystemResource(tempFile));
     }
 
@@ -104,6 +100,7 @@ public class FileCutter implements Closeable {
         var filename = this.options.getFilename();
         var zipFilename = filename + ".zip";
         var tempFile = Files.createTempFile(TEMP_FILE_PREFIX, zipFilename);
+        tempFile.toFile().deleteOnExit();
         @Cleanup var zipOutputStream = new ZipOutputStream(Files.newOutputStream(tempFile));
         for (var source : sourceMap.entrySet()) {
             zipOutputStream.putNextEntry(new ZipEntry(source.getKey()));
@@ -111,23 +108,7 @@ public class FileCutter implements Closeable {
             is.transferTo(zipOutputStream);
             zipOutputStream.closeEntry();
         }
-        this.tempFiles.put(zipFilename, tempFile);
         return new FileSystemResource(tempFile);
-    }
-
-    /**
-     * clean temp files if exists
-     */
-    @SneakyThrows
-    @Override
-    public void close() {
-        if (this.tempFiles.isEmpty()) {
-            return;
-        }
-        for (var tempFile : this.tempFiles.values()) {
-            Files.deleteIfExists(tempFile);
-        }
-        this.tempFiles.clear();
     }
 
     /**
@@ -146,7 +127,6 @@ public class FileCutter implements Closeable {
             setter.accept(o);
         }
     }
-
 
     /**
      * FileCutter options

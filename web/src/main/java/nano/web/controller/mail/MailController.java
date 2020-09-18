@@ -1,4 +1,4 @@
-package nano.web.controller;
+package nano.web.controller.mail;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
