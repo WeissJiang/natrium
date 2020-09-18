@@ -48,6 +48,7 @@ export function useUser(token) {
             setUser(null)
             return
         }
+        setLoading(true)
         ;(async () => {
             const user = await fetchUser(token)
             if (user) {
