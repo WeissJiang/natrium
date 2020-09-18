@@ -65,7 +65,7 @@ function Token(props) {
 
     if (!user) {
         redirectToLoginPage()
-        return <div>Redirect to login page</div>
+        return <div>Redirecting to login page...</div>
     }
 
     async function handleDeleteToken(id, ev) {

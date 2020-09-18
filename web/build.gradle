@@ -40,6 +40,10 @@ processResources {
     }
 }
 
+clean {
+    dependsOn rootProject.staticClean
+}
+
 dependencies {
     // user agent parser
     implementation 'com.github.ua-parser:uap-java:1.4.4'
