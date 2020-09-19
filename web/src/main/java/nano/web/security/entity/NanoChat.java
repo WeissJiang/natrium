@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class NanoChat {
 
-    private Number id;
+    private Long id;
 
     private String username;
     private String title;

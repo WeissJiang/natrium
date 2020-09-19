@@ -46,7 +46,7 @@ public class SessionInitializeHandler implements Onion.Middleware<BotContext> {
         var user = new NanoUser();
         Number userId = context.read("$.message.from.id");
         Assert.notNull(userId, "userId is null");
-        user.setId(userId);
+        user.setId(userId.longValue());
         user.setUsername(context.read("$.message.from.username"));
         user.setFirstname(context.read("$.message.from.first_name"));
         user.setIsBot(context.read("$.message.from.is_bot"));
@@ -58,7 +58,7 @@ public class SessionInitializeHandler implements Onion.Middleware<BotContext> {
         var chat = new NanoChat();
         Number chatId = context.read("$.message.chat.id");
         Assert.notNull(chatId, "chatId is null");
-        chat.setId(chatId);
+        chat.setId(chatId.longValue());
         chat.setUsername(context.read("$.message.chat.username"));
         chat.setFirstname(context.read("$.message.chat.first_name"));
         chat.setTitle(context.read("$.message.chat.title"));

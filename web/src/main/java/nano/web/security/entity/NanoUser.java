@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class NanoUser {
 
-    private Number id;
+    private Long id;
 
     private String username;
     private String firstname;

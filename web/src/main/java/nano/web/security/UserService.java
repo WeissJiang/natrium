@@ -31,7 +31,7 @@ public class UserService {
         }
         // copy properties
         var userDTO = new UserDTO();
-        userDTO.setId(String.valueOf(user.getId().longValue()));
+        userDTO.setId(String.valueOf(user.getId()));
         userDTO.setUsername(user.getUsername());
         userDTO.setFirstname(user.getFirstname());
         this.tokenRepository.updateLastActiveTime(token, Timestamp.from(Instant.now()));

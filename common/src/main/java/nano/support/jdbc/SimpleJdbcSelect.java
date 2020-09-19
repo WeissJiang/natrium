@@ -3,6 +3,7 @@ package nano.support.jdbc;
 import lombok.NonNull;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.util.Assert;
@@ -24,7 +25,8 @@ import static nano.support.EntityUtils.*;
 public class SimpleJdbcSelect<T> {
 
     private final Class<T> entityClass;
-    private final RowMapper<T> rowMapper;
+    private final RowMapper<T> entityRowMapper;
+    private final RowMapper<Integer> countRowMapper = new SingleColumnRowMapper<>(Integer.class);
 
     private NamedParameterJdbcTemplate jdbcTemplate;
     private String tableName;
@@ -38,7 +40,7 @@ public class SimpleJdbcSelect<T> {
 
     public SimpleJdbcSelect(@NonNull Class<T> entityClass) {
         this.entityClass = entityClass;
-        this.rowMapper = new BeanPropertyRowMapper<>(entityClass);
+        this.entityRowMapper = new BeanPropertyRowMapper<>(entityClass);
     }
 
     public SimpleJdbcSelect<T> usesJdbcTemplate(NamedParameterJdbcTemplate jdbcTemplate) {
@@ -80,23 +82,48 @@ public class SimpleJdbcSelect<T> {
 
     public List<T> query(SqlParameterSource paramSource) {
         this.jdbcTemplateProvided();
-        return this.jdbcTemplate.query(this.getSql(), paramSource, this.rowMapper);
+        return this.jdbcTemplate.query(this.getSql(false), paramSource, this.entityRowMapper);
     }
 
     public List<T> query(Map<String, ?> paramMap) {
         this.jdbcTemplateProvided();
-        return this.jdbcTemplate.query(this.getSql(), paramMap, this.rowMapper);
+        return this.jdbcTemplate.query(this.getSql(false), paramMap, this.entityRowMapper);
     }
 
     public List<T> query() {
         this.jdbcTemplateProvided();
-        return this.jdbcTemplate.query(this.getSql(), this.rowMapper);
+        return this.jdbcTemplate.query(this.getSql(false), this.entityRowMapper);
     }
 
-    public String getSql() {
-        Assert.hasText(this.tableName, "this.tableName");
+    public int queryCount(SqlParameterSource paramSource) {
+        this.jdbcTemplateProvided();
+        var count = this.jdbcTemplate.query(this.getSql(true), paramSource, this.countRowMapper);
+        return getCount(count);
+    }
+
+    public int queryCount(Map<String, ?> paramMap) {
+        this.jdbcTemplateProvided();
+        var count = this.jdbcTemplate.query(this.getSql(true), paramMap, this.countRowMapper);
+        return getCount(count);
+
+    }
+
+    public int queryCount() {
+        this.jdbcTemplateProvided();
+        var count = this.jdbcTemplate.query(this.getSql(true), this.countRowMapper);
+        return getCount(count);
+    }
+
+
+    public String getSql(boolean count) {
         var sb = new StringBuilder();
-        var columns = String.join(", ", entityColumnNames(this.entityClass));
+        String columns;
+        if (count) {
+            columns = "COUNT(*)";
+        } else {
+            columns = String.join(", ", entityColumnNames(this.entityClass));
+        }
+        Assert.hasText(this.tableName, "this.tableName");
         sb.append("SELECT ").append(columns).append(" FROM ").append(tableName);
         boolean firstWhereClause = true;
         if (notEmpty(this.whereEqualColumns)) {
@@ -126,11 +153,14 @@ public class SimpleJdbcSelect<T> {
         if (this.whereClause != null) {
             sb.append(" ").append(slim(this.whereClause));
         }
-        if (this.limit != null) {
-            sb.append(" LIMIT ").append(this.limit);
-        }
-        if (this.offset != null) {
-            sb.append(" OFFSET ").append(this.offset);
+        // count without limit and offset
+        if (!count) {
+            if (this.limit != null) {
+                sb.append(" LIMIT ").append(this.limit);
+            }
+            if (this.offset != null) {
+                sb.append(" OFFSET ").append(this.offset);
+            }
         }
         return sb.append(";").toString();
     }
@@ -143,4 +173,8 @@ public class SimpleJdbcSelect<T> {
         return a != null && a.length > 0;
     }
 
+    private static int getCount(List<Integer> count) {
+        Assert.state(count.size() == 1, "Unexpected count");
+        return count.get(0);
+    }
 }

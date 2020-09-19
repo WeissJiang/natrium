@@ -3,7 +3,6 @@ package nano.web.security.repository;
 import lombok.RequiredArgsConstructor;
 import nano.support.jdbc.SimpleJdbcSelect;
 import nano.web.security.entity.NanoToken;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -30,7 +29,7 @@ public class TokenRepository {
         return getFirst(tokenList);
     }
 
-    public NanoToken queryValidToken(String token) {
+    public NanoToken queryTokenIfValid(String token) {
         var select = new SimpleJdbcSelect<>(NanoToken.class)
                 .withTableName("nano_token").whereEqual("token", "status").limit(1);
         var paramMap = Map.of("token", token, "status", NanoToken.VALID);
