@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
@@ -13,6 +14,9 @@ import java.util.concurrent.ThreadLocalRandom;
  * Token相关
  */
 public abstract class TokenCode {
+
+    public static final String BLOWFISH = "Blowfish";
+    public static final Charset utf8 = StandardCharsets.UTF_8;
 
     public static final String X_TOKEN = "X-Token";
 
@@ -54,10 +58,9 @@ public abstract class TokenCode {
      */
     @SneakyThrows
     public static String desensitizeToken(@NotNull String originalToken) {
-        var algorithm = "Blowfish";
-        var tokenBytes = originalToken.getBytes(StandardCharsets.UTF_8);
-        var secretKeySpec = new SecretKeySpec(tokenBytes, algorithm);
-        var cipher = Cipher.getInstance(algorithm);
+        var tokenBytes = originalToken.getBytes(utf8);
+        var secretKeySpec = new SecretKeySpec(tokenBytes, BLOWFISH);
+        var cipher = Cipher.getInstance(BLOWFISH);
         cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
         var decrypted = cipher.doFinal(tokenBytes);
         return new String(encodeHex(decrypted));

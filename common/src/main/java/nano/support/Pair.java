@@ -7,7 +7,7 @@ import java.util.Objects;
  */
 public final class Pair<L, R> {
 
-    private static final Pair<Object, Object> EMPTY = new Pair<>(null, null);
+    private static final Pair<?, ?> EMPTY = new Pair<>(null, null);
 
     private final L left;
     private final R right;
@@ -92,19 +92,13 @@ public final class Pair<L, R> {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-
-        if (obj instanceof Pair) {
-            Pair<L, R> pair = (Pair<L, R>) obj;
-            return Objects.equals(left, pair.left) && Objects.equals(right, pair.right);
-        }
-
-        return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pair<?, ?> pair = (Pair<?, ?>) o;
+        return Objects.equals(left, pair.left) &&
+               Objects.equals(right, pair.right);
     }
 
     /**
