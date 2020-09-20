@@ -1,11 +1,21 @@
 import { React } from '/deps.mjs'
 
-import style from './style.module.less'
+const { useState } = React
 
 function Nano() {
+
+    const [apiToken, setApiToken] = useState('')
+
     return (
-        <div className={style.container}>
-            <div className={style.title}>Nano</div>
+        <div>
+            <div>
+                <span>API Token: </span>
+                <input type="text" value={apiToken} onChange={ev => setApiToken(ev.target.value)}/>
+            </div>
+            <hr/>
+            <div>
+                nano
+            </div>
         </div>
     );
 }
