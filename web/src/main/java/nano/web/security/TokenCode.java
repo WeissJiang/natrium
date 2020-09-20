@@ -63,16 +63,20 @@ public abstract class TokenCode {
         var cipher = Cipher.getInstance(BLOWFISH);
         cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
         var decrypted = cipher.doFinal(tokenBytes);
-        return new String(encodeHex(decrypted));
+        return encodeHex(decrypted);
     }
 
-    private static char[] encodeHex(byte[] bytes) {
-        char[] chars = new char[32];
-        for (int i = 0; i < chars.length; i = i + 2) {
-            byte b = bytes[i / 2];
-            chars[i] = HEX_CHARS[(b >>> 0x4) & 0xf];
-            chars[i + 1] = HEX_CHARS[b & 0xf];
+    /**
+     * Encode bytes to hex string
+     */
+    private static String encodeHex(byte[] bytes) {
+        int len = bytes.length;
+        char[] chars = new char[len << 1];
+        // two characters form the hex value.
+        for (int i = 0, j = 0; i < len; i++) {
+            chars[j++] = HEX_CHARS[(0xF0 & bytes[i]) >>> 4];
+            chars[j++] = HEX_CHARS[0x0F & bytes[i]];
         }
-        return chars;
+        return new String(chars);
     }
 }

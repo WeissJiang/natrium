@@ -1,5 +1,5 @@
 import { React } from '/deps.mjs'
-import { getLocalItem, setLocalItem } from '/modules/storage.mjs'
+import { getLocalItem, setLocalItem, removeLocalItem } from '/modules/storage.mjs'
 
 const { useState, useEffect } = React
 
@@ -24,7 +24,11 @@ export function useToken() {
     const [token, internalSetToken] = useState(() => getLocalItem(TOKEN))
 
     function setLocalToken(token) {
-        setLocalItem(TOKEN, token)
+        if (token == null) {
+            removeLocalItem(TOKEN)
+        } else {
+            setLocalItem(TOKEN, token)
+        }
     }
 
     function setToken(token) {
