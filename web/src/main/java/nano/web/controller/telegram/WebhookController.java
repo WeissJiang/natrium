@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 /**
- * Handle webhook request
+ * Handle webhook requests
  *
  * @see TelegramService
  */
@@ -29,11 +29,11 @@ public class WebhookController {
     @NonNull
     private final BotHandler botHandler;
 
-    @PostMapping("/webhook/{token}")
-    public ResponseEntity<?> webhook(@PathVariable("token") String token,
+    @PostMapping("/webhook/{key}")
+    public ResponseEntity<?> webhook(@PathVariable("key") String key,
                                      @RequestBody Map<String, Object> parameterMap) {
-        // check token
-        this.securityService.checkNanoApiToken(token);
+        // check key
+        this.securityService.checkNanoApiKey(key);
         // handle request
         this.botHandler.handleAsync(parameterMap);
         // always return ok

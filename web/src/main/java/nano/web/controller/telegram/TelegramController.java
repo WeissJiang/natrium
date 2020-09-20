@@ -8,14 +8,16 @@ import nano.web.telegram.TelegramService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static nano.web.security.TokenPrivilege.NANO_API;
+
 /**
- * Handle telegram request
+ * Handle telegram requests
  *
  * @see TelegramService
  * @see Authorized
  */
 @Slf4j
-@Authorized
+@Authorized(NANO_API)
 @CrossOrigin
 @RestController
 @RequiredArgsConstructor

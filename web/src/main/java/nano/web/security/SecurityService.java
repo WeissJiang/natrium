@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import nano.support.Json;
 import nano.web.controller.security.TokenDTO;
 import nano.web.nano.ConfigVars;
 import nano.web.security.entity.NanoToken;
@@ -20,6 +21,7 @@ import java.util.*;
 
 import static nano.support.Sugar.*;
 import static nano.web.security.TokenCode.*;
+import static nano.web.security.TokenPrivilege.BASIC;
 
 @Slf4j
 @Service
@@ -34,14 +36,27 @@ public class SecurityService {
     private final TokenRepository tokenRepository;
 
     /**
-     * 检查API Token权限
+     * nano API Key
      */
-    public void checkNanoApiToken(String token) {
+    public void checkNanoApiKey(String key) {
+        if (StringUtils.isEmpty(key)) {
+            throw new AuthenticationException("Missing API key");
+        }
+        var apiToken = this.configVars.getNanoApiKey();
+        if (!key.equals(apiToken)) {
+            throw new AuthenticationException("Illegal API key");
+        }
+    }
+
+    /**
+     * 检查Token权限
+     */
+    public void checkTokenPrivilege(String token, List<TokenPrivilege> privilegeList) {
         if (StringUtils.isEmpty(token)) {
             throw new AuthenticationException("Missing API token");
         }
-        var apiToken = this.configVars.getNanoApiToken();
-        if (!token.equals(apiToken)) {
+        boolean exists = this.tokenRepository.existsTokenWithPrivilege(token, map(privilegeList, TokenPrivilege::name));
+        if (!exists) {
             throw new AuthenticationException("Illegal API token");
         }
     }
@@ -99,6 +114,7 @@ public class SecurityService {
         var now = Timestamp.from(Instant.now());
         token.setCreationTime(now);
         token.setLastActiveTime(now);
+        token.setPrivilege(Json.encode(List.of(BASIC.name())));
         this.tokenRepository.createToken(token);
         return Map.of("token", originalToken, "verificationCode", verificationCode);
     }
@@ -201,5 +217,6 @@ public class SecurityService {
     private static Parser createUserAgentParser() {
         return new Parser();
     }
+
 
 }

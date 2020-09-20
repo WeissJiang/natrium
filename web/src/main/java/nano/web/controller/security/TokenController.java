@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import static nano.web.security.TokenCode.*;
+import static nano.web.security.TokenPrivilege.NANO_API;
 
 @Slf4j
 @CrossOrigin
@@ -58,7 +59,7 @@ public class TokenController {
         return ResponseEntity.ok(Result.of(tokenList));
     }
 
-    @Authorized
+    @Authorized(NANO_API)
     @PostMapping("/pruneVerificatingTimeoutToken")
     public ResponseEntity<?> verificatingTimeoutToken() {
         var count = this.securityService.pruneVerificatingTimeoutToken();

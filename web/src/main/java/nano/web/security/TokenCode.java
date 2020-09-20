@@ -15,20 +15,13 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public abstract class TokenCode {
 
-    public static final String BLOWFISH = "Blowfish";
-    public static final Charset utf8 = StandardCharsets.UTF_8;
-
     public static final String X_TOKEN = "X-Token";
-
-    /**
-     * desensitized token
-     */
     public static final String D_TOKEN = "DESENSITIZED_TOKEN";
 
-    private static final char[] HEX_CHARS = {
-            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-            'a', 'b', 'c', 'd', 'e', 'f'
-    };
+    private static final String BLOWFISH = "Blowfish";
+    private static final Charset utf8 = StandardCharsets.UTF_8;
+    private static final char[] HEX_CHARS =
+            {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
     /**
      * 生成随机6位验证码

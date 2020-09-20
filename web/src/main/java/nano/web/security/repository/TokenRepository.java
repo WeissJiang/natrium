@@ -1,6 +1,7 @@
 package nano.web.security.repository;
 
 import lombok.RequiredArgsConstructor;
+import nano.support.Json;
 import nano.support.jdbc.SimpleJdbcSelect;
 import nano.web.security.entity.NanoToken;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
@@ -76,10 +77,14 @@ public class TokenRepository {
     }
 
     public void createToken(NanoToken token) {
-        var insert = new SimpleJdbcInsert(this.jdbcTemplate.getJdbcTemplate())
-                .withTableName("nano_token").usingGeneratedKeyColumns("id");
+        var sql = """
+                INSERT INTO nano_token (token, name, chat_id, user_id, status, privilege,
+                                        last_active_time, creation_time)
+                VALUES (:token, :name, :chatId, :userId, :status, :privilege::JSONB,
+                        :lastActiveTime, :lastActiveTime);
+                """;
         var paramSource = new BeanPropertySqlParameterSource(token);
-        insert.execute(paramSource);
+        this.jdbcTemplate.update(slim(sql), paramSource);
     }
 
     public void updateToken(NanoToken token) {
@@ -88,6 +93,7 @@ public class TokenRepository {
                 SET chat_id          = :chatId,
                     user_id          = :userId,
                     status           = :status,
+                    privilege        = :privilege::JSONB
                     last_active_time = :lastActiveTime
                 WHERE token = :token;
                 """;
@@ -113,7 +119,6 @@ public class TokenRepository {
         this.jdbcTemplate.update(slim(sql), Map.of("idList", idList));
     }
 
-
     public void batchDeleteByToken(List<String> tokenList) {
         var sql = """
                 DELETE
@@ -123,4 +128,20 @@ public class TokenRepository {
         this.jdbcTemplate.update(slim(sql), Map.of("tokenList", tokenList));
     }
 
+    /**
+     * @see <a href="https://github.com/spring-projects/spring-framework/issues/17773">SPR-13181</a>
+     */
+    public boolean existsTokenWithPrivilege(String token, List<String> privilegeList) {
+        var sql = """
+                SELECT EXISTS(SELECT token
+                              FROM nano_token
+                              WHERE status = 'VALID'
+                                AND token = :token
+                                AND JSONB_EXISTS_ALL(privilege, ARRAY [ :privilegeList ]));
+                """;
+        var rowMapper = new SingleColumnRowMapper<>(Boolean.class);
+        var paramMap = Map.of("token", token, "privilegeList", privilegeList);
+        var exists = this.jdbcTemplate.query(slim(sql), paramMap, rowMapper);
+        return Boolean.TRUE.equals(getFirst(exists));
+    }
 }

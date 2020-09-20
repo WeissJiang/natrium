@@ -10,7 +10,9 @@ import java.util.Map;
 @Data
 public class Scripting {
 
-    // https://html.spec.whatwg.org/multipage/scripting.html#scriptingLanguages
+    /**
+     * @see <a href="https://html.spec.whatwg.org/multipage/scripting.html#scriptingLanguages">Scripting languages</a>
+     */
     public static final MediaType TEXT_JAVASCRIPT = MediaType.parseMediaType("text/javascript");
     public static final Map<String, MediaType> MEDIA_TYPE = Map.of(
             "mjs", TEXT_JAVASCRIPT, "jsx", TEXT_JAVASCRIPT,

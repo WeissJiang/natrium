@@ -62,7 +62,7 @@ public class SessionRepository {
     public void updateAttributes(Integer id, String attributes) {
         var sql = """
                 UPDATE nano_session
-                SET attributes = :attributes
+                SET attributes = :attributes::JSON
                 WHERE id = :id;
                 """;
         this.jdbcTemplate.update(slim(sql), Map.of("id", id, "attributes", attributes));

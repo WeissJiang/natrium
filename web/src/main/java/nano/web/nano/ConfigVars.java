@@ -13,7 +13,11 @@ public class ConfigVars {
      */
     private String botName;
     private String nanoApi;
-    private String nanoApiToken;
+
+    /**
+     * For verifying the Telegram webhook
+     */
+    private String nanoApiKey;
 
     /**
      * Telegram Bot token

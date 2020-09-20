@@ -11,7 +11,7 @@ public class NanoToken {
     public static final String VALID = "VALID";
     public static final String INVALID = "INVALID";
     public static final String VERIFICATING = "VERIFICATING";
-    // verificating result
+    // verificating
     public static final String VERIFICATION_TIMEOUT = "VERIFICATION_TIMEOUT";
     public static final String VERIFICATED = "VERIFICATED";
 
@@ -36,6 +36,13 @@ public class NanoToken {
      * VERIFICATING:{username}:{code}
      */
     private String status;
+
+    /**
+     * 权限
+     *
+     * @see nano.web.security.TokenPrivilege
+     */
+    private String privilege;
 
     private Timestamp lastActiveTime;
     private Timestamp creationTime;

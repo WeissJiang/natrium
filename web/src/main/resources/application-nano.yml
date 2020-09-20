@@ -1,4 +1,4 @@
 nano:
   bot-name: nano_telegram_bot
   nano-api: https://nano-bot.herokuapp.com
-  nano-api-token: token
+  nano-api-key: token

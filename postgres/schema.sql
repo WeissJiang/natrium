@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS nano_session
     creation_time      TIMESTAMPTZ,
     UNIQUE (chat_id, user_id)
 );
+
 -- nano_chat
 DROP TABLE IF EXISTS nano_chat;
 CREATE TABLE IF NOT EXISTS nano_chat
@@ -20,6 +21,7 @@ CREATE TABLE IF NOT EXISTS nano_chat
     firstname VARCHAR,
     type      VARCHAR
 );
+
 -- nano_chat
 DROP TABLE IF EXISTS nano_user;
 CREATE TABLE IF NOT EXISTS nano_user
@@ -30,6 +32,7 @@ CREATE TABLE IF NOT EXISTS nano_user
     is_bot        BOOL,
     language_code VARCHAR
 );
+
 -- nano_token
 DROP TABLE IF EXISTS nano_token;
 CREATE TABLE IF NOT EXISTS nano_token
@@ -40,9 +43,9 @@ CREATE TABLE IF NOT EXISTS nano_token
     chat_id          BIGINT,
     user_id          BIGINT,
     status           VARCHAR DEFAULT 'VALID',
+    privilege        JSONB,
     last_active_time TIMESTAMPTZ,
     creation_time    TIMESTAMPTZ,
     UNIQUE (token)
 );
-
-COMMENT ON COLUMN nano_token.status IS 'VALID,INVALID,VERIFICATING:{username}:{code}'
+COMMENT ON COLUMN nano_token.status IS 'VALID,INVALID,VERIFICATING:{username}:{code}';

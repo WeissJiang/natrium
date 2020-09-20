@@ -7,9 +7,12 @@ import java.lang.annotation.*;
  *
  * @see SecurityService
  * @see AuthenticationInterceptor
+ * @see TokenPrivilege
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Authorized {
+
+    TokenPrivilege[] value() default TokenPrivilege.BASIC;
 }

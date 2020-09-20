@@ -31,9 +31,9 @@ public class TelegramService {
     private final ConfigVars configVars;
 
     public Map<String, Object> setWebhook() {
-        var apiToken = this.configVars.getNanoApiToken();
+        var apiKey = this.configVars.getNanoApiKey();
         var nanoApi = this.configVars.getNanoApi();
-        var url = "%s/api/telegram/webhook/%s".formatted(nanoApi, apiToken);
+        var url = "%s/api/telegram/webhook/%s".formatted(nanoApi, apiKey);
         return this.call("setWebhook", Map.of("url", url));
     }
 

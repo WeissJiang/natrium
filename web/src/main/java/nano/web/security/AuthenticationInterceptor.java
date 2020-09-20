@@ -10,6 +10,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.List;
+
 import static nano.web.security.TokenCode.*;
 
 @Component
@@ -24,10 +26,13 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                              @NotNull HttpServletResponse response,
                              @NotNull Object handler) {
         if (handler instanceof HandlerMethod handlerMethod) {
-            if (handlerMethod.hasMethodAnnotation(Authorized.class)
-                || handlerMethod.getBeanType().isAnnotationPresent(Authorized.class)) {
-                var token = request.getHeader(X_TOKEN);
-                this.securityService.checkNanoApiToken(token);
+            var authorized = handlerMethod.getMethodAnnotation(Authorized.class);
+            if (authorized == null) {
+                authorized = handlerMethod.getBeanType().getAnnotation(Authorized.class);
+            }
+            if (authorized != null) {
+                var token = (String) request.getAttribute(D_TOKEN);
+                this.securityService.checkTokenPrivilege(token, List.of(authorized.value()));
             }
         }
         return true;
