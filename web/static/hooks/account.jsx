@@ -24,7 +24,7 @@ export function useToken() {
     const [token, internalSetToken] = useState(() => getLocalItem(TOKEN))
 
     function setLocalToken(token) {
-        if (token == null) {
+        if (token === null) {
             removeLocalItem(TOKEN)
         } else {
             setLocalItem(TOKEN, token)
