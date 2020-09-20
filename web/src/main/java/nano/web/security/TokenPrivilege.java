@@ -7,5 +7,14 @@ package nano.web.security;
  * @see nano.web.security.entity.NanoToken
  */
 public enum TokenPrivilege {
-    BASIC, NANO_API, TELEGRAM_WEBHOOK
+
+    /**
+     * Basic API
+     */
+    BASIC,
+
+    /**
+     * System API
+     */
+    NANO_API,
 }

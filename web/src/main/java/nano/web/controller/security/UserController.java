@@ -4,11 +4,13 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nano.web.controller.Result;
+import nano.web.security.Authorized;
 import nano.web.security.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static nano.web.security.TokenCode.*;
+import static nano.web.security.TokenPrivilege.BASIC;
 
 @Slf4j
 @CrossOrigin
@@ -20,6 +22,7 @@ public class UserController {
     @NonNull
     private final UserService userService;
 
+    @Authorized(BASIC)
     @GetMapping("/user")
     public ResponseEntity<?> getUser(@RequestAttribute(D_TOKEN) String token) {
         var userDTO = this.userService.getUserByToken(token);

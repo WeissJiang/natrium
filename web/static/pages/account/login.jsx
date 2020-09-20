@@ -69,6 +69,10 @@ function Login(props) {
             setToken(null)
         }
 
+        const backUrl = getBackUrl()
+        if (backUrl) {
+            location.href = backUrl
+        }
         return <LoggedInBox user={user} handleLogout={handleLogout}/>
     }
 

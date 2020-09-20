@@ -36,7 +36,7 @@ public class SecurityService {
     private final TokenRepository tokenRepository;
 
     /**
-     * nano API Key
+     * Check nano API Key
      */
     public void checkNanoApiKey(String key) {
         if (StringUtils.isEmpty(key)) {
@@ -53,11 +53,11 @@ public class SecurityService {
      */
     public void checkTokenPrivilege(String token, List<TokenPrivilege> privilegeList) {
         if (StringUtils.isEmpty(token)) {
-            throw new AuthenticationException("Missing API token");
+            throw new AuthenticationException("Missing token");
         }
         boolean exists = this.tokenRepository.existsTokenWithPrivilege(token, map(privilegeList, TokenPrivilege::name));
         if (!exists) {
-            throw new AuthenticationException("Illegal API token");
+            throw new AuthenticationException("Illegal token");
         }
     }
 
@@ -211,7 +211,6 @@ public class SecurityService {
             return "Unknow";
         }
     }
-
 
     @SneakyThrows
     private static Parser createUserAgentParser() {

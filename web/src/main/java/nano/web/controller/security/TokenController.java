@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import static nano.web.security.TokenCode.*;
-import static nano.web.security.TokenPrivilege.NANO_API;
+import static nano.web.security.TokenPrivilege.*;
 
 @Slf4j
 @CrossOrigin
@@ -39,6 +39,7 @@ public class TokenController {
         return ResponseEntity.ok(Result.of(result));
     }
 
+    @Authorized(BASIC)
     @PostMapping("/delete")
     public ResponseEntity<?> deleteToken(@RequestAttribute(D_TOKEN) String token,
                                          @RequestParam(name = "id", required = false) List<Integer> idList) {
@@ -53,6 +54,7 @@ public class TokenController {
         return ResponseEntity.ok(Result.empty());
     }
 
+    @Authorized(BASIC)
     @GetMapping("/list")
     public ResponseEntity<?> getTokenList(@RequestAttribute(D_TOKEN) String token) {
         var tokenList = this.securityService.getAssociatedTokenList(token);

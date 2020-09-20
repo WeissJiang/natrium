@@ -1,13 +1,11 @@
 package nano.web.security.repository;
 
 import lombok.RequiredArgsConstructor;
-import nano.support.Json;
 import nano.support.jdbc.SimpleJdbcSelect;
 import nano.web.security.entity.NanoToken;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
@@ -93,7 +91,7 @@ public class TokenRepository {
                 SET chat_id          = :chatId,
                     user_id          = :userId,
                     status           = :status,
-                    privilege        = :privilege::JSONB
+                    privilege        = :privilege::JSONB,
                     last_active_time = :lastActiveTime
                 WHERE token = :token;
                 """;

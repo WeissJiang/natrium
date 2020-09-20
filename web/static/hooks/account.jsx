@@ -3,6 +3,10 @@ import { getLocalItem, setLocalItem, removeLocalItem } from '/modules/storage.mj
 
 const { useState, useEffect } = React
 
+function isIllegalToken(result) {
+    return result?.error === 'Illegal token'
+}
+
 const TOKEN = 'token'
 
 async function fetchUser(token) {
@@ -14,7 +18,7 @@ async function fetchUser(token) {
     }
     const response = await fetch('/api/user/user', options)
     const result = await response.json()
-    if (result.error) {
+    if (result.error && !isIllegalToken(result)) {
         alert(result.error)
     }
     return result.payload

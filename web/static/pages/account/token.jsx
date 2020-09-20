@@ -70,17 +70,17 @@ function Token(props) {
         return <div>Redirecting to login page...</div>
     }
 
-    async function handleDeleteToken(id, ev) {
+    async function handleDeleteToken(target, ev) {
         ev.preventDefault()
         if (!confirm('The following token will be permanently deleted, are you sure you want to continue?')) {
             return
         }
-        await fetchDeleteToken(token, [id])
-        const tokenList = await fetchTokenList(token)
-        if (!tokenList.length) {
+        await fetchDeleteToken(token, [target.id])
+        if (target.current) {
             redirectToLoginPage()
             return
         }
+        const tokenList = await fetchTokenList(token)
         setTokenList(tokenList)
     }
 
@@ -103,7 +103,7 @@ function Token(props) {
                         <td>{it['name']}</td>
                         <td>{isoToLocal(it['lastActiveTime'])}</td>
                         <td className={style['operation']}>
-                            <a href="" onClick={(ev) => handleDeleteToken(it.id, ev)}>DELETE</a>
+                            <a href="" onClick={(ev) => handleDeleteToken(it, ev)}>DELETE</a>
                         </td>
                     </tr>
                 ))}
