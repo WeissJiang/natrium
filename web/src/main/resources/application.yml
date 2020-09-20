@@ -16,3 +16,7 @@ spring:
     active: dev
   rabbitmq:
     addresses: ${CLOUDAMQP_URL:}
+logging:
+  level:
+    # org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver#resolveException
+    org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: error
