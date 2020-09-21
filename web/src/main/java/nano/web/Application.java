@@ -1,10 +1,11 @@
 package nano.web;
 
 import nano.support.configuration.ConditionalOnRabbit;
-import nano.web.nano.ConfigVars;
-import nano.web.security.AuthenticationInterceptor;
+import nano.support.templating.SugarViewResolver;
 import nano.web.messageing.ExchangeDeclarer;
+import nano.web.nano.ConfigVars;
 import nano.web.scripting.Scripting;
+import nano.web.security.AuthenticationInterceptor;
 import nano.web.security.TokenDesensitizationInterceptor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -15,7 +16,6 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -34,6 +34,18 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
+    }
+
+    /**
+     * Templating
+     *
+     * @see nano.support.Sugar#render
+     */
+    @Bean
+    public SugarViewResolver sugarViewResolver() {
+        var resolver = new SugarViewResolver();
+        resolver.setPrefix("classpath:/templates/");
+        return resolver;
     }
 
     /**
