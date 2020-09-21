@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: nano-web
+  profiles:
+    include: nano
+    active: dev
+  mvc:
+    log-resolved-exception: false
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/postgres}
@@ -11,12 +16,5 @@ spring:
     password: ${JDBC_DATABASE_PASSWORD:password}
     hikari:
       maximum-pool-size: 8
-  profiles:
-    include: nano
-    active: dev
   rabbitmq:
     addresses: ${CLOUDAMQP_URL:}
-logging:
-  level:
-    # org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver#resolveException
-    org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: error

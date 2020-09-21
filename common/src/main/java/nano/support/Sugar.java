@@ -7,7 +7,10 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * 一点语法糖
@@ -87,6 +90,11 @@ public abstract class Sugar {
         }
         var first = collection.stream().findFirst();
         return first.orElse(null);
+    }
+
+    public static String render(@NonNull String template, Map<String, ?> scope) {
+        return Pattern.compile("(\\{(\\w+)})").matcher(template)
+                .replaceAll(mr -> requireNonNull(scope.get(mr.group(2)), mr.group(1) + " not found in scope").toString());
     }
 
     public static boolean isEmpty(Collection<?> collection) {
