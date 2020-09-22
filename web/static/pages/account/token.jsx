@@ -6,7 +6,7 @@ import style from './style.module.less'
 const { useState, useEffect } = React
 
 function redirectToLoginPage() {
-    const loginUrl = '/login.html'
+    const loginUrl = '/login'
     const backUrl = new URL(location.href).pathname
     const searchParams = new URLSearchParams({ backUrl })
     location.href = `${loginUrl}?${searchParams}`

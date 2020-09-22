@@ -1,4 +1,4 @@
-package nano.web.controller.nano;
+package nano.web.controller.view;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
