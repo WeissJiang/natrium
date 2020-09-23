@@ -2,6 +2,7 @@ package nano.web.security.repository;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import nano.support.jdbc.SimpleJdbcSelect;
 import nano.web.security.entity.NanoUser;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -19,6 +20,14 @@ public class UserRepository {
 
     @NonNull
     private final NamedParameterJdbcTemplate jdbcTemplate;
+
+    public NanoUser queryUser(Long id) {
+        var select = new SimpleJdbcSelect<>(NanoUser.class)
+                .withTableName("nano_session").whereEqual("id").limit(1);
+        var paramMap = Map.of("id", id);
+        var userList = select.usesJdbcTemplate(this.jdbcTemplate).query(paramMap);
+        return getFirst(userList);
+    }
 
     public void upsertUser(NanoUser nanoUser) {
         var sql = """

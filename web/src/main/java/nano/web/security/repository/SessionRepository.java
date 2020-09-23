@@ -2,6 +2,7 @@ package nano.web.security.repository;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import nano.support.Sugar;
 import nano.web.security.entity.NanoSession;
 import nano.support.jdbc.SimpleJdbcSelect;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -15,6 +16,7 @@ import java.sql.Timestamp;
 import java.util.Map;
 
 import static nano.support.EntityUtils.*;
+import static nano.support.Sugar.getFirst;
 
 @Repository
 @RequiredArgsConstructor
@@ -28,10 +30,7 @@ public class SessionRepository {
                 .withTableName("nano_session").whereEqual("chat_id", "user_id").limit(1);
         var paramMap = Map.of("chatId", chatId, "userId", userId);
         var sessionList = select.usesJdbcTemplate(this.jdbcTemplate).query(paramMap);
-        if (CollectionUtils.isEmpty(sessionList)) {
-            return null;
-        }
-        return sessionList.get(0);
+        return getFirst(sessionList);
     }
 
     public Integer createSessionAndReturnsKey(NanoSession nanoSession) {

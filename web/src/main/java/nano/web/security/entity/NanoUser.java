@@ -12,8 +12,9 @@ public class NanoUser {
 
     private String username;
     private String firstname;
-    private Boolean isBot;
     private String languageCode;
+
+    private Boolean isBot;
 
     private String email;
 }

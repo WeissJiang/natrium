@@ -2,6 +2,7 @@ package nano.web.security;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import nano.support.Sugar;
 import nano.web.security.entity.NanoChat;
 import nano.web.security.entity.NanoSession;
 import nano.web.security.entity.NanoUser;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Objects;
+
+import static nano.support.Sugar.*;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +48,17 @@ public class SessionService {
     }
 
     private void updateOrCreateUserIfAbsent(NanoUser user) {
-        this.userRepository.upsertUser(user);
+        var exist = this.userRepository.queryUser(user.getId());
+        if (exist == null) {
+            this.userRepository.upsertUser(user);
+        }
+        // user changed
+        else if (!is(user::getUsername, exist::getUsername)
+                 || !is(user::getFirstname, exist::getFirstname)
+                 || !is(user::getLanguageCode, exist::getLanguageCode)) {
+            user.setEmail(exist.getEmail());
+            this.userRepository.upsertUser(user);
+        }
     }
 
     private NanoSession internalGetSession(SessionKey key) {
