@@ -6,6 +6,7 @@ import nano.web.messageing.MailService;
 import nano.web.telegram.BotContext;
 import nano.web.telegram.handler.AbstractCommandHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 /**
  * 发送邮件给自己
@@ -20,7 +21,11 @@ public class MailHandler extends AbstractCommandHandler {
     @Override
     protected void handle(BotContext context, String tail) {
         var email = context.getSession().getUser().getEmail();
-        this.mailService.sendTextMail(email, tail);
+        if (StringUtils.isEmpty(email)) {
+            context.sendMessage("邮箱📮未设置，发送/setmail设置邮箱，如：\n/setmail mail@example.com");
+        } else {
+            this.mailService.sendTextMail(email, tail);
+        }
     }
 
     @Override

@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nano.web.controller.security.UserDTO;
+import nano.web.security.entity.NanoUser;
 import nano.web.security.repository.TokenRepository;
 import nano.web.security.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -36,5 +37,9 @@ public class UserService {
         userDTO.setFirstname(user.getFirstname());
         this.tokenRepository.updateLastActiveTime(token, Timestamp.from(Instant.now()));
         return userDTO;
+    }
+
+    public void createOrUpdateUser(NanoUser user) {
+        this.userRepository.upsertUser(user);
     }
 }
