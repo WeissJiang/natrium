@@ -54,10 +54,14 @@ public class SessionService {
         if (exist == null) {
             this.userRepository.upsertUser(user);
         }
-        // user changed
-        else if (!is(user::getUsername, exist::getUsername)
-                 || !is(user::getFirstname, exist::getFirstname)
-                 || !is(user::getLanguageCode, exist::getLanguageCode)) {
+        // user not changed
+        else if (is(user::getUsername, exist::getUsername)
+                 && is(user::getFirstname, exist::getFirstname)
+                 && is(user::getLanguageCode, exist::getLanguageCode)) {
+            user.setEmail(exist.getEmail());
+        }
+        //  user not changed
+        else {
             user.setEmail(exist.getEmail());
             this.userRepository.upsertUser(user);
         }
