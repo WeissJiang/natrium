@@ -23,7 +23,7 @@ public class UserRepository {
 
     public NanoUser queryUser(Long id) {
         var select = new SimpleJdbcSelect<>(NanoUser.class)
-                .withTableName("nano_session").whereEqual("id").limit(1);
+                .withTableName("nano_user").whereEqual("id").limit(1);
         var paramMap = Map.of("id", id);
         var userList = select.usesJdbcTemplate(this.jdbcTemplate).query(paramMap);
         return getFirst(userList);

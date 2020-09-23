@@ -27,7 +27,7 @@ public class MailService {
         var helper = new MimeMessageHelper(message);
         helper.setFrom(this.fromAddress);
         helper.setTo(to);
-        helper.setSubject("");
+        helper.setSubject("Shinonome Research Institute Mail Service");
         helper.setText(text);
         mailSender.send(message);
     }

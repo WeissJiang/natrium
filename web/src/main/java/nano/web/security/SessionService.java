@@ -2,7 +2,7 @@ package nano.web.security;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import nano.support.Sugar;
+import nano.support.Json;
 import nano.web.security.entity.NanoChat;
 import nano.web.security.entity.NanoSession;
 import nano.web.security.entity.NanoUser;
@@ -11,14 +11,13 @@ import nano.web.security.model.SessionKey;
 import nano.web.security.repository.ChatRepository;
 import nano.web.security.repository.SessionRepository;
 import nano.web.security.repository.UserRepository;
-import nano.support.Json;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Objects;
 
-import static nano.support.Sugar.*;
+import static nano.support.Sugar.is;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +43,10 @@ public class SessionService {
     }
 
     private void updateOrCreateChatIfAbsent(NanoChat chat) {
-        this.chatRepository.upsertChat(chat);
+        var exist = this.chatRepository.queryChat(chat.getId());
+        if (!Objects.equals(exist, chat)) {
+            this.chatRepository.upsertChat(chat);
+        }
     }
 
     private void updateOrCreateUserIfAbsent(NanoUser user) {

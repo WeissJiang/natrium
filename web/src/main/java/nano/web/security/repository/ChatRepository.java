@@ -2,12 +2,17 @@ package nano.web.security.repository;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import nano.support.jdbc.SimpleJdbcSelect;
 import nano.web.security.entity.NanoChat;
+import nano.web.security.entity.NanoUser;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.Map;
+
 import static nano.support.EntityUtils.slim;
+import static nano.support.Sugar.getFirst;
 
 @Repository
 @RequiredArgsConstructor
@@ -15,6 +20,14 @@ public class ChatRepository {
 
     @NonNull
     private final NamedParameterJdbcTemplate jdbcTemplate;
+
+    public NanoChat queryChat(Long id) {
+        var select = new SimpleJdbcSelect<>(NanoChat.class)
+                .withTableName("nano_chat").whereEqual("id").limit(1);
+        var paramMap = Map.of("id", id);
+        var chatList = select.usesJdbcTemplate(this.jdbcTemplate).query(paramMap);
+        return getFirst(chatList);
+    }
 
     public void upsertChat(NanoChat nanoChat){
         var sql = """
