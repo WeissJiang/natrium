@@ -3,14 +3,18 @@ package nano.web.security;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nano.support.Json;
 import nano.web.controller.security.UserDTO;
+import nano.web.security.entity.NanoToken;
 import nano.web.security.entity.NanoUser;
 import nano.web.security.repository.TokenRepository;
 import nano.web.security.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -41,5 +45,23 @@ public class UserService {
 
     public void createOrUpdateUser(NanoUser user) {
         this.userRepository.upsertUser(user);
+    }
+
+    public List<NanoToken> queryUserToken(Long userId) {
+        return this.tokenRepository.queryUserTokenList(userId);
+    }
+
+    public boolean hasPrivilege(Long userId, NanoPrivilege privilege) {
+        var nanoTokens = this.queryUserToken(userId);
+        if (CollectionUtils.isEmpty(nanoTokens)) {
+            return false;
+        }
+        for (NanoToken token : nanoTokens) {
+            var pl = Json.decodeValueAsList(token.getPrivilege());
+            if (pl.contains(privilege.name())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

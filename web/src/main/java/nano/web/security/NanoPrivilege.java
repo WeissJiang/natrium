@@ -6,7 +6,7 @@ package nano.web.security;
  * @see Authorized
  * @see nano.web.security.entity.NanoToken
  */
-public enum TokenPrivilege {
+public enum NanoPrivilege {
 
     /**
      * Basic API
@@ -17,4 +17,9 @@ public enum TokenPrivilege {
      * System API
      */
     NANO_API,
+
+    /**
+     * Mail service
+     */
+    MAIL,
 }

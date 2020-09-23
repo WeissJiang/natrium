@@ -22,7 +22,7 @@ public class MailHandler extends AbstractCommandHandler {
     protected void handle(BotContext context, String tail) {
         var email = context.getSession().getUser().getEmail();
         if (StringUtils.isEmpty(email)) {
-            context.sendMessage("邮箱📮未设置，发送/setmail设置邮箱，如：\n/setmail mail@example.com");
+            context.sendMessage("邮箱📮未设置，发送/setmail设置邮箱，如：\n/setmail alice@google.com");
         } else {
             this.mailService.sendTextMail(email, tail);
         }

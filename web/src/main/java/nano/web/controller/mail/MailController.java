@@ -11,7 +11,7 @@ import org.springframework.amqp.rabbit.core.RabbitMessagingTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static nano.web.security.TokenPrivilege.NANO_API;
+import static nano.web.security.NanoPrivilege.NANO_API;
 
 /**
  * Send mail

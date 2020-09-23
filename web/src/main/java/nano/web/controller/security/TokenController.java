@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import static nano.web.security.TokenCode.*;
-import static nano.web.security.TokenPrivilege.*;
+import static nano.web.security.NanoPrivilege.*;
 
 @Slf4j
 @CrossOrigin

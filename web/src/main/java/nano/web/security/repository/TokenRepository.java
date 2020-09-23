@@ -142,4 +142,10 @@ public class TokenRepository {
         var exists = this.jdbcTemplate.query(slim(sql), paramMap, rowMapper);
         return Boolean.TRUE.equals(getFirst(exists));
     }
+
+    public List<NanoToken> queryUserTokenList(Long userId) {
+        var select = new SimpleJdbcSelect<>(NanoToken.class)
+                .withTableName("nano_token").whereEqual("user_id").limit(1);
+        return select.usesJdbcTemplate(this.jdbcTemplate).query(Map.of("userId", userId));
+    }
 }

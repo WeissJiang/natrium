@@ -2,6 +2,7 @@ package nano.web.telegram.handler.command;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import nano.web.security.NanoPrivilege;
 import nano.web.security.UserService;
 import nano.web.security.entity.NanoUser;
 import nano.web.security.repository.UserRepository;
@@ -22,9 +23,14 @@ public class MailSetupHandler extends AbstractCommandHandler {
     @Override
     protected void handle(BotContext context, String tail) {
         var user = context.getSession().getUser();
-        user.setEmail(tail);
-        this.userService.createOrUpdateUser(user);
-        context.sendMessage("设置成功");
+        if (this.userService.hasPrivilege(user.getId(), NanoPrivilege.MAIL)) {
+            user.setEmail(tail);
+            this.userService.createOrUpdateUser(user);
+            context.sendMessage("设置成功");
+        } else {
+            context.sendMessage("设置失败，无邮件📧服务权限");
+        }
+
     }
 
     @Override

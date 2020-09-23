@@ -21,7 +21,7 @@ import java.util.*;
 
 import static nano.support.Sugar.*;
 import static nano.web.security.TokenCode.*;
-import static nano.web.security.TokenPrivilege.BASIC;
+import static nano.web.security.NanoPrivilege.BASIC;
 
 @Slf4j
 @Service
@@ -51,11 +51,11 @@ public class SecurityService {
     /**
      * 检查Token权限
      */
-    public void checkTokenPrivilege(String token, List<TokenPrivilege> privilegeList) {
+    public void checkTokenPrivilege(String token, List<NanoPrivilege> privilegeList) {
         if (StringUtils.isEmpty(token)) {
             throw new AuthenticationException("Missing token");
         }
-        boolean exists = this.tokenRepository.existsTokenWithPrivilege(token, map(privilegeList, TokenPrivilege::name));
+        boolean exists = this.tokenRepository.existsTokenWithPrivilege(token, map(privilegeList, NanoPrivilege::name));
         if (!exists) {
             throw new AuthenticationException("Illegal token");
         }

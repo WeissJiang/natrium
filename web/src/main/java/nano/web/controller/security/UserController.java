@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static nano.web.security.TokenCode.*;
-import static nano.web.security.TokenPrivilege.BASIC;
+import static nano.web.security.NanoPrivilege.BASIC;
 
 @Slf4j
 @CrossOrigin

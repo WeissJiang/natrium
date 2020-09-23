@@ -1,6 +1,7 @@
 package nano.web.security.entity;
 
 import lombok.Data;
+import nano.web.security.NanoPrivilege;
 
 import java.sql.Timestamp;
 
@@ -40,7 +41,7 @@ public class NanoToken {
     /**
      * 权限
      *
-     * @see nano.web.security.TokenPrivilege
+     * @see NanoPrivilege
      */
     private String privilege;
 
