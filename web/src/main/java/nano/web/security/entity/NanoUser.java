@@ -14,4 +14,6 @@ public class NanoUser {
     private String firstname;
     private Boolean isBot;
     private String languageCode;
+
+    private String email;
 }

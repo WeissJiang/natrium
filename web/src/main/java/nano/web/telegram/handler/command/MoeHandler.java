@@ -35,7 +35,7 @@ public class MoeHandler extends AbstractCommandHandler {
     @Override
     protected String help() {
         return """
-                Usage: /moe title
+                Usage: /moe {title}
                 """;
     }
 }

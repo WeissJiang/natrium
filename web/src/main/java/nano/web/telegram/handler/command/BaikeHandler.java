@@ -34,7 +34,7 @@ public class BaikeHandler extends AbstractCommandHandler {
     @Override
     protected String help() {
         return """
-                Usage: /baike title
+                Usage: /baike {title}
                 """;
     }
 }

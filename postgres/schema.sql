@@ -30,7 +30,8 @@ CREATE TABLE IF NOT EXISTS nano_user
     username      VARCHAR,
     firstname     VARCHAR,
     is_bot        BOOL,
-    language_code VARCHAR
+    language_code VARCHAR,
+    email         VARCHAR
 );
 
 -- nano_token

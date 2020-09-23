@@ -22,13 +22,14 @@ public class UserRepository {
 
     public void upsertUser(NanoUser nanoUser) {
         var sql = """
-                INSERT INTO nano_user (id, username, firstname, is_bot, language_code)
-                VALUES (:id, :username, :firstname, :isBot, :languageCode)
+                INSERT INTO nano_user (id, username, firstname, is_bot, language_code, email)
+                VALUES (:id, :username, :firstname, :isBot, :languageCode, :email)
                 ON CONFLICT (id)
                     DO UPDATE SET username      = EXCLUDED.username,
                                   firstname     = EXCLUDED.firstname,
                                   is_bot        = EXCLUDED.is_bot,
-                                  language_code = EXCLUDED.language_code;
+                                  language_code = EXCLUDED.language_code,
+                                  email         = EXCLUDED.email;
                 """;
         var paramSource = new BeanPropertySqlParameterSource(nanoUser);
         this.jdbcTemplate.update(slim(sql), paramSource);
@@ -40,7 +41,8 @@ public class UserRepository {
                        nu.firstname     AS firstname,
                        nu.username      AS username,
                        nu.language_code AS language_code,
-                       nu.is_bot        AS is_bot
+                       nu.is_bot        AS is_bot,
+                       nu.email         AS email
                 FROM nano_token nt
                          JOIN nano_user nu on nt.user_id = nu.id
                 WHERE nt.status = 'VALID'

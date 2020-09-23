@@ -33,7 +33,7 @@ public class BabelHandler extends AbstractCommandHandler {
     @Override
     protected String help() {
         return """
-                Usage: /babel text
+                Usage: /babel {text}
                 """;
     }
 }

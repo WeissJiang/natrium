@@ -27,7 +27,7 @@ public class EvalHandler extends AbstractCommandHandler {
     @Override
     protected String help() {
         return """
-                Usage: /eval script
+                Usage: /eval {script}
                 """;
     }
 

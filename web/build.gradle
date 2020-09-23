@@ -55,6 +55,7 @@ dependencies {
     // postgresql
     implementation 'org.postgresql:postgresql:42.2.16'
     // spring
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
