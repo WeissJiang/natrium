@@ -25,6 +25,8 @@ public class MailHandler extends AbstractCommandHandler {
             context.sendMessage("邮箱📮未设置，发送/setmail设置邮箱，如：\n/setmail alice@google.com");
         } else {
             this.mailService.sendTextMail(email, tail);
+            context.sendMessage("邮件📧投递成功");
+
         }
     }
 

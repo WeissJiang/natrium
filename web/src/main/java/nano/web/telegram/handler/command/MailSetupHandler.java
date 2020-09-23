@@ -4,8 +4,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import nano.web.security.NanoPrivilege;
 import nano.web.security.UserService;
-import nano.web.security.entity.NanoUser;
-import nano.web.security.repository.UserRepository;
 import nano.web.telegram.BotContext;
 import nano.web.telegram.handler.AbstractCommandHandler;
 import org.springframework.stereotype.Component;

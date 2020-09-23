@@ -5,16 +5,20 @@ import lombok.RequiredArgsConstructor;
 import nano.support.Json;
 import nano.web.security.entity.NanoChat;
 import nano.web.security.entity.NanoSession;
+import nano.web.security.entity.NanoToken;
 import nano.web.security.entity.NanoUser;
 import nano.web.security.model.Session;
 import nano.web.security.model.SessionKey;
 import nano.web.security.repository.ChatRepository;
 import nano.web.security.repository.SessionRepository;
+import nano.web.security.repository.TokenRepository;
 import nano.web.security.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 
 import static nano.support.Sugar.is;
@@ -29,17 +33,43 @@ public class SessionService {
     private final ChatRepository chatRepository;
     @NonNull
     private final UserRepository userRepository;
+    @NonNull
+    private final TokenRepository tokenRepository;
 
+    @Transactional
     public Session getSession(SessionKey key, NanoChat chat, NanoUser user) {
         var internalSession = this.internalGetSession(key);
         this.updateOrCreateChatIfAbsent(chat);
         this.updateOrCreateUserIfAbsent(user);
-
-        var session = new Session(internalSession, chat, user);
+        var token = this.getOrCreateTokenIfAbsent(user.getId(), chat.getId());
+        var session = new Session(internalSession, chat, user, token);
         // put attributes
         var attributesJson = internalSession.getAttributes();
         session.getAttributes().putAll(Json.decodeValueAsMap(attributesJson));
         return session;
+    }
+
+    private NanoToken getOrCreateTokenIfAbsent(Long userId, Long chatId) {
+        var tokenKey = "%s-%s".formatted(userId, chatId);
+        var token = this.tokenRepository.queryToken(tokenKey);
+        var now = Timestamp.from(Instant.now());
+        if (token == null) {
+            token = new NanoToken();
+            token.setPrivilege(Json.encode(List.of(NanoPrivilege.BASIC.name())));
+            token.setName("Telegram");
+            token.setLastActiveTime(now);
+            token.setCreationTime(now);
+            token.setUserId(userId);
+            token.setChatId(chatId);
+            token.setToken(tokenKey);
+            token.setStatus(NanoToken.VALID);
+            this.tokenRepository.createToken(token);
+        }
+        // token exists
+        else {
+            this.tokenRepository.updateLastActiveTime(tokenKey, now);
+        }
+        return token;
     }
 
     private void updateOrCreateChatIfAbsent(NanoChat chat) {

@@ -3,6 +3,7 @@ package nano.web.security.model;
 import lombok.Getter;
 import nano.web.security.entity.NanoChat;
 import nano.web.security.entity.NanoSession;
+import nano.web.security.entity.NanoToken;
 import nano.web.security.entity.NanoUser;
 
 import java.util.HashMap;
@@ -18,11 +19,15 @@ public class Session {
     private final NanoChat chat;
     @Getter
     private final NanoUser user;
+    @Getter
+    private final NanoToken token;
 
-    public Session(NanoSession internalSession, NanoChat chat, NanoUser user) {
+    public Session(NanoSession internalSession,
+                   NanoChat chat, NanoUser user, NanoToken token) {
         this.internalSession = internalSession;
         this.chat = chat;
         this.user = user;
+        this.token = token;
     }
 
     public <T> T getAttribute(String key, Class<T> clazz) {
