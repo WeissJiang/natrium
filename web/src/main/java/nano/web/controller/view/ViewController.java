@@ -1,16 +1,11 @@
 package nano.web.controller.view;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class ViewController {
-
-    @Autowired
-    public ApplicationContext context;
 
     @GetMapping("/")
     public String index(Model model) {
@@ -56,7 +51,7 @@ public class ViewController {
 
     @GetMapping("/util/name-key")
     public String nameKey(Model model) {
-        model.addAttribute("title", "Name Key");
+        model.addAttribute("title", "NameKey");
         model.addAttribute("page", "/pages/util/name_key.jsx");
         return "page.html";
     }
