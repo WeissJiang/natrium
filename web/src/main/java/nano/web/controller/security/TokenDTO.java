@@ -9,6 +9,9 @@ public class TokenDTO {
 
     private Integer id;
     private String name;
+
+    private String privilege;
+
     private Instant creationTime;
     private Instant lastActiveTime;
 

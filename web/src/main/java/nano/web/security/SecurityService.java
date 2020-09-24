@@ -8,6 +8,7 @@ import nano.support.Json;
 import nano.web.controller.security.TokenDTO;
 import nano.web.nano.ConfigVars;
 import nano.web.security.entity.NanoToken;
+import nano.web.security.entity.NanoUser;
 import nano.web.security.repository.TokenRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -93,6 +94,7 @@ public class SecurityService {
             var tokenDTO = new TokenDTO();
             tokenDTO.setId(it.getId());
             tokenDTO.setName(it.getName());
+            tokenDTO.setPrivilege(it.getPrivilege());
             tokenDTO.setCreationTime(it.getCreationTime().toInstant());
             tokenDTO.setLastActiveTime(it.getLastActiveTime().toInstant());
             tokenDTO.setCurrent(Objects.equals(token, it.getToken()));
@@ -150,13 +152,15 @@ public class SecurityService {
     /**
      * 验证Token
      */
-    public Map<NanoToken, String> verificateToken(Number userId, String username, String verificationCode) {
-        var nanoTokenList = this.tokenRepository.queryVerificatingToken(username, verificationCode);
+    public Map<NanoToken, String> verificateToken(NanoUser user, NanoToken telegramToken, String verificationCode) {
+        var nanoTokenList = this.tokenRepository.queryVerificatingToken(user.getUsername(), verificationCode);
         var result = new HashMap<NanoToken, String>();
         var now = Timestamp.from(Instant.now());
         forEach(nanoTokenList, it -> {
-            it.setUserId(userId);
+            it.setUserId(user.getId());
             it.setLastActiveTime(now);
+            // copy telegram token privilege
+            it.setPrivilege(telegramToken.getPrivilege());
             // verification timeout
             if (verificatingTimeout(it)) {
                 result.put(it, NanoToken.VERIFICATION_TIMEOUT);
@@ -189,7 +193,7 @@ public class SecurityService {
     /**
      * 接口验证是否超时，5分钟超时时间
      */
-    private boolean verificatingTimeout(NanoToken nanoToken) {
+    private static boolean verificatingTimeout(NanoToken nanoToken) {
         var creationTime = nanoToken.getCreationTime();
         var now = Timestamp.from(Instant.now().minusSeconds(300));
         return now.after(creationTime);

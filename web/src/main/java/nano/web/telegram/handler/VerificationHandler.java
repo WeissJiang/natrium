@@ -29,9 +29,8 @@ public class VerificationHandler implements Onion.Middleware<BotContext> {
         var session = context.getSession();
         if (session != null && isVerificationCode(text)) {
             var user = session.getUser();
-            var username = user.getUsername();
-            var userId = user.getId();
-            var tokenResultMap = this.securityService.verificateToken(userId, username, text);
+            var token = session.getToken();
+            var tokenResultMap = this.securityService.verificateToken(user, token, text);
             if (!tokenResultMap.isEmpty()) {
                 context.sendMessage(buildMessage(tokenResultMap));
             }

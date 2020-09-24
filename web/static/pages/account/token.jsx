@@ -92,6 +92,7 @@ function Token(props) {
                 <tr>
                     <th/>
                     <th>NAME</th>
+                    <th>PRIVILEGE</th>
                     <th>LAST ACTIVE</th>
                     <th>OPERATION</th>
                 </tr>
@@ -101,6 +102,7 @@ function Token(props) {
                     <tr key={it['id']}>
                         <td>{it['current'] && '*'}</td>
                         <td>{it['name']}</td>
+                        <td>{JSON.parse(it['privilege']).join(',')}</td>
                         <td>{isoToLocal(it['lastActiveTime'])}</td>
                         <td className={style['operation']}>
                             <a href="" onClick={(ev) => handleDeleteToken(it, ev)}>DELETE</a>
