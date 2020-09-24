@@ -1,16 +1,3 @@
--- nano_session
-DROP TABLE IF EXISTS nano_session;
-CREATE TABLE IF NOT EXISTS nano_session
-(
-    id                 SERIAL PRIMARY KEY,
-    chat_id            BIGINT,
-    user_id            BIGINT,
-    attributes         JSON,
-    last_accessed_time TIMESTAMPTZ,
-    creation_time      TIMESTAMPTZ,
-    UNIQUE (chat_id, user_id)
-);
-
 -- nano_chat
 DROP TABLE IF EXISTS nano_chat;
 CREATE TABLE IF NOT EXISTS nano_chat
@@ -22,7 +9,7 @@ CREATE TABLE IF NOT EXISTS nano_chat
     type      VARCHAR
 );
 
--- nano_chat
+-- nano_user
 DROP TABLE IF EXISTS nano_user;
 CREATE TABLE IF NOT EXISTS nano_user
 (

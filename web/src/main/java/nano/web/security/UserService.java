@@ -14,7 +14,12 @@ import org.springframework.util.CollectionUtils;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.Collections.emptyList;
+import static nano.support.Sugar.map;
 
 @Slf4j
 @Service
@@ -51,17 +56,18 @@ public class UserService {
         return this.tokenRepository.queryUserTokenList(userId);
     }
 
-    public boolean hasPrivilege(Long userId, NanoPrivilege privilege) {
+    public List<NanoPrivilege> getUserPrivilege(Long userId) {
         var nanoTokens = this.queryUserToken(userId);
         if (CollectionUtils.isEmpty(nanoTokens)) {
-            return false;
+            return emptyList();
         }
-        for (NanoToken token : nanoTokens) {
-            var pl = Json.decodeValueAsList(token.getPrivilege());
-            if (pl.contains(privilege.name())) {
-                return true;
-            }
-        }
-        return false;
+        return nanoTokens.stream()
+                .map(NanoToken::getPrivilege)
+                .map(Json::decodeValueAsList)
+                .map(it -> map(it, String::valueOf))
+                .flatMap(Collection::stream)
+                .distinct()
+                .map(NanoPrivilege::valueOf)
+                .collect(Collectors.toList());
     }
 }

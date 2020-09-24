@@ -126,10 +126,8 @@ public class TokenRepository {
         this.jdbcTemplate.update(slim(sql), Map.of("tokenList", tokenList));
     }
 
-    /**
-     * @see <a href="https://github.com/spring-projects/spring-framework/issues/17773">SPR-13181</a>
-     */
     public boolean existsTokenWithPrivilege(String token, List<String> privilegeList) {
+        // https://github.com/spring-projects/spring-framework/issues/17773
         var sql = """
                 SELECT EXISTS(SELECT token
                               FROM nano_token

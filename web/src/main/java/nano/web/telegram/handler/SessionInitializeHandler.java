@@ -7,7 +7,6 @@ import nano.web.security.SessionService;
 import nano.web.security.entity.NanoChat;
 import nano.web.security.entity.NanoUser;
 import nano.web.security.model.Session;
-import nano.web.security.model.SessionKey;
 import nano.support.Onion;
 import nano.web.telegram.BotContext;
 import org.springframework.stereotype.Component;
@@ -34,8 +33,6 @@ public class SessionInitializeHandler implements Onion.Middleware<BotContext> {
             var session = this.buildSession(chat, user);
             context.setSession(session);
             next.next();
-            // sync session at the end
-            this.sessionService.syncSession(session);
         } catch (Exception ex) {
             log.warn("build session failed: {}", ex.getMessage());
             next.next();
@@ -67,11 +64,7 @@ public class SessionInitializeHandler implements Onion.Middleware<BotContext> {
     }
 
     private Session buildSession(NanoChat chat, NanoUser user) {
-        var sessionKey = new SessionKey();
-        sessionKey.setChatId(chat.getId());
-        sessionKey.setUserId(user.getId());
-
-        return this.sessionService.getSession(sessionKey, chat, user);
+        return this.sessionService.getSession(chat, user);
     }
 
 }
