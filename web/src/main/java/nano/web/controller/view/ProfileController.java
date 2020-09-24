@@ -10,7 +10,8 @@ public class ProfileController {
 
     @GetMapping("/deps.mjs")
     public String profileDeps() {
-        return "forward:deps.prod.mjs";
+        var prodDeps = "deps.prod.mjs";
+        return "forward:" + prodDeps;
     }
 }
 

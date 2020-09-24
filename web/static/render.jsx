@@ -2,11 +2,10 @@ import { React, ReactDOM } from '/deps.mjs'
 
 const { Suspense, lazy } = React
 
-export default async function (appUrl, elementId) {
-    const App = lazy(() => import(appUrl))
+export default async function (pageUrl, elementId) {
+    const Page = lazy(() => import(pageUrl))
     ReactDOM.render(
         <Suspense fallback={null}>
-            <App/>
+            <Page/>
         </Suspense>, document.getElementById(elementId))
 }
-
