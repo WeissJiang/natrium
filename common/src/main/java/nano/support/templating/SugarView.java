@@ -14,6 +14,11 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * @author cbdyzj
+ * @see Sugar#render
+ * @since 2020.9.22
+ */
 public class SugarView extends AbstractTemplateView {
 
     private String charset;
@@ -24,7 +29,8 @@ public class SugarView extends AbstractTemplateView {
     }
 
     @Override
-    protected void renderMergedTemplateModel(@NotNull Map<String, Object> model, @NotNull HttpServletRequest request,
+    protected void renderMergedTemplateModel(@NotNull Map<String, Object> model,
+                                             @NotNull HttpServletRequest request,
                                              @NotNull HttpServletResponse response) throws Exception {
         var template = this.getResourceAsString(this.getResource());
         var rendered = Sugar.render(template, model);

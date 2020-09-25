@@ -1,5 +1,6 @@
 package nano.support;
 
+import lombok.Data;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -26,5 +27,12 @@ public class EntityUtilsTests {
     public void testEntityColumnNames() {
         var names = EntityUtils.entityColumnNames(Apple.class);
         assertIterableEquals(List.of("color", "tastes"), names);
+    }
+
+    @Data
+    public static class Apple {
+
+        private String color;
+        private String tastes;
     }
 }

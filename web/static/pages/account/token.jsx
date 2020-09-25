@@ -46,7 +46,7 @@ async function fetchDeleteToken(token, idList) {
 }
 
 function Token(props) {
-    const [tokenList, setTokenList] = useState([])
+    const [tokenList, setTokenList] = useState(null)
 
     const { token } = useToken()
     const { loading, user } = useUser(token)
@@ -56,8 +56,8 @@ function Token(props) {
             return
         }
         ;(async () => {
-            const tokenList = await fetchTokenList(token)
-            setTokenList(tokenList)
+            const fetched = await fetchTokenList(token)
+            setTokenList(fetched || [])
         })()
     }, [user])
 
@@ -70,6 +70,15 @@ function Token(props) {
         return <div>Redirecting to login page...</div>
     }
 
+    if (!tokenList) {
+        return (
+            <div>
+                <span>hi, {user['firstname']}</span>
+                <div>Loading token...</div>
+            </div>
+        )
+    }
+
     async function handleDeleteToken(target, ev) {
         ev.preventDefault()
         if (!confirm('The following token will be permanently deleted, are you sure you want to continue?')) {
@@ -80,8 +89,8 @@ function Token(props) {
             redirectToLoginPage()
             return
         }
-        const tokenList = await fetchTokenList(token)
-        setTokenList(tokenList)
+        const fetched = await fetchTokenList(token)
+        setTokenList(fetched)
     }
 
     return (
@@ -91,10 +100,10 @@ function Token(props) {
                 <thead>
                 <tr>
                     <th/>
-                    <th>NAME</th>
-                    <th>PRIVILEGE</th>
-                    <th>LAST ACTIVE</th>
-                    <th>OPERATION</th>
+                    <th> NAME</th>
+                    <th> PRIVILEGE</th>
+                    <th> LAST ACTIVE</th>
+                    <th> OPERATION</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -102,7 +111,7 @@ function Token(props) {
                     <tr key={it['id']}>
                         <td>{it['current'] && '*'}</td>
                         <td>{it['name']}</td>
-                        <td>{JSON.parse(it['privilege']).join(',')}</td>
+                        <td>{JSON.parse(it['privilege']).join(', ')}</td>
                         <td>{isoToLocal(it['lastActiveTime'])}</td>
                         <td className={style['operation']}>
                             <a href="" onClick={(ev) => handleDeleteToken(it, ev)}>DELETE</a>

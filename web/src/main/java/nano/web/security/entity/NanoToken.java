@@ -5,6 +5,9 @@ import nano.web.security.NanoPrivilege;
 
 import java.sql.Timestamp;
 
+/**
+ * Nano token
+ */
 @Data
 public class NanoToken {
 
@@ -12,6 +15,7 @@ public class NanoToken {
     public static final String VALID = "VALID";
     public static final String INVALID = "INVALID";
     public static final String VERIFICATING = "VERIFICATING";
+
     // verificating
     public static final String VERIFICATION_TIMEOUT = "VERIFICATION_TIMEOUT";
     public static final String VERIFICATED = "VERIFICATED";

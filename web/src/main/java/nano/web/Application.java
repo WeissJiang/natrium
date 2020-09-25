@@ -4,7 +4,6 @@ import nano.support.configuration.ConditionalOnRabbit;
 import nano.support.templating.SugarViewResolver;
 import nano.web.messageing.ExchangeDeclarer;
 import nano.web.nano.ConfigVars;
-import nano.web.scripting.Scripting;
 import nano.web.security.AuthenticationInterceptor;
 import nano.web.security.TokenDesensitizationInterceptor;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +16,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
+import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
@@ -24,6 +24,11 @@ import org.springframework.web.filter.ShallowEtagHeaderFilter;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.HashMap;
+import java.util.List;
+
+import static nano.web.scripting.Scripting.TEXT_JAVASCRIPT;
 
 @EnableAsync
 @EnableScheduling
@@ -103,11 +108,13 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     }
 
     /**
-     * 增加Scripting相关静态资源的content type
+     * 增加Scripting相关静态资源的media type
      */
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-        configurer.mediaTypes(Scripting.MEDIA_TYPE);
+        var mediaTypes = new HashMap<String, MediaType>();
+        List.of("mjs", "jsx", "ts", "tsx", "less").forEach(ext -> mediaTypes.put(ext, TEXT_JAVASCRIPT));
+        configurer.mediaTypes(mediaTypes);
     }
 
     @Override

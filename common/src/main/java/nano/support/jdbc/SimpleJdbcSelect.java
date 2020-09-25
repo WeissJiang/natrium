@@ -14,9 +14,9 @@ import java.util.Map;
 import static nano.support.EntityUtils.*;
 
 /**
- * 简易实体字段查询SQL生成器
+ * Simple entity query SQL generator
  *
- * @param <T> 对应实体类
+ * @param <T> Entity class
  * @author cbdyzj
  * @see org.springframework.jdbc.core.simple.SimpleJdbcInsert
  * @see org.springframework.jdbc.core.simple.SimpleJdbcCall

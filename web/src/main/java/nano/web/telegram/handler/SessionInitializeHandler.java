@@ -27,8 +27,8 @@ public class SessionInitializeHandler implements Onion.Middleware<BotContext> {
     public void via(BotContext context, Onion.Next next) throws Exception {
         try {
             // sync chat and user
-            NanoChat chat = this.readChat(context);
-            NanoUser user = this.readUser(context);
+            var chat = this.readChat(context);
+            var user = this.readUser(context);
             // build session
             var session = this.buildSession(chat, user);
             context.setSession(session);

@@ -40,7 +40,7 @@ public abstract class EntityUtils {
     }
 
     /**
-     * convert property name to underscore name
+     * Convert property name to underscore name
      *
      * @param name property name
      * @return underscore name
@@ -68,7 +68,7 @@ public abstract class EntityUtils {
     }
 
     /**
-     * convert underscore name to property name
+     * Convert underscore name to property name
      *
      * @param name underscore name
      * @return property name
