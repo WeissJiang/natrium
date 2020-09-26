@@ -1,26 +1,24 @@
 package nano.web.controller.security;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import nano.web.controller.Result;
 import nano.web.security.Authorized;
 import nano.web.security.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static nano.web.security.TokenCode.*;
 import static nano.web.security.NanoPrivilege.BASIC;
+import static nano.web.security.TokenCode.D_TOKEN;
 
-@Slf4j
 @CrossOrigin
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/user")
 public class UserController {
 
-    @NonNull
     private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @Authorized(BASIC)
     @GetMapping("/user")

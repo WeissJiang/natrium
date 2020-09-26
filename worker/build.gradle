@@ -6,12 +6,6 @@ plugins {
 
 group = 'nano'
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(15)
-    }
-}
-
 sourceCompatibility = '15'
 targetCompatibility = '15'
 
@@ -32,9 +26,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     // project common
     implementation project(':common')
-    // lombok
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
     // test
     testImplementation 'org.springframework.amqp:spring-rabbit-test'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {

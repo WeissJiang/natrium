@@ -1,7 +1,5 @@
 package nano.web.security.repository;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import nano.support.jdbc.SimpleJdbcSelect;
 import nano.web.security.entity.NanoChat;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -14,11 +12,13 @@ import static nano.support.EntityUtils.slim;
 import static nano.support.Sugar.getFirst;
 
 @Repository
-@RequiredArgsConstructor
 public class ChatRepository {
 
-    @NonNull
     private final NamedParameterJdbcTemplate jdbcTemplate;
+
+    public ChatRepository(NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public NanoChat queryChat(Long id) {
         var select = new SimpleJdbcSelect<>(NanoChat.class)

@@ -1,7 +1,5 @@
 package nano.web.telegram.handler.command;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import nano.support.Predicates;
 import nano.web.security.NanoPrivilege;
 import nano.web.security.UserService;
@@ -13,11 +11,13 @@ import org.springframework.stereotype.Component;
  * 设置邮箱
  */
 @Component
-@RequiredArgsConstructor
 public class MailSetupHandler extends AbstractCommandHandler {
 
-    @NonNull
     private final UserService userService;
+
+    public MailSetupHandler(UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     protected void handle(BotContext context, String tail) {

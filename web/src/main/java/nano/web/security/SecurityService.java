@@ -1,40 +1,46 @@
 package nano.web.security;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import nano.support.Json;
 import nano.web.controller.security.TokenDTO;
 import nano.web.nano.ConfigVars;
 import nano.web.security.entity.NanoToken;
 import nano.web.security.entity.NanoUser;
 import nano.web.security.repository.TokenRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ua_parser.Parser;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import static nano.support.Sugar.*;
-import static nano.web.security.TokenCode.*;
 import static nano.web.security.NanoPrivilege.BASIC;
+import static nano.web.security.TokenCode.generateToken;
+import static nano.web.security.TokenCode.generateVerificationCode;
 
-@Slf4j
 @Service
-@RequiredArgsConstructor
 public class SecurityService {
+
+    private static final Logger log = LoggerFactory.getLogger(SecurityService.class);
 
     private static final Parser userAgentParser = createUserAgentParser();
 
-    @NonNull
     private final ConfigVars configVars;
-    @NonNull
     private final TokenRepository tokenRepository;
+
+    public SecurityService(ConfigVars configVars, TokenRepository tokenRepository) {
+        this.configVars = configVars;
+        this.tokenRepository = tokenRepository;
+    }
 
     /**
      * Check nano API Key
@@ -106,7 +112,7 @@ public class SecurityService {
      * 创建验证中的Token
      * 不保存原始Token，保存脱敏后的Token
      */
-    public Map<String, String> createVerificatingToken(String username, String ua) {
+    public Map<String, String> createVerificatingToken(String username, String ua) throws Exception {
         var originalToken = generateToken();
         var token = new NanoToken();
         token.setToken(TokenCode.desensitizeToken(originalToken));
@@ -216,10 +222,11 @@ public class SecurityService {
         }
     }
 
-    @SneakyThrows
     private static Parser createUserAgentParser() {
-        return new Parser();
+        try {
+            return new Parser();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
-
-
 }

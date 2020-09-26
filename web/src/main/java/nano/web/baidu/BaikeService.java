@@ -1,7 +1,6 @@
 package nano.web.baidu;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
@@ -9,15 +8,18 @@ import org.springframework.web.client.RestTemplate;
 import java.util.regex.Pattern;
 
 @Service
-@RequiredArgsConstructor
 public class BaikeService {
 
     private static final Pattern pattern = Pattern.compile("<meta name=\"description\" content=\"(?<desc>.+)\">");
 
     private static final String QUERY_API = "https://baike.baidu.com/item/";
 
-    @NonNull
     private final RestTemplate restTemplate;
+
+    @Autowired
+    public BaikeService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     public String getBaikeExtract(String keyword) {
         var url = QUERY_API + "{0}";

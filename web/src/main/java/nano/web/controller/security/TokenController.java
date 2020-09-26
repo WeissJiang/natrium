@@ -1,8 +1,5 @@
 package nano.web.controller.security;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import nano.web.controller.Result;
 import nano.web.security.Authorized;
 import nano.web.security.SecurityService;
@@ -13,22 +10,24 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-import static nano.web.security.TokenCode.*;
-import static nano.web.security.NanoPrivilege.*;
+import static nano.web.security.NanoPrivilege.BASIC;
+import static nano.web.security.NanoPrivilege.NANO_API;
+import static nano.web.security.TokenCode.D_TOKEN;
 
-@Slf4j
 @CrossOrigin
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/token")
 public class TokenController {
 
-    @NonNull
     private final SecurityService securityService;
+
+    public TokenController(SecurityService securityService) {
+        this.securityService = securityService;
+    }
 
     @PostMapping("/createVerificatingToken")
     public ResponseEntity<?> createVerificatingToken(@RequestHeader("User-Agent") String ua,
-                                                     @RequestParam("username") String username) {
+                                                     @RequestParam("username") String username) throws Exception {
         var result = this.securityService.createVerificatingToken(username, ua);
         return ResponseEntity.ok(Result.of(result));
     }

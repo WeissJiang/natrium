@@ -3,22 +3,22 @@ package nano.web.telegram;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
-import lombok.Data;
-import lombok.NonNull;
 import nano.support.Json;
 import nano.support.Sugar;
 import nano.web.security.NanoPrivilege;
 import nano.web.security.model.Session;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 
-@Data
 public class BotContext {
 
     private final Map<String, Object> parameters;
@@ -30,7 +30,7 @@ public class BotContext {
 
     private TelegramService telegramService;
 
-    public BotContext(@NonNull Map<String, Object> parameters) {
+    public BotContext(@NotNull Map<String, Object> parameters) {
         this.parameters = parameters;
         this.documentContext = JsonPath.parse(parameters);
     }
@@ -52,7 +52,7 @@ public class BotContext {
     }
 
     public List<NanoPrivilege> userPrivilegeList() {
-        var privilege = this.getSession().getToken().getPrivilege();
+        var privilege = this.session.getToken().getPrivilege();
         return Json.decodeValueAsList(privilege)
                 .stream()
                 .map(String::valueOf)
@@ -116,5 +116,25 @@ public class BotContext {
             return ((Number) o).intValue();
         }
         return null;
+    }
+
+    public Map<String, Object> getParameters() {
+        return parameters;
+    }
+
+    public Session getSession() {
+        return session;
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
+    }
+
+    public TelegramService getTelegramService() {
+        return telegramService;
+    }
+
+    public void setTelegramService(TelegramService telegramService) {
+        this.telegramService = telegramService;
     }
 }

@@ -1,8 +1,8 @@
 package nano.worker.service;
 
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import nano.support.mail.TextMail;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -10,16 +10,18 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-@Slf4j
+import javax.mail.MessagingException;
+
 @Service
 public class MailService {
+
+    private static final Logger log = LoggerFactory.getLogger(MailService.class);
 
     private String fromAddress;
 
     private JavaMailSender javaMailSender;
 
-    @SneakyThrows
-    public void sendTextMail(TextMail mail) {
+    public void sendTextMail(TextMail mail) throws MessagingException {
         Assert.hasText(this.fromAddress, "this.fromAddress is empty");
         Assert.notNull(this.javaMailSender, "this.javaMailSender is null");
         var mailSender = this.javaMailSender;

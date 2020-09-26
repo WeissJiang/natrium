@@ -1,6 +1,6 @@
 package nano.support;
 
-import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
 
@@ -18,7 +18,7 @@ public abstract class EntityUtils {
      * @param sql SQL
      * @return slimmed SQL
      */
-    public static String slim(@NonNull String sql) {
+    public static String slim(@NotNull String sql) {
         return sql.replaceAll("\\s+", " ").trim();
     }
 

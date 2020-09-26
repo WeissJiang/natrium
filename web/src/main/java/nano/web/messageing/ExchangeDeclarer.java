@@ -1,15 +1,15 @@
 package nano.web.messageing;
 
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
 
-import static nano.web.messageing.Exchanges.*;
+import static nano.web.messageing.Exchanges.MAIL;
+import static nano.web.messageing.Exchanges.NANO;
 
 /**
  * Declare exchanges on rabbit property set
@@ -17,14 +17,13 @@ import static nano.web.messageing.Exchanges.*;
  * @see Exchanges
  * @see nano.web.Application#exchangeDeclarer
  */
-@Slf4j
 public class ExchangeDeclarer {
 
-    @NonNull
     private AmqpAdmin amqpAdmin;
 
     @PostConstruct
     public void declareExchange() {
+        Assert.notNull(this.amqpAdmin, "this.amqpAdmin is null");
         for (var exchange : List.of(NANO, MAIL)) {
             this.amqpAdmin.declareExchange(new DirectExchange(exchange));
         }
