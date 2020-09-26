@@ -3,6 +3,7 @@ package nano.web.controller.telegram;
 import nano.web.security.SecurityService;
 import nano.web.telegram.BotHandler;
 import nano.web.telegram.TelegramService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
