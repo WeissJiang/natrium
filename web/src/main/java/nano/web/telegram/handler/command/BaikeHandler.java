@@ -1,7 +1,5 @@
 package nano.web.telegram.handler.command;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import nano.web.baidu.BaikeService;
 import nano.web.telegram.BotContext;
 import nano.web.telegram.handler.AbstractCommandHandler;
@@ -11,11 +9,13 @@ import org.springframework.stereotype.Service;
  * 百度百科
  */
 @Service
-@RequiredArgsConstructor
 public class BaikeHandler extends AbstractCommandHandler {
 
-    @NonNull
     private final BaikeService baikeService;
+
+    public BaikeHandler(BaikeService baikeService) {
+        this.baikeService = baikeService;
+    }
 
     @Override
     public void handle(BotContext context, String title) {

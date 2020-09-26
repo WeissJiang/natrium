@@ -1,6 +1,6 @@
 package nano.support.jdbc;
 
-import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
@@ -38,7 +38,7 @@ public class SimpleJdbcSelect<T> {
     private Integer limit;
     private Integer offset;
 
-    public SimpleJdbcSelect(@NonNull Class<T> entityClass) {
+    public SimpleJdbcSelect(@NotNull Class<T> entityClass) {
         this.entityClass = entityClass;
         this.entityRowMapper = new BeanPropertyRowMapper<>(entityClass);
     }

@@ -1,7 +1,5 @@
 package nano.web.security;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import nano.support.Json;
 import nano.web.security.entity.NanoChat;
 import nano.web.security.entity.NanoToken;
@@ -22,15 +20,19 @@ import java.util.function.Function;
 import static nano.support.Sugar.every;
 
 @Service
-@RequiredArgsConstructor
 public class SessionService {
 
-    @NonNull
     private final ChatRepository chatRepository;
-    @NonNull
     private final UserRepository userRepository;
-    @NonNull
     private final TokenRepository tokenRepository;
+
+    public SessionService(ChatRepository chatRepository,
+                          UserRepository userRepository,
+                          TokenRepository tokenRepository) {
+        this.chatRepository = chatRepository;
+        this.userRepository = userRepository;
+        this.tokenRepository = tokenRepository;
+    }
 
     @Transactional
     public Session getSession(NanoChat chat, NanoUser user) {

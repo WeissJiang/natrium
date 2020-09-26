@@ -1,6 +1,5 @@
 package nano.web.telegram;
 
-import lombok.SneakyThrows;
 import nano.support.Onion;
 import nano.web.telegram.handler.*;
 import org.jetbrains.annotations.NotNull;
@@ -35,19 +34,18 @@ public class BotHandler implements ApplicationContextAware {
     }
 
     @Async
-    public void handleAsync(Map<String, Object> parameters) {
+    public void handleAsync(Map<String, Object> parameters) throws Exception {
         this.internalHandle(this.buildContext(parameters));
     }
 
-    public void handle(Map<String, Object> parameters) {
+    public void handle(Map<String, Object> parameters) throws Exception {
         this.internalHandle(this.buildContext(parameters));
     }
 
     /**
      * handle context
      */
-    @SneakyThrows
-    private void internalHandle(BotContext context) {
+    private void internalHandle(BotContext context) throws Exception {
         this.onion.handle(context);
     }
 

@@ -1,8 +1,5 @@
 package nano.web.security;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import nano.support.Json;
 import nano.web.controller.security.UserDTO;
 import nano.web.security.entity.NanoToken;
@@ -21,15 +18,17 @@ import java.util.stream.Collectors;
 import static java.util.Collections.emptyList;
 import static nano.support.Sugar.map;
 
-@Slf4j
 @Service
-@RequiredArgsConstructor
 public class UserService {
 
-    @NonNull
     private final TokenRepository tokenRepository;
-    @NonNull
     private final UserRepository userRepository;
+
+    public UserService(TokenRepository tokenRepository,
+                       UserRepository userRepository) {
+        this.tokenRepository = tokenRepository;
+        this.userRepository = userRepository;
+    }
 
     /**
      * 根据Token获取关联的User

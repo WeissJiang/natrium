@@ -1,8 +1,5 @@
 package nano.web.controller.telegram;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import nano.web.security.SecurityService;
 import nano.web.telegram.BotHandler;
 import nano.web.telegram.TelegramService;
@@ -16,22 +13,23 @@ import java.util.Map;
  *
  * @see TelegramService
  */
-@Slf4j
 @CrossOrigin
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/telegram")
 public class WebhookController {
 
-    @NonNull
     private final SecurityService securityService;
 
-    @NonNull
     private final BotHandler botHandler;
+
+    public WebhookController(SecurityService securityService, BotHandler botHandler) {
+        this.securityService = securityService;
+        this.botHandler = botHandler;
+    }
 
     @PostMapping("/webhook/{key}")
     public ResponseEntity<?> webhook(@PathVariable("key") String key,
-                                     @RequestBody Map<String, Object> parameterMap) {
+                                     @RequestBody Map<String, Object> parameterMap) throws Exception {
         // check key
         this.securityService.checkNanoApiKey(key);
         // handle request

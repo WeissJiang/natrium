@@ -1,11 +1,11 @@
 package nano.support;
 
-import lombok.Data;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 public class EntityUtilsTests {
 
@@ -29,10 +29,25 @@ public class EntityUtilsTests {
         assertIterableEquals(List.of("color", "tastes"), names);
     }
 
-    @Data
     public static class Apple {
 
         private String color;
         private String tastes;
+
+        public String getColor() {
+            return color;
+        }
+
+        public void setColor(String color) {
+            this.color = color;
+        }
+
+        public String getTastes() {
+            return tastes;
+        }
+
+        public void setTastes(String tastes) {
+            this.tastes = tastes;
+        }
     }
 }

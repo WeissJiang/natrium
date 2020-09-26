@@ -1,7 +1,5 @@
 package nano.web.security.repository;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import nano.support.jdbc.SimpleJdbcSelect;
 import nano.web.security.entity.NanoUser;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -12,14 +10,16 @@ import org.springframework.stereotype.Repository;
 import java.util.Map;
 
 import static nano.support.EntityUtils.slim;
-import static nano.support.Sugar.*;
+import static nano.support.Sugar.getFirst;
 
 @Repository
-@RequiredArgsConstructor
 public class UserRepository {
 
-    @NonNull
     private final NamedParameterJdbcTemplate jdbcTemplate;
+
+    public UserRepository(NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public NanoUser queryUser(Long id) {
         var select = new SimpleJdbcSelect<>(NanoUser.class)

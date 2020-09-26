@@ -3,6 +3,7 @@ package nano.web.controller;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * HTTP 200 response body
@@ -48,10 +49,10 @@ public class Result<T> {
 
     @Override
     public String toString() {
-        return "Result{" +
-               "error='" + error + '\'' +
-               ", payload=" + payload +
-               '}';
+        return new StringJoiner(", ", Result.class.getSimpleName() + "[", "]")
+                .add("error='" + error + "'")
+                .add("payload=" + payload)
+                .toString();
     }
 
     public static <U> Result<U> of(U payload) {

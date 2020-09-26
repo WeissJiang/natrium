@@ -1,6 +1,5 @@
 package nano.web.security.repository;
 
-import lombok.RequiredArgsConstructor;
 import nano.support.jdbc.SimpleJdbcSelect;
 import nano.web.security.entity.NanoToken;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
@@ -16,10 +15,13 @@ import static nano.support.EntityUtils.slim;
 import static nano.support.Sugar.getFirst;
 
 @Repository
-@RequiredArgsConstructor
 public class TokenRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
+
+    public TokenRepository(NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public NanoToken queryToken(String token) {
         var select = new SimpleJdbcSelect<>(NanoToken.class)

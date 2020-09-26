@@ -1,11 +1,9 @@
 package nano.web.scripting;
 
-import lombok.Data;
-import lombok.NonNull;
 import org.graalvm.polyglot.Context;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.MediaType;
 
-@Data
 public class Scripting {
 
     /**
@@ -13,7 +11,7 @@ public class Scripting {
      */
     public static final MediaType TEXT_JAVASCRIPT = MediaType.parseMediaType("text/javascript");
 
-    public static String eval(@NonNull String script) {
+    public static String eval(@NotNull String script) {
         var value = Context.create("js").eval("js", script);
         return String.valueOf(value);
     }

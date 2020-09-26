@@ -1,9 +1,7 @@
 package nano.web.telegram;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import nano.web.nano.ConfigVars;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
@@ -15,20 +13,21 @@ import java.util.Map;
 /**
  * @see <a href="https://core.telegram.org/bots/api">Telegram Bot API</a>
  */
-@Slf4j
 @Service
-@RequiredArgsConstructor
 public class TelegramService {
 
     private static final ParameterizedTypeReference<Map<String, Object>> STRING_OBJECT_MAP_TYPE = new ParameterizedTypeReference<>() { };
 
     private static final String TELEGRAM_API = "https://api.telegram.org/bot%s/%s";
 
-    @NonNull
     private final RestTemplate restTemplate;
 
-    @NonNull
     private final ConfigVars configVars;
+
+    public TelegramService(RestTemplate restTemplate, ConfigVars configVars) {
+        this.restTemplate = restTemplate;
+        this.configVars = configVars;
+    }
 
     public Map<String, Object> setWebhook() {
         var apiKey = this.configVars.getNanoApiKey();
@@ -40,7 +39,7 @@ public class TelegramService {
     /**
      * Send text message
      */
-    public Map<String, Object> sendMessage(@NonNull Number chatId, @NonNull String text) {
+    public Map<String, Object> sendMessage(@NotNull Number chatId, @NotNull String text) {
         Map<String, Object> parameters = Map.of("chat_id", chatId, "text", text);
         return this.call("sendMessage", parameters);
     }
@@ -48,7 +47,7 @@ public class TelegramService {
     /**
      * Telegram API caller
      */
-    public Map<String, Object> call(@NonNull String method, @NonNull Map<String, Object> parameters) {
+    public Map<String, Object> call(@NotNull String method, @NotNull Map<String, Object> parameters) {
         var token = this.configVars.getTelegramBotToken();
         var telegramApi = TELEGRAM_API.formatted(token, method);
         var url = URI.create(telegramApi);
