@@ -4,8 +4,14 @@ plugins {
 
 group = 'nano'
 
-sourceCompatibility = '14'
-targetCompatibility = '14'
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(15)
+    }
+}
+
+sourceCompatibility = '15'
+targetCompatibility = '15'
 
 configurations {
     compileOnly {
