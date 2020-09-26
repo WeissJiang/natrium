@@ -5,7 +5,6 @@ import nano.web.messageing.Exchanges;
 import nano.web.security.AuthenticationInterceptor;
 import nano.web.security.Authorized;
 import org.springframework.amqp.rabbit.core.RabbitMessagingTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

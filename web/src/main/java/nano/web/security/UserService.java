@@ -34,17 +34,9 @@ public class UserService {
      * 根据Token获取关联的User
      */
     public UserDTO getUserByToken(String token) {
-        var user = this.userRepository.queryUserByToken(token);
-        if (user == null) {
-            return null;
-        }
-        // copy properties
-        var userDTO = new UserDTO();
-        userDTO.setId(String.valueOf(user.getId()));
-        userDTO.setUsername(user.getUsername());
-        userDTO.setFirstname(user.getFirstname());
         this.tokenRepository.updateLastActiveTime(token, Timestamp.from(Instant.now()));
-        return userDTO;
+        var user = this.userRepository.queryUserByToken(token);
+        return convert(user);
     }
 
     public void createOrUpdateUser(NanoUser user) {
@@ -68,5 +60,22 @@ public class UserService {
                 .distinct()
                 .map(NanoPrivilege::valueOf)
                 .collect(Collectors.toList());
+    }
+
+    public List<UserDTO> getUserList() {
+        var userList = this.userRepository.queryUserList();
+        return map(userList, UserService::convert);
+    }
+
+    private static UserDTO convert(NanoUser user) {
+        if (user == null) {
+            return null;
+        }
+        // copy properties
+        var userDTO = new UserDTO();
+        userDTO.setId(String.valueOf(user.getId()));
+        userDTO.setUsername(user.getUsername());
+        userDTO.setFirstname(user.getFirstname());
+        return userDTO;
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 import static nano.support.EntityUtils.slim;
@@ -27,6 +28,12 @@ public class UserRepository {
         var paramMap = Map.of("id", id);
         var userList = select.usesJdbcTemplate(this.jdbcTemplate).query(paramMap);
         return getFirst(userList);
+    }
+
+    public List<NanoUser> queryUserList() {
+        var select = new SimpleJdbcSelect<>(NanoUser.class)
+                .withTableName("nano_user");
+        return select.usesJdbcTemplate(this.jdbcTemplate).query();
     }
 
     public void upsertUser(NanoUser nanoUser) {
@@ -62,5 +69,6 @@ public class UserRepository {
         var userList = this.jdbcTemplate.query(slim(sql), paramMap, rowMapper);
         return getFirst(userList);
     }
+
 
 }

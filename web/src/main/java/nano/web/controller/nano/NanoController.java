@@ -4,7 +4,6 @@ import nano.web.controller.Result;
 import nano.web.messageing.Exchanges;
 import nano.web.nano.NanoService;
 import org.springframework.amqp.rabbit.core.RabbitMessagingTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

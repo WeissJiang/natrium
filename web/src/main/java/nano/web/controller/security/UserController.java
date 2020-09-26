@@ -6,7 +6,7 @@ import nano.web.security.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static nano.web.security.NanoPrivilege.BASIC;
+import static nano.web.security.NanoPrivilege.*;
 import static nano.web.security.TokenCode.D_TOKEN;
 
 @CrossOrigin
@@ -25,5 +25,12 @@ public class UserController {
     public ResponseEntity<?> getUser(@RequestAttribute(D_TOKEN) String token) {
         var userDTO = this.userService.getUserByToken(token);
         return ResponseEntity.ok(Result.of(userDTO));
+    }
+
+    @Authorized(NANO_API)
+    @GetMapping("/list")
+    public ResponseEntity<?> getUserList() {
+        var userDTOList = this.userService.getUserList();
+        return ResponseEntity.ok(Result.of(userDTOList));
     }
 }
