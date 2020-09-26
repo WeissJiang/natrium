@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 import static nano.support.EntityUtils.slim;
@@ -28,6 +29,12 @@ public class ChatRepository {
         return getFirst(chatList);
     }
 
+    public List<NanoChat> queryChatList() {
+        var select = new SimpleJdbcSelect<>(NanoChat.class)
+                .withTableName("nano_chat");
+        return select.usesJdbcTemplate(this.jdbcTemplate).query();
+    }
+
     public void upsertChat(NanoChat nanoChat){
         var sql = """
                 INSERT INTO nano_chat (id, username, title, firstname, type)
@@ -41,5 +48,4 @@ public class ChatRepository {
         var paramSource = new BeanPropertySqlParameterSource(nanoChat);
         this.jdbcTemplate.update(slim(sql), paramSource);
     }
-
 }

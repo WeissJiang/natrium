@@ -6,6 +6,7 @@ import nano.web.security.entity.NanoToken;
 import nano.web.security.entity.NanoUser;
 import nano.web.security.repository.TokenRepository;
 import nano.web.security.repository.UserRepository;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -67,11 +68,7 @@ public class UserService {
         return map(userList, UserService::convert);
     }
 
-    private static UserDTO convert(NanoUser user) {
-        if (user == null) {
-            return null;
-        }
-        // copy properties
+    private static UserDTO convert(@NotNull NanoUser user) {
         var userDTO = new UserDTO();
         userDTO.setId(String.valueOf(user.getId()));
         userDTO.setUsername(user.getUsername());

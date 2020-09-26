@@ -1,40 +1,53 @@
 package nano.web.controller.telegram;
 
 import nano.web.security.Authorized;
+import nano.web.security.SecurityService;
+import nano.web.telegram.BotHandler;
 import nano.web.telegram.TelegramService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 import static nano.web.security.NanoPrivilege.NANO_API;
 
 /**
- * Handle telegram requests
+ * Handle Telegram requests
  *
  * @see TelegramService
- * @see Authorized
  */
-@Authorized(NANO_API)
 @CrossOrigin
 @RestController
 @RequestMapping("/api/telegram")
 public class TelegramController {
 
+    private final BotHandler botHandler;
     private final TelegramService telegramService;
+    private final SecurityService securityService;
 
-    public TelegramController(TelegramService telegramService) {
+    public TelegramController(BotHandler botHandler,
+                              TelegramService telegramService,
+                              SecurityService securityService) {
+        this.botHandler = botHandler;
         this.telegramService = telegramService;
+        this.securityService = securityService;
     }
 
+    @PostMapping("/webhook/{key}")
+    public ResponseEntity<?> webhook(@PathVariable("key") String key,
+                                     @RequestBody Map<String, Object> parameterMap) throws Exception {
+        // check key
+        this.securityService.checkNanoApiKey(key);
+        // handle request
+        this.botHandler.handleAsync(parameterMap);
+        // always return ok
+        return ResponseEntity.ok().build();
+    }
+
+    @Authorized(NANO_API)
     @PostMapping("/setWebhook")
     public ResponseEntity<?> setWebhook() {
         var result = this.telegramService.setWebhook();
-        return ResponseEntity.ok(result);
-    }
-
-    @PostMapping("/sendMessage")
-    public ResponseEntity<?> sendMessage(@RequestParam("chatId") Integer chatId,
-                                         @RequestParam("text") String text) {
-        var result = this.telegramService.sendMessage(chatId, text);
         return ResponseEntity.ok(result);
     }
 }
