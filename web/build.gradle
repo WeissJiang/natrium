@@ -9,12 +9,6 @@ group = 'nano'
 sourceCompatibility = '15'
 targetCompatibility = '15'
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
 repositories {
     mavenCentral()
 }
