@@ -1,10 +1,8 @@
 package nano.web.controller.telegram;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import nano.web.security.Authorized;
 import nano.web.telegram.TelegramService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,16 +14,17 @@ import static nano.web.security.NanoPrivilege.NANO_API;
  * @see TelegramService
  * @see Authorized
  */
-@Slf4j
 @Authorized(NANO_API)
 @CrossOrigin
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/telegram")
 public class TelegramController {
 
-    @NonNull
     private final TelegramService telegramService;
+
+    public TelegramController(TelegramService telegramService) {
+        this.telegramService = telegramService;
+    }
 
     @PostMapping("/setWebhook")
     public ResponseEntity<?> setWebhook() {

@@ -1,8 +1,5 @@
 package nano.web.telegram.handler.command;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import nano.web.mediawiki.WikiService;
 import nano.web.telegram.BotContext;
 import nano.web.telegram.handler.AbstractCommandHandler;
@@ -13,16 +10,17 @@ import java.util.List;
 /**
  * 维基百科
  */
-@Slf4j
 @Component
-@RequiredArgsConstructor
 public class WikiHandler extends AbstractCommandHandler {
 
     // language list
     private static final List<String> LANGUAGE_LIST = List.of("zh", "en", "ja");
 
-    @NonNull
     private final WikiService wikiService;
+
+    public WikiHandler(WikiService wikiService) {
+        this.wikiService = wikiService;
+    }
 
     @Override
     public void handle(BotContext context, String title) {

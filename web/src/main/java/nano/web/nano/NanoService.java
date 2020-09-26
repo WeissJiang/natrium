@@ -1,8 +1,7 @@
 package nano.web.nano;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.stereotype.Service;
@@ -11,10 +10,10 @@ import org.springframework.util.unit.DataSize;
 import java.lang.management.ManagementFactory;
 import java.util.List;
 
-@Slf4j
 @Service
-@RequiredArgsConstructor
 public class NanoService {
+
+    private static final Logger log = LoggerFactory.getLogger(NanoService.class);
 
     private static final List<String> SYSTEM_PROPERTIES = List.of(
             "java.specification.version",
@@ -42,8 +41,11 @@ public class NanoService {
             "java.class.version"
     );
 
-    @NonNull
     private final JdbcTemplate jdbcTemplate;
+
+    public NanoService(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public String system() {
         var nano = new StringBuilder();

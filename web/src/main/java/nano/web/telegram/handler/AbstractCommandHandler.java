@@ -50,7 +50,7 @@ public abstract class AbstractCommandHandler implements Onion.Middleware<BotCont
         return split[1].trim();
     }
 
-    protected abstract void handle(BotContext context, String tail);
+    protected abstract void handle(BotContext context, String tail) throws Exception;
 
     protected abstract String command();
 

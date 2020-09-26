@@ -1,8 +1,5 @@
 package nano.web.telegram.handler;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import nano.support.Onion;
 import nano.web.nano.ConfigVars;
 import nano.web.telegram.BotContext;
@@ -11,13 +8,14 @@ import org.springframework.stereotype.Component;
 /**
  * 帮助
  */
-@Slf4j
 @Component
-@RequiredArgsConstructor
 public class HelpHandler implements Onion.Middleware<BotContext> {
 
-    @NonNull
     private final ConfigVars configVars;
+
+    public HelpHandler(ConfigVars configVars) {
+        this.configVars = configVars;
+    }
 
     @Override
     public void via(BotContext context, Onion.Next next) throws Exception {

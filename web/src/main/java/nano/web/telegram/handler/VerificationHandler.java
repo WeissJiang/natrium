@@ -1,7 +1,5 @@
 package nano.web.telegram.handler;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import nano.support.Onion;
 import nano.web.security.SecurityService;
 import nano.web.security.entity.NanoToken;
@@ -17,11 +15,13 @@ import static nano.web.security.TokenCode.isVerificationCode;
  * 用户Token验证
  */
 @Component
-@RequiredArgsConstructor
 public class VerificationHandler implements Onion.Middleware<BotContext> {
 
-    @NonNull
     private final SecurityService securityService;
+
+    public VerificationHandler(SecurityService securityService) {
+        this.securityService = securityService;
+    }
 
     @Override
     public void via(BotContext context, Onion.Next next) throws Exception {

@@ -1,11 +1,13 @@
 package nano.worker.consumer;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 
-@Slf4j
 public class NanoConsumer {
+
+    private static final Logger log = LoggerFactory.getLogger(NanoConsumer.class);
 
     @RabbitListener(queuesToDeclare = @Queue("nano"))
     public void consume(String message) {

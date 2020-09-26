@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import lombok.SneakyThrows;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -21,8 +20,10 @@ import java.util.Map;
 
 public abstract class Json {
 
-    private static final TypeReference<Map<String, Object>> STRING_OBJECT_MAP_TYPE = new TypeReference<>() { };
-    private static final TypeReference<List<Object>> OBJECT_LIST_TYPE = new TypeReference<>() { };
+    private static final TypeReference<Map<String, Object>> STRING_OBJECT_MAP_TYPE = new TypeReference<>() {
+    };
+    private static final TypeReference<List<Object>> OBJECT_LIST_TYPE = new TypeReference<>() {
+    };
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -62,18 +63,21 @@ public abstract class Json {
         return invoke(() -> mapper.readValue(buf.array(), clazz));
     }
 
-    public static  Map<String,Object> decodeValueAsMap(String str) {
+    public static Map<String, Object> decodeValueAsMap(String str) {
         return decodeValue(str, STRING_OBJECT_MAP_TYPE);
     }
 
-    public static  List<Object> decodeValueAsList(String str) {
+    public static List<Object> decodeValueAsList(String str) {
         return decodeValue(str, OBJECT_LIST_TYPE);
     }
 
 
-    @SneakyThrows
     private static <T> T invoke(ATE<T> actionThrowsException) {
-        return actionThrowsException.invoke();
+        try {
+            return actionThrowsException.invoke();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     interface ATE<T> {

@@ -1,27 +1,29 @@
 package nano.web.telegram.handler;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import nano.support.Onion;
 import nano.web.security.SessionService;
 import nano.web.security.entity.NanoChat;
 import nano.web.security.entity.NanoUser;
 import nano.web.security.model.Session;
-import nano.support.Onion;
 import nano.web.telegram.BotContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 /**
  * 初始化会话
  */
-@Slf4j
 @Component
-@RequiredArgsConstructor
 public class SessionInitializeHandler implements Onion.Middleware<BotContext> {
 
-    @NonNull
+    private static final Logger log = LoggerFactory.getLogger(SessionInitializeHandler.class);
+
     private final SessionService sessionService;
+
+    public SessionInitializeHandler(SessionService sessionService) {
+        this.sessionService = sessionService;
+    }
 
     @Override
     public void via(BotContext context, Onion.Next next) throws Exception {

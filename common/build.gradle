@@ -4,8 +4,8 @@ plugins {
 
 group = 'nano'
 
-sourceCompatibility = '14'
-targetCompatibility = '14'
+sourceCompatibility = '15'
+targetCompatibility = '15'
 
 configurations {
     compileOnly {
@@ -23,11 +23,6 @@ dependencies {
     // spring
     compileOnly 'org.springframework.boot:spring-boot-starter-jdbc:2.3.4.RELEASE'
     compileOnly 'org.springframework.boot:spring-boot-starter-web:2.3.4.RELEASE'
-    // lombok
-    compileOnly 'org.projectlombok:lombok:1.18.12'
-    annotationProcessor 'org.projectlombok:lombok:1.18.12'
-    testCompileOnly 'org.projectlombok:lombok:1.18.12'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
     testImplementation 'org.springframework:spring-beans:5.2.9.RELEASE'
     // test
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'

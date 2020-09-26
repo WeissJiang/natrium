@@ -1,27 +1,26 @@
 package nano.web.controller.nano;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import nano.web.controller.Result;
-import nano.web.nano.NanoService;
 import nano.web.messageing.Exchanges;
+import nano.web.nano.NanoService;
 import org.springframework.amqp.rabbit.core.RabbitMessagingTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
 @CrossOrigin
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/nano")
 public class NanoController {
 
-    @NonNull
+    private final RabbitMessagingTemplate messagingTemplate;
+
     private final NanoService nanoService;
 
-    @NonNull
-    private final RabbitMessagingTemplate messagingTemplate;
+    public NanoController(RabbitMessagingTemplate messagingTemplate, NanoService nanoService) {
+        this.messagingTemplate = messagingTemplate;
+        this.nanoService = nanoService;
+    }
 
     @GetMapping("/ping")
     public ResponseEntity<?> ping() {

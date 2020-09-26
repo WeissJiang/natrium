@@ -1,12 +1,9 @@
 package nano.web.baidu;
 
 import com.jayway.jsonpath.JsonPath;
-import lombok.Data;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import nano.web.nano.ConfigVars;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -27,20 +24,23 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
-@RequiredArgsConstructor
 public class TranslationService {
+
+    private static final Logger log = LoggerFactory.getLogger(TranslationService.class);
 
     private static final Predicate<String> chinese = Pattern.compile("[\u4e00-\u9fa5]").asPredicate();
 
     private static final String TRANSLATION_API = "https://fanyi-api.baidu.com/api/trans/vip/translate";
 
-    @NonNull
     private final RestTemplate restTemplate;
 
-    @NonNull
     private final ConfigVars configVars;
+
+    public TranslationService(RestTemplate restTemplate, ConfigVars configVars) {
+        this.restTemplate = restTemplate;
+        this.configVars = configVars;
+    }
 
     public String autoTranslate(String input) {
         var payload = new Payload();
@@ -57,7 +57,6 @@ public class TranslationService {
         return this.translate(payload);
     }
 
-    @SneakyThrows
     public String translate(Payload payload) {
         var input = payload.getInput();
         var from = payload.getFrom();
@@ -96,12 +95,35 @@ public class TranslationService {
         return result.stream().map(it -> it.get("dst")).collect(Collectors.joining("\n"));
     }
 
-    @Data
     public static class Payload {
 
         private String input;
         private String from;
         private String to;
+
+        public String getInput() {
+            return input;
+        }
+
+        public void setInput(String input) {
+            this.input = input;
+        }
+
+        public String getFrom() {
+            return from;
+        }
+
+        public void setFrom(String from) {
+            this.from = from;
+        }
+
+        public String getTo() {
+            return to;
+        }
+
+        public void setTo(String to) {
+            this.to = to;
+        }
     }
 
 

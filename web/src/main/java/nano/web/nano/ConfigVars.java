@@ -1,11 +1,8 @@
 package nano.web.nano;
 
-import lombok.Data;
-
 /**
  * 环境配置Key
  */
-@Data
 public class ConfigVars {
 
     /**
@@ -30,4 +27,51 @@ public class ConfigVars {
     private String baiduTranslationAppId;
     private String baiduTranslationSecretKey;
 
+    public String getBotName() {
+        return botName;
+    }
+
+    public void setBotName(String botName) {
+        this.botName = botName;
+    }
+
+    public String getNanoApi() {
+        return nanoApi;
+    }
+
+    public void setNanoApi(String nanoApi) {
+        this.nanoApi = nanoApi;
+    }
+
+    public String getNanoApiKey() {
+        return nanoApiKey;
+    }
+
+    public void setNanoApiKey(String nanoApiKey) {
+        this.nanoApiKey = nanoApiKey;
+    }
+
+    public String getTelegramBotToken() {
+        return telegramBotToken;
+    }
+
+    public void setTelegramBotToken(String telegramBotToken) {
+        this.telegramBotToken = telegramBotToken;
+    }
+
+    public String getBaiduTranslationAppId() {
+        return baiduTranslationAppId;
+    }
+
+    public void setBaiduTranslationAppId(String baiduTranslationAppId) {
+        this.baiduTranslationAppId = baiduTranslationAppId;
+    }
+
+    public String getBaiduTranslationSecretKey() {
+        return baiduTranslationSecretKey;
+    }
+
+    public void setBaiduTranslationSecretKey(String baiduTranslationSecretKey) {
+        this.baiduTranslationSecretKey = baiduTranslationSecretKey;
+    }
 }

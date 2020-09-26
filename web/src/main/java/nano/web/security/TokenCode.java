@@ -1,6 +1,5 @@
 package nano.web.security;
 
-import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.Cipher;
@@ -50,8 +49,7 @@ public abstract class TokenCode {
     /**
      * 对Token生成摘要用于脱敏
      */
-    @SneakyThrows
-    public static String desensitizeToken(@NotNull String originalToken) {
+    public static String desensitizeToken(@NotNull String originalToken) throws Exception {
         var tokenBytes = originalToken.getBytes(utf8);
         var secretKeySpec = new SecretKeySpec(tokenBytes, BLOWFISH);
         var cipher = Cipher.getInstance(BLOWFISH);

@@ -1,6 +1,5 @@
 package nano.support.templating;
 
-import lombok.Cleanup;
 import nano.support.Sugar;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.io.Resource;
@@ -35,9 +34,11 @@ public class SugarView extends AbstractTemplateView {
         var template = this.getResourceAsString(this.getResource());
         var rendered = Sugar.render(template, model);
         response.setCharacterEncoding(this.charset);
-        @Cleanup var writer = response.getWriter();
-        writer.write(rendered);
-        writer.flush();
+        var writer = response.getWriter();
+        try (writer) {
+            writer.write(rendered);
+            writer.flush();
+        }
     }
 
     public void setCharset(String charset) {
@@ -49,7 +50,9 @@ public class SugarView extends AbstractTemplateView {
     }
 
     private String getResourceAsString(Resource resource) throws IOException {
-        @Cleanup var inputStream = resource.getInputStream();
-        return new String(inputStream.readAllBytes(), this.charset);
+        var inputStream = resource.getInputStream();
+        try (inputStream) {
+            return new String(inputStream.readAllBytes(), this.charset);
+        }
     }
 }
