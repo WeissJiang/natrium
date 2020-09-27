@@ -1,4 +1,4 @@
-import { React } from '/deps.mjs'
+import React from '/modules/react'
 import { useUser, useToken } from '/hooks/account.jsx'
 
 import style from './style.module.less'

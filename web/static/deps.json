@@ -1,0 +1,12 @@
+{
+  "dev": {
+    "react": "/modules/react/umd/react.development.js",
+    "react-dom": "/modules/react-dom/umd/react-dom.development.js",
+    "react-dom-server": "/modules/react-dom/umd/react-dom-server.browser.development.js"
+  },
+  "prod": {
+    "react": "/modules/react/umd/react.production.min.js",
+    "react-dom": "/modules/react-dom/umd/react-dom.production.min.js",
+    "react-dom-server": "/modules/react-dom/umd/react-dom-server.browser.production.min.js"
+  }
+}

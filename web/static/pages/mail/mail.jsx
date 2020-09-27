@@ -1,4 +1,4 @@
-import { React } from '/deps.mjs'
+import React from '/modules/react'
 
 function Mail(props) {
 

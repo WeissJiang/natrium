@@ -4,7 +4,7 @@ import less from 'less'
 import postcss from 'postcss'
 import modules from 'postcss-modules'
 
-async function readFileAsString(filePath) {
+export async function readFileAsString(filePath) {
     const data = await readFile(filePath, { encoding: 'utf8' })
     return data.toString('utf8')
 }

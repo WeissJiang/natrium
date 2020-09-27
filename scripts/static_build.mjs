@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import { fileURLToPath } from 'url'
-import { join as joinPath, dirname, basename } from 'path'
+import { join as joinPath, dirname } from 'path'
 import { readdir, stat, mkdir, copyFile, writeFile } from 'fs/promises'
 
-import { transformCss, transformEsm } from './transforming.mjs'
+import { transformCss, transformEsm, readFileAsString } from './transforming.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -11,23 +11,10 @@ const staticPath = joinPath(__dirname, '..', 'web/static')
 const nodeModulesPath = joinPath(__dirname, '..', 'node_modules')
 const distPath = joinPath(__dirname, '..', 'web/dist')
 
-const deps = []
-
-function collectDeps(text) {
-    const r = /\s*import\s+("(.+?)"|'(.+?)')\s*/g
-    let a
-    while (a = r.exec(text)) {
-        deps.push(a[2] || a[3])
-    }
-}
-
 async function compileFile(srcFilePath, destFilePath) {
     // js module
     if (/.+\.(mjs|jsx|ts|tsx)$/.test(srcFilePath)) {
         const transformed = await transformEsm(srcFilePath)
-        if (/deps(\..*)?\.mjs/.test(basename(srcFilePath))) {
-            collectDeps(transformed)
-        }
         await writeFile(destFilePath, transformed)
     }
     // css module
@@ -58,7 +45,16 @@ async function traverseDir(srcPath, destPath) {
     }
 }
 
+function getAllValues(object) {
+    const v = []
+    const rg = o => Object.values(o).forEach(it => typeof it === 'object' ? rg(it) : v.push(it))
+    rg(object)
+    return v
+}
+
 async function copyDeps() {
+    const json = await readFileAsString(joinPath(staticPath, 'deps.json'))
+    const deps = getAllValues(JSON.parse(json))
     if (!deps.length) {
         return
     }

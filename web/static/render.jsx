@@ -1,4 +1,5 @@
-import { React, ReactDOM } from '/deps.mjs'
+import React from '/modules/react'
+import ReactDOM from '/modules/react-dom'
 
 const { Suspense, lazy } = React
 

@@ -1,4 +1,4 @@
-import { React } from '/deps.mjs'
+import React from '/modules/react'
 import { getLocalItem, setLocalItem, removeLocalItem } from '/modules/storage.mjs'
 
 const { useState, useEffect } = React

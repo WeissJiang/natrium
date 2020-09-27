@@ -4,6 +4,7 @@ import nano.support.configuration.ConditionalOnRabbit;
 import nano.support.templating.SugarViewResolver;
 import nano.web.messageing.ExchangeDeclarer;
 import nano.web.nano.ConfigVars;
+import nano.web.scripting.Scripting;
 import nano.web.security.AuthenticationInterceptor;
 import nano.web.security.TokenDesensitizationInterceptor;
 import org.jetbrains.annotations.NotNull;
@@ -27,8 +28,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.HashMap;
 import java.util.List;
-
-import static nano.web.scripting.Scripting.TEXT_JAVASCRIPT;
 
 @EnableAsync
 @EnableScheduling
@@ -113,7 +112,8 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
         var mediaTypes = new HashMap<String, MediaType>();
-        List.of("mjs", "jsx", "ts", "tsx", "less").forEach(ext -> mediaTypes.put(ext, TEXT_JAVASCRIPT));
+        var javaScript = MediaType.parseMediaType(Scripting.TEXT_JAVASCRIPT);
+        List.of("mjs", "jsx", "ts", "tsx", "less").forEach(ext -> mediaTypes.put(ext, javaScript));
         configurer.mediaTypes(mediaTypes);
     }
 

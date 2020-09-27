@@ -1,4 +1,4 @@
-import { React } from '/deps.mjs'
+import React from '/modules/react'
 
 import murmur3 from '/modules/murmurhash3_32.mjs'
 

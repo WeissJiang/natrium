@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ViewController {
 
-    private static final String PAGE_TEMPLATE = "page-template.html";
+    private static final String PAGE_TEMPLATE = "page_template.html";
 
     @GetMapping("/")
     public String index(Model model) {
