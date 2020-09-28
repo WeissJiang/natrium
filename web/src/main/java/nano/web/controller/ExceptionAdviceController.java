@@ -2,6 +2,7 @@ package nano.web.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.NestedExceptionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,11 +16,12 @@ public class ExceptionAdviceController {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception ex) {
+        var cause = NestedExceptionUtils.getMostSpecificCause(ex);
         if (log.isDebugEnabled()) {
-            log.debug(ex.getMessage(), ex);
+            log.debug(cause.getMessage(), cause);
         }
-        var exClass = ex.getClass();
-        var message = ex.getMessage();
+        var exClass = cause.getClass();
+        var message = cause.getMessage();
         if (message == null) {
             message = exClass.getName();
         }
