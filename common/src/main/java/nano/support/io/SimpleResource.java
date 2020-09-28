@@ -21,7 +21,7 @@ public class SimpleResource implements Resource {
 
     private final Resource delegate;
 
-    public SimpleResource(Resource delegate) {
+    public SimpleResource(@NotNull Resource delegate) {
         this.delegate = delegate;
     }
 
