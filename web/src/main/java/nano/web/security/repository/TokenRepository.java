@@ -58,18 +58,18 @@ public class TokenRepository {
         return select.usesJdbcTemplate(this.jdbcTemplate).query(Map.of("token", token));
     }
 
-    public List<NanoToken> queryVerificatingToken(String username, String verificationCode) {
+    public List<NanoToken> queryVerifyingToken(String username, String verificationCode) {
         var select = new SimpleJdbcSelect<>(NanoToken.class)
                 .withTableName("nano_token").whereEqual("status");
-        var status = NanoToken.verificatingStatus(username, verificationCode);
+        var status = NanoToken.verifyingStatus(username, verificationCode);
         return select.usesJdbcTemplate(this.jdbcTemplate).query(Map.of("status", status));
     }
 
-    public List<String> queryVerificatingTimeoutToken() {
+    public List<String> queryVerifyingTimeoutToken() {
         var sql = """
                 SELECT token
                 FROM nano_token
-                WHERE status LIKE 'VERIFICATING%'
+                WHERE status LIKE 'VERIFYING%'
                   AND creation_time + '360 sec' < NOW();
                 """;
         var rowMapper = new SingleColumnRowMapper<>(String.class);
@@ -126,21 +126,6 @@ public class TokenRepository {
                 WHERE token IN (:tokenList);
                 """;
         this.jdbcTemplate.update(slim(sql), Map.of("tokenList", tokenList));
-    }
-
-    public boolean existsTokenWithPrivilege(String token, List<String> privilegeList) {
-        // https://github.com/spring-projects/spring-framework/issues/17773
-        var sql = """
-                SELECT EXISTS(SELECT token
-                              FROM nano_token
-                              WHERE status = 'VALID'
-                                AND token = :token
-                                AND JSONB_EXISTS_ALL(privilege, ARRAY [ :privilegeList ]));
-                """;
-        var rowMapper = new SingleColumnRowMapper<>(Boolean.class);
-        var paramMap = Map.of("token", token, "privilegeList", privilegeList);
-        var exists = this.jdbcTemplate.query(slim(sql), paramMap, rowMapper);
-        return Boolean.TRUE.equals(getFirst(exists));
     }
 
     public List<NanoToken> queryUserTokenList(Long userId) {

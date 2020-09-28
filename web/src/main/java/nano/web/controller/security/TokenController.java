@@ -25,10 +25,10 @@ public class TokenController {
         this.securityService = securityService;
     }
 
-    @PostMapping("/createVerificatingToken")
-    public ResponseEntity<?> createVerificatingToken(@RequestHeader("User-Agent") String ua,
+    @PostMapping("/createVerifyingToken")
+    public ResponseEntity<?> createVerifyingToken(@RequestHeader("User-Agent") String ua,
                                                      @RequestParam("username") String username) throws Exception {
-        var result = this.securityService.createVerificatingToken(username, ua);
+        var result = this.securityService.createVerifyingToken(username, ua);
         return ResponseEntity.ok(Result.of(result));
     }
 
@@ -61,9 +61,9 @@ public class TokenController {
     }
 
     @Authorized(NANO_API)
-    @PostMapping("/pruneVerificatingTimeoutToken")
-    public ResponseEntity<?> verificatingTimeoutToken() {
-        var count = this.securityService.pruneVerificatingTimeoutToken();
+    @PostMapping("/pruneVerifyingTimeoutToken")
+    public ResponseEntity<?> verifyingTimeoutToken() {
+        var count = this.securityService.pruneVerifyingTimeoutToken();
         return ResponseEntity.ok(Result.of(Map.of("count", count)));
     }
 }

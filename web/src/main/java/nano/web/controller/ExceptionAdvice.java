@@ -10,20 +10,20 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
-public class ExceptionAdviceController {
+public class ExceptionAdvice {
 
-    private static final Logger log = LoggerFactory.getLogger(ExceptionAdviceController.class);
+    private static final Logger log = LoggerFactory.getLogger(ExceptionAdvice.class);
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception ex) {
         var cause = NestedExceptionUtils.getMostSpecificCause(ex);
-        if (log.isDebugEnabled()) {
-            log.debug(cause.getMessage(), cause);
-        }
         var exClass = cause.getClass();
         var message = cause.getMessage();
         if (message == null) {
-            message = exClass.getName();
+            message = exClass.getSimpleName();
+        }
+        if (log.isDebugEnabled()) {
+            log.debug(message, cause);
         }
         var status = HttpStatus.OK;
         if (exClass.isAnnotationPresent(ResponseStatus.class)) {

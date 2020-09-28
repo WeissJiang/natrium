@@ -19,13 +19,13 @@ public class Cron implements ApplicationContextAware {
     private ApplicationContext context;
 
     /**
-     * Prune verificating timeout token
+     * Prune verifying timeout token
      * Fixed delay 24h
      */
     @Scheduled(fixedDelay = 24 * 60 * 60 * 1000)
-    public void pruneVerificatingTimeoutToken() {
-        var count = this.context.getBean(SecurityService.class).pruneVerificatingTimeoutToken();
-        log.info("Prune verificating timeout token: {}", count);
+    public void pruneVerifyingTimeoutToken() {
+        var count = this.context.getBean(SecurityService.class).pruneVerifyingTimeoutToken();
+        log.info("Prune verifying timeout token: {}", count);
     }
 
     @Override

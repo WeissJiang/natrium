@@ -36,4 +36,4 @@ CREATE TABLE IF NOT EXISTS nano_token
     creation_time    TIMESTAMPTZ,
     UNIQUE (token)
 );
-COMMENT ON COLUMN nano_token.status IS 'VALID,INVALID,VERIFICATING:{username}:{code}';
+COMMENT ON COLUMN nano_token.status IS 'VALID,INVALID,VERIFYING:{username}:{code}';

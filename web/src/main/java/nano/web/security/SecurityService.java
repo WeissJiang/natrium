@@ -59,13 +59,13 @@ public class SecurityService {
      * 检查Token权限
      */
     public void checkTokenPrivilege(String token, List<NanoPrivilege> privilegeList) {
-        if (StringUtils.isEmpty(token)) {
-            throw new AuthenticationException("Missing token");
-        }
-        boolean exists = this.tokenRepository.existsTokenWithPrivilege(token, map(privilegeList, NanoPrivilege::name));
-        if (!exists) {
-            throw new AuthenticationException("Illegal token");
-        }
+        authState(!StringUtils.isEmpty(token), "Missing token");
+        var nanoToken = this.tokenRepository.queryToken(token);
+        authState(nanoToken != null, "Illegal token");
+        authState(NanoToken.VALID.equals(nanoToken.getStatus()), "Invalid token");
+        var tokenPrivileges = Json.decodeValueAsList(nanoToken.getPrivilege());
+        var exists = tokenPrivileges.containsAll(map(privilegeList, NanoPrivilege::name));
+        authState(exists, "Insufficient token privilege");
     }
 
     /**
@@ -112,13 +112,13 @@ public class SecurityService {
      * 创建验证中的Token
      * 不保存原始Token，保存脱敏后的Token
      */
-    public Map<String, String> createVerificatingToken(String username, String ua) throws Exception {
+    public Map<String, String> createVerifyingToken(String username, String ua) throws Exception {
         var originalToken = generateToken();
         var token = new NanoToken();
         token.setToken(TokenCode.desensitizeToken(originalToken));
         token.setName(parseUserAgent(ua));
         var verificationCode = generateVerificationCode();
-        token.setStatus(NanoToken.verificatingStatus(username, verificationCode));
+        token.setStatus(NanoToken.verifyingStatus(username, verificationCode));
         var now = Timestamp.from(Instant.now());
         token.setCreationTime(now);
         token.setLastActiveTime(now);
@@ -138,14 +138,14 @@ public class SecurityService {
         var result = new HashMap<String, String>();
         switch (status) {
             case NanoToken.INVALID -> throw new IllegalStateException("Token is invalid");
-            case NanoToken.VALID -> result.put("verificating", "done");
+            case NanoToken.VALID -> result.put("verifying", "done");
             default -> {
                 // 验证中
-                if (status.startsWith(NanoToken.VERIFICATING)) {
-                    if (verificatingTimeout(nanoToken)) {
-                        result.put("verificating", "timeout");
+                if (status.startsWith(NanoToken.VERIFYING)) {
+                    if (verifyingTimeout(nanoToken)) {
+                        result.put("verifying", "timeout");
                     } else {
-                        result.put("verificating", "pending");
+                        result.put("verifying", "pending");
                     }
                 } else {
                     throw new IllegalStateException("Illegal token status");
@@ -159,7 +159,7 @@ public class SecurityService {
      * 验证Token
      */
     public Map<NanoToken, String> verificateToken(NanoUser user, NanoToken telegramToken, String verificationCode) {
-        var nanoTokenList = this.tokenRepository.queryVerificatingToken(user.getUsername(), verificationCode);
+        var nanoTokenList = this.tokenRepository.queryVerifyingToken(user.getUsername(), verificationCode);
         var result = new HashMap<NanoToken, String>();
         var now = Timestamp.from(Instant.now());
         forEach(nanoTokenList, it -> {
@@ -168,14 +168,14 @@ public class SecurityService {
             // copy telegram token privilege
             it.setPrivilege(telegramToken.getPrivilege());
             // verification timeout
-            if (verificatingTimeout(it)) {
-                result.put(it, NanoToken.VERIFICATION_TIMEOUT);
+            if (verifyingTimeout(it)) {
+                result.put(it, NanoToken.VERIFYING_TIMEOUT);
             }
             // verificated
             else {
                 it.setStatus(NanoToken.VALID);
                 this.tokenRepository.updateToken(it);
-                result.put(it, NanoToken.VERIFICATED);
+                result.put(it, NanoToken.VERIFIED);
             }
         });
         return result;
@@ -186,8 +186,8 @@ public class SecurityService {
      *
      * @return prune count
      */
-    public int pruneVerificatingTimeoutToken() {
-        var tokenList = this.tokenRepository.queryVerificatingTimeoutToken();
+    public int pruneVerifyingTimeoutToken() {
+        var tokenList = this.tokenRepository.queryVerifyingTimeoutToken();
         int count = 0;
         if (!CollectionUtils.isEmpty(tokenList)) {
             count = tokenList.size();
@@ -199,7 +199,7 @@ public class SecurityService {
     /**
      * 接口验证是否超时，5分钟超时时间
      */
-    private static boolean verificatingTimeout(NanoToken nanoToken) {
+    private static boolean verifyingTimeout(NanoToken nanoToken) {
         var creationTime = nanoToken.getCreationTime();
         var now = Timestamp.from(Instant.now().minusSeconds(300));
         return now.after(creationTime);
@@ -227,6 +227,12 @@ public class SecurityService {
             return new Parser();
         } catch (IOException ex) {
             throw new RuntimeException(ex);
+        }
+    }
+
+    public static void authState(boolean expression, String message) {
+        if (!expression) {
+            throw new AuthenticationException(message);
         }
     }
 }

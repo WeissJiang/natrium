@@ -1,20 +1,69 @@
 import React from '/modules/react'
+import { useUser } from '/hooks/account.jsx'
+
+import style from './style.module.less'
 
 const { useState } = React
 
-function Nano() {
+async function getUserList(token) {
+    const response = await fetch('/api/user/list', {
+        method: 'GET',
+        headers: { 'X-Token': token },
+    })
+    const result = await response.json()
+    if (result.error) {
+        alert(result.error)
+        throw new Error(result.error)
+    }
+    return result.payload
+}
 
-    const [apiToken, setApiToken] = useState('')
+async function getChatList(token) {
+    const response = await fetch('/api/telegram/chat/list', {
+        method: 'GET',
+        headers: { 'X-Token': token },
+    })
+    const result = await response.json()
+    if (result.error) {
+        alert(result.error)
+        throw new Error(result.error)
+    }
+    return result.payload
+}
+
+function printJson(o) {
+    return JSON.stringify(o, null, 2)
+}
+
+function Nano() {
+    const { loading, token, redirectToLoginPageIfNotLogin } = useUser()
+
+    const [userList, setUserList] = useState([])
+    const [chatList, setChatList] = useState([])
+
+    if (loading) {
+        return <div>Loading...</div>
+    }
+
+    if (redirectToLoginPageIfNotLogin()) {
+        return <div>Redirecting to login page...</div>
+    }
+
+    async function getList() {
+        const fetchedUserList = await getUserList(token)
+        const fetchedChatList = await getChatList(token)
+        setUserList(fetchedUserList || [])
+        setChatList(fetchedChatList || [])
+    }
 
     return (
-        <div>
+        <div className={style['nano-container']}>
             <div>
-                <span>API Token: </span>
-                <input type="text" value={apiToken} onChange={ev => setApiToken(ev.target.value)}/>
-            </div>
-            <hr/>
-            <div>
-                nano
+                <button onClick={getList}>Get list</button>
+                <div>User list</div>
+                <pre>{printJson(userList)}</pre>
+                <div>Chat list</div>
+                <pre>{printJson(chatList)}</pre>
             </div>
         </div>
     );

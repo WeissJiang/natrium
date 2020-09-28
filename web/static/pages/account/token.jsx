@@ -1,16 +1,9 @@
 import React from '/modules/react'
-import { useUser, useToken } from '/hooks/account.jsx'
+import { useUser, redirectToLoginPage } from '/hooks/account.jsx'
 
 import style from './style.module.less'
 
 const { useState, useEffect } = React
-
-function redirectToLoginPage() {
-    const loginUrl = '/login'
-    const backUrl = new URL(location.href).pathname
-    const searchParams = new URLSearchParams({ backUrl })
-    location.href = `${loginUrl}?${searchParams}`
-}
 
 function isoToLocal(iso) {
     if (!iso) {
@@ -46,13 +39,11 @@ async function fetchDeleteToken(token, idList) {
 }
 
 function Token(props) {
+    const { loading, user, token, redirectToLoginPageIfNotLogin } = useUser()
     const [tokenList, setTokenList] = useState(null)
 
-    const { token } = useToken()
-    const { loading, user } = useUser(token)
-
     useEffect(() => {
-        if (!user) {
+        if (!token) {
             return
         }
         ;(async () => {
@@ -65,8 +56,7 @@ function Token(props) {
         return <div>Loading...</div>
     }
 
-    if (!user) {
-        redirectToLoginPage()
+    if (redirectToLoginPageIfNotLogin()) {
         return <div>Redirecting to login page...</div>
     }
 

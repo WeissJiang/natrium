@@ -14,17 +14,17 @@ public class NanoToken {
     // status
     public static final String VALID = "VALID";
     public static final String INVALID = "INVALID";
-    public static final String VERIFICATING = "VERIFICATING";
+    public static final String VERIFYING = "VERIFYING";
 
-    // verificating
-    public static final String VERIFICATION_TIMEOUT = "VERIFICATION_TIMEOUT";
-    public static final String VERIFICATED = "VERIFICATED";
+    // verifying
+    public static final String VERIFYING_TIMEOUT = "VERIFYING_TIMEOUT";
+    public static final String VERIFIED = "VERIFIED";
 
     /**
-     * 拼接verificating status
+     * 拼接verifying status
      */
-    public static String verificatingStatus(String username, String verificationCode) {
-        return "%s:%s:%s".formatted(VERIFICATING, username, verificationCode);
+    public static String verifyingStatus(String username, String verificationCode) {
+        return "%s:%s:%s".formatted(VERIFYING, username, verificationCode);
     }
 
     private Integer id;
@@ -38,7 +38,7 @@ public class NanoToken {
     /**
      * VALID
      * INVALID
-     * VERIFICATING:{username}:{code}
+     * VERIFYING:{username}:{code}
      */
     private String status;
 

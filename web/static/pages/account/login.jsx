@@ -1,14 +1,11 @@
 import React from '/modules/react'
-import { useUser, useToken } from '/hooks/account.jsx'
+import { useUser, getBackUrl } from '/hooks/account.jsx'
 import { sleep } from '/modules/schedule.mjs'
 
 const { useState } = React
 
-function getBackUrl() {
-    return new URLSearchParams(location.search).get('backUrl')
-}
 
-function VerificatingBox(props) {
+function VerifyingBox(props) {
     return (
         <div>
             <span>
@@ -43,11 +40,10 @@ function LoggedInBox(props) {
 
 function Login(props) {
 
-    const [verificating, setVerificating] = useState(false)
+    const [verifying, setVerifying] = useState(false)
     const [verificationCode, setVerificationCode] = useState('')
 
-    const { token, setLocalToken, setToken } = useToken()
-    const { loading, user } = useUser(token)
+    const { loading, user, token, setLocalToken, setToken } = useUser()
 
     if (loading) {
         return <div>Loading...</div>
@@ -90,8 +86,8 @@ function Login(props) {
                 alert(result.error)
                 throw new Error(result.error)
             }
-            const { verificating } = result.payload
-            switch (verificating) {
+            const { verifying } = result.payload
+            switch (verifying) {
                 case 'done': {
                     return
                 }
@@ -107,8 +103,8 @@ function Login(props) {
         }
     }
 
-    async function createTokenAndWaitVerificating(username) {
-        const response = await fetch('/api/token/createVerificatingToken', {
+    async function createTokenAndWaitVerifying(username) {
+        const response = await fetch('/api/token/createVerifyingToken', {
             method: 'POST',
             body: new URLSearchParams({ username })
         })
@@ -119,7 +115,7 @@ function Login(props) {
         }
         const { token, verificationCode } = result.payload
         setLocalToken(token)
-        setVerificating(true)
+        setVerifying(true)
         setVerificationCode(verificationCode)
         try {
             await pollingTokenVerification(token)
@@ -128,14 +124,14 @@ function Login(props) {
             if (backUrl) {
                 location.href = backUrl
             } else {
-                setVerificating(false)
+                setVerifying(false)
                 setVerificationCode('')
                 setToken(token)
             }
         } catch (err) {
             if (err.message === 'timeout') {
                 alert('Verification timeout')
-                setVerificating(false)
+                setVerifying(false)
                 setVerificationCode('')
             }
         }
@@ -144,11 +140,11 @@ function Login(props) {
     async function handleLoginFromSubmit(ev) {
         ev.preventDefault()
         const username = ev.target.username.value
-        await createTokenAndWaitVerificating(username)
+        await createTokenAndWaitVerifying(username)
     }
 
-    if (verificating) {
-        return <VerificatingBox verificationCode={verificationCode}/>
+    if (verifying) {
+        return <VerifyingBox verificationCode={verificationCode}/>
     } else {
         return <LoginForm handleSubmit={handleLoginFromSubmit}/>
     }

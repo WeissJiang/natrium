@@ -3,8 +3,16 @@ import { getLocalItem, setLocalItem, removeLocalItem } from '/modules/storage.mj
 
 const { useState, useEffect } = React
 
-function isIllegalToken(result) {
-    return result?.error === 'Illegal token'
+
+export function redirectToLoginPage() {
+    const loginUrl = '/login'
+    const backUrl = new URL(location.href).pathname
+    const searchParams = new URLSearchParams({ backUrl })
+    location.href = `${loginUrl}?${searchParams}`
+}
+
+export function getBackUrl() {
+    return new URLSearchParams(location.search).get('backUrl')
 }
 
 const TOKEN = 'token'
@@ -18,14 +26,14 @@ async function fetchUser(token) {
     }
     const response = await fetch('/api/user/user', options)
     const result = await response.json()
-    if (result.error && !isIllegalToken(result)) {
+    if (result.error && response.status !== 403) {
         alert(result.error)
     }
     return result.payload
 }
 
-export function useToken() {
-    const [token, internalSetToken] = useState(() => getLocalItem(TOKEN))
+function useToken() {
+    const [token, setTokenState] = useState(() => getLocalItem(TOKEN))
 
     function setLocalToken(token) {
         if (token === null) {
@@ -37,7 +45,7 @@ export function useToken() {
 
     function setToken(token) {
         setLocalToken(token)
-        internalSetToken(token)
+        setTokenState(token)
     }
 
     return {
@@ -47,7 +55,8 @@ export function useToken() {
     }
 }
 
-export function useUser(token) {
+export function useUser() {
+    const { token, setToken, setLocalToken } = useToken()
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
 
@@ -66,5 +75,22 @@ export function useUser(token) {
             setLoading(false)
         })()
     }, [token])
-    return { loading, user }
+
+    function redirectToLoginPageIfNotLogin() {
+        if (!loading && !user) {
+            redirectToLoginPage()
+            return true
+        }
+        return false
+    }
+
+    return {
+        loading,
+        user,
+        token,
+        setToken,
+        setLocalToken,
+        redirectToLoginPageIfNotLogin,
+    }
 }
+

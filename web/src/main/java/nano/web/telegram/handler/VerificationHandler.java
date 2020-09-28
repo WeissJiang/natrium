@@ -43,18 +43,18 @@ public class VerificationHandler implements Onion.Middleware<BotContext> {
      * 根据结果组织验证信息
      */
     private static String buildMessage(Map<NanoToken, String> tokenResultMap) {
-        var verificated = new ArrayList<String>();
+        var verified = new ArrayList<String>();
         var timeout = new ArrayList<String>();
         tokenResultMap.forEach((token, result) -> {
             switch (result) {
-                case NanoToken.VERIFICATED -> verificated.add(token.getName());
-                case NanoToken.VERIFICATION_TIMEOUT -> timeout.add(token.getName());
+                case NanoToken.VERIFIED -> verified.add(token.getName());
+                case NanoToken.VERIFYING_TIMEOUT -> timeout.add(token.getName());
                 default -> throw new IllegalStateException("Illegal verification result");
             }
         });
         var message = new StringBuilder();
-        if (!verificated.isEmpty()) {
-            message.append("验证成功：\n").append(String.join("\n", verificated));
+        if (!verified.isEmpty()) {
+            message.append("验证成功：\n").append(String.join("\n", verified));
         }
         if (!timeout.isEmpty()) {
             if (message.length() > 0) {

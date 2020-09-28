@@ -40,7 +40,7 @@ public class ChatController {
 
     @GetMapping("/chat/list")
     public ResponseEntity<?> getChatList() {
-        var chatDTOList = chatService.getChatList();
+        var chatDTOList = this.chatService.getChatList();
         return ResponseEntity.ok(Result.of(chatDTOList));
     }
 }

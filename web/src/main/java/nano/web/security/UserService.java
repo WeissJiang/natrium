@@ -8,6 +8,7 @@ import nano.web.security.repository.TokenRepository;
 import nano.web.security.repository.UserRepository;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 import java.sql.Timestamp;
@@ -37,6 +38,7 @@ public class UserService {
     public UserDTO getUserByToken(String token) {
         this.tokenRepository.updateLastActiveTime(token, Timestamp.from(Instant.now()));
         var user = this.userRepository.queryUserByToken(token);
+        Assert.notNull(user, "Token is not associated with a user");
         return convert(user);
     }
 
