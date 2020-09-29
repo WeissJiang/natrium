@@ -32,7 +32,7 @@ async function fetchDeleteToken(token, idList) {
         body,
     })
     const result = await response.json()
-    if (result.error) {
+    if (result.error && response.status !== 403) {
         alert(result.error)
     }
     return result.payload

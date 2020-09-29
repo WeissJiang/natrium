@@ -2,4 +2,4 @@
 cd `dirname $0`
 # ---
 cd ..
-java $JAVA_OPTS -jar web/build/libs/web.jar --spring.profiles.active=prod
+java $JAVA_OPTS -XX:+UseZGC -jar web/build/libs/web.jar

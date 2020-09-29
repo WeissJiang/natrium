@@ -21,7 +21,7 @@ public class TokenDesensitizationInterceptor implements HandlerInterceptor {
                              @NotNull Object handler) throws Exception {
         var token = request.getHeader(X_TOKEN);
         if (token != null) {
-            request.setAttribute(D_TOKEN, desensitizeToken(token));
+            request.setAttribute(X_TOKEN_DIGEST, desensitizeToken(token));
         }
         return true;
     }

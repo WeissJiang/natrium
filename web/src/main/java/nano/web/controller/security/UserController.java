@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static nano.web.security.NanoPrivilege.*;
-import static nano.web.security.TokenCode.D_TOKEN;
+import static nano.web.security.TokenCode.X_TOKEN_DIGEST;
 
 @CrossOrigin
 @RestController
@@ -22,7 +22,7 @@ public class UserController {
 
     @Authorized(BASIC)
     @GetMapping("/user")
-    public ResponseEntity<?> getUser(@RequestAttribute(D_TOKEN) String token) {
+    public ResponseEntity<?> getUser(@RequestAttribute(X_TOKEN_DIGEST) String token) {
         var userDTO = this.userService.getUserByToken(token);
         return ResponseEntity.ok(Result.of(userDTO));
     }

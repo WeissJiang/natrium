@@ -12,7 +12,7 @@ import java.util.Map;
 
 import static nano.web.security.NanoPrivilege.BASIC;
 import static nano.web.security.NanoPrivilege.NANO_API;
-import static nano.web.security.TokenCode.D_TOKEN;
+import static nano.web.security.TokenCode.X_TOKEN_DIGEST;
 
 @CrossOrigin
 @RestController
@@ -33,14 +33,14 @@ public class TokenController {
     }
 
     @GetMapping("/verification")
-    public ResponseEntity<?> getTokenVerification(@RequestAttribute(D_TOKEN) String token) {
+    public ResponseEntity<?> getTokenVerification(@RequestAttribute(X_TOKEN_DIGEST) String token) {
         var result = this.securityService.getTokenVerification(token);
         return ResponseEntity.ok(Result.of(result));
     }
 
     @Authorized(BASIC)
     @PostMapping("/delete")
-    public ResponseEntity<?> deleteToken(@RequestAttribute(D_TOKEN) String token,
+    public ResponseEntity<?> deleteToken(@RequestAttribute(X_TOKEN_DIGEST) String token,
                                          @RequestParam(name = "id", required = false) List<Integer> idList) {
         // 登出删除Token
         if (CollectionUtils.isEmpty(idList)) {
@@ -55,7 +55,7 @@ public class TokenController {
 
     @Authorized(BASIC)
     @GetMapping("/list")
-    public ResponseEntity<?> getTokenList(@RequestAttribute(D_TOKEN) String token) {
+    public ResponseEntity<?> getTokenList(@RequestAttribute(X_TOKEN_DIGEST) String token) {
         var tokenList = this.securityService.getAssociatedTokenList(token);
         return ResponseEntity.ok(Result.of(tokenList));
     }
