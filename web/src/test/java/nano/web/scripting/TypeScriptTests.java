@@ -1,12 +1,13 @@
 package nano.web.scripting;
 
 import org.graalvm.polyglot.Context;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 @Disabled
-public class TypescriptTests {
+public class TypeScriptTests {
 
     @Test
     public void test() {
@@ -15,6 +16,6 @@ public class TypescriptTests {
                 import ts from 'https://jspm.dev/typescript@4.0.2'
                 """);
         var transpileModule = context.eval("js", "ts.transpileModule");
-        Assertions.assertNotNull(transpileModule);
+        assertNotNull(transpileModule);
     }
 }
