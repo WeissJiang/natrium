@@ -110,11 +110,11 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
      * 增加Scripting相关静态资源的media type
      */
     @Override
-    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+    public void configureContentNegotiation(ContentNegotiationConfigurer cnc) {
         var mediaTypes = new HashMap<String, MediaType>();
         var javaScript = MediaType.parseMediaType(Scripting.TEXT_JAVASCRIPT);
         List.of("mjs", "jsx", "ts", "tsx", "less").forEach(ext -> mediaTypes.put(ext, javaScript));
-        configurer.mediaTypes(mediaTypes);
+        cnc.mediaTypes(mediaTypes);
     }
 
     @Override

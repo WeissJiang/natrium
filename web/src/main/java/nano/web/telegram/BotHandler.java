@@ -34,11 +34,11 @@ public class BotHandler implements ApplicationContextAware {
     }
 
     @Async
-    public void handleAsync(Map<String, Object> parameters) throws Exception {
+    public void handleAsync(Map<String, ?> parameters) throws Exception {
         this.internalHandle(this.buildContext(parameters));
     }
 
-    public void handle(Map<String, Object> parameters) throws Exception {
+    public void handle(Map<String, ?> parameters) throws Exception {
         this.internalHandle(this.buildContext(parameters));
     }
 
@@ -52,7 +52,7 @@ public class BotHandler implements ApplicationContextAware {
     /**
      * build context
      */
-    private BotContext buildContext(Map<String, Object> parameters) {
+    private BotContext buildContext(Map<String, ?> parameters) {
         var context = new BotContext(parameters);
         // build context
         var ctx = this.context;

@@ -35,7 +35,7 @@ public class TelegramController {
 
     @PostMapping("/webhook/{key}")
     public ResponseEntity<?> webhook(@PathVariable("key") String key,
-                                     @RequestBody Map<String, Object> parameterMap) throws Exception {
+                                     @RequestBody Map<String, ?> parameterMap) throws Exception {
         // check key
         this.securityService.checkNanoApiKey(key);
         // handle request

@@ -21,7 +21,7 @@ import static java.util.Collections.emptyList;
 
 public class BotContext {
 
-    private final Map<String, Object> parameters;
+    private final Map<String, ?> parameters;
     private final DocumentContext documentContext;
 
     // -- context相关对象
@@ -30,7 +30,7 @@ public class BotContext {
 
     private TelegramService telegramService;
 
-    public BotContext(@NotNull Map<String, Object> parameters) {
+    public BotContext(@NotNull Map<String, ?> parameters) {
         this.parameters = parameters;
         this.documentContext = JsonPath.parse(parameters);
     }
@@ -118,7 +118,7 @@ public class BotContext {
         return null;
     }
 
-    public Map<String, Object> getParameters() {
+    public Map<String, ?> getParameters() {
         return parameters;
     }
 

@@ -88,11 +88,32 @@ public abstract class Sugar {
         if (collection == null) {
             return null;
         }
-        var first = collection.stream().findFirst();
-        return first.orElse(null);
+        var first = (T) null;
+        for (T it : collection) {
+            first = it;
+            break;
+        }
+        return first;
     }
 
-    public static String render(@NotNull String template, Map<String, ?> scope) {
+    public static <T> T getLast(Collection<T> collection) {
+        if (collection == null) {
+            return null;
+        }
+        // if is List
+        if (collection instanceof List) {
+            var list = (List<T>) collection;
+            return list.get(list.size() - 1);
+        }
+        // other collection
+        var last = (T) null;
+        for (T it : collection) {
+            last = it;
+        }
+        return last;
+    }
+
+    public static String render(@NotNull String template, @NotNull Map<String, ?> scope) {
         return Pattern.compile("(\\{(\\w+)})").matcher(template)
                 .replaceAll(mr -> requireNonNull(scope.get(mr.group(2)), mr.group(1) + " not found in scope").toString());
     }
