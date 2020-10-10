@@ -1,6 +1,5 @@
 package nano.web.controller.telegram;
 
-import nano.web.nano.Bot;
 import nano.web.security.Authorized;
 import nano.web.security.SecurityService;
 import nano.web.telegram.BotHandler;
@@ -45,7 +44,7 @@ public class TelegramController {
         return ResponseEntity.ok().build();
     }
 
-    @Authorized(NANO_API)
+//    @Authorized(NANO_API)
     @PostMapping("/setWebhook")
     public ResponseEntity<?> setWebhook() {
         var result = this.telegramService.setWebhook();
