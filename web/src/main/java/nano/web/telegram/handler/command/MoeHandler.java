@@ -22,7 +22,7 @@ public class MoeHandler extends AbstractCommandHandler {
         if (extract == null) {
             extract = "nano没有找到：" + title;
         }
-        context.sendMessage(extract);
+        context.replyMessage(extract);
     }
 
     @Override

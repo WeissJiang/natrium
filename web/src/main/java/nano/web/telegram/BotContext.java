@@ -51,6 +51,10 @@ public class BotContext {
         return this.read("$.message.chat.type");
     }
 
+    public Number messageId() {
+        return this.read("$.message.message_id");
+    }
+
     public List<NanoPrivilege> userPrivilegeList() {
         var privilege = this.session.getToken().getPrivilege();
         return Json.decodeValueAsList(privilege)
@@ -103,9 +107,9 @@ public class BotContext {
 
     // -- proxy to TelegramService
 
-    public void sendMessage(String text, Object... args) {
+    public void replyMessage(String text, Object... args) {
         Assert.notNull(this.telegramService, "this.telegramService is null");
-        this.telegramService.sendMessage(this.chatId(), String.format(text, args));
+        this.telegramService.replyMessage(this.chatId(), this.messageId(), String.format(text, args));
     }
 
     private static Integer getInteger(Object o) {

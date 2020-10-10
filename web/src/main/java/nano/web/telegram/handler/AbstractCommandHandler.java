@@ -27,7 +27,7 @@ public abstract class AbstractCommandHandler implements Onion.Middleware<BotCont
         if (StringUtils.hasText(tail)) {
             this.handle(context, tail);
         } else if (text.startsWith("/" + this.command())) {
-            context.sendMessage(this.help());
+            context.replyMessage(this.help());
         } else {
             next.next();
         }

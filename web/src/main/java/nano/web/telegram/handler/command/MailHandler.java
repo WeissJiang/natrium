@@ -25,15 +25,15 @@ public class MailHandler extends AbstractCommandHandler {
     protected void handle(BotContext context, String tail) throws MessagingException {
         var email = context.getSession().getUser().getEmail();
         if (StringUtils.isEmpty(email)) {
-            context.sendMessage("邮箱📮未设置，发送/setmail设置邮箱，如：\n/setmail alice@google.com");
+            context.replyMessage("邮箱📮未设置，发送/setmail设置邮箱，如：\n/setmail somename@example.com");
             return;
         }
         if (!context.userPrivilegeList().contains(NanoPrivilege.MAIL)) {
-            context.sendMessage("发送失败，无邮件📧服务权限");
+            context.replyMessage("发送失败，无邮件📧服务权限");
             return;
         }
         this.mailService.sendTextMail(email, tail);
-        context.sendMessage("邮件📧投递成功");
+        context.replyMessage("邮件📧投递成功");
     }
 
     @Override

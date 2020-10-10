@@ -23,16 +23,16 @@ public class MailSetupHandler extends AbstractCommandHandler {
     protected void handle(BotContext context, String tail) {
         var user = context.getSession().getUser();
         if (!context.userPrivilegeList().contains(NanoPrivilege.MAIL)) {
-            context.sendMessage("设置失败，无邮件📧服务权限");
+            context.replyMessage("设置失败，无邮件📧服务权限");
             return;
         }
         if (!Predicates.EMAIL.test(tail)) {
-            context.sendMessage("非法的邮箱格式");
+            context.replyMessage("非法的邮箱格式");
             return;
         }
         user.setEmail(tail);
         this.userService.createOrUpdateUser(user);
-        context.sendMessage("设置成功");
+        context.replyMessage("设置成功");
     }
 
     @Override

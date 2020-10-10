@@ -1,7 +1,7 @@
 {
   "name": "nano-bot",
   "version": "1.0.0",
-  "description": " Shinonome Research Institute",
+  "description": "Shinonome Lab",
   "main": "index.js",
   "scripts": {
     "i": "yarn --ignore-optional install",

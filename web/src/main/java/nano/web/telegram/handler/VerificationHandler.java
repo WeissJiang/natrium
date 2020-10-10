@@ -32,7 +32,7 @@ public class VerificationHandler implements Onion.Middleware<BotContext> {
             var token = session.getToken();
             var tokenResultMap = this.securityService.verificateToken(user, token, text);
             if (!tokenResultMap.isEmpty()) {
-                context.sendMessage(buildMessage(tokenResultMap));
+                context.replyMessage(buildMessage(tokenResultMap));
             }
         } else {
             next.next();

@@ -26,7 +26,7 @@ public class ExceptionHandler implements Onion.Middleware<BotContext> {
 
     private static void sendMessageIfPossible(BotContext context, String text) {
         if (context.chatId() != null) {
-            context.sendMessage(text);
+            context.replyMessage(text);
         }
     }
 }

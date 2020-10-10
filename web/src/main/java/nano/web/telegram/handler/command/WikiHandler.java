@@ -25,7 +25,7 @@ public class WikiHandler extends AbstractCommandHandler {
     @Override
     public void handle(BotContext context, String title) {
         var extract = this.fetchExtract(title);
-        context.sendMessage(extract);
+        context.replyMessage(extract);
     }
 
     private String fetchExtract(String title) {

@@ -20,7 +20,7 @@ public class BabelHandler extends AbstractCommandHandler {
     @Override
     public void handle(BotContext context, String text) {
         var translated = this.translationService.autoTranslate(text);
-        context.sendMessage(translated);
+        context.replyMessage(translated);
     }
 
     @Override

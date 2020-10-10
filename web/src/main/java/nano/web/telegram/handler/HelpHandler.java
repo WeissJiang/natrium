@@ -23,9 +23,9 @@ public class HelpHandler implements Onion.Middleware<BotContext> {
         var chatType = context.chatType();
 
         if ("supergroup".equals(chatType) && commands.contains("/help@" + configVars.getBotName())) {
-            context.sendMessage(this.help());
+            context.replyMessage(this.help());
         } else if ("private".equals(chatType) && commands.contains("/help")) {
-            context.sendMessage(this.help());
+            context.replyMessage(this.help());
         } else {
             next.next();
         }

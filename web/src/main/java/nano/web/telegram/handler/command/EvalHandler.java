@@ -14,7 +14,7 @@ public class EvalHandler extends AbstractCommandHandler {
 
     @Override
     public void handle(BotContext context, String script) {
-        context.sendMessage(eval(script));
+        context.replyMessage(eval(script));
     }
 
     @Override

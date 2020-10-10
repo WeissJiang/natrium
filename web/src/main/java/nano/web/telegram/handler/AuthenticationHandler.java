@@ -14,7 +14,7 @@ public class AuthenticationHandler implements Onion.Middleware<BotContext> {
         if (session == null || NanoToken.VALID.equals(session.getToken().getStatus())) {
             next.next();
         } else {
-            context.sendMessage("Telegram token is not valid");
+            context.replyMessage("Telegram token is not valid");
         }
     }
 }

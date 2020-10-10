@@ -16,6 +16,8 @@ public class MailService {
 
     private static final Logger log = LoggerFactory.getLogger(MailService.class);
 
+    private static final String DEFAULT_MAIL_SUBJECT = "Shinonome Lab Mail Service";
+
     private String fromAddress;
 
     private JavaMailSender javaMailSender;
@@ -29,7 +31,7 @@ public class MailService {
         var helper = new MimeMessageHelper(message);
         helper.setFrom(this.fromAddress);
         helper.setTo(to);
-        helper.setSubject("Shinonome Research Institute Mail Service");
+        helper.setSubject(DEFAULT_MAIL_SUBJECT);
         helper.setText(text);
         mailSender.send(message);
     }
