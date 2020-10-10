@@ -44,7 +44,7 @@ public class TelegramController {
         return ResponseEntity.ok().build();
     }
 
-//    @Authorized(NANO_API)
+    @Authorized(NANO_API)
     @PostMapping("/setWebhook")
     public ResponseEntity<?> setWebhook() {
         var result = this.telegramService.setWebhook();
