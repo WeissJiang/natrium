@@ -1,5 +1,7 @@
 package nano.web.nano;
 
+import java.util.Map;
+
 /**
  * 环境配置Key
  */
@@ -8,7 +10,6 @@ public class ConfigVars {
     /**
      * nano
      */
-    private String botName;
     private String nanoApi;
 
     /**
@@ -17,23 +18,16 @@ public class ConfigVars {
     private String nanoApiKey;
 
     /**
-     * Telegram Bot token
-     */
-    private String telegramBotToken;
-
-    /**
      * 百度翻译APP ID、secret key
      */
     private String baiduTranslationAppId;
     private String baiduTranslationSecretKey;
 
-    public String getBotName() {
-        return botName;
-    }
+    /**
+     * Telegram Bots
+     */
+    private Map<String, Bot> bots;
 
-    public void setBotName(String botName) {
-        this.botName = botName;
-    }
 
     public String getNanoApi() {
         return nanoApi;
@@ -51,14 +45,6 @@ public class ConfigVars {
         this.nanoApiKey = nanoApiKey;
     }
 
-    public String getTelegramBotToken() {
-        return telegramBotToken;
-    }
-
-    public void setTelegramBotToken(String telegramBotToken) {
-        this.telegramBotToken = telegramBotToken;
-    }
-
     public String getBaiduTranslationAppId() {
         return baiduTranslationAppId;
     }
@@ -73,5 +59,13 @@ public class ConfigVars {
 
     public void setBaiduTranslationSecretKey(String baiduTranslationSecretKey) {
         this.baiduTranslationSecretKey = baiduTranslationSecretKey;
+    }
+
+    public Map<String, Bot> getBots() {
+        return bots;
+    }
+
+    public void setBots(Map<String, Bot> bots) {
+        this.bots = bots;
     }
 }

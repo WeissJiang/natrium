@@ -1,5 +1,6 @@
 package nano.web.controller.telegram;
 
+import nano.web.nano.Bot;
 import nano.web.security.Authorized;
 import nano.web.security.SecurityService;
 import nano.web.telegram.BotHandler;
@@ -33,13 +34,13 @@ public class TelegramController {
         this.securityService = securityService;
     }
 
-    @PostMapping("/webhook/{key}")
-    public ResponseEntity<?> webhook(@PathVariable("key") String key,
+    @PostMapping("/webhook/{bot}/{key}")
+    public ResponseEntity<?> webhook(@PathVariable("bot") String bot, @PathVariable("key") String key,
                                      @RequestBody Map<String, ?> parameterMap) throws Exception {
         // check key
         this.securityService.checkNanoApiKey(key);
         // handle request
-        this.botHandler.handleAsync(parameterMap);
+        this.botHandler.handleAsync(bot, parameterMap);
         // always return ok
         return ResponseEntity.ok().build();
     }

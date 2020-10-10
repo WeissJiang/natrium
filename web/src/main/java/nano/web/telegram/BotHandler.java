@@ -34,12 +34,12 @@ public class BotHandler implements ApplicationContextAware {
     }
 
     @Async
-    public void handleAsync(Map<String, ?> parameters) throws Exception {
-        this.internalHandle(this.buildContext(parameters));
+    public void handleAsync(String botKey, Map<String, ?> parameters) throws Exception {
+        this.internalHandle(this.buildContext(botKey, parameters));
     }
 
-    public void handle(Map<String, ?> parameters) throws Exception {
-        this.internalHandle(this.buildContext(parameters));
+    public void handle(String botKey, Map<String, ?> parameters) throws Exception {
+        this.internalHandle(this.buildContext(botKey, parameters));
     }
 
     /**
@@ -52,8 +52,8 @@ public class BotHandler implements ApplicationContextAware {
     /**
      * build context
      */
-    private BotContext buildContext(Map<String, ?> parameters) {
-        var context = new BotContext(parameters);
+    private BotContext buildContext(String botKey, Map<String, ?> parameters) {
+        var context = new BotContext(botKey, parameters);
         // build context
         var ctx = this.context;
         var telegramService = ctx.getBean(TelegramService.class);

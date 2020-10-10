@@ -2,6 +2,7 @@ package nano.web.telegram;
 
 import nano.support.Json;
 import nano.support.Onion;
+import nano.web.nano.Bot;
 import nano.web.security.SessionService;
 import nano.web.telegram.handler.HelpHandler;
 import org.junit.jupiter.api.Test;
@@ -65,7 +66,7 @@ public class BotHandlerTests {
             return null;
         }).when(this.helpHandler).via(Mockito.any(), Mockito.any());
         // test handle
-        this.botHandler.handle(Json.decodeValueAsMap(payload));
+        this.botHandler.handle(Bot.BOT_ROOT, Json.decodeValueAsMap(payload));
         verify(this.helpHandler, times(1)).via(Mockito.any(), Mockito.any());
     }
 }

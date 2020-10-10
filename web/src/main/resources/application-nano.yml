@@ -1,4 +1,14 @@
 nano:
-  bot-name: nano_telegram_bot
   nano-api: https://nano-bot.herokuapp.com
-  nano-api-key: token
+  nano-api-key: key
+  baidu-translation-app-id:
+  baidu-translation-secret-key:
+  bots:
+    bot-root:
+      name: nano
+      username: nano_telegram_bot
+      token: token
+    bot-026:
+      name: nano-026
+      username: nano_026_bot
+      token: token

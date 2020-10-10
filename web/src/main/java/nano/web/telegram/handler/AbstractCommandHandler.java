@@ -1,9 +1,11 @@
 package nano.web.telegram.handler;
 
 import nano.support.Onion;
+import nano.web.nano.Bot;
 import nano.web.nano.ConfigVars;
 import nano.web.telegram.BotContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -34,9 +36,11 @@ public abstract class AbstractCommandHandler implements Onion.Middleware<BotCont
     }
 
     private String parseCommand(String chatType, String text) {
+        var bot = this.configVars.getBots().get(Bot.BOT_ROOT);
+        Assert.notNull(bot, "bot should not null");
         var cmd = this.command().trim();
         String regex = switch (chatType) {
-            case "supergroup" -> "(?i)/%s@%s\\s".formatted(cmd, this.configVars.getBotName());
+            case "supergroup" -> "(?i)/%s@%s\\s".formatted(cmd, bot.getName());
             case "private" -> "(?i)^/?%s\\s".formatted(cmd);
             default -> null;
         };

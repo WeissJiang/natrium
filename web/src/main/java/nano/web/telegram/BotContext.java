@@ -21,6 +21,8 @@ import static java.util.Collections.emptyList;
 
 public class BotContext {
 
+    private final String botKey;
+
     private final Map<String, ?> parameters;
     private final DocumentContext documentContext;
 
@@ -30,7 +32,9 @@ public class BotContext {
 
     private TelegramService telegramService;
 
-    public BotContext(@NotNull Map<String, ?> parameters) {
+
+    public BotContext(@NotNull String botKey, @NotNull Map<String, ?> parameters) {
+        this.botKey = botKey;
         this.parameters = parameters;
         this.documentContext = JsonPath.parse(parameters);
     }
@@ -109,7 +113,7 @@ public class BotContext {
 
     public void replyMessage(String text, Object... args) {
         Assert.notNull(this.telegramService, "this.telegramService is null");
-        this.telegramService.replyMessage(this.chatId(), this.messageId(), String.format(text, args));
+        this.telegramService.replyMessage(this.botKey, this.chatId(), this.messageId(), String.format(text, args));
     }
 
     private static Integer getInteger(Object o) {
@@ -140,5 +144,9 @@ public class BotContext {
 
     public void setTelegramService(TelegramService telegramService) {
         this.telegramService = telegramService;
+    }
+
+    public String botKey() {
+        return this.botKey;
     }
 }
