@@ -37,17 +37,17 @@ public class StartHandler implements Onion.Middleware<BotContext> {
 
     private static void replyNanoStart(BotContext context) {
         var text = """
-                *至尊戒，驭众戒*
-                
-                - [nano-026](https://t.me/nano_026_bot) \\- Chinese English translation
-                - [nano-100](https://t.me/nano_100_bot) \\- Encyclopedia
-                - [nano-233](https://t.me/nano_233_bot) \\- Get sticker
-                - [nano-262](https://t.me/nano_262_bot) \\- Evaluate JavaScript
+                <b>至尊戒，驭众戒</b>
+                <br>
+                <a href="https://t.me/nano_026_bot">nano-026</a> - Chinese English translation
+                <a href="https://t.me/nano_100_bot">nano-100</a> - Encyclopedia
+                <a href="https://t.me/nano_233_bot">nano-233</a> - Get sticker
+                <a href="https://t.me/nano_262_bot">nano-262</a> - Evaluate JavaScript
                 """;
         var payload = Map.of(
                 "chat_id", context.chatId(),
                 "reply_to_message_id", context.messageId(),
-                "parse_mode", "MarkdownV2",
+                "parse_mode", "HTML",
                 "disable_web_page_preview", true,
                 "text", text
         );
