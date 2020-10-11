@@ -28,7 +28,7 @@ public class StartHandler implements Onion.Middleware<BotContext> {
         var bot = context.bot();
         switch (bot.getName()) {
             case Bot.NANO -> replyNanoStart(context);
-            case Bot.NANO_026 -> context.replyMessage("CN/EN translation");
+            case Bot.NANO_026 -> context.replyMessage("ZH/EN translation");
             case Bot.NANO_100 -> context.replyMessage("Encyclopedia");
             case Bot.NANO_233 -> context.replyMessage("Get Sticker");
             case Bot.NANO_262 -> context.replyMessage("Evaluate JavaScript");
@@ -39,7 +39,7 @@ public class StartHandler implements Onion.Middleware<BotContext> {
         var text = """
                 <b>至尊戒，驭众戒</b>
                 
-                <a href="https://t.me/nano_026_bot">nano-026</a> - CN/EN translation
+                <a href="https://t.me/nano_026_bot">nano-026</a> - ZH/EN translation
                 <a href="https://t.me/nano_100_bot">nano-100</a> - Encyclopedia
                 <a href="https://t.me/nano_233_bot">nano-233</a> - Get sticker
                 <a href="https://t.me/nano_262_bot">nano-262</a> - Evaluate JavaScript
