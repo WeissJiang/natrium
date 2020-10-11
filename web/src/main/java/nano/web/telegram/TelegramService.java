@@ -4,10 +4,14 @@ import nano.web.nano.Bot;
 import nano.web.nano.ConfigVars;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -65,9 +69,9 @@ public class TelegramService {
         return this.call(bot, "sendMessage", parameters);
     }
 
-    public Map<String, ?> sendPhoto(@NotNull Bot bot, @NotNull Number chatId, @NotNull String photo) {
+    public Map<String, ?> sendPhoto(@NotNull Bot bot, @NotNull Number chatId, @NotNull Resource photo) {
         var parameters = Map.of("chat_id", chatId, "photo", photo);
-        return this.call(bot, "sendPhoto", parameters);
+        return this.callPostForm(bot, "sendPhoto", parameters);
     }
 
     public Map<String, ?> getFile(@NotNull Bot bot, @NotNull String fileId) {
@@ -76,8 +80,7 @@ public class TelegramService {
     }
 
     public Path downloadFile(@NotNull Bot bot, @NotNull String filePath) {
-        var token = bot.getToken();
-        var fileUrl = TELEGRAM_FILE_API.formatted(token, filePath);
+        var fileUrl = getFileUrl(bot, filePath);
         return this.restTemplate.execute(fileUrl, HttpMethod.GET, null, response -> {
             var tempFile = Files.createTempFile("download", "tmp");
             tempFile.toFile().deleteOnExit();
@@ -94,12 +97,35 @@ public class TelegramService {
     /**
      * Telegram API caller
      */
-    public Map<String, ?> call(@NotNull Bot bot, @NotNull String method, @NotNull Map<String, ?> parameters) {
-        var token = bot.getToken();
-        var telegramApi = TELEGRAM_API.formatted(token, method);
+    public Map<String, ?> call(@NotNull Bot bot, @NotNull String method, @NotNull Map<String, ?> payload) {
+        var telegramApi = getTelegramApi(bot, method);
         var url = URI.create(telegramApi);
-        var request = RequestEntity.post(url).body(parameters);
+
+        var request = RequestEntity.post(url).body(payload);
         var response = this.restTemplate.exchange(request, STRING_OBJECT_MAP_TYPE);
         return response.getBody();
     }
+
+    public Map<String, ?> callPostForm(@NotNull Bot bot, @NotNull String method, @NotNull Map<String, ?> payload) {
+        var telegramApi = getTelegramApi(bot, method);
+        var url = URI.create(telegramApi);
+        var formData = new LinkedMultiValueMap<String, Object>();
+        payload.forEach(formData::add);
+        var headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        var request = RequestEntity.post(url).headers(headers).body(formData);
+        var response = this.restTemplate.exchange(request, STRING_OBJECT_MAP_TYPE);
+        return response.getBody();
+    }
+
+    public static String getFileUrl(@NotNull Bot bot, @NotNull String filePath) {
+        var token = bot.getToken();
+        return TELEGRAM_FILE_API.formatted(token, filePath);
+    }
+
+    public static String getTelegramApi(@NotNull Bot bot, @NotNull String method) {
+        var token = bot.getToken();
+        return TELEGRAM_API.formatted(token, method);
+    }
+
 }

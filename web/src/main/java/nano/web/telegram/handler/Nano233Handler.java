@@ -1,12 +1,17 @@
 package nano.web.telegram.handler;
 
-import nano.support.Json;
 import nano.support.Onion;
 import nano.web.nano.Bot;
 import nano.web.telegram.BotContext;
+import nano.web.telegram.TelegramService;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
-import java.util.Map;
+import javax.imageio.ImageIO;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 @Component
 public class Nano233Handler implements Onion.Middleware<BotContext> {
@@ -23,7 +28,7 @@ public class Nano233Handler implements Onion.Middleware<BotContext> {
     /**
      * convert sticker to jpeg, then reply
      */
-    private void getSticker(BotContext context) {
+    private void getSticker(BotContext context) throws Exception {
         String stickerFileId = context.read("$.message.sticker.file_id");
         if (stickerFileId == null) {
             context.sendMessage("⚠️The sticker missing");
@@ -32,15 +37,20 @@ public class Nano233Handler implements Onion.Middleware<BotContext> {
         var bot = context.bot();
         var service = context.getTelegramService();
         var fileDTO = service.getFile(bot, stickerFileId);
-        var payload = Map.of(
-                "chat_id", context.chatId(),
-                "document", stickerFileId,
-                "reply_to_message_id", context.messageId()
-        );
-        context.sendMessage(Json.encode(fileDTO));
-        service.call(bot, "sendDocument", payload);
-//        var filePath = (String) fileDTO.get("file_path");
-//        Assert.notNull(filePath, "filePath is null");
-//        var path = service.downloadFile(bot, filePath);
+        var filePath = (String) fileDTO.get("file_path");
+        Assert.notNull(filePath, "filePath is null");
+        var webpUrl = TelegramService.getFileUrl(bot, filePath);
+        var pngFilePath = convertWebpToJpeg(webpUrl);
+        service.sendPhoto(bot, context.chatId(), new FileSystemResource(pngFilePath));
     }
+
+    private static Path convertWebpToJpeg(String webpUrl) throws Exception {
+        var bufferedImage = ImageIO.read(new URL(webpUrl));
+        var tempFilePath = Files.createTempFile("convert_webp_to_png", "tmp");
+        var tempFile = tempFilePath.toFile();
+        tempFile.deleteOnExit();
+        ImageIO.write(bufferedImage, "png", tempFile);
+        return tempFilePath;
+    }
+
 }

@@ -26,6 +26,8 @@ clean {
 }
 
 dependencies {
+    // webp
+    implementation 'org.sejda.imageio:webp-imageio:0.1.6'
     // user agent parser
     implementation 'com.github.ua-parser:uap-java:1.4.4'
     // json path
