@@ -44,10 +44,11 @@ public class MailHandler implements Onion.Middleware<BotContext> {
     }
 
     private static boolean isMailCommand(String text) {
-        if (StringUtils.isEmpty(text)) {
+        int len = "/mail ".length();
+        if (StringUtils.isEmpty(text) || text.length() < len) {
             return false;
         }
-        return "/mail ".equalsIgnoreCase(text.substring(0, "/mail ".length()));
+        return "/mail ".equalsIgnoreCase(text.substring(0, len));
     }
 
     private static String getMailBody(String text) {

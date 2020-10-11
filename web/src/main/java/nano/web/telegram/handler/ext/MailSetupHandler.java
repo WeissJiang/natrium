@@ -29,7 +29,7 @@ public class MailSetupHandler implements Onion.Middleware<BotContext> {
         }
     }
 
-    private void trySetMailAddress(BotContext context){
+    private void trySetMailAddress(BotContext context) {
         var user = context.getSession().getUser();
         if (!context.userPrivilegeList().contains(NanoPrivilege.MAIL)) {
             context.replyMessage("设置失败，无邮件📧服务权限");
@@ -46,10 +46,11 @@ public class MailSetupHandler implements Onion.Middleware<BotContext> {
     }
 
     private static boolean isSetMailCommand(String text) {
-        if (StringUtils.isEmpty(text)) {
+        int len = "/setmail ".length();
+        if (StringUtils.isEmpty(text) || text.length() < len) {
             return false;
         }
-        return "/setmail ".equalsIgnoreCase(text.substring(0, "/setmail ".length()));
+        return "/setmail ".equalsIgnoreCase(text.substring(0, len));
     }
 
     private static String getMailAddress(String text) {
