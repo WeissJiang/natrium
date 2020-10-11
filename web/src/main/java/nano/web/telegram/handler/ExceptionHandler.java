@@ -20,7 +20,7 @@ public class ExceptionHandler implements Onion.Middleware<BotContext> {
             next.next();
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
-            sendMessageIfPossible(context, "nano故障：" + ex.getMessage());
+            sendMessageIfPossible(context, "nano fault: " + ex.getMessage());
         }
     }
 
