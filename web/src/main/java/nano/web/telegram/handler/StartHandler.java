@@ -38,7 +38,7 @@ public class StartHandler implements Onion.Middleware<BotContext> {
     private static void replyNanoStart(BotContext context) {
         var text = """
                 <b>至尊戒，驭众戒</b>
-                <br>
+                
                 <a href="https://t.me/nano_026_bot">nano-026</a> - Chinese English translation
                 <a href="https://t.me/nano_100_bot">nano-100</a> - Encyclopedia
                 <a href="https://t.me/nano_233_bot">nano-233</a> - Get sticker
