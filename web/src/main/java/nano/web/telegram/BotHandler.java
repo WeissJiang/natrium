@@ -3,6 +3,8 @@ package nano.web.telegram;
 import nano.support.Onion;
 import nano.web.nano.ConfigVars;
 import nano.web.telegram.handler.*;
+import nano.web.telegram.handler.ext.MailHandler;
+import nano.web.telegram.handler.ext.MailSetupHandler;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -34,12 +36,12 @@ public class BotHandler implements ApplicationContextAware {
         // function handlers
         onion.use(ctx.getBean(Nano026Handler.class));
         onion.use(ctx.getBean(Nano100Handler.class));
+        onion.use(ctx.getBean(Nano233Handler.class));
         onion.use(ctx.getBean(Nano262Handler.class));
         onion.use(ctx.getBean(VerificationHandler.class));
-        // command handler
-        var commandHandlers = ctx.getBeansOfType(AbstractCommandHandler.class);
-        commandHandlers.values().forEach(onion::use);
-
+        // ext function handlers
+        onion.use(ctx.getBean(MailHandler.class));
+        onion.use(ctx.getBean(MailSetupHandler.class));
     }
 
     @Async
