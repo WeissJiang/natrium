@@ -55,28 +55,28 @@ public class TelegramService {
     }
 
     public Map<String, ?> sendMessage(@NotNull Bot bot, @NotNull Number chatId, @NotNull String text) {
-        var parameters = Map.of("chat_id", chatId, "text", text);
-        return this.call(bot, "sendMessage", parameters);
+        var payload = Map.of("chat_id", chatId, "text", text);
+        return this.call(bot, "sendMessage", payload);
     }
 
     public Map<String, ?> replyMessage(@NotNull Bot bot, @NotNull Number chatId,
                                        @NotNull Number replyToMessageId, @NotNull String text) {
-        var parameters = Map.of(
+        var payload = Map.of(
                 "chat_id", chatId,
                 "reply_to_message_id", replyToMessageId,
                 "text", text
         );
-        return this.call(bot, "sendMessage", parameters);
+        return this.call(bot, "sendMessage", payload);
     }
 
     public Map<String, ?> sendPhoto(@NotNull Bot bot, @NotNull Number chatId, @NotNull Resource photo) {
-        var parameters = Map.of("chat_id", chatId, "photo", photo);
-        return this.callPostForm(bot, "sendPhoto", parameters);
+        var payload = Map.of("chat_id", chatId, "photo", photo);
+        return this.callPostForm(bot, "sendPhoto", payload);
     }
 
     public Map<String, ?> getFile(@NotNull Bot bot, @NotNull String fileId) {
-        var parameters = Map.of("file_id", fileId);
-        return this.call(bot, "getFile", parameters);
+        var payload = Map.of("file_id", fileId);
+        return this.call(bot, "getFile", payload);
     }
 
     public Path downloadFile(@NotNull Bot bot, @NotNull String filePath) {
@@ -95,7 +95,7 @@ public class TelegramService {
     }
 
     /**
-     * Telegram API caller
+     * Telegram API caller, Call POST JSON
      */
     public Map<String, ?> call(@NotNull Bot bot, @NotNull String method, @NotNull Map<String, ?> payload) {
         var telegramApi = getTelegramApi(bot, method);
@@ -106,6 +106,9 @@ public class TelegramService {
         return response.getBody();
     }
 
+    /**
+     * Telegram API caller, Call POST Form
+     */
     public Map<String, ?> callPostForm(@NotNull Bot bot, @NotNull String method, @NotNull Map<String, ?> payload) {
         var telegramApi = getTelegramApi(bot, method);
         var url = URI.create(telegramApi);
