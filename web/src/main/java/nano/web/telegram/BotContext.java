@@ -5,6 +5,7 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
 import nano.support.Json;
 import nano.support.Sugar;
+import nano.web.nano.Bot;
 import nano.web.security.NanoPrivilege;
 import nano.web.security.model.Session;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +22,7 @@ import static java.util.Collections.emptyList;
 
 public class BotContext {
 
-    private final String botKey;
+    private final Bot bot;
 
     private final Map<String, ?> parameters;
     private final DocumentContext documentContext;
@@ -33,8 +34,8 @@ public class BotContext {
     private TelegramService telegramService;
 
 
-    public BotContext(@NotNull String botKey, @NotNull Map<String, ?> parameters) {
-        this.botKey = botKey;
+    public BotContext(@NotNull Bot bot, @NotNull Map<String, ?> parameters) {
+        this.bot = bot;
         this.parameters = parameters;
         this.documentContext = JsonPath.parse(parameters);
     }
@@ -113,7 +114,7 @@ public class BotContext {
 
     public void replyMessage(String text, Object... args) {
         Assert.notNull(this.telegramService, "this.telegramService is null");
-        this.telegramService.replyMessage(this.botKey, this.chatId(), this.messageId(), String.format(text, args));
+        this.telegramService.replyMessage(this.bot, this.chatId(), this.messageId(), String.format(text, args));
     }
 
     private static Integer getInteger(Object o) {
@@ -146,7 +147,7 @@ public class BotContext {
         this.telegramService = telegramService;
     }
 
-    public String botKey() {
-        return this.botKey;
+    public Bot bot() {
+        return this.bot;
     }
 }

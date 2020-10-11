@@ -2,7 +2,7 @@ package nano.web.nano;
 
 public class Bot {
 
-    public static final String BOT_ROOT = "bot-root";
+    public static final String BOT_NANO = "nano";
     public static final String BOT_026 = "bot-026";
     public static final String BOT_100 = "bot-100";
 

@@ -4,7 +4,7 @@ nano:
   baidu-translation-app-id:
   baidu-translation-secret-key:
   bots:
-    bot-root:
+    nano:
       name: nano
       username: nano_telegram_bot
       token: token

@@ -37,7 +37,7 @@ public abstract class AbstractCommandHandler implements Onion.Middleware<BotCont
     }
 
     private String parseCommand(String chatType, String text) {
-        var bot = this.configVars.getBots().get(Bot.BOT_ROOT);
+        var bot = this.configVars.getBots().get(Bot.BOT_NANO);
         Assert.notNull(bot, "bot should not null");
         var cmd = this.command().trim();
         String regex = switch (chatType) {

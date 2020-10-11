@@ -19,7 +19,7 @@ public class Bot026Handler implements Onion.Middleware<BotContext> {
     @Override
     public void via(BotContext context, Onion.Next next) throws Exception {
         var text = context.text();
-        if (!StringUtils.isEmpty(text) && Bot.BOT_026.equals(context.botKey())) {
+        if (!StringUtils.isEmpty(text) && Bot.BOT_026.equals(context.bot().getName())) {
             var translated = this.translationService.autoTranslate(text);
             context.replyMessage(translated);
         } else {

@@ -35,7 +35,7 @@ public class Bot100Handler implements Onion.Middleware<BotContext> {
     @Override
     public void via(BotContext context, Onion.Next next) throws Exception {
         var text = context.text();
-        if (!StringUtils.isEmpty(text) && Bot.BOT_100.equals(context.botKey())) {
+        if (!StringUtils.isEmpty(text) && Bot.BOT_100.equals(context.bot().getName())) {
             for (var fetcher : this.fetcherList) {
                 String extract = fetcher.apply(text);
                 if (extract != null) {
