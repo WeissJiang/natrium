@@ -113,27 +113,19 @@ public class BotContext {
 
     // -- proxy to TelegramService
 
-    public void sendMessage(String text, Object... args) {
-        var payload = Map.of("chat_id", this.chatId(), "text", String.format(text, args));
-        this.getTelegramService().sendMessage(this.bot(), payload);
-    }
-
-    public void replyMessage(String text, Object... args) {
+    public void sendMessage(String text) {
         var payload = Map.of(
                 "chat_id", this.chatId(),
-                "reply_to_message_id", this.messageId(),
-                "text", String.format(text, args)
+                "text", text
         );
         this.getTelegramService().sendMessage(this.bot(), payload);
     }
 
-    public void replyMessageWithoutPreview(String text, Object... args) {
+    public void replyMessage(String text) {
         var payload = Map.of(
                 "chat_id", this.chatId(),
                 "reply_to_message_id", this.messageId(),
-                "disable_web_page_preview", true,
-                "text", String.format(text, args)
-
+                "text", text
         );
         this.getTelegramService().sendMessage(this.bot(), payload);
     }

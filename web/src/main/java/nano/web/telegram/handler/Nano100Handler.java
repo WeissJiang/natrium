@@ -11,6 +11,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 @Component
@@ -50,7 +51,7 @@ public class Nano100Handler implements Onion.Middleware<BotContext> {
         for (var fetcher : this.fetcherList) {
             String extract = fetcher.apply(text);
             if (extract != null) {
-                context.replyMessageWithoutPreview(extract);
+                replyMessageWithoutPreview(context, extract);
                 return;
             }
         }
@@ -73,5 +74,15 @@ public class Nano100Handler implements Onion.Middleware<BotContext> {
 
     private String fetchBaikeExtract(String title) {
         return this.baikeService.getBaikeExtract(title);
+    }
+
+    private static void replyMessageWithoutPreview(BotContext context, String text) {
+        var payload = Map.of(
+                "chat_id", context.chatId(),
+                "reply_to_message_id", context.messageId(),
+                "disable_web_page_preview", true,
+                "text", text
+        );
+        context.getTelegramService().sendMessage(context.bot(), payload);
     }
 }
