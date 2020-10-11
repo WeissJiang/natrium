@@ -3,6 +3,8 @@ package nano.web.telegram.handler;
 import nano.support.Onion;
 import nano.web.nano.Bot;
 import nano.web.telegram.BotContext;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Component;
 
@@ -27,18 +29,25 @@ public class Nano233Handler implements Onion.Middleware<BotContext> {
      * convert sticker to jpeg, then reply
      */
     private void getSticker(BotContext context) throws Exception {
-        String stickerFileId = context.read("$.message.sticker.file_id");
+        var stickerFileId = (String) context.read("$.message.sticker.file_id");
         if (stickerFileId == null) {
             context.sendMessage("⚠️The sticker missing");
             return;
         }
         var webpUrl = context.getFileUrl(stickerFileId);
         var pngFilePath = convertWebpToJpeg(webpUrl);
+        if (pngFilePath == null) {
+            context.sendMessage("⚠️The sticker is not supported");
+            return;
+        }
         context.replyPhoto(new FileSystemResource(pngFilePath));
     }
 
-    private static Path convertWebpToJpeg(String webpUrl) throws Exception {
+    private static @Nullable Path convertWebpToJpeg(@NotNull String webpUrl) throws Exception {
         var bufferedImage = ImageIO.read(new URL(webpUrl));
+        if (bufferedImage == null) {
+            return null;
+        }
         var tempFilePath = Files.createTempFile("convert_webp_to_png", "tmp");
         var tempFile = tempFilePath.toFile();
         tempFile.deleteOnExit();
