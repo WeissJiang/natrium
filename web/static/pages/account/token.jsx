@@ -43,7 +43,7 @@ function Token(props) {
     const [tokenList, setTokenList] = useState(null)
 
     useEffect(() => {
-        if (!token) {
+        if (!token || !user) {
             return
         }
         ;(async () => {

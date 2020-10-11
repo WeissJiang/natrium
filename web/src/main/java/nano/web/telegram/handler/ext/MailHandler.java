@@ -41,6 +41,7 @@ public class MailHandler implements Onion.Middleware<BotContext> {
             return;
         }
         this.mailService.sendTextMail(email, message);
+        context.replyMessage("邮件📧投递成功");
     }
 
     private static boolean isMailCommand(String text) {
