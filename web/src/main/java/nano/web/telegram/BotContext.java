@@ -120,10 +120,6 @@ public class BotContext {
         this.getTelegramService().replyMessage(this.bot(), this.chatId(), this.messageId(), String.format(text, args));
     }
 
-    public void sendPhoto(String photo) {
-        this.getTelegramService().sendPhoto(this.bot(), this.chatId(), photo);
-    }
-
     private static Integer getInteger(Object o) {
         if (o instanceof Integer) {
             return (Integer) o;

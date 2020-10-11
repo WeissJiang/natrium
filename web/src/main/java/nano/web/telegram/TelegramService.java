@@ -4,11 +4,20 @@ import nano.web.nano.Bot;
 import nano.web.nano.ConfigVars;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +31,7 @@ public class TelegramService {
     };
 
     private static final String TELEGRAM_API = "https://api.telegram.org/bot%s/%s";
+    private static final String TELEGRAM_FILE_API = "https://api.telegram.org/file/bot%s/%s";
 
     private final RestTemplate restTemplate;
 
@@ -63,6 +73,27 @@ public class TelegramService {
     public Map<String, ?> sendPhoto(@NotNull Bot bot, @NotNull Number chatId, @NotNull String photo) {
         var parameters = Map.of("chat_id", chatId, "photo", photo);
         return this.call(bot, "sendPhoto", parameters);
+    }
+
+    public Map<String, ?> getFile(@NotNull Bot bot, @NotNull String fileId) {
+        var parameters = Map.of("file_id", fileId);
+        return this.call(bot, "getFile", parameters);
+    }
+
+    public Path downloadFile(@NotNull Bot bot, @NotNull String filePath) {
+        var token = bot.getToken();
+        var fileUrl = TELEGRAM_FILE_API.formatted(token, filePath);
+        return this.restTemplate.execute(fileUrl, HttpMethod.GET, null, response -> {
+            var tempFile = Files.createTempFile("download", "tmp");
+            tempFile.toFile().deleteOnExit();
+            var is = response.getBody();
+            Assert.notNull(is, "response input stream require non null");
+            var os = Files.newOutputStream(tempFile);
+            try (is; os) {
+                is.transferTo(os);
+            }
+            return tempFile;
+        });
     }
 
     /**

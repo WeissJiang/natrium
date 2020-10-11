@@ -1,9 +1,12 @@
 package nano.web.telegram.handler;
 
+import nano.support.Json;
 import nano.support.Onion;
 import nano.web.nano.Bot;
 import nano.web.telegram.BotContext;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 @Component
 public class Nano233Handler implements Onion.Middleware<BotContext> {
@@ -26,6 +29,18 @@ public class Nano233Handler implements Onion.Middleware<BotContext> {
             context.sendMessage("⚠️The sticker missing");
             return;
         }
-        context.sendPhoto(stickerFileId);
+        var bot = context.bot();
+        var service = context.getTelegramService();
+        var fileDTO = service.getFile(bot, stickerFileId);
+        var payload = Map.of(
+                "chat_id", context.chatId(),
+                "document", stickerFileId,
+                "reply_to_message_id", context.fromId()
+        );
+        context.sendMessage(Json.encode(fileDTO));
+        service.call(bot, "sendDocument", payload);
+//        var filePath = (String) fileDTO.get("file_path");
+//        Assert.notNull(filePath, "filePath is null");
+//        var path = service.downloadFile(bot, filePath);
     }
 }
