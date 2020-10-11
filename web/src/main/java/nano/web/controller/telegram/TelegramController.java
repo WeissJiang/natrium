@@ -34,12 +34,12 @@ public class TelegramController {
     }
 
     @PostMapping("/webhook/{bot}/{key}")
-    public ResponseEntity<?> webhook(@PathVariable("bot") String bot, @PathVariable("key") String key,
+    public ResponseEntity<?> webhook(@PathVariable("bot") String botName, @PathVariable("key") String key,
                                      @RequestBody Map<String, ?> parameterMap) throws Exception {
         // check key
         this.securityService.checkNanoApiKey(key);
         // handle request
-        this.botHandler.handleAsync(bot, parameterMap);
+        this.botHandler.handleAsync(botName, parameterMap);
         // always return ok
         return ResponseEntity.ok().build();
     }

@@ -66,7 +66,7 @@ public class BotHandlerTests {
             return null;
         }).when(this.startHandler).via(Mockito.any(), Mockito.any());
         // test handle
-        this.botHandler.handle(Bot.BOT_NANO, Json.decodeValueAsMap(payload));
+        this.botHandler.handle(Bot.NANO, Json.decodeValueAsMap(payload));
         verify(this.startHandler, times(1)).via(Mockito.any(), Mockito.any());
     }
 }

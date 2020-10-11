@@ -25,9 +25,10 @@ public class StartHandler implements Onion.Middleware<BotContext> {
     private static void replyStartMessage(BotContext context) {
         var bot = context.bot();
         switch (bot.getName()) {
-            case Bot.BOT_NANO -> context.replyMessage("至尊戒，驭众戒");
-            case Bot.BOT_026 -> context.replyMessage("Chinese English translation");
-            case Bot.BOT_100 -> context.replyMessage("Encyclopedia");
+            case Bot.NANO -> context.replyMessage("至尊戒，驭众戒");
+            case Bot.NANO_026 -> context.replyMessage("Chinese English translation");
+            case Bot.NANO_100 -> context.replyMessage("Encyclopedia");
+            case Bot.NANO_233 -> context.replyMessage("Get Sticker");
         }
     }
 }

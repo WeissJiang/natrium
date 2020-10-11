@@ -2,9 +2,10 @@ package nano.web.nano;
 
 public class Bot {
 
-    public static final String BOT_NANO = "nano";
-    public static final String BOT_026 = "bot-026";
-    public static final String BOT_100 = "bot-100";
+    public static final String NANO = "nano";
+    public static final String NANO_026 = "nano-026";
+    public static final String NANO_100 = "nano-100";
+    public static final String NANO_233 = "nano-233";
 
     private String name;
     private String username;
