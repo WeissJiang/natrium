@@ -3,17 +3,13 @@ package nano.web.telegram.handler;
 import nano.support.Onion;
 import nano.web.nano.Bot;
 import nano.web.telegram.BotContext;
-import nano.web.telegram.TelegramService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
 import javax.imageio.ImageIO;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Map;
 
 @Component
 public class Nano233Handler implements Onion.Middleware<BotContext> {
@@ -36,13 +32,9 @@ public class Nano233Handler implements Onion.Middleware<BotContext> {
             context.sendMessage("⚠️The sticker missing");
             return;
         }
-        var bot = context.bot();
-        var service = context.getTelegramService();
-        var getFileResult = service.getFile(bot, stickerFileId);
-        var filePath = getFilePath(getFileResult);
-        var webpUrl = TelegramService.getFileUrl(bot, filePath);
+        var webpUrl = context.getFileUrl(stickerFileId);
         var pngFilePath = convertWebpToJpeg(webpUrl);
-        service.sendPhoto(bot, context.chatId(), new FileSystemResource(pngFilePath));
+        context.replyPhoto(new FileSystemResource(pngFilePath));
     }
 
     private static Path convertWebpToJpeg(String webpUrl) throws Exception {
@@ -52,15 +44,6 @@ public class Nano233Handler implements Onion.Middleware<BotContext> {
         tempFile.deleteOnExit();
         ImageIO.write(bufferedImage, "png", tempFile);
         return tempFilePath;
-    }
-
-    @SuppressWarnings("unchecked")
-    private static @NotNull String getFilePath(Map<String, ?> getFileResult) {
-        var result = getFileResult.get("result");
-        Assert.isInstanceOf(Map.class, result);
-        var filePath = (String) ((Map<String, ?>) result).get("file_path");
-        Assert.notNull(filePath, "filePath is null");
-        return filePath;
     }
 
 }

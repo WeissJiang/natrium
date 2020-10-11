@@ -9,6 +9,7 @@ import nano.web.nano.Bot;
 import nano.web.security.NanoPrivilege;
 import nano.web.security.model.Session;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
@@ -118,6 +119,17 @@ public class BotContext {
 
     public void replyMessage(String text, Object... args) {
         this.getTelegramService().replyMessage(this.bot(), this.chatId(), this.messageId(), String.format(text, args));
+    }
+
+    public void replyPhoto(Resource photo) {
+        this.getTelegramService().replyPhoto(this.bot(), this.chatId(), this.messageId(), photo);
+    }
+
+    public String getFileUrl(String fileId) {
+        var result = this.getTelegramService().getFile(this.bot(), fileId);
+        var filePath = (String) JsonPath.read(result, "$.result.file_path");
+        Assert.notNull(filePath, "filePath is null");
+        return TelegramService.getFileUrl(this.bot(), filePath);
     }
 
     private static Integer getInteger(Object o) {

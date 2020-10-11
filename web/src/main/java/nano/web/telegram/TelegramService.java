@@ -69,8 +69,12 @@ public class TelegramService {
         return this.call(bot, "sendMessage", payload);
     }
 
-    public Map<String, ?> sendPhoto(@NotNull Bot bot, @NotNull Number chatId, @NotNull Resource photo) {
-        var payload = Map.of("chat_id", chatId, "photo", photo);
+    public Map<String, ?> replyPhoto(@NotNull Bot bot, @NotNull Number chatId, @NotNull Number replyToMessageId, @NotNull Resource photo) {
+        var payload = Map.of(
+                "chat_id", chatId,
+                "reply_to_message_id", replyToMessageId,
+                "photo", photo
+        );
         return this.callPostForm(bot, "sendPhoto", payload);
     }
 
