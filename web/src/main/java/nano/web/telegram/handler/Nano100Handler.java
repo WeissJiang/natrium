@@ -50,7 +50,7 @@ public class Nano100Handler implements Onion.Middleware<BotContext> {
         for (var fetcher : this.fetcherList) {
             String extract = fetcher.apply(text);
             if (extract != null) {
-                context.replyMessage(extract);
+                context.replyMessageWithoutPreview(extract);
                 return;
             }
         }
