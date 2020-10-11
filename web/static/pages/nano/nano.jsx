@@ -31,6 +31,19 @@ async function getChatList(token) {
     return result.payload
 }
 
+async function fetchSetWebhook(token) {
+    const response = await fetch('/api/telegram/setWebhook', {
+        method: 'POST',
+        headers: { 'X-Token': token },
+    })
+    const result = await response.json()
+    if (result.error) {
+        alert(result.error)
+        throw new Error(result.error)
+    }
+    return result.payload
+}
+
 function printJson(o) {
     return JSON.stringify(o, null, 2)
 }
@@ -40,6 +53,8 @@ function Nano() {
 
     const [userList, setUserList] = useState([])
     const [chatList, setChatList] = useState([])
+
+    const [result, setResult] = useState({})
 
     if (loading) {
         return <div>Loading...</div>
@@ -56,6 +71,11 @@ function Nano() {
         setChatList(fetchedChatList || [])
     }
 
+    async function setWebhook() {
+        const setWebhookResult = await fetchSetWebhook(token)
+        setResult(setWebhookResult || {})
+    }
+
     return (
         <div className={style['nano-container']}>
             <div>
@@ -64,6 +84,11 @@ function Nano() {
                 <pre>{printJson(userList)}</pre>
                 <div>Chat list</div>
                 <pre>{printJson(chatList)}</pre>
+            </div>
+            <div>
+                <button onClick={setWebhook}>Set Webhook</button>
+                <div>Result</div>
+                <pre>{printJson(result)}</pre>
             </div>
         </div>
     );
