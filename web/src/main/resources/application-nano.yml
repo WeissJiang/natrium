@@ -12,3 +12,11 @@ nano:
       name: nano-026
       username: nano_026_bot
       token: token
+    bot-100:
+      name: nano-100
+      username: nano_100_bot
+      token: token
+    bot-233:
+      name: nano-233
+      username: nano_233_bot
+      token: token

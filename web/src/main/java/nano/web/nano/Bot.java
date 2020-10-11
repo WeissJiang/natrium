@@ -4,6 +4,7 @@ public class Bot {
 
     public static final String BOT_ROOT = "bot-root";
     public static final String BOT_026 = "bot-026";
+    public static final String BOT_100 = "bot-100";
 
     private String name;
     private String username;

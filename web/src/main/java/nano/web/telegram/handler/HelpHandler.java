@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 /**
  * 帮助
  */
+@Deprecated
 @Component
 public class HelpHandler implements Onion.Middleware<BotContext> {
 

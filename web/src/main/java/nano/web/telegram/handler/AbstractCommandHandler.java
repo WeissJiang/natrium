@@ -11,6 +11,7 @@ import org.springframework.util.StringUtils;
 /**
  * CommandHandler通用处理
  */
+@Deprecated
 public abstract class AbstractCommandHandler implements Onion.Middleware<BotContext> {
 
     private ConfigVars configVars;
