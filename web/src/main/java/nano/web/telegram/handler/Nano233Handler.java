@@ -35,7 +35,7 @@ public class Nano233Handler implements Onion.Middleware<BotContext> {
         var payload = Map.of(
                 "chat_id", context.chatId(),
                 "document", stickerFileId,
-                "reply_to_message_id", context.fromId()
+                "reply_to_message_id", context.messageId()
         );
         context.sendMessage(Json.encode(fileDTO));
         service.call(bot, "sendDocument", payload);
