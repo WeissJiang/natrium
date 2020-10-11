@@ -20,6 +20,6 @@ public class Nano233Handler implements Onion.Middleware<BotContext> {
     }
 
     private void getSticker(BotContext context) {
-        context.replyMessage("todo");
+        context.replyMessage("See: https://t.me/GIFDownloader_bot");
     }
 }
