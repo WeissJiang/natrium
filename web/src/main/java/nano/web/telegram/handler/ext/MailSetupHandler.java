@@ -49,10 +49,10 @@ public class MailSetupHandler implements Onion.Middleware<BotContext> {
         if (StringUtils.isEmpty(text)) {
             return false;
         }
-        return "mail ".equalsIgnoreCase(text.substring(0, "mail ".length()));
+        return "/setmail ".equalsIgnoreCase(text.substring(0, "/setmail ".length()));
     }
 
     private static String getMailAddress(String text) {
-        return text.substring("mail ".length());
+        return text.substring("/setmail ".length());
     }
 }
