@@ -8,11 +8,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
-public class Bot026Handler implements Onion.Middleware<BotContext> {
+public class Nano026Handler implements Onion.Middleware<BotContext> {
 
     private final TranslationService translationService;
 
-    public Bot026Handler(TranslationService translationService) {
+    public Nano026Handler(TranslationService translationService) {
         this.translationService = translationService;
     }
 

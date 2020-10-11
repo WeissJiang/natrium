@@ -112,6 +112,11 @@ public class BotContext {
 
     // -- proxy to TelegramService
 
+    public void sendMessage(String text, Object... args) {
+        Assert.notNull(this.telegramService, "this.telegramService is null");
+        this.telegramService.sendMessage(this.bot, this.chatId(), String.format(text, args));
+    }
+
     public void replyMessage(String text, Object... args) {
         Assert.notNull(this.telegramService, "this.telegramService is null");
         this.telegramService.replyMessage(this.bot, this.chatId(), this.messageId(), String.format(text, args));

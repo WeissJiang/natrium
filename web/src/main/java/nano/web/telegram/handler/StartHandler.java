@@ -29,6 +29,7 @@ public class StartHandler implements Onion.Middleware<BotContext> {
             case Bot.NANO_026 -> context.replyMessage("Chinese English translation");
             case Bot.NANO_100 -> context.replyMessage("Encyclopedia");
             case Bot.NANO_233 -> context.replyMessage("Get Sticker");
+            case Bot.NANO_262 -> context.replyMessage("Evaluate JavaScript");
         }
     }
 }

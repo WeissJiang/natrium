@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.function.Function;
 
 @Component
-public class Bot100Handler implements Onion.Middleware<BotContext> {
+public class Nano100Handler implements Onion.Middleware<BotContext> {
 
     private final MoeService moeService;
     private final WikiService wikiService;
@@ -22,7 +22,7 @@ public class Bot100Handler implements Onion.Middleware<BotContext> {
 
     private final List<Function<String, String>> fetcherList = new ArrayList<>();
 
-    public Bot100Handler(MoeService moeService, WikiService wikiService, BaikeService baikeService) {
+    public Nano100Handler(MoeService moeService, WikiService wikiService, BaikeService baikeService) {
         this.moeService = moeService;
         this.wikiService = wikiService;
         this.baikeService = baikeService;

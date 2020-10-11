@@ -6,6 +6,7 @@ public class Bot {
     public static final String NANO_026 = "nano-026";
     public static final String NANO_100 = "nano-100";
     public static final String NANO_233 = "nano-233";
+    public static final String NANO_262 = "nano-262";
 
     private String name;
     private String username;

@@ -32,8 +32,9 @@ public class BotHandler implements ApplicationContextAware {
         // start handler
         onion.use(ctx.getBean(StartHandler.class));
         // function handlers
-        onion.use(ctx.getBean(Bot026Handler.class));
-        onion.use(ctx.getBean(Bot100Handler.class));
+        onion.use(ctx.getBean(Nano026Handler.class));
+        onion.use(ctx.getBean(Nano100Handler.class));
+        onion.use(ctx.getBean(Nano262Handler.class));
         onion.use(ctx.getBean(VerificationHandler.class));
         // command handler
         var commandHandlers = ctx.getBeansOfType(AbstractCommandHandler.class);
