@@ -2,7 +2,6 @@ package nano.web.scripting;
 
 import org.graalvm.polyglot.Context;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.http.MediaType;
 
 public class Scripting {
 
@@ -12,7 +11,11 @@ public class Scripting {
     public static final String TEXT_JAVASCRIPT = "text/javascript";
 
     public static String eval(@NotNull String script) {
-        var value = Context.create("js").eval("js", script);
-        return String.valueOf(value);
+        try {
+            var value = Context.create("js").eval("js", script);
+            return String.valueOf(value);
+        } catch (Exception ex) {
+            return ex.getMessage();
+        }
     }
 }
