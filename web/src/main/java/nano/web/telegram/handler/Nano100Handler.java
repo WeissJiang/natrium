@@ -34,19 +34,27 @@ public class Nano100Handler implements Onion.Middleware<BotContext> {
 
     @Override
     public void via(BotContext context, Onion.Next next) throws Exception {
-        var text = context.text();
-        if (!StringUtils.isEmpty(text) && Bot.NANO_100.equals(context.bot().getName())) {
-            for (var fetcher : this.fetcherList) {
-                String extract = fetcher.apply(text);
-                if (extract != null) {
-                    context.replyMessage(extract);
-                    return;
-                }
-            }
-            context.replyMessage("nano没有找到：" + text);
+        if (Bot.NANO_100.equals(context.bot().getName())) {
+            this.fetchAndSendExtract(context);
         } else {
             next.next();
         }
+    }
+
+    private void fetchAndSendExtract(BotContext context) {
+        var text = context.text();
+        if (StringUtils.isEmpty(text)) {
+            context.sendMessage("⚠️The title is empty, please title");
+            return;
+        }
+        for (var fetcher : this.fetcherList) {
+            String extract = fetcher.apply(text);
+            if (extract != null) {
+                context.replyMessage(extract);
+                return;
+            }
+        }
+        context.replyMessage("nano没有找到：" + text);
     }
 
     private String fetchWikiExtract(String title) {

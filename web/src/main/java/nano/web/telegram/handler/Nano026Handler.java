@@ -18,12 +18,20 @@ public class Nano026Handler implements Onion.Middleware<BotContext> {
 
     @Override
     public void via(BotContext context, Onion.Next next) throws Exception {
-        var text = context.text();
-        if (!StringUtils.isEmpty(text) && Bot.NANO_026.equals(context.bot().getName())) {
-            var translated = this.translationService.autoTranslate(text);
-            context.replyMessage(translated);
+        if (Bot.NANO_026.equals(context.bot().getName())) {
+            this.translate(context);
         } else {
             next.next();
         }
+    }
+
+    private void translate(BotContext context) {
+        var text = context.text();
+        if (StringUtils.isEmpty(text)) {
+            context.sendMessage("⚠️The content is empty, please input the text to be translated");
+            return;
+        }
+        var translated = this.translationService.autoTranslate(text);
+        context.replyMessage(translated);
     }
 }

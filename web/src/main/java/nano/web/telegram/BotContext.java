@@ -61,7 +61,7 @@ public class BotContext {
     }
 
     public List<NanoPrivilege> userPrivilegeList() {
-        var privilege = this.session.getToken().getPrivilege();
+        var privilege = this.getSession().getToken().getPrivilege();
         return Json.decodeValueAsList(privilege)
                 .stream()
                 .map(String::valueOf)
@@ -113,13 +113,15 @@ public class BotContext {
     // -- proxy to TelegramService
 
     public void sendMessage(String text, Object... args) {
-        Assert.notNull(this.telegramService, "this.telegramService is null");
-        this.telegramService.sendMessage(this.bot, this.chatId(), String.format(text, args));
+        this.getTelegramService().sendMessage(this.bot(), this.chatId(), String.format(text, args));
     }
 
     public void replyMessage(String text, Object... args) {
-        Assert.notNull(this.telegramService, "this.telegramService is null");
-        this.telegramService.replyMessage(this.bot, this.chatId(), this.messageId(), String.format(text, args));
+        this.getTelegramService().replyMessage(this.bot(), this.chatId(), this.messageId(), String.format(text, args));
+    }
+
+    public void sendPhoto(String photo) {
+        this.getTelegramService().sendPhoto(this.bot(), this.chatId(), photo);
     }
 
     private static Integer getInteger(Object o) {
@@ -145,7 +147,8 @@ public class BotContext {
     }
 
     public TelegramService getTelegramService() {
-        return telegramService;
+        Assert.notNull(this.telegramService, "this.telegramService is null");
+        return this.telegramService;
     }
 
     public void setTelegramService(TelegramService telegramService) {
@@ -155,4 +158,5 @@ public class BotContext {
     public Bot bot() {
         return this.bot;
     }
+
 }

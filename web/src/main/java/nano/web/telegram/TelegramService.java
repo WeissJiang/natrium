@@ -45,9 +45,6 @@ public class TelegramService {
         return result;
     }
 
-    /**
-     * Send text message
-     */
     public Map<String, ?> sendMessage(@NotNull Bot bot, @NotNull Number chatId, @NotNull String text) {
         var parameters = Map.of("chat_id", chatId, "text", text);
         return this.call(bot, "sendMessage", parameters);
@@ -61,6 +58,11 @@ public class TelegramService {
                 "text", text
         );
         return this.call(bot, "sendMessage", parameters);
+    }
+
+    public Map<String, ?> sendPhoto(@NotNull Bot bot, @NotNull Number chatId, @NotNull String photo) {
+        var parameters = Map.of("chat_id", chatId, "photo", photo);
+        return this.call(bot, "sendPhoto", parameters);
     }
 
     /**
