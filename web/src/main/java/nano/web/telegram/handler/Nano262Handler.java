@@ -31,6 +31,16 @@ public class Nano262Handler implements Onion.Middleware<BotContext> {
             context.sendMessage("⚠️The script is empty");
             return;
         }
-        context.replyMessage(this.scripting.eval(text));
+        var result = this.scripting.eval(text);
+        if (StringUtils.isEmpty(result)) {
+            return;
+        }
+        // Text of the message to be sent, 1-4096 characters after entities parsing
+        if (result.length() > 4096) {
+            // todo send document
+            context.replyMessage("Evaluated result is too long");
+            return;
+        }
+        context.replyMessage(result);
     }
 }

@@ -55,6 +55,10 @@ public class TelegramService {
     }
 
     public Map<String, ?> sendMessage(@NotNull Bot bot, Map<String, ?> payload) {
+        var text = (String) payload.get("text");
+        // Text of the message to be sent, 1-4096 characters after entities parsing
+        Assert.notNull(text, "Text is missing");
+        Assert.isTrue(text.length() <= 4096, "Text length too long");
         return this.call(bot, "sendMessage", payload);
     }
 
