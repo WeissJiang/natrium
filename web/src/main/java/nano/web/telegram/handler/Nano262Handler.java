@@ -2,14 +2,19 @@ package nano.web.telegram.handler;
 
 import nano.support.Onion;
 import nano.web.nano.Bot;
+import nano.web.scripting.Scripting;
 import nano.web.telegram.BotContext;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import static nano.web.scripting.Scripting.eval;
-
 @Component
 public class Nano262Handler implements Onion.Middleware<BotContext> {
+
+    private final Scripting scripting;
+
+    public Nano262Handler(Scripting scripting) {
+        this.scripting = scripting;
+    }
 
     @Override
     public void via(BotContext context, Onion.Next next) throws Exception {
@@ -26,6 +31,6 @@ public class Nano262Handler implements Onion.Middleware<BotContext> {
             context.sendMessage("⚠️The script is empty");
             return;
         }
-        context.replyMessage(eval(text));
+        context.replyMessage(this.scripting.eval(text));
     }
 }
