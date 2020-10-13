@@ -4,10 +4,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.cache.support.AbstractValueAdaptingCache;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.util.Assert;
 
-import java.time.Instant;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -18,30 +18,23 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * @see ConcurrentMapCache
  */
-public class ThrottleCache extends AbstractValueAdaptingCache {
-
-    // 1 seconds
-    private static final int INTERVAL_TIME = 1;
+public class DirtyCache extends AbstractValueAdaptingCache {
 
     private final String name;
 
-    private final ConcurrentMap<Object, Instant> timeRecorder = new ConcurrentHashMap<>(256);
+    private final Timer timer = new Timer();
 
     private final ConcurrentMap<Object, Object> store;
 
-    private final TaskExecutor taskExecutor;
-
-    public ThrottleCache(String name, TaskExecutor taskExecutor) {
-        this(name, true, taskExecutor, new ConcurrentHashMap<>(256));
+    public DirtyCache(String name) {
+        this(name, true, new ConcurrentHashMap<>(256));
     }
 
-    public ThrottleCache(String name, boolean allowNullValues, TaskExecutor taskExecutor, ConcurrentMap<Object, Object> store) {
+    public DirtyCache(String name, boolean allowNullValues, ConcurrentMap<Object, Object> store) {
         super(allowNullValues);
         Assert.notNull(name, "Name must not be null");
-        Assert.notNull(store, "TaskExecutor must not be null");
         Assert.notNull(store, "Store must not be null");
         this.name = name;
-        this.taskExecutor = taskExecutor;
         this.store = store;
     }
 
@@ -63,13 +56,12 @@ public class ThrottleCache extends AbstractValueAdaptingCache {
     @SuppressWarnings("unchecked")
     @Override
     public <T> T get(@NotNull Object key, @NotNull Callable<T> valueLoader) {
-        this.evictIfExpired(key);
-        var reloaded = new AtomicBoolean(false);
+        var newlyLoaded = new AtomicBoolean(false);
         var value = (T) fromStoreValue(this.store.computeIfAbsent(key, k -> {
-            reloaded.set(true);
-            return this.toStoreValue(this.loadValueSync(k, valueLoader));
+            newlyLoaded.set(true);
+            return this.toStoreValue(this.loadValue(k, valueLoader));
         }));
-        if (!reloaded.get()) {
+        if (!newlyLoaded.get()) {
             this.reloadedValueAsync(key, valueLoader);
         }
         return value;
@@ -109,34 +101,22 @@ public class ThrottleCache extends AbstractValueAdaptingCache {
     }
 
     protected void reloadedValueAsync(@NotNull Object key, @NotNull Callable<?> valueLoader) {
-        var recordedTime = this.timeRecorder.get(key);
-        if (recordedTime != null && !isExpired(recordedTime)) {
-            return;
-        }
-        this.taskExecutor.execute(() -> {
-            Object o = this.loadValueSync(key, valueLoader);
-            this.put(key, o);
-        });
+        var cache = this;
+        this.timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                var loadedValue = cache.loadValue(key, valueLoader);
+                cache.put(key, loadedValue);
+
+            }
+        }, 0);
     }
 
-    private void evictIfExpired(Object key) {
-        var recordedTime = this.timeRecorder.get(key);
-        if (recordedTime != null && isExpired(recordedTime)) {
-            this.evictIfPresent(key);
-        }
-    }
-
-    protected <T> T loadValueSync(@NotNull Object key, @NotNull Callable<T> valueLoader) {
+    protected <T> T loadValue(@NotNull Object key, @NotNull Callable<T> valueLoader) {
         try {
-            var value = valueLoader.call();
-            this.timeRecorder.put(key, Instant.now());
-            return value;
+            return valueLoader.call();
         } catch (Throwable ex) {
             throw new ValueRetrievalException(key, valueLoader, ex);
         }
-    }
-
-    private static boolean isExpired(Instant recordedTime) {
-        return recordedTime.plusSeconds(INTERVAL_TIME).isAfter(Instant.now());
     }
 }
