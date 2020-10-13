@@ -18,7 +18,7 @@ public class TokenDesensitizationInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(@NotNull HttpServletRequest request,
                              @NotNull HttpServletResponse response,
-                             @NotNull Object handler) throws Exception {
+                             @NotNull Object handler) {
         var token = request.getHeader(X_TOKEN);
         if (token != null) {
             request.setAttribute(X_TOKEN_DIGEST, desensitizeToken(token));

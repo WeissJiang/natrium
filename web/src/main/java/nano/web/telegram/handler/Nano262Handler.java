@@ -37,8 +37,7 @@ public class Nano262Handler implements Onion.Middleware<BotContext> {
         }
         // Text of the message to be sent, 1-4096 characters after entities parsing
         if (result.length() > 4096) {
-            // todo send document
-            context.replyMessage("Evaluated result is too long");
+            context.sendMessage("⚠️Evaluated result is too long");
             return;
         }
         context.replyMessage(result);

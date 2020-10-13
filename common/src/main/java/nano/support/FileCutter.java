@@ -15,8 +15,8 @@ import java.util.zip.ZipOutputStream;
 /**
  * 文件切割者
  * <p>
- * - 把一个大文件切割成一个个小文件
- * - 把若干个小文件合并成一个大文件
+ * 把一个大文件切割成一个个小文件
+ * 把若干个小文件合并成一个大文件
  */
 public class FileCutter {
 

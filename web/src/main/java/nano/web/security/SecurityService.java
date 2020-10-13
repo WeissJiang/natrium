@@ -112,7 +112,7 @@ public class SecurityService {
      * 创建验证中的Token
      * 不保存原始Token，保存脱敏后的Token
      */
-    public Map<String, String> createVerifyingToken(String username, String ua) throws Exception {
+    public Map<String, String> createVerifyingToken(String username, String ua) {
         var originalToken = generateToken();
         var token = new NanoToken();
         token.setToken(TokenCode.desensitizeToken(originalToken));

@@ -1,5 +1,6 @@
 package nano.web;
 
+import nano.support.ThrottleCache;
 import nano.support.configuration.ConditionalOnRabbit;
 import nano.support.templating.SugarViewResolver;
 import nano.web.messageing.ExchangeDeclarer;
@@ -9,6 +10,7 @@ import nano.web.security.AuthenticationInterceptor;
 import nano.web.security.TokenDesensitizationInterceptor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -16,7 +18,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -53,6 +55,14 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     }
 
     /**
+     * 节流缓存
+     */
+    @Bean
+    public ThrottleCache throttleCache(@Qualifier("applicationTaskExecutor") TaskExecutor taskExecutor) {
+        return new ThrottleCache("throttleCache", taskExecutor);
+    }
+
+    /**
      * App config vars
      */
     @Bean
@@ -82,7 +92,7 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
      */
     @Bean
     @ConditionalOnRabbit
-    public ExchangeDeclarer exchangeDeclarer(Environment env) {
+    public ExchangeDeclarer exchangeDeclarer() {
         return new ExchangeDeclarer();
     }
 

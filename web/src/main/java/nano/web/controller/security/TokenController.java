@@ -27,7 +27,7 @@ public class TokenController {
 
     @PostMapping("/createVerifyingToken")
     public ResponseEntity<?> createVerifyingToken(@RequestHeader("User-Agent") String ua,
-                                                     @RequestParam("username") String username) throws Exception {
+                                                     @RequestParam("username") String username) {
         var result = this.securityService.createVerifyingToken(username, ua);
         return ResponseEntity.ok(Result.of(result));
     }
