@@ -6,6 +6,5 @@ public class ThrottleCacheTests {
 
     @Test
     public void testGet() {
-        // todo
     }
 }
