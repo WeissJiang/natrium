@@ -45,7 +45,7 @@ public class Nano100Handler implements Onion.Middleware<BotContext> {
     private void fetchAndSendExtract(BotContext context) {
         var text = context.text();
         if (StringUtils.isEmpty(text)) {
-            context.sendMessage("⚠️The title is empty, please title");
+            context.sendMessage("⚠️The title is empty, please input title");
             return;
         }
         for (var fetcher : this.fetcherList) {
