@@ -32,12 +32,12 @@
   },
   "homepage": "https://github.com/cbdyzj/nano-bot#readme",
   "dependencies": {
-    "esbuild": "^0.7.14",
+    "esbuild": "^0.7.15",
     "less": "^3.12.2",
-    "postcss": "^7.0.34",
+    "postcss": "^8.1.1",
     "postcss-modules": "^3.2.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0"
   },
   "devDependencies": {
     "express": "^4.17.1"
