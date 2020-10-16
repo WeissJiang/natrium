@@ -22,7 +22,7 @@ public class DirtyCache extends AbstractValueAdaptingCache {
 
     private final String name;
 
-    private final Timer timer = new Timer();
+    private final Timer timer;
 
     private final ConcurrentMap<Object, Object> store;
 
@@ -36,6 +36,7 @@ public class DirtyCache extends AbstractValueAdaptingCache {
         Assert.notNull(store, "Store must not be null");
         this.name = name;
         this.store = store;
+        this.timer = new Timer();
     }
 
     @Override
