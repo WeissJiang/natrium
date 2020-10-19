@@ -1,5 +1,6 @@
 package nano.web.controller.nano;
 
+import nano.support.validation.Validating;
 import nano.web.controller.Result;
 import nano.web.messageing.Exchanges;
 import nano.web.nano.NanoService;
@@ -32,6 +33,7 @@ public class NanoController {
         return ResponseEntity.ok(nano);
     }
 
+    @Validating(NanoMessageValidator.class)
     @PostMapping("/message")
     public ResponseEntity<?> message(@RequestParam("m") String m) {
         this.messagingTemplate.convertAndSend(Exchanges.NANO, "nano", m);

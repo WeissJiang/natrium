@@ -2,13 +2,19 @@ package nano.web;
 
 import nano.support.configuration.ConditionalOnRabbit;
 import nano.support.templating.SugarViewResolver;
+import nano.support.validation.Validating;
+import nano.support.validation.Validator;
 import nano.web.messageing.ExchangeDeclarer;
 import nano.web.nano.ConfigVars;
+import nano.web.nano.ValidateInterceptor;
 import nano.web.scripting.Scripting;
 import nano.web.security.AuthenticationInterceptor;
 import nano.web.security.TokenDesensitizationInterceptor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.aop.aspectj.AspectJExpressionPointcut;
+import org.springframework.aop.support.DefaultPointcutAdvisor;
+import org.springframework.aop.support.annotation.AnnotationMatchingPointcut;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -103,6 +109,22 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(this.context.getBean(TokenDesensitizationInterceptor.class)).order(1).addPathPatterns("/api/**");
         registry.addInterceptor(this.context.getBean(AuthenticationInterceptor.class)).order(2).addPathPatterns("/api/**");
+    }
+
+    /**
+     * 校验切面
+     *
+     * @see Validating
+     * @see Validator
+     * @see ValidateInterceptor
+     */
+    @Bean
+    public DefaultPointcutAdvisor validatePointcutAdvisor(ValidateInterceptor interceptor) {
+        // advisor
+        var advisor = new DefaultPointcutAdvisor();
+        advisor.setPointcut(AnnotationMatchingPointcut.forMethodAnnotation(Validating.class));
+        advisor.setAdvice(interceptor);
+        return advisor;
     }
 
     /**

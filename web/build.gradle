@@ -26,6 +26,8 @@ clean {
 }
 
 dependencies {
+    // AOP
+    implementation 'org.aspectj:aspectjweaver:1.9.5'
     // webp
     implementation 'org.sejda.imageio:webp-imageio:0.1.6'
     // user agent parser
