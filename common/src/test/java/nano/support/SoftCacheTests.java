@@ -2,7 +2,7 @@ package nano.support;
 
 import org.junit.jupiter.api.Test;
 
-public class DirtyCacheTests {
+public class SoftCacheTests {
 
     @Test
     public void testGet() {
