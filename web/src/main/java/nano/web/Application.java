@@ -12,7 +12,6 @@ import nano.web.security.AuthenticationInterceptor;
 import nano.web.security.TokenDesensitizationInterceptor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.aop.support.annotation.AnnotationMatchingPointcut;
 import org.springframework.boot.SpringApplication;
