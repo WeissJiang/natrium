@@ -16,13 +16,13 @@ public class SendTextMailValidator implements Validator {
         Assert.isInstanceOf(TextMail.class, args[0], "arg0 is not instance of TextMail");
         var textMail = (TextMail) args[0];
         if (StringUtils.isEmpty(textMail.getSubject())) {
-            return "mail \"subject\" is empty";
+            return "TextMail \"subject\" is empty";
         }
         if (StringUtils.isEmpty(textMail.getTo())) {
-            return "Mail \"to\" is empty";
+            return "TextMail \"to\" is empty";
         }
         if (StringUtils.isEmpty(textMail.getText())) {
-            return "Mail \"text\" is empty";
+            return "TextMail \"text\" is empty";
         }
         return null;
     }
