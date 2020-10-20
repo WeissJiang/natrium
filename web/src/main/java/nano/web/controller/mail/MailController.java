@@ -1,6 +1,7 @@
 package nano.web.controller.mail;
 
 import nano.support.mail.TextMail;
+import nano.support.validation.Validating;
 import nano.web.messageing.Exchanges;
 import nano.web.security.AuthenticationInterceptor;
 import nano.web.security.Authorized;
@@ -26,6 +27,7 @@ public class MailController {
         this.rabbitMessagingTemplate = rabbitMessagingTemplate;
     }
 
+    @Validating(SendTextMailValidator.class)
     @Authorized(NANO_API)
     @PostMapping("/sendTextMail")
     public ResponseEntity<?> sendTextMail(@RequestBody TextMail mail) {

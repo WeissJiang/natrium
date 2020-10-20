@@ -28,7 +28,7 @@ public class SoftCache {
         return this.name;
     }
 
-    public @NotNull Object getNativeCache() {
+    public @NotNull ConcurrentMap<Object, SoftReference<Object>> getNativeCache() {
         return this.store;
     }
 

@@ -31,7 +31,7 @@ public class ValidateInterceptor implements MethodInterceptor, ApplicationContex
         // validate
         var validating = method.getAnnotation(Validating.class);
         Assert.notNull(validating, "Validating annotation is null");
-        for (Class<? extends Validator> validatorClass : validating.value()) {
+        for (var validatorClass : validating.value()) {
             var validator = this.context.getBean(validatorClass);
             var message = validator.validate(arguments);
             if (message != null) {
