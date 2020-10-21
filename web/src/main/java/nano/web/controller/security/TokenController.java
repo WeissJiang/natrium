@@ -4,7 +4,6 @@ import nano.web.controller.Result;
 import nano.web.security.Authorized;
 import nano.web.security.SecurityService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,7 +26,7 @@ public class TokenController {
 
     @PostMapping("/createVerifyingToken")
     public ResponseEntity<?> createVerifyingToken(@RequestHeader("User-Agent") String ua,
-                                                     @RequestParam("username") String username) {
+                                                  @RequestParam("username") String username) {
         var result = this.securityService.createVerifyingToken(username, ua);
         return ResponseEntity.ok(Result.of(result));
     }
@@ -39,17 +38,17 @@ public class TokenController {
     }
 
     @Authorized(BASIC)
+    @PostMapping("/deleteSelf")
+    public ResponseEntity<?> deleteTokenSelf(@RequestAttribute(X_TOKEN_DIGEST) String token) {
+        this.securityService.deleteTheToken(token);
+        return ResponseEntity.ok(Result.empty());
+    }
+
+    @Authorized(BASIC)
     @PostMapping("/delete")
     public ResponseEntity<?> deleteToken(@RequestAttribute(X_TOKEN_DIGEST) String token,
                                          @RequestParam(name = "id", required = false) List<Integer> idList) {
-        // 登出删除Token
-        if (CollectionUtils.isEmpty(idList)) {
-            this.securityService.deleteTheToken(token);
-        }
-        // 管理删除Token
-        else {
-            this.securityService.deleteSpecificToken(token, idList);
-        }
+        this.securityService.deleteSpecificToken(token, idList);
         return ResponseEntity.ok(Result.empty());
     }
 

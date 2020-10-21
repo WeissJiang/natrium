@@ -53,7 +53,7 @@ function Login(props) {
 
     if (user) {
         async function handleLogout() {
-            const response = await fetch('/api/token/delete', {
+            const response = await fetch('/api/token/deleteSelf', {
                 method: 'POST',
                 headers: { 'X-Token': token }
             })

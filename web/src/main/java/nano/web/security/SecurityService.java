@@ -218,7 +218,7 @@ public class SecurityService {
             if (log.isDebugEnabled()) {
                 log.debug(ex.getMessage(), ex);
             }
-            return "Unknow";
+            return "Unknown";
         }
     }
 
