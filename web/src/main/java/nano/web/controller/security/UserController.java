@@ -2,12 +2,16 @@ package nano.web.controller.security;
 
 import nano.web.controller.Result;
 import nano.web.security.Authorized;
+import nano.web.security.Token;
 import nano.web.security.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import static nano.web.security.NanoPrivilege.*;
-import static nano.web.security.TokenCode.X_TOKEN_DIGEST;
+import static nano.web.security.NanoPrivilege.BASIC;
+import static nano.web.security.NanoPrivilege.NANO_API;
 
 @CrossOrigin
 @RestController
@@ -22,7 +26,7 @@ public class UserController {
 
     @Authorized(BASIC)
     @GetMapping("/user")
-    public ResponseEntity<?> getUser(@RequestAttribute(X_TOKEN_DIGEST) String token) {
+    public ResponseEntity<?> getUser(@Token String token) {
         var userDTO = this.userService.getUserByToken(token);
         return ResponseEntity.ok(Result.of(userDTO));
     }

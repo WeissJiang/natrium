@@ -39,6 +39,12 @@ public class ModuleController {
         return MODULE_TEMPLATE;
     }
 
+    /**
+     * Get module url by module name
+     *
+     * @param moduleName module name
+     * @return module url
+     */
     private String getUrl(String moduleName) {
         return this.staticDeps.getModuleUrl(moduleName);
     }

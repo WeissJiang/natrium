@@ -1,6 +1,6 @@
 package nano.web.security;
 
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
@@ -13,7 +13,6 @@ import java.util.concurrent.ThreadLocalRandom;
 public abstract class TokenCode {
 
     public static final String X_TOKEN = "X-Token";
-    public static final String X_TOKEN_DIGEST = "X_TOKEN_DIGEST";
 
     /**
      * 生成随机6位验证码
@@ -41,7 +40,10 @@ public abstract class TokenCode {
     /**
      * 生成Token摘要
      */
-    public static String desensitizeToken(@NotNull String originalToken) {
+    public static String desensitizeToken(@Nullable String originalToken) {
+        if (originalToken == null) {
+            return null;
+        }
         return DigestUtils.md5DigestAsHex(originalToken.getBytes(StandardCharsets.UTF_8));
     }
 }

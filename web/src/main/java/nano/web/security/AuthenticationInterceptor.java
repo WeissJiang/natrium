@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-import static nano.web.security.TokenCode.X_TOKEN_DIGEST;
+import static nano.web.security.TokenCode.*;
 
 @Component
 public class AuthenticationInterceptor implements HandlerInterceptor {
@@ -31,8 +31,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 authorized = handlerMethod.getBeanType().getAnnotation(Authorized.class);
             }
             if (authorized != null) {
-                var token = (String) request.getAttribute(X_TOKEN_DIGEST);
-                this.securityService.checkTokenPrivilege(token, List.of(authorized.value()));
+                var token = request.getHeader(X_TOKEN);
+                this.securityService.checkTokenPrivilege(desensitizeToken(token), List.of(authorized.value()));
             }
         }
         return true;

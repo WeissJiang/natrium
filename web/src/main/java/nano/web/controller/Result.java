@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 /**
- * HTTP 200 response body
+ * HTTP response body wrapper
  *
  * @param <T> payload type
  */

@@ -3,6 +3,7 @@ package nano.web.controller.security;
 import nano.web.controller.Result;
 import nano.web.security.Authorized;
 import nano.web.security.SecurityService;
+import nano.web.security.Token;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +12,6 @@ import java.util.Map;
 
 import static nano.web.security.NanoPrivilege.BASIC;
 import static nano.web.security.NanoPrivilege.NANO_API;
-import static nano.web.security.TokenCode.X_TOKEN_DIGEST;
 
 @CrossOrigin
 @RestController
@@ -32,29 +32,28 @@ public class TokenController {
     }
 
     @GetMapping("/verification")
-    public ResponseEntity<?> getTokenVerification(@RequestAttribute(X_TOKEN_DIGEST) String token) {
+    public ResponseEntity<?> getTokenVerification(@Token String token) {
         var result = this.securityService.getTokenVerification(token);
         return ResponseEntity.ok(Result.of(result));
     }
 
     @Authorized(BASIC)
     @PostMapping("/deleteSelf")
-    public ResponseEntity<?> deleteTokenSelf(@RequestAttribute(X_TOKEN_DIGEST) String token) {
+    public ResponseEntity<?> deleteTokenSelf(@Token String token) {
         this.securityService.deleteTheToken(token);
         return ResponseEntity.ok(Result.empty());
     }
 
     @Authorized(BASIC)
     @PostMapping("/delete")
-    public ResponseEntity<?> deleteToken(@RequestAttribute(X_TOKEN_DIGEST) String token,
-                                         @RequestParam(name = "id", required = false) List<Integer> idList) {
+    public ResponseEntity<?> deleteToken(@Token String token, @RequestParam(name = "id", required = false) List<Integer> idList) {
         this.securityService.deleteSpecificToken(token, idList);
         return ResponseEntity.ok(Result.empty());
     }
 
     @Authorized(BASIC)
     @GetMapping("/list")
-    public ResponseEntity<?> getTokenList(@RequestAttribute(X_TOKEN_DIGEST) String token) {
+    public ResponseEntity<?> getTokenList(@Token String token) {
         var tokenList = this.securityService.getAssociatedTokenList(token);
         return ResponseEntity.ok(Result.of(tokenList));
     }
