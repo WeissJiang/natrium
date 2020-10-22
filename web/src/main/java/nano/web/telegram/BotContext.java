@@ -4,7 +4,6 @@ import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
 import nano.support.Json;
-import nano.support.Sugar;
 import nano.web.nano.Bot;
 import nano.web.security.NanoPrivilege;
 import nano.web.security.model.Session;
@@ -20,6 +19,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
+import static nano.support.Sugar.filter;
 
 public class BotContext {
 
@@ -80,7 +80,7 @@ public class BotContext {
 
     public List<String> commands() {
         List<Map<String, Object>> entities = this.read("$.message.entities");
-        var commandEntities = Sugar.filter(entities, it -> "bot_command".equals(it.get("type")));
+        var commandEntities = filter(entities, it -> "bot_command".equals(it.get("type")));
         if (CollectionUtils.isEmpty(commandEntities)) {
             return emptyList();
         }

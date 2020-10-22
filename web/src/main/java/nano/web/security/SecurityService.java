@@ -171,7 +171,7 @@ public class SecurityService {
             if (verifyingTimeout(it)) {
                 result.put(it, NanoToken.VERIFYING_TIMEOUT);
             }
-            // verificated
+            // verified
             else {
                 it.setStatus(NanoToken.VALID);
                 this.tokenRepository.updateToken(it);

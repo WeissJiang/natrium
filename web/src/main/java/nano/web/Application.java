@@ -47,6 +47,15 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     }
 
     /**
+     * App config vars
+     */
+    @Bean
+    @ConfigurationProperties("nano")
+    public ConfigVars configVars() {
+        return new ConfigVars();
+    }
+
+    /**
      * Templating
      *
      * @see nano.support.Sugar#render
@@ -56,15 +65,6 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
         var resolver = new SugarViewResolver();
         resolver.setPrefix("classpath:/templates/");
         return resolver;
-    }
-
-    /**
-     * App config vars
-     */
-    @Bean
-    @ConfigurationProperties("nano")
-    public ConfigVars configVars() {
-        return new ConfigVars();
     }
 
     /**
@@ -84,6 +84,22 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     }
 
     /**
+     * 校验切面
+     *
+     * @see Validating
+     * @see Validator
+     * @see ValidateInterceptor
+     */
+    @Bean
+    public DefaultPointcutAdvisor validatePointcutAdvisor(ValidateInterceptor interceptor) {
+        // advisor
+        var advisor = new DefaultPointcutAdvisor();
+        advisor.setPointcut(AnnotationMatchingPointcut.forMethodAnnotation(Validating.class));
+        advisor.setAdvice(interceptor);
+        return advisor;
+    }
+
+    /**
      * Declare exchanges on rabbit property set
      */
     @Bean
@@ -99,22 +115,6 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     @ConditionalOnRabbit
     public Jackson2JsonMessageConverter jackson2JsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
-    }
-
-    /**
-     * 校验切面
-     *
-     * @see Validating
-     * @see Validator
-     * @see ValidateInterceptor
-     */
-    @Bean
-    public DefaultPointcutAdvisor validatePointcutAdvisor(ValidateInterceptor interceptor) {
-        // advisor
-        var advisor = new DefaultPointcutAdvisor();
-        advisor.setPointcut(AnnotationMatchingPointcut.forMethodAnnotation(Validating.class));
-        advisor.setAdvice(interceptor);
-        return advisor;
     }
 
     /**
@@ -151,5 +151,4 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     public void setApplicationContext(@NotNull ApplicationContext applicationContext) {
         this.context = applicationContext;
     }
-
 }

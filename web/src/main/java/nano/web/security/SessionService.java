@@ -49,35 +49,35 @@ public class SessionService {
         }
     }
 
-    private void updateOrCreateUserIfAbsent(NanoUser incomming) {
-        var exist = this.userRepository.queryUser(incomming.getId());
+    private void updateOrCreateUserIfAbsent(NanoUser incoming) {
+        var exist = this.userRepository.queryUser(incoming.getId());
         if (exist == null) {
-            this.userRepository.upsertUser(incomming);
+            this.userRepository.upsertUser(incoming);
         }
-        // incomming not changed
-        else if (userNotChanged(incomming, exist)) {
-            incomming.setEmail(exist.getEmail());
+        // incoming not changed
+        else if (userNotChanged(incoming, exist)) {
+            incoming.setEmail(exist.getEmail());
         }
-        //  incomming not changed
+        //  incoming not changed
         else {
-            incomming.setEmail(exist.getEmail());
-            this.userRepository.upsertUser(incomming);
+            incoming.setEmail(exist.getEmail());
+            this.userRepository.upsertUser(incoming);
         }
     }
 
     /**
      * Whether user changed
      */
-    private static boolean userNotChanged(NanoUser incomming, NanoUser exist) {
+    private static boolean userNotChanged(NanoUser incoming, NanoUser exist) {
         List<Function<NanoUser, ?>> getterList = List.of(
                 NanoUser::getUsername,
                 NanoUser::getFirstname,
                 NanoUser::getLanguageCode
         );
         return every(getterList, getter -> {
-            var incommingVal = getter.apply(incomming);
+            var incomingVal = getter.apply(incoming);
             var existVal = getter.apply(exist);
-            return Objects.equals(incommingVal, existVal);
+            return Objects.equals(incomingVal, existVal);
         });
     }
 
