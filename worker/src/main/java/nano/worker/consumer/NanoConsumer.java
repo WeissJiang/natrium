@@ -5,6 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 
+/**
+ * Handle nano message
+ */
 public class NanoConsumer {
 
     private static final Logger log = LoggerFactory.getLogger(NanoConsumer.class);

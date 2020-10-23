@@ -1,18 +1,16 @@
-package nano.worker.service;
+package nano.support.mail;
 
-import nano.support.mail.TextMail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.mail.MessagingException;
 
-@Service
+/**
+ * 邮件服务
+ */
 public class MailService {
 
     private static final Logger log = LoggerFactory.getLogger(MailService.class);
@@ -21,6 +19,9 @@ public class MailService {
 
     private JavaMailSender javaMailSender;
 
+    /**
+     * 发送文本邮件
+     */
     public void sendTextMail(TextMail mail) throws MessagingException {
         Assert.hasText(this.fromAddress, "this.fromAddress is empty");
         Assert.notNull(this.javaMailSender, "this.javaMailSender is null");
@@ -35,13 +36,11 @@ public class MailService {
         mailSender.send(message);
     }
 
-    @Autowired(required = false)
     public void setJavaMailSender(JavaMailSender javaMailSender) {
         log.info("Mail sender set: {}", javaMailSender);
         this.javaMailSender = javaMailSender;
     }
 
-    @Value("${spring.mail.username:}")
     public void setFromAddress(String fromAddress) {
         this.fromAddress = fromAddress;
     }

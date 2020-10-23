@@ -9,6 +9,9 @@ import org.springframework.web.util.UriUtils;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+/**
+ * MediaWiki
+ */
 public abstract class MediaWikiService {
 
     private final RestTemplate restTemplate;
@@ -44,6 +47,5 @@ public abstract class MediaWikiService {
     protected abstract String getQueryApi(String language);
 
     protected abstract String getPageUrl(String language, String title);
-
 
 }

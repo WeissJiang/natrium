@@ -3,6 +3,9 @@ package nano.support.mail;
 import java.util.Objects;
 import java.util.StringJoiner;
 
+/**
+ * 文本邮件
+ */
 public class TextMail {
 
     private String to;

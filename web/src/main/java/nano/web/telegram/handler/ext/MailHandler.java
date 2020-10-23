@@ -1,7 +1,8 @@
 package nano.web.telegram.handler.ext;
 
 import nano.support.Onion;
-import nano.web.messageing.MailService;
+import nano.support.mail.MailService;
+import nano.support.mail.TextMail;
 import nano.web.nano.Bot;
 import nano.web.telegram.BotContext;
 import org.springframework.stereotype.Component;
@@ -40,8 +41,16 @@ public class MailHandler implements Onion.Middleware<BotContext> {
             context.replyMessage("Mail内容为空，发送邮件：/mail {message}");
             return;
         }
-        this.mailService.sendTextMail(email, message);
+        this.mailService.sendTextMail(createTextMail(email, message));
         context.replyMessage("邮件📧投递成功");
+    }
+
+    private static TextMail createTextMail(String email, String message) {
+        var mail = new TextMail();
+        mail.setTo(email);
+        mail.setSubject("Shinonome Lab Mail Service");
+        mail.setText(message);
+        return mail;
     }
 
     private static boolean isMailCommand(String text) {

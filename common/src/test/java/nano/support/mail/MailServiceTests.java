@@ -1,22 +1,19 @@
-package nano.worker.service;
+package nano.support.mail;
 
-import nano.support.mail.TextMail;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.mail.javamail.JavaMailSender;
 
-import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-
-import static org.mockito.Mockito.*;
 
 public class MailServiceTests {
 
     @Test
-    public void testSendTextMail() throws MessagingException {
+    public void testSendTextMail() throws Exception {
         // mock
-        var mockMailSender = mock(JavaMailSender.class);
-        var mockMimeMessage = mock(MimeMessage.class);
-        when(mockMailSender.createMimeMessage()).thenReturn(mockMimeMessage);
+        var mockMailSender = Mockito.mock(JavaMailSender.class);
+        var mockMimeMessage = Mockito.mock(MimeMessage.class);
+        Mockito.when(mockMailSender.createMimeMessage()).thenReturn(mockMimeMessage);
         // test send
         var mailService = new MailService();
         mailService.setFromAddress("from");
@@ -27,6 +24,6 @@ public class MailServiceTests {
         mail.setText("text");
         mailService.sendTextMail(mail);
         // verify
-        verify(mockMailSender, times(1)).send(mockMimeMessage);
+        Mockito.verify(mockMailSender, Mockito.times(1)).send(mockMimeMessage);
     }
 }

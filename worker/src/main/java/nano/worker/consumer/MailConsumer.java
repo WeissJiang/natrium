@@ -1,8 +1,8 @@
 package nano.worker.consumer;
 
 import nano.support.Json;
+import nano.support.mail.MailService;
 import nano.support.mail.TextMail;
-import nano.worker.service.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.Queue;
@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.mail.MessagingException;
 
+/**
+ * Handle mail message
+ */
 public class MailConsumer {
 
     private static final Logger log = LoggerFactory.getLogger(MailConsumer.class);

@@ -1,6 +1,7 @@
 package nano.web;
 
 import nano.support.configuration.ConditionalOnRabbit;
+import nano.support.mail.MailService;
 import nano.support.templating.SugarViewResolver;
 import nano.support.validation.Validating;
 import nano.support.validation.Validator;
@@ -15,14 +16,17 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.aop.support.annotation.AnnotationMatchingPointcut;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
@@ -97,6 +101,15 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
         advisor.setPointcut(AnnotationMatchingPointcut.forMethodAnnotation(Validating.class));
         advisor.setAdvice(interceptor);
         return advisor;
+    }
+
+    @Bean
+    @ConditionalOnProperty("spring.mail.host")
+    public MailService mailService(JavaMailSender javaMailSender, @Value("${spring.mail.username:}") String fromAddress) {
+        var mailService = new MailService();
+        mailService.setJavaMailSender(javaMailSender);
+        mailService.setFromAddress(fromAddress);
+        return mailService;
     }
 
     /**
