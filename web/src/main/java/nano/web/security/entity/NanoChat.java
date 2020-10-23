@@ -71,15 +71,4 @@ public class NanoChat {
     public int hashCode() {
         return Objects.hash(id, username, title, firstname, type);
     }
-
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", NanoChat.class.getSimpleName() + "[", "]")
-                .add("id=" + id)
-                .add("username='" + username + "'")
-                .add("title='" + title + "'")
-                .add("firstname='" + firstname + "'")
-                .add("type='" + type + "'")
-                .toString();
-    }
 }

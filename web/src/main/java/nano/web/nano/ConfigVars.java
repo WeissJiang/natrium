@@ -8,7 +8,7 @@ import java.util.Map;
 public class ConfigVars {
 
     /**
-     * nano
+     * nano API
      */
     private String nanoApi;
 
@@ -18,9 +18,13 @@ public class ConfigVars {
     private String nanoApiKey;
 
     /**
-     * 百度翻译APP ID、secret key
+     * 百度翻译APP ID
      */
     private String baiduTranslationAppId;
+
+    /**
+     * Secret key
+     */
     private String baiduTranslationSecretKey;
 
     /**

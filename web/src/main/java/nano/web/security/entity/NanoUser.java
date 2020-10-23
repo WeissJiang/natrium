@@ -83,16 +83,4 @@ public class NanoUser {
     public int hashCode() {
         return Objects.hash(id, username, firstname, languageCode, isBot, email);
     }
-
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", NanoUser.class.getSimpleName() + "[", "]")
-                .add("id=" + id)
-                .add("username='" + username + "'")
-                .add("firstname='" + firstname + "'")
-                .add("languageCode='" + languageCode + "'")
-                .add("isBot=" + isBot)
-                .add("email='" + email + "'")
-                .toString();
-    }
 }

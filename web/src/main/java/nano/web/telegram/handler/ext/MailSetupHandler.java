@@ -1,13 +1,15 @@
 package nano.web.telegram.handler.ext;
 
 import nano.support.Onion;
-import nano.support.Predicates;
 import nano.web.nano.Bot;
 import nano.web.security.NanoPrivilege;
 import nano.web.security.UserService;
 import nano.web.telegram.BotContext;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+
+import static nano.support.mail.MailService.EMAIL;
 
 @Component
 public class MailSetupHandler implements Onion.Middleware<BotContext> {
@@ -19,7 +21,7 @@ public class MailSetupHandler implements Onion.Middleware<BotContext> {
     }
 
     @Override
-    public void via(BotContext context, Onion.Next next) throws Exception {
+    public void via(@NotNull BotContext context, @NotNull Onion.Next next) throws Exception {
         var text = context.text();
         var bot = context.bot();
         if (Bot.NANO.equals(bot.getName()) && isSetMailCommand(text)) {
@@ -36,7 +38,7 @@ public class MailSetupHandler implements Onion.Middleware<BotContext> {
             return;
         }
         var mailAddress = getMailAddress(context.text());
-        if (!Predicates.EMAIL.test(mailAddress)) {
+        if (!EMAIL.test(mailAddress)) {
             context.replyMessage("非法的邮箱格式");
             return;
         }

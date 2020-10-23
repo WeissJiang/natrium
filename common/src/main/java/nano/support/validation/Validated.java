@@ -4,6 +4,7 @@ import java.lang.annotation.*;
 
 /**
  * @see Validator
+ * @see ValidateInterceptor
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

@@ -1,5 +1,7 @@
 package nano.web.nano;
 
+import java.util.Objects;
+
 public class Bot {
 
     public static final String NANO = "nano";
@@ -34,5 +36,20 @@ public class Bot {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Bot bot = (Bot) o;
+        return Objects.equals(name, bot.name) &&
+               Objects.equals(username, bot.username) &&
+               Objects.equals(token, bot.token);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, username, token);
     }
 }

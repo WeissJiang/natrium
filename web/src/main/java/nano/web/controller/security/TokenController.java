@@ -46,7 +46,7 @@ public class TokenController {
 
     @Authorized(BASIC)
     @PostMapping("/delete")
-    public ResponseEntity<?> deleteToken(@Token String token, @RequestParam(name = "id", required = false) List<Integer> idList) {
+    public ResponseEntity<?> deleteToken(@Token String token, @RequestParam("id") List<Integer> idList) {
         this.securityService.deleteSpecificToken(token, idList);
         return ResponseEntity.ok(Result.empty());
     }

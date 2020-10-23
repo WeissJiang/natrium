@@ -2,9 +2,9 @@ package nano.support.validation;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.util.Assert;
-import org.springframework.util.ReflectionUtils;
 
 /**
  * @see Validated
@@ -14,14 +14,14 @@ public class ValidateInterceptor implements MethodInterceptor {
 
     private final BeanFactory beanFactory;
 
-    public ValidateInterceptor(BeanFactory beanFactory) {
+    public ValidateInterceptor(@NotNull BeanFactory beanFactory) {
+        Assert.notNull(beanFactory, "BeanFactory must be not null");
         this.beanFactory = beanFactory;
     }
 
     @Override
-    public Object invoke(MethodInvocation invocation) {
+    public Object invoke(@NotNull MethodInvocation invocation) throws Throwable {
         var method = invocation.getMethod();
-        var target = invocation.getThis();
         var arguments = invocation.getArguments();
         // validate
         var validated = method.getAnnotation(Validated.class);
@@ -33,7 +33,6 @@ public class ValidateInterceptor implements MethodInterceptor {
                 throw new IllegalArgumentException(message);
             }
         }
-        return ReflectionUtils.invokeMethod(method, target, arguments);
+        return invocation.proceed();
     }
-
 }

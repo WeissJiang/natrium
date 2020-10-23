@@ -3,6 +3,7 @@ package nano.web.telegram.handler;
 import nano.support.Onion;
 import nano.web.nano.Bot;
 import nano.web.telegram.BotContext;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -14,7 +15,7 @@ import java.util.Map;
 public class StartHandler implements Onion.Middleware<BotContext> {
 
     @Override
-    public void via(BotContext context, Onion.Next next) throws Exception {
+    public void via(@NotNull BotContext context, @NotNull Onion.Next next) throws Exception {
         var commands = context.commands();
         var bot = context.bot();
         if (commands.contains("/start") || commands.contains("/start@" + bot.getUsername())) {
@@ -38,7 +39,7 @@ public class StartHandler implements Onion.Middleware<BotContext> {
     private static void replyNanoStart(BotContext context) {
         var text = """
                 <b>至尊戒，驭众戒</b>
-                
+                                
                 <a href="https://t.me/nano_026_bot">nano-026</a> - ZH/EN translation
                 <a href="https://t.me/nano_100_bot">nano-100</a> - Encyclopedia
                 <a href="https://t.me/nano_233_bot">nano-233</a> - Get sticker

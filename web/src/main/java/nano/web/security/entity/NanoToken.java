@@ -144,19 +144,4 @@ public class NanoToken {
     public int hashCode() {
         return Objects.hash(id, token, name, chatId, userId, status, privilege, lastActiveTime, creationTime);
     }
-
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", NanoToken.class.getSimpleName() + "[", "]")
-                .add("id=" + id)
-                .add("token='" + token + "'")
-                .add("name='" + name + "'")
-                .add("chatId=" + chatId)
-                .add("userId=" + userId)
-                .add("status='" + status + "'")
-                .add("privilege='" + privilege + "'")
-                .add("lastActiveTime=" + lastActiveTime)
-                .add("creationTime=" + creationTime)
-                .toString();
-    }
 }

@@ -1,6 +1,9 @@
 package nano.support;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Onion is just like an Onion
@@ -13,11 +16,12 @@ public class Onion<T> {
 
     private Middleware<T> core = (ctx, nxt) -> nxt.next();
 
-    public final void use(Middleware<T> middleware) {
+    public final void use(@NotNull Middleware<T> middleware) {
+        Objects.requireNonNull(middleware, "Middleware must be not null");
         this.core = compose(this.core, middleware);
     }
 
-    public void handle(T context) throws Exception {
+    public void handle(@NotNull T context) throws Exception {
 
         this.core.via(context, () -> {
         });
@@ -25,7 +29,7 @@ public class Onion<T> {
 
     public interface Middleware<T> {
 
-        void via(T context, Next next) throws Exception;
+        void via(@NotNull T context, @NotNull Next next) throws Exception;
     }
 
     public interface Next {
@@ -34,8 +38,7 @@ public class Onion<T> {
     }
 
     @SafeVarargs
-    public static <U> Middleware<U> compose(Middleware<U>... middlewares) {
-        return Arrays.stream(middlewares).reduce((ctx, nxt) -> nxt.next(),
-                (before, after) -> (ctx, nxt) -> before.via(ctx, () -> after.via(ctx, nxt)));
+    public static @NotNull <U> Middleware<U> compose(@NotNull Middleware<U>... middlewares) {
+        return Arrays.stream(middlewares).reduce((ctx, nxt) -> nxt.next(), (before, after) -> (ctx, nxt) -> before.via(ctx, () -> after.via(ctx, nxt)));
     }
 }

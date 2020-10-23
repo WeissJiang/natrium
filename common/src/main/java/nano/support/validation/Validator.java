@@ -4,6 +4,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * @see Validated
+ * @see ValidateInterceptor
  */
 @FunctionalInterface
 public interface Validator {

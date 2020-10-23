@@ -4,6 +4,7 @@ import nano.support.Onion;
 import nano.web.security.SecurityService;
 import nano.web.security.entity.NanoToken;
 import nano.web.telegram.BotContext;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class VerificationHandler implements Onion.Middleware<BotContext> {
     }
 
     @Override
-    public void via(BotContext context, Onion.Next next) throws Exception {
+    public void via(@NotNull BotContext context, @NotNull Onion.Next next) throws Exception {
         var text = context.text();
         var session = context.getSession();
         if (session != null && isVerificationCode(text)) {

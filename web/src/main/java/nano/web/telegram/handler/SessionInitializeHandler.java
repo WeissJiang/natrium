@@ -6,6 +6,7 @@ import nano.web.security.entity.NanoChat;
 import nano.web.security.entity.NanoUser;
 import nano.web.security.model.Session;
 import nano.web.telegram.BotContext;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -26,7 +27,7 @@ public class SessionInitializeHandler implements Onion.Middleware<BotContext> {
     }
 
     @Override
-    public void via(BotContext context, Onion.Next next) throws Exception {
+    public void via(@NotNull BotContext context, @NotNull Onion.Next next) throws Exception {
         try {
             // sync chat and user
             var chat = this.readChat(context);

@@ -4,6 +4,7 @@ import nano.support.Onion;
 import nano.web.nano.Bot;
 import nano.web.scripting.Scripting;
 import nano.web.telegram.BotContext;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -17,7 +18,7 @@ public class Nano262Handler implements Onion.Middleware<BotContext> {
     }
 
     @Override
-    public void via(BotContext context, Onion.Next next) throws Exception {
+    public void via(@NotNull BotContext context, @NotNull Onion.Next next) throws Exception {
         if (Bot.NANO_262.equals(context.bot().getName())) {
             this.evalScript(context);
         } else {
