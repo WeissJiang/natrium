@@ -7,7 +7,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * @see Validating
+ * @see Validated
  * @see Validator
  */
 public class ValidateInterceptor implements MethodInterceptor {
@@ -24,9 +24,9 @@ public class ValidateInterceptor implements MethodInterceptor {
         var target = invocation.getThis();
         var arguments = invocation.getArguments();
         // validate
-        var validating = method.getAnnotation(Validating.class);
-        Assert.notNull(validating, "Validating annotation is null");
-        for (var validatorClass : validating.value()) {
+        var validated = method.getAnnotation(Validated.class);
+        Assert.notNull(validated, "Validated annotation is null");
+        for (var validatorClass : validated.value()) {
             var validator = this.beanFactory.getBean(validatorClass);
             var message = validator.validate(arguments);
             if (message != null) {

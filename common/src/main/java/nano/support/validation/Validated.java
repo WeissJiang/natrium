@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Validating {
+public @interface Validated {
 
     Class<? extends Validator>[] value() default {};
 }

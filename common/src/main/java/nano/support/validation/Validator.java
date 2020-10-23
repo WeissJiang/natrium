@@ -3,7 +3,7 @@ package nano.support.validation;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * @see Validating
+ * @see Validated
  */
 @FunctionalInterface
 public interface Validator {

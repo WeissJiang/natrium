@@ -3,7 +3,7 @@ package nano.web;
 import nano.support.configuration.ConditionalOnRabbit;
 import nano.support.mail.MailService;
 import nano.support.templating.SugarViewResolver;
-import nano.support.validation.Validating;
+import nano.support.validation.Validated;
 import nano.support.validation.Validator;
 import nano.web.messageing.ExchangeDeclarer;
 import nano.web.nano.ConfigVars;
@@ -90,7 +90,7 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     /**
      * 校验切面
      *
-     * @see Validating
+     * @see Validated
      * @see Validator
      * @see ValidateInterceptor
      */
@@ -98,7 +98,7 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     public DefaultPointcutAdvisor validatePointcutAdvisor() {
         // advisor
         var advisor = new DefaultPointcutAdvisor();
-        advisor.setPointcut(AnnotationMatchingPointcut.forMethodAnnotation(Validating.class));
+        advisor.setPointcut(AnnotationMatchingPointcut.forMethodAnnotation(Validated.class));
         advisor.setAdvice(new ValidateInterceptor(this.context));
         return advisor;
     }
