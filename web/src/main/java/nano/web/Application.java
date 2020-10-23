@@ -7,7 +7,7 @@ import nano.support.validation.Validating;
 import nano.support.validation.Validator;
 import nano.web.messageing.ExchangeDeclarer;
 import nano.web.nano.ConfigVars;
-import nano.web.nano.ValidateInterceptor;
+import nano.support.validation.ValidateInterceptor;
 import nano.web.scripting.Scripting;
 import nano.web.security.AuthenticationInterceptor;
 import nano.web.security.Token;
@@ -95,11 +95,11 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
      * @see ValidateInterceptor
      */
     @Bean
-    public DefaultPointcutAdvisor validatePointcutAdvisor(ValidateInterceptor interceptor) {
+    public DefaultPointcutAdvisor validatePointcutAdvisor() {
         // advisor
         var advisor = new DefaultPointcutAdvisor();
         advisor.setPointcut(AnnotationMatchingPointcut.forMethodAnnotation(Validating.class));
-        advisor.setAdvice(interceptor);
+        advisor.setAdvice(new ValidateInterceptor(this.context));
         return advisor;
     }
 
