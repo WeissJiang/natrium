@@ -35,7 +35,8 @@ public class Nano100Handler implements Onion.Middleware<BotContext> {
     }
 
     @Override
-    public void via(@NotNull BotContext context, @NotNull Onion.Next next) throws Exception {
+    public void via(@NotNull BotContext context, Onion.@NotNull Next next) throws Exception {
+
         if (Bot.NANO_100.equals(context.bot().getName())) {
             this.fetchAndSendExtract(context);
         } else {

@@ -16,7 +16,7 @@ public class ExceptionHandler implements Onion.Middleware<BotContext> {
     private static final Logger log = LoggerFactory.getLogger(ExceptionHandler.class);
 
     @Override
-    public void via(@NotNull BotContext context, @NotNull Onion.Next next) {
+    public void via(@NotNull BotContext context, Onion.@NotNull Next next) {
         try {
             next.next();
         } catch (Exception ex) {

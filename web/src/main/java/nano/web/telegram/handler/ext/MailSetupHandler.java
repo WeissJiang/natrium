@@ -21,7 +21,7 @@ public class MailSetupHandler implements Onion.Middleware<BotContext> {
     }
 
     @Override
-    public void via(@NotNull BotContext context, @NotNull Onion.Next next) throws Exception {
+    public void via(@NotNull BotContext context, Onion.@NotNull Next next) throws Exception {
         var text = context.text();
         var bot = context.bot();
         if (Bot.NANO.equals(bot.getName()) && isSetMailCommand(text)) {

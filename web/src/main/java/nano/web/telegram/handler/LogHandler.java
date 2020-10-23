@@ -17,7 +17,7 @@ public class LogHandler implements Onion.Middleware<BotContext> {
     private static final Logger log = LoggerFactory.getLogger(LogHandler.class);
 
     @Override
-    public void via(@NotNull BotContext context, @NotNull Onion.Next next) throws Exception {
+    public void via(@NotNull BotContext context, Onion.@NotNull Next next) throws Exception {
         var parameters = context.getParameters();
         log.info("parameters: {}", Json.encode(parameters));
         // next

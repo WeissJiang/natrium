@@ -15,7 +15,7 @@ import java.util.Map;
 public class StartHandler implements Onion.Middleware<BotContext> {
 
     @Override
-    public void via(@NotNull BotContext context, @NotNull Onion.Next next) throws Exception {
+    public void via(@NotNull BotContext context, Onion.@NotNull Next next) throws Exception {
         var commands = context.commands();
         var bot = context.bot();
         if (commands.contains("/start") || commands.contains("/start@" + bot.getUsername())) {

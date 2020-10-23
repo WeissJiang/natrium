@@ -27,7 +27,7 @@ public class SessionInitializeHandler implements Onion.Middleware<BotContext> {
     }
 
     @Override
-    public void via(@NotNull BotContext context, @NotNull Onion.Next next) throws Exception {
+    public void via(@NotNull BotContext context, Onion.@NotNull Next next) throws Exception {
         try {
             // sync chat and user
             var chat = this.readChat(context);

@@ -17,7 +17,7 @@ import java.nio.file.Path;
 public class Nano233Handler implements Onion.Middleware<BotContext> {
 
     @Override
-    public void via(@NotNull BotContext context, @NotNull Onion.Next next) throws Exception {
+    public void via(@NotNull BotContext context, Onion.@NotNull Next next) throws Exception {
         if (Bot.NANO_233.equals(context.bot().getName())) {
             this.getSticker(context);
         } else {
