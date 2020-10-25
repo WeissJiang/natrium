@@ -1,7 +1,7 @@
 package nano.web.controller.nano;
 
 import nano.support.validation.Validated;
-import nano.web.controller.Result;
+import nano.support.Result;
 import nano.web.messageing.Exchanges;
 import nano.web.nano.NanoService;
 import org.springframework.amqp.rabbit.core.RabbitMessagingTemplate;

@@ -6,6 +6,7 @@ import nano.web.nano.ConfigVars;
 import nano.web.security.entity.NanoToken;
 import nano.web.security.entity.NanoUser;
 import nano.web.security.repository.TokenRepository;
+import org.jetbrains.annotations.Nls;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -158,7 +159,7 @@ public class SecurityService {
     /**
      * 验证Token
      */
-    public Map<NanoToken, String> verificateToken(NanoUser user, NanoToken telegramToken, String verificationCode) {
+    public Map<NanoToken, String> verifyToken(NanoUser user, NanoToken telegramToken, String verificationCode) {
         var nanoTokenList = this.tokenRepository.queryVerifyingToken(user.getUsername(), verificationCode);
         var result = new HashMap<NanoToken, String>();
         var now = Timestamp.from(Instant.now());
@@ -230,7 +231,7 @@ public class SecurityService {
         }
     }
 
-    public static void authState(boolean expression, String message) {
+    public static void authState(boolean expression, @Nls String message) {
         if (!expression) {
             throw new AuthenticationException(message);
         }

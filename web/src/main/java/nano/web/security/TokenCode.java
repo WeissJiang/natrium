@@ -1,5 +1,7 @@
 package nano.web.security;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.util.DigestUtils;
 
@@ -17,7 +19,7 @@ public abstract class TokenCode {
     /**
      * 生成随机6位验证码
      */
-    public static String generateVerificationCode() {
+    public static @NotNull String generateVerificationCode() {
         var randomInt = ThreadLocalRandom.current().nextInt(1_000_000);
         // left pad with '0'
         return String.format("%6d", randomInt).replaceAll(" ", "0");
@@ -26,20 +28,22 @@ public abstract class TokenCode {
     /**
      * 字符串是否为验证码
      */
-    public static boolean isVerificationCode(String text) {
+    @Contract(value = "null -> false", pure = true)
+    public static boolean isVerificationCode(@Nullable String text) {
         return text != null && text.matches("^[0-9]{6}$");
     }
 
     /**
      * 生成随机Token
      */
-    public static String generateToken() {
+    public static @NotNull String generateToken() {
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
 
     /**
      * 生成Token摘要
      */
+    @Contract(value = "null -> null", pure = true)
     public static String desensitizeToken(@Nullable String originalToken) {
         if (originalToken == null) {
             return null;

@@ -36,7 +36,9 @@ public class TelegramService {
 
     private final ConfigVars configVars;
 
-    public TelegramService(RestTemplate restTemplate, ConfigVars configVars) {
+    public TelegramService(@NotNull RestTemplate restTemplate, @NotNull ConfigVars configVars) {
+        Assert.notNull(restTemplate, "restTemplate must be not null");
+        Assert.notNull(configVars, "configVars must be not null");
         this.restTemplate = restTemplate;
         this.configVars = configVars;
     }

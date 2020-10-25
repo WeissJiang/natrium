@@ -1,6 +1,8 @@
 package nano.support;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -21,70 +23,70 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class Sugar {
 
-    public static <T> T findFirst(Collection<T> list, @NotNull Predicate<? super T> predicate) {
+    public static <T> @Nullable T findFirst(@Nullable Collection<T> list, @NotNull Predicate<? super T> predicate) {
         if (isEmpty(list)) {
             return null;
         }
-        Optional<T> ot = list.stream().filter(predicate).findFirst();
+        var ot = list.stream().filter(predicate).findFirst();
         return ot.orElse(null);
     }
 
-    public static <T, R> R reduce(Collection<T> list, @NotNull R identity, @NotNull BiFunction<R, ? super T, R> accumulator) {
+    public static <T, R> @NotNull R reduce(@Nullable Collection<T> list, @NotNull R identity, @NotNull BiFunction<R, ? super T, R> accumulator) {
         if (isEmpty(list)) {
             return identity;
         }
         return list.stream().reduce(identity, accumulator, (a, c) -> null);
     }
 
-    public static <T> List<T> filter(Collection<T> list, @NotNull Predicate<? super T> predicate) {
+    public static <T> @NotNull List<T> filter(@Nullable Collection<T> list, @NotNull Predicate<? super T> predicate) {
         if (isEmpty(list)) {
             return new ArrayList<>();
         }
         return list.stream().filter(predicate).collect(Collectors.toList());
     }
 
-    public static <T> boolean every(Collection<T> list, @NotNull Predicate<? super T> predicate) {
+    public static <T> boolean every(@Nullable Collection<T> list, @NotNull Predicate<? super T> predicate) {
         if (isEmpty(list)) {
             return false;
         }
         return list.stream().allMatch(predicate);
     }
 
-    public static <T> void forEach(Collection<T> list, @NotNull Consumer<? super T> action) {
+    public static <T> void forEach(@Nullable Collection<T> list, @NotNull Consumer<? super T> action) {
         if (isEmpty(list)) {
             return;
         }
         list.forEach(action);
     }
 
-    public static <T, R> List<R> map(Collection<T> list, @NotNull Function<? super T, ? extends R> mapper) {
+    public static <T, R> @NotNull List<R> map(@Nullable Collection<T> list, @NotNull Function<? super T, ? extends R> mapper) {
         if (isEmpty(list)) {
             return new ArrayList<>();
         }
         return list.stream().map(mapper).collect(Collectors.toList());
     }
 
-    public static <T, K> Map<K, T> toMap(Collection<T> list, @NotNull Function<? super T, ? extends K> keyExtractor) {
+    public static <T, K> @NotNull Map<K, T> toMap(@Nullable Collection<T> list, @NotNull Function<? super T, ? extends K> keyExtractor) {
         return toMap(list, keyExtractor, Function.identity());
     }
 
-    public static <T, K, V> Map<K, V> toMap(Collection<T> list,
-                                            @NotNull Function<? super T, ? extends K> keyExtractor,
-                                            @NotNull Function<? super T, ? extends V> valueExtractor) {
+    public static <T, K, V> @NotNull Map<K, V> toMap(@Nullable Collection<T> list,
+                                                     @NotNull Function<? super T, ? extends K> keyExtractor,
+                                                     @NotNull Function<? super T, ? extends V> valueExtractor) {
         if (isEmpty(list)) {
             return new HashMap<>();
         }
         return list.stream().collect(Collectors.toMap(keyExtractor, valueExtractor));
     }
 
-    public static <T> boolean includes(Collection<T> list, @NotNull Predicate<? super T> predicate) {
+    public static <T> boolean includes(@Nullable Collection<T> list, @NotNull Predicate<? super T> predicate) {
         if (isEmpty(list)) {
             return false;
         }
         return list.stream().anyMatch(predicate);
     }
 
-    public static <T> T getFirst(Collection<T> collection) {
+    public static <T> @Nullable T getFirst(@Nullable Collection<T> collection) {
         if (collection == null) {
             return null;
         }
@@ -96,7 +98,7 @@ public abstract class Sugar {
         return first;
     }
 
-    public static <T> T getLast(Collection<T> collection) {
+    public static <T> @Nullable T getLast(@Nullable Collection<T> collection) {
         if (collection == null) {
             return null;
         }
@@ -120,11 +122,12 @@ public abstract class Sugar {
      * @param scope    Map.of("name", "world")
      * @return "hello world"
      */
-    public static String render(@NotNull String template, @NotNull Map<String, ?> scope) {
+    public static @NotNull String render(@NotNull String template, @NotNull Map<String, ?> scope) {
         return Pattern.compile("(\\{(\\w+)})").matcher(template).replaceAll(mr -> requireNonNull(scope.get(mr.group(2)), mr.group(1) + " not found in scope").toString());
     }
 
-    public static boolean isEmpty(Collection<?> collection) {
+    @Contract(value = "null -> true", pure = true)
+    public static boolean isEmpty(@Nullable Collection<?> collection) {
         return collection == null || collection.isEmpty();
     }
 }

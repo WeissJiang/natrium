@@ -1,6 +1,6 @@
 package nano.web.controller.telegram;
 
-import nano.web.controller.Result;
+import nano.support.Result;
 import nano.web.security.Authorized;
 import nano.web.telegram.ChatService;
 import nano.web.telegram.TelegramService;

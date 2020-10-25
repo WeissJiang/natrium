@@ -1,6 +1,6 @@
 package nano.web.controller.security;
 
-import nano.web.controller.Result;
+import nano.support.Result;
 import nano.web.security.Authorized;
 import nano.web.security.SecurityService;
 import nano.web.security.Token;

@@ -1,5 +1,6 @@
-package nano.web.controller;
+package nano.support;
 
+import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -20,7 +21,7 @@ public class Result<T> {
     @Nullable
     private final T payload;
 
-    public Result(@Nullable String error, @Nullable T payload) {
+    public Result(@Nullable @Nls String error, @Nullable T payload) {
         this.error = error;
         this.payload = payload;
     }
@@ -59,7 +60,7 @@ public class Result<T> {
         return new Result<>(null, payload);
     }
 
-    public static Result<?> error(String error) {
+    public static Result<?> error(@Nls String error) {
         return new Result<>(error, null);
     }
 
