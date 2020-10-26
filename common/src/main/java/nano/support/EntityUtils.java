@@ -1,6 +1,7 @@
 package nano.support;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
 
@@ -18,7 +19,7 @@ public abstract class EntityUtils {
      * @param sql SQL
      * @return slimmed SQL
      */
-    public static String slim(@NotNull String sql) {
+    public static @NotNull String slim(@NotNull String sql) {
         return sql.replaceAll("\\s+", " ").trim();
     }
 
@@ -26,7 +27,7 @@ public abstract class EntityUtils {
      * @param clazz entity class
      * @return column name list
      */
-    public static List<String> entityColumnNames(Class<?> clazz) {
+    public static @NotNull List<@NotNull String> entityColumnNames(@NotNull Class<?> clazz) {
         var mappedColumns = new ArrayList<String>();
         PropertyDescriptor[] pds = BeanUtils.getPropertyDescriptors(clazz);
         for (var pd : pds) {
@@ -45,7 +46,7 @@ public abstract class EntityUtils {
      * @param name property name
      * @return underscore name
      */
-    public static String underscoreName(String name) {
+    public static @NotNull String underscoreName(@Nullable String name) {
         if (!StringUtils.hasLength(name)) {
             return "";
         }
@@ -63,7 +64,7 @@ public abstract class EntityUtils {
         return result.toString();
     }
 
-    private static String lowerCaseName(String name) {
+    private static @NotNull String lowerCaseName(@NotNull String name) {
         return name.toLowerCase(Locale.US);
     }
 
@@ -73,7 +74,7 @@ public abstract class EntityUtils {
      * @param name underscore name
      * @return property name
      */
-    public static String propertyName(String name) {
+    public static @NotNull String propertyName(@Nullable String name) {
         StringBuilder result = new StringBuilder();
         boolean nextIsUpper = false;
         if (name != null && name.length() > 0) {

@@ -6,11 +6,15 @@ import nano.web.telegram.BotContext;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
- * 记日志
+ * Write log
+ * <p>
+ * After {@link ExceptionHandler}
  */
+@Order(-100_000)
 @Component
 public class LogHandler implements Onion.Middleware<BotContext> {
 

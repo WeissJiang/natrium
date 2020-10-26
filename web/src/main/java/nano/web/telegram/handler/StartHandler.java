@@ -4,13 +4,17 @@ import nano.support.Onion;
 import nano.web.nano.Bot;
 import nano.web.telegram.BotContext;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
 /**
  * Start
+ * <p>
+ * After {@link AuthenticationHandler}
  */
+@Order(-100)
 @Component
 public class StartHandler implements Onion.Middleware<BotContext> {
 

@@ -9,12 +9,16 @@ import nano.web.telegram.BotContext;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 /**
  * 初始化会话
+ * <p>
+ * After {@link LogHandler}
  */
+@Order(-10_000)
 @Component
 public class SessionInitializeHandler implements Onion.Middleware<BotContext> {
 

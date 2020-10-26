@@ -130,4 +130,12 @@ public abstract class Sugar {
     public static boolean isEmpty(@Nullable Collection<?> collection) {
         return collection == null || collection.isEmpty();
     }
+
+    /**
+     * Type cast
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T cast(Object o) {
+        return (T) o;
+    }
 }

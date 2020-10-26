@@ -5,11 +5,15 @@ import nano.web.telegram.BotContext;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
  * 异常处理
+ * <p>
+ * Before all middleware
  */
+@Order(-1000_000)
 @Component
 public class ExceptionHandler implements Onion.Middleware<BotContext> {
 

@@ -11,6 +11,9 @@ import org.springframework.util.StringUtils;
 
 import static nano.support.mail.MailService.EMAIL;
 
+/**
+ * Mail setup handler
+ */
 @Component
 public class MailSetupHandler implements Onion.Middleware<BotContext> {
 

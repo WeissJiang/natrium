@@ -11,6 +11,9 @@ import org.springframework.util.StringUtils;
 
 import javax.mail.MessagingException;
 
+/**
+ * Mail handler
+ */
 @Component
 public class MailHandler implements Onion.Middleware<BotContext> {
 

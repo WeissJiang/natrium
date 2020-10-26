@@ -1,19 +1,22 @@
 package nano.web.telegram;
 
 import nano.support.Onion;
+import nano.support.Onion.Middleware;
+import nano.support.Sugar;
 import nano.web.nano.ConfigVars;
-import nano.web.telegram.handler.*;
-import nano.web.telegram.handler.ext.MailHandler;
-import nano.web.telegram.handler.ext.MailSetupHandler;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.Map;
+
+import static nano.support.Sugar.*;
 
 @Component
 public class BotHandler implements ApplicationContextAware {
@@ -24,24 +27,11 @@ public class BotHandler implements ApplicationContextAware {
 
     @PostConstruct
     public void init() {
-        var ctx = this.context;
-        var onion = this.onion;
-        // pre handle handlers
-        onion.use(ctx.getBean(ExceptionHandler.class));
-        onion.use(ctx.getBean(LogHandler.class));
-        onion.use(ctx.getBean(SessionInitializeHandler.class));
-        onion.use(ctx.getBean(AuthenticationHandler.class));
-        // start handler
-        onion.use(ctx.getBean(StartHandler.class));
-        // function handlers
-        onion.use(ctx.getBean(Nano026Handler.class));
-        onion.use(ctx.getBean(Nano100Handler.class));
-        onion.use(ctx.getBean(Nano233Handler.class));
-        onion.use(ctx.getBean(Nano262Handler.class));
-        onion.use(ctx.getBean(VerificationHandler.class));
-        // ext function handlers
-        onion.use(ctx.getBean(MailHandler.class));
-        onion.use(ctx.getBean(MailSetupHandler.class));
+        var middlewareMap = this.context.getBeansOfType(Middleware.class);
+        Assert.notEmpty(middlewareMap, "middlewareMap is empty");
+        var middlewares = new ArrayList<>(middlewareMap.values());
+        AnnotationAwareOrderComparator.sort(middlewares);
+        forEach(map(middlewares, Sugar::cast), this.onion::use);
     }
 
     @Async

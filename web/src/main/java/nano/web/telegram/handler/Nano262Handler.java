@@ -8,6 +8,9 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+/**
+ * Evaluate JavaScript
+ */
 @Component
 public class Nano262Handler implements Onion.Middleware<BotContext> {
 

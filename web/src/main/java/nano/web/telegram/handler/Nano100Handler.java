@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+/**
+ * Encyclopedia
+ */
 @Component
 public class Nano100Handler implements Onion.Middleware<BotContext> {
 

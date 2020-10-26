@@ -13,6 +13,9 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+/**
+ * Get sticker
+ */
 @Component
 public class Nano233Handler implements Onion.Middleware<BotContext> {
 

@@ -8,6 +8,9 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+/**
+ * ZH/EN translation
+ */
 @Component
 public class Nano026Handler implements Onion.Middleware<BotContext> {
 

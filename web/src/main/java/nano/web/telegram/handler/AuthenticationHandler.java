@@ -4,8 +4,15 @@ import nano.support.Onion;
 import nano.web.security.entity.NanoToken;
 import nano.web.telegram.BotContext;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+/**
+ * Authentication
+ * <p>
+ * After {@link SessionInitializeHandler}
+ */
+@Order(-1000)
 @Component
 public class AuthenticationHandler implements Onion.Middleware<BotContext> {
 
