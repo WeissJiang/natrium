@@ -2,11 +2,11 @@ package nano.web.telegram;
 
 import nano.support.Onion;
 import nano.support.Onion.Middleware;
-import nano.support.Sugar;
 import nano.web.nano.ConfigVars;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.ResolvableType;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -31,8 +31,15 @@ public class BotHandler implements ApplicationContextAware {
         Assert.notEmpty(middlewareMap, "middlewareMap is empty");
         var middlewares = new ArrayList<>(middlewareMap.values());
         AnnotationAwareOrderComparator.sort(middlewares);
-        // Dummy cast to suppress warning
-        forEach(map(middlewares, Sugar::cast), this.onion::use);
+        // Check and cast
+        forEach(map(middlewares, this::castMiddleware), this.onion::use);
+    }
+
+    private @NotNull Middleware<BotContext> castMiddleware(@NotNull Middleware<?> m) {
+        var resolvableType = ResolvableType.forClass(m.getClass());
+        var genericType = resolvableType.as(Middleware.class).getGeneric(0);
+        Assert.state(genericType.getType() == BotContext.class, "m is not instance of Middleware<BotContext>");
+        return cast(m);
     }
 
     @Async
