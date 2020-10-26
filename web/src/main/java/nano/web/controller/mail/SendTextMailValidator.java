@@ -1,7 +1,9 @@
 package nano.web.controller.mail;
 
+import nano.support.Arguments;
 import nano.support.mail.TextMail;
 import nano.support.validation.Validator;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -11,10 +13,9 @@ import org.springframework.util.StringUtils;
 public class SendTextMailValidator implements Validator {
 
     @Override
-    public @Nullable String validate(Object... args) {
-        Assert.state(args.length == 1, "args.length != 1");
-        Assert.isInstanceOf(TextMail.class, args[0], "arg0 is not instance of TextMail");
-        var textMail = (TextMail) args[0];
+    public @Nullable String validate(Object @NotNull ... args) {
+        var arguments = new Arguments(args);
+        var textMail = arguments.get(0, TextMail.class);
         if (StringUtils.isEmpty(textMail.getSubject())) {
             return "TextMail \"subject\" is empty";
         }

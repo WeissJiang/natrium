@@ -1,5 +1,6 @@
 package nano.support.validation;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -9,5 +10,5 @@ import org.jetbrains.annotations.Nullable;
 @FunctionalInterface
 public interface Validator {
 
-    @Nullable String validate(Object... args);
+    @Nullable String validate(Object @NotNull ... args);
 }

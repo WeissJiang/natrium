@@ -1,9 +1,10 @@
 package nano.web.controller.nano;
 
+import nano.support.Arguments;
 import nano.support.validation.Validator;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -13,9 +14,9 @@ import org.springframework.util.StringUtils;
 public class NanoMessageValidator implements Validator {
 
     @Override
-    public @Nullable String validate(Object... args) {
-        Assert.state(args.length == 1, "args.length != 1");
-        var m = args[0];
+    public @Nullable String validate(Object @NotNull ... args) {
+        var arguments = new Arguments(args);
+        var m = arguments.get(0, String.class);
         if (StringUtils.isEmpty(m)) {
             return "Illegal message body";
         }
