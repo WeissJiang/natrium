@@ -31,6 +31,7 @@ public class BotHandler implements ApplicationContextAware {
         Assert.notEmpty(middlewareMap, "middlewareMap is empty");
         var middlewares = new ArrayList<>(middlewareMap.values());
         AnnotationAwareOrderComparator.sort(middlewares);
+        // Dummy cast to suppress warning
         forEach(map(middlewares, Sugar::cast), this.onion::use);
     }
 
