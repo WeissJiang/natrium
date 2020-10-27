@@ -7,8 +7,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.Objects;
-
+import static java.util.Objects.hash;
 import static nano.support.Sugar.cast;
 
 /**
@@ -28,7 +27,8 @@ public class CacheInterceptor implements MethodInterceptor {
     }
 
     private static int getCacheKey(@NotNull MethodInvocation invocation) {
-        return Objects.hash(invocation.getThis(), invocation.getMethod(), invocation.getArguments());
+        var argumentsHash = hash(invocation.getArguments());
+        return hash(invocation.getThis(), invocation.getMethod(), argumentsHash);
     }
 
     private static Class<?> getRefClass(String refName) throws ClassNotFoundException {
