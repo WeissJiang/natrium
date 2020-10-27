@@ -74,7 +74,7 @@ public class SugarView extends AbstractTemplateView {
         if (producibleMimeTypes instanceof Set) {
             var mimeTypes = (Set<?>) producibleMimeTypes;
             if (!CollectionUtils.isEmpty(mimeTypes)) {
-                return getFirst(mimeTypes).toString();
+                return requireNonNull(getFirst(mimeTypes)).toString();
             }
         }
         return null;

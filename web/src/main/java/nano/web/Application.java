@@ -1,13 +1,15 @@
 package nano.web;
 
+import nano.support.cache.CacheInterceptor;
+import nano.support.cache.LocalCached;
 import nano.support.configuration.ConditionalOnRabbit;
 import nano.support.mail.MailService;
 import nano.support.templating.SugarViewResolver;
+import nano.support.validation.ValidateInterceptor;
 import nano.support.validation.Validated;
 import nano.support.validation.Validator;
 import nano.web.messageing.ExchangeDeclarer;
 import nano.web.nano.ConfigVars;
-import nano.support.validation.ValidateInterceptor;
 import nano.web.scripting.Scripting;
 import nano.web.security.AuthenticationInterceptor;
 import nano.web.security.Token;
@@ -85,6 +87,21 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder.build();
+    }
+
+    /**
+     * 缓存切面
+     *
+     * @see LocalCached
+     * @see CacheInterceptor
+     */
+    @Bean
+    public DefaultPointcutAdvisor cachePointcutAdvisor() {
+        // advisor
+        var advisor = new DefaultPointcutAdvisor();
+        advisor.setPointcut(AnnotationMatchingPointcut.forMethodAnnotation(LocalCached.class));
+        advisor.setAdvice(new CacheInterceptor());
+        return advisor;
     }
 
     /**
