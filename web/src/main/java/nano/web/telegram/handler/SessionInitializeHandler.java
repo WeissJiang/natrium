@@ -39,9 +39,9 @@ public class SessionInitializeHandler implements Onion.Middleware<BotContext> {
             // build session
             var session = this.buildSession(chat, user);
             context.setSession(session);
-            next.next();
         } catch (Exception ex) {
             log.warn("build session failed: {}", ex.getMessage());
+        } finally {
             next.next();
         }
     }

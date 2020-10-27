@@ -1,6 +1,7 @@
 package nano.web.baidu;
 
 import com.jayway.jsonpath.JsonPath;
+import nano.support.cache.LocalCached;
 import nano.web.nano.ConfigVars;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,7 @@ public class TranslationService {
         this.configVars = configVars;
     }
 
+    @LocalCached
     public String autoTranslate(String input) {
         var payload = new Payload();
         payload.setInput(input);
