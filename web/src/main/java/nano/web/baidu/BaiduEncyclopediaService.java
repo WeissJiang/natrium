@@ -7,7 +7,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.regex.Pattern;
 
 @Service
-public class BaikeService {
+public class BaiduEncyclopediaService {
 
     private static final Pattern pattern = Pattern.compile("<meta name=\"description\" content=\"(?<desc>.+)\">");
 
@@ -15,11 +15,11 @@ public class BaikeService {
 
     private final RestTemplate restTemplate;
 
-    public BaikeService(RestTemplate restTemplate) {
+    public BaiduEncyclopediaService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
-    public String getBaikeExtract(String keyword) {
+    public String getPageExtract(String keyword) {
         var url = QUERY_API + "{0}";
         var response = this.restTemplate.getForEntity(url, String.class, keyword);
         var body = response.getBody();
