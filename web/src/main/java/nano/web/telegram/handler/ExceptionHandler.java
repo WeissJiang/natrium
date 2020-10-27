@@ -25,13 +25,21 @@ public class ExceptionHandler implements Onion.Middleware<BotContext> {
             next.next();
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
-            sendMessageIfPossible(context, "nano fault: " + ex.getMessage());
+            trySendMessage(context, "nano fault: " + ex.getMessage());
         }
     }
 
-    private static void sendMessageIfPossible(BotContext context, String text) {
-        if (context.chatId() != null) {
+    /**
+     * Send message to terminal client if possible
+     */
+    private static void trySendMessage(BotContext context, String text) {
+        if (context.chatId() == null) {
+            return;
+        }
+        try {
             context.sendMessage(text);
+        } catch (Exception ex) {
+            log.warn(ex.getMessage());
         }
     }
 }
