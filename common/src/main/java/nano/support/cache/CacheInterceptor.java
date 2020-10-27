@@ -24,7 +24,11 @@ public class CacheInterceptor implements MethodInterceptor {
         var localCached = invocation.getMethod().getAnnotation(LocalCached.class);
         Assert.notNull(localCached, "LocalCached annotation is null");
         var ref = getRefClass(localCached.value());
-        return this.cache.get(Objects.hash(invocation.getArguments()), invocation::proceed, cast(ref));
+        return this.cache.get(getCacheKey(invocation), invocation::proceed, cast(ref));
+    }
+
+    private static int getCacheKey(@NotNull MethodInvocation invocation) {
+        return Objects.hash(invocation.getThis(), invocation.getMethod(), invocation.getArguments());
     }
 
     private static Class<?> getRefClass(String refName) throws ClassNotFoundException {
