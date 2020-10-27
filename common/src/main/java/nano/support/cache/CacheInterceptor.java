@@ -11,7 +11,6 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static java.util.Objects.hash;
 import static nano.support.Sugar.cast;
 
 /**
@@ -61,7 +60,7 @@ public class CacheInterceptor implements MethodInterceptor {
 
         @Override
         public int hashCode() {
-            int result = hash(target, method);
+            int result = Objects.hash(target, method);
             result = 31 * result + Arrays.hashCode(arguments);
             return result;
         }
