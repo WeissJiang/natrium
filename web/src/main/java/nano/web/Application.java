@@ -89,20 +89,20 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
         return builder.build();
     }
 
-    /**
-     * 缓存切面
-     *
-     * @see LocalCached
-     * @see CacheInterceptor
-     */
-    @Bean
-    public DefaultPointcutAdvisor cachePointcutAdvisor() {
-        // advisor
-        var advisor = new DefaultPointcutAdvisor();
-        advisor.setPointcut(AnnotationMatchingPointcut.forMethodAnnotation(LocalCached.class));
-        advisor.setAdvice(new CacheInterceptor());
-        return advisor;
-    }
+//    /**
+//     * 缓存切面
+//     *
+//     * @see LocalCached
+//     * @see CacheInterceptor
+//     */
+//    @Bean
+//    public DefaultPointcutAdvisor cachePointcutAdvisor() {
+//        // advisor
+//        var advisor = new DefaultPointcutAdvisor();
+//        advisor.setPointcut(AnnotationMatchingPointcut.forMethodAnnotation(LocalCached.class));
+//        advisor.setAdvice(new CacheInterceptor());
+//        return advisor;
+//    }
 
     /**
      * 校验切面

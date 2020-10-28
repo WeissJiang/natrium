@@ -9,8 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-import static nano.support.cache.ReferenceCache.SOFT_REFERENCE;
-
 @Component
 public class StaticDeps {
 
@@ -18,7 +16,7 @@ public class StaticDeps {
 
     private DocumentContext deps;
 
-    @LocalCached(SOFT_REFERENCE)
+    @LocalCached
     public String getModuleUrl(String moduleName) {
         var path = "$.%s.%s".formatted(this.activeProfile, moduleName);
         return this.deps.read(path);
