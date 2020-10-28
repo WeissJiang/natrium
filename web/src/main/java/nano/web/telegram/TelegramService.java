@@ -99,7 +99,6 @@ public class TelegramService {
     public Map<String, ?> call(@NotNull Bot bot, @NotNull String method, @NotNull Map<String, ?> payload) {
         var telegramApi = getTelegramApi(bot, method);
         var url = URI.create(telegramApi);
-
         var request = RequestEntity.post(url).body(payload);
         var response = this.restTemplate.exchange(request, STRING_OBJECT_MAP_TYPE);
         return response.getBody();

@@ -3,6 +3,7 @@ package nano.support.cache;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.cache.Cache;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 
 import java.lang.reflect.Method;
@@ -15,7 +16,15 @@ import java.util.concurrent.Callable;
  */
 public class CacheInterceptor implements MethodInterceptor {
 
-    private final ConcurrentMapCache cache = new ConcurrentMapCache("localCache@" + this.hashCode());
+    private final Cache cache;
+
+    public CacheInterceptor() {
+        this.cache = new ConcurrentMapCache("localCache@" + this.hashCode());
+    }
+
+    public CacheInterceptor(@NotNull Cache cache) {
+        this.cache = Objects.requireNonNull(cache, "cache is null");
+    }
 
     @Override
     public Object invoke(@NotNull MethodInvocation invocation) {

@@ -4,7 +4,6 @@ import nano.web.security.NanoPrivilege;
 
 import java.sql.Timestamp;
 import java.util.Objects;
-import java.util.StringJoiner;
 
 /**
  * Nano token

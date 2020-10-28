@@ -1,7 +1,6 @@
 package nano.web.security.entity;
 
 import java.util.Objects;
-import java.util.StringJoiner;
 
 /**
  * Telegram chat
