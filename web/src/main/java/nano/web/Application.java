@@ -1,7 +1,5 @@
 package nano.web;
 
-import nano.support.cache.CacheInterceptor;
-import nano.support.cache.LocalCached;
 import nano.support.configuration.ConditionalOnRabbit;
 import nano.support.mail.MailService;
 import nano.support.templating.SugarViewResolver;
@@ -88,21 +86,6 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder.build();
     }
-
-//    /**
-//     * 缓存切面
-//     *
-//     * @see LocalCached
-//     * @see CacheInterceptor
-//     */
-//    @Bean
-//    public DefaultPointcutAdvisor cachePointcutAdvisor() {
-//        // advisor
-//        var advisor = new DefaultPointcutAdvisor();
-//        advisor.setPointcut(AnnotationMatchingPointcut.forMethodAnnotation(LocalCached.class));
-//        advisor.setAdvice(new CacheInterceptor());
-//        return advisor;
-//    }
 
     /**
      * 校验切面

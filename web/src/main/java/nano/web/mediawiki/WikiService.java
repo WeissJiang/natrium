@@ -1,6 +1,5 @@
 package nano.web.mediawiki;
 
-import nano.support.cache.LocalCached;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,7 +16,6 @@ public class WikiService extends MediaWikiService {
         super(restTemplate);
     }
 
-    @LocalCached
     @Override
     public String getPageExtract(String title, String language) {
         return super.getPageExtract(title, language);

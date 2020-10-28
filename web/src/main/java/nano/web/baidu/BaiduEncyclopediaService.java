@@ -1,6 +1,5 @@
 package nano.web.baidu;
 
-import nano.support.cache.LocalCached;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
@@ -20,7 +19,6 @@ public class BaiduEncyclopediaService {
         this.restTemplate = restTemplate;
     }
 
-    @LocalCached
     public String getPageExtract(String keyword) {
         var url = QUERY_API + "{0}";
         var response = this.restTemplate.getForEntity(url, String.class, keyword);

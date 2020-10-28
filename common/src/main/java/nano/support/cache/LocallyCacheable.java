@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface LocalCached {
+public @interface LocallyCacheable {
 
     /**
      * local cache option

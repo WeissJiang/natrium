@@ -2,7 +2,6 @@ package nano.web.controller.view;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
-import nano.support.cache.LocalCached;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -16,7 +15,6 @@ public class StaticDeps {
 
     private DocumentContext deps;
 
-    @LocalCached
     public String getModuleUrl(String moduleName) {
         var path = "$.%s.%s".formatted(this.activeProfile, moduleName);
         return this.deps.read(path);
