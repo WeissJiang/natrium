@@ -1,6 +1,7 @@
 package nano.support.jdbc;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
@@ -31,8 +32,8 @@ public class SimpleJdbcSelect<T> {
     private NamedParameterJdbcTemplate jdbcTemplate;
     private String tableName;
 
-    private String[] whereEqualColumns;
-    private String[] whereInColumns;
+    private String[] whereEqualColumns = {};
+    private String[] whereInColumns = {};
     private String whereClause;
 
     private Integer limit;
@@ -48,22 +49,22 @@ public class SimpleJdbcSelect<T> {
         return this;
     }
 
-    public SimpleJdbcSelect<T> withTableName(String tableName) {
+    public SimpleJdbcSelect<T> withTableName(@NotNull String tableName) {
         this.tableName = tableName;
         return this;
     }
 
-    public SimpleJdbcSelect<T> whereEqual(String... whereEqualColumns) {
+    public SimpleJdbcSelect<T> whereEqual(String @NotNull ... whereEqualColumns) {
         this.whereEqualColumns = whereEqualColumns;
         return this;
     }
 
-    public SimpleJdbcSelect<T> whereIn(String... whereInColumns) {
+    public SimpleJdbcSelect<T> whereIn(String @NotNull ... whereInColumns) {
         this.whereInColumns = whereInColumns;
         return this;
     }
 
-    public SimpleJdbcSelect<T> whereClause(String whereClause) {
+    public SimpleJdbcSelect<T> whereClause(@NotNull String whereClause) {
         this.whereClause = whereClause;
         return this;
     }
@@ -80,12 +81,12 @@ public class SimpleJdbcSelect<T> {
         return this;
     }
 
-    public List<T> query(SqlParameterSource paramSource) {
+    public List<T> query(@NotNull SqlParameterSource paramSource) {
         this.jdbcTemplateProvided();
         return this.jdbcTemplate.query(this.getSql(false), paramSource, this.entityRowMapper);
     }
 
-    public List<T> query(Map<String, ?> paramMap) {
+    public List<T> query(@NotNull Map<String, ?> paramMap) {
         this.jdbcTemplateProvided();
         return this.jdbcTemplate.query(this.getSql(false), paramMap, this.entityRowMapper);
     }
@@ -95,13 +96,25 @@ public class SimpleJdbcSelect<T> {
         return this.jdbcTemplate.query(this.getSql(false), this.entityRowMapper);
     }
 
-    public int queryCount(SqlParameterSource paramSource) {
+    public @Nullable T queryOne(@NotNull SqlParameterSource paramSource) {
+        return getFirst(this.query(paramSource));
+    }
+
+    public @Nullable T queryOne(@NotNull Map<String, ?> paramMap) {
+        return getFirst(this.query(paramMap));
+    }
+
+    public @Nullable T queryOne() {
+        return getFirst(this.query());
+    }
+
+    public int queryCount(@NotNull SqlParameterSource paramSource) {
         this.jdbcTemplateProvided();
         var count = this.jdbcTemplate.query(this.getSql(true), paramSource, this.countRowMapper);
         return getCount(count);
     }
 
-    public int queryCount(Map<String, ?> paramMap) {
+    public int queryCount(@NotNull Map<String, ?> paramMap) {
         this.jdbcTemplateProvided();
         var count = this.jdbcTemplate.query(this.getSql(true), paramMap, this.countRowMapper);
         return getCount(count);
@@ -126,7 +139,7 @@ public class SimpleJdbcSelect<T> {
         Assert.hasText(this.tableName, "this.tableName");
         sb.append("SELECT ").append(columns).append(" FROM ").append(tableName);
         boolean firstWhereClause = true;
-        if (notEmpty(this.whereEqualColumns)) {
+        if (this.whereEqualColumns.length > 0) {
             Assert.state(this.whereClause == null, "\"whereEqualColumns\" and \"WhereClause\" cannot exist at the same time");
             for (String where : this.whereEqualColumns) {
                 var sourceName = propertyName(where);
@@ -138,7 +151,7 @@ public class SimpleJdbcSelect<T> {
                 }
             }
         }
-        if (notEmpty(this.whereInColumns)) {
+        if (this.whereInColumns.length > 0) {
             Assert.state(this.whereClause == null, "\"WhereInColumns\" and \"WhereClause\" cannot exist at the same time");
             for (String where : this.whereInColumns) {
                 var sourceName = propertyName(where);
@@ -169,12 +182,15 @@ public class SimpleJdbcSelect<T> {
         Assert.notNull(this.jdbcTemplate, "this.jdbcTemplate is null");
     }
 
-    private static boolean notEmpty(Object[] a) {
-        return a != null && a.length > 0;
-    }
-
-    private static int getCount(List<Integer> count) {
+    private static int getCount(@NotNull List<Integer> count) {
         Assert.state(count.size() == 1, "Unexpected count");
         return count.get(0);
+    }
+
+    private static <T> @Nullable T getFirst(@NotNull List<T> records) {
+        if (records.size() == 0) {
+            return null;
+        }
+        return records.get(0);
     }
 }

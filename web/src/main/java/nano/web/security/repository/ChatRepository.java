@@ -2,6 +2,8 @@ package nano.web.security.repository;
 
 import nano.support.jdbc.SimpleJdbcSelect;
 import nano.web.security.entity.NanoChat;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -10,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 import static nano.support.EntityUtils.slim;
-import static nano.support.Sugar.getFirst;
 
 @Repository
 public class ChatRepository {
@@ -21,21 +22,20 @@ public class ChatRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public NanoChat queryChat(Long id) {
+    public @Nullable NanoChat queryChat(@NotNull Long id) {
         var select = new SimpleJdbcSelect<>(NanoChat.class)
                 .withTableName("nano_chat").whereEqual("id").limit(1);
         var paramMap = Map.of("id", id);
-        var chatList = select.usesJdbcTemplate(this.jdbcTemplate).query(paramMap);
-        return getFirst(chatList);
+        return select.usesJdbcTemplate(this.jdbcTemplate).queryOne(paramMap);
     }
 
-    public List<NanoChat> queryChatList() {
+    public @NotNull List<NanoChat> queryChatList() {
         var select = new SimpleJdbcSelect<>(NanoChat.class)
                 .withTableName("nano_chat");
         return select.usesJdbcTemplate(this.jdbcTemplate).query();
     }
 
-    public void upsertChat(NanoChat nanoChat){
+    public void upsertChat(@NotNull NanoChat nanoChat) {
         var sql = """
                 INSERT INTO nano_chat (id, username, title, firstname, type)
                 VALUES (:id, :username, :title, :firstname, :type)

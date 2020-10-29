@@ -2,6 +2,8 @@ package nano.web.security.repository;
 
 import nano.support.jdbc.SimpleJdbcSelect;
 import nano.web.security.entity.NanoUser;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -22,21 +24,20 @@ public class UserRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public NanoUser queryUser(Long id) {
+    public @Nullable NanoUser queryUser(@NotNull Long id) {
         var select = new SimpleJdbcSelect<>(NanoUser.class)
                 .withTableName("nano_user").whereEqual("id").limit(1);
         var paramMap = Map.of("id", id);
-        var userList = select.usesJdbcTemplate(this.jdbcTemplate).query(paramMap);
-        return getFirst(userList);
+        return select.usesJdbcTemplate(this.jdbcTemplate).queryOne(paramMap);
     }
 
-    public List<NanoUser> queryUserList() {
+    public @NotNull List<NanoUser> queryUserList() {
         var select = new SimpleJdbcSelect<>(NanoUser.class)
                 .withTableName("nano_user");
         return select.usesJdbcTemplate(this.jdbcTemplate).query();
     }
 
-    public void upsertUser(NanoUser nanoUser) {
+    public void upsertUser(@NotNull NanoUser nanoUser) {
         var sql = """
                 INSERT INTO nano_user (id, username, firstname, is_bot, language_code, email)
                 VALUES (:id, :username, :firstname, :isBot, :languageCode, :email)
@@ -51,7 +52,7 @@ public class UserRepository {
         this.jdbcTemplate.update(slim(sql), paramSource);
     }
 
-    public NanoUser queryUserByToken(String token) {
+    public @Nullable NanoUser queryUserByToken(@NotNull String token) {
         var sql = """
                 SELECT nu.id            AS id,
                        nu.firstname     AS firstname,
@@ -69,6 +70,4 @@ public class UserRepository {
         var userList = this.jdbcTemplate.query(slim(sql), paramMap, rowMapper);
         return getFirst(userList);
     }
-
-
 }

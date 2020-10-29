@@ -23,12 +23,7 @@ public class FileCutter {
     private static final int BUFFER_SIZE = 8192;
     private static final String TEMP_FILE_PREFIX = "file-cutter";
 
-    private final Options options = new Options() {{
-        this.setFilename(getId());
-        this.setPartSuffix(".part");
-        // 50MB
-        this.setUnitSize(50_000_000);
-    }};
+    private final Options options = createDefaultOptions();
 
     public FileCutter() {
     }
@@ -39,10 +34,19 @@ public class FileCutter {
         setIfNotNull(options::getPartSuffix, this.options::setPartSuffix);
     }
 
+    private static @NotNull Options createDefaultOptions() {
+        var options = new Options();
+        options.setFilename(getId());
+        options.setPartSuffix(".part");
+        // 50MB
+        options.setUnitSize(50_000_000);
+        return options;
+    }
+
     /**
      * split files
      */
-    public Map<String, InputStreamSource> split(@NotNull InputStreamSource source) throws IOException {
+    public @NotNull Map<String, InputStreamSource> split(@NotNull InputStreamSource source) throws IOException {
         var is = source.getInputStream();
         try (is) {
 
@@ -76,7 +80,7 @@ public class FileCutter {
     /**
      * merge files
      */
-    public Pair<String, InputStreamSource> merge(@NotNull Map<String, InputStreamSource> partSourceMap) throws IOException {
+    public @NotNull Pair<String, InputStreamSource> merge(@NotNull Map<String, InputStreamSource> partSourceMap) throws IOException {
         var filename = this.options.getFilename();
         var tempFile = Files.createTempFile(TEMP_FILE_PREFIX, filename);
         tempFile.toFile().deleteOnExit();
@@ -98,7 +102,7 @@ public class FileCutter {
     /**
      * build zip file
      */
-    public InputStreamSource zip(Map<String, InputStreamSource> sourceMap) throws IOException {
+    public @NotNull InputStreamSource zip(@NotNull Map<String, InputStreamSource> sourceMap) throws IOException {
         var filename = this.options.getFilename();
         var zipFilename = filename + ".zip";
         var tempFile = Files.createTempFile(TEMP_FILE_PREFIX, zipFilename);
@@ -120,7 +124,7 @@ public class FileCutter {
     /**
      * get UUID
      */
-    private static String getId() {
+    private static @NotNull String getId() {
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
 

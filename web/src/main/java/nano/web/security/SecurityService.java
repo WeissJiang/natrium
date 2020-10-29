@@ -7,6 +7,8 @@ import nano.web.security.entity.NanoToken;
 import nano.web.security.entity.NanoUser;
 import nano.web.security.repository.TokenRepository;
 import org.jetbrains.annotations.Nls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -46,7 +48,7 @@ public class SecurityService {
     /**
      * Check nano API Key
      */
-    public void checkNanoApiKey(String key) {
+    public void checkNanoApiKey(@Nullable String key) {
         if (StringUtils.isEmpty(key)) {
             throw new AuthenticationException("Missing API key");
         }
@@ -59,7 +61,7 @@ public class SecurityService {
     /**
      * 检查Token权限
      */
-    public void checkTokenPrivilege(String token, List<NanoPrivilege> privilegeList) {
+    public void checkTokenPrivilege(@Nullable String token, @NotNull List<@NotNull NanoPrivilege> privilegeList) {
         authState(!StringUtils.isEmpty(token), "Missing token");
         var nanoToken = this.tokenRepository.queryToken(token);
         authState(nanoToken != null, "Illegal token");
@@ -72,7 +74,7 @@ public class SecurityService {
     /**
      * 删除Token，也作登出使用
      */
-    public void deleteTheToken(String token) {
+    public void deleteTheToken(@NotNull String token) {
         Assert.hasText(token, "Illegal token");
         this.tokenRepository.batchDeleteByToken(List.of(token));
     }
@@ -80,7 +82,7 @@ public class SecurityService {
     /**
      * 删除Token，Token管理
      */
-    public void deleteSpecificToken(String token, List<Integer> idList) {
+    public void deleteSpecificToken(@NotNull String token, List<Integer> idList) {
         var nanoTokenList = this.tokenRepository.queryTokenList(idList);
         if (CollectionUtils.isEmpty(nanoTokenList)) {
             return;
@@ -209,7 +211,7 @@ public class SecurityService {
     /**
      * 解析用户代理
      */
-    private static String parseUserAgent(String ua) {
+    private static @NotNull String parseUserAgent(@Nullable String ua) {
         try {
             Assert.notNull(userAgentParser, "userAgentParser is null");
             Assert.hasText(ua, "Illegal user agent");

@@ -2,6 +2,8 @@ package nano.web.security.repository;
 
 import nano.support.jdbc.SimpleJdbcSelect;
 import nano.web.security.entity.NanoToken;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -12,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import static nano.support.EntityUtils.slim;
-import static nano.support.Sugar.getFirst;
 
 @Repository
 public class TokenRepository {
@@ -23,28 +24,26 @@ public class TokenRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public NanoToken queryToken(String token) {
+    public @Nullable NanoToken queryToken(@NotNull String token) {
         var select = new SimpleJdbcSelect<>(NanoToken.class)
                 .withTableName("nano_token").whereEqual("token").limit(1);
-        var tokenList = select.usesJdbcTemplate(this.jdbcTemplate).query(Map.of("token", token));
-        return getFirst(tokenList);
+        return select.usesJdbcTemplate(this.jdbcTemplate).queryOne(Map.of("token", token));
     }
 
-    public NanoToken queryTokenIfValid(String token) {
+    public @Nullable NanoToken queryTokenIfValid(@NotNull String token) {
         var select = new SimpleJdbcSelect<>(NanoToken.class)
                 .withTableName("nano_token").whereEqual("token", "status").limit(1);
         var paramMap = Map.of("token", token, "status", NanoToken.VALID);
-        var tokenList = select.usesJdbcTemplate(this.jdbcTemplate).query(paramMap);
-        return getFirst(tokenList);
+        return select.usesJdbcTemplate(this.jdbcTemplate).queryOne(paramMap);
     }
 
-    public List<NanoToken> queryTokenList(List<Integer> idList) {
+    public @NotNull List<NanoToken> queryTokenList(@NotNull List<@NotNull Integer> idList) {
         var select = new SimpleJdbcSelect<>(NanoToken.class)
                 .withTableName("nano_token").whereIn("id");
         return select.usesJdbcTemplate(this.jdbcTemplate).query(Map.of("id", idList));
     }
 
-    public List<NanoToken> queryAssociatedTokenList(String token) {
+    public @NotNull List<NanoToken> queryAssociatedTokenList(@NotNull String token) {
         var select = new SimpleJdbcSelect<>(NanoToken.class)
                 .withTableName("nano_token").whereClause("""
                         WHERE status = 'VALID'
@@ -58,14 +57,14 @@ public class TokenRepository {
         return select.usesJdbcTemplate(this.jdbcTemplate).query(Map.of("token", token));
     }
 
-    public List<NanoToken> queryVerifyingToken(String username, String verificationCode) {
+    public @NotNull List<NanoToken> queryVerifyingToken(@NotNull String username, @NotNull String verificationCode) {
         var select = new SimpleJdbcSelect<>(NanoToken.class)
                 .withTableName("nano_token").whereEqual("status");
         var status = NanoToken.verifyingStatus(username, verificationCode);
         return select.usesJdbcTemplate(this.jdbcTemplate).query(Map.of("status", status));
     }
 
-    public List<String> queryVerifyingTimeoutToken() {
+    public @NotNull List<String> queryVerifyingTimeoutToken() {
         var sql = """
                 SELECT token
                 FROM nano_token
@@ -76,7 +75,7 @@ public class TokenRepository {
         return this.jdbcTemplate.query(slim(sql), rowMapper);
     }
 
-    public void createToken(NanoToken token) {
+    public void createToken(@NotNull NanoToken token) {
         var sql = """
                 INSERT INTO nano_token (token, name, chat_id, user_id, status, privilege,
                                         last_active_time, creation_time)
@@ -87,7 +86,7 @@ public class TokenRepository {
         this.jdbcTemplate.update(slim(sql), paramSource);
     }
 
-    public void updateToken(NanoToken token) {
+    public void updateToken(@NotNull NanoToken token) {
         var sql = """
                 UPDATE nano_token
                 SET chat_id          = :chatId,
@@ -101,7 +100,7 @@ public class TokenRepository {
         this.jdbcTemplate.update(slim(sql), paramSource);
     }
 
-    public void updateLastActiveTime(String token, Timestamp lastActiveTime) {
+    public void updateLastActiveTime(@NotNull String token, @NotNull Timestamp lastActiveTime) {
         var sql = """
                 UPDATE nano_token
                 SET last_active_time = :lastActiveTime
@@ -110,7 +109,7 @@ public class TokenRepository {
         this.jdbcTemplate.update(slim(sql), Map.of("token", token, "lastActiveTime", lastActiveTime));
     }
 
-    public void batchDeleteById(List<Integer> idList) {
+    public void batchDeleteById(@NotNull List<@NotNull Integer> idList) {
         var sql = """
                 DELETE
                 FROM nano_token
@@ -119,7 +118,7 @@ public class TokenRepository {
         this.jdbcTemplate.update(slim(sql), Map.of("idList", idList));
     }
 
-    public void batchDeleteByToken(List<String> tokenList) {
+    public void batchDeleteByToken(@NotNull List<@NotNull String> tokenList) {
         var sql = """
                 DELETE
                 FROM nano_token
@@ -128,7 +127,7 @@ public class TokenRepository {
         this.jdbcTemplate.update(slim(sql), Map.of("tokenList", tokenList));
     }
 
-    public List<NanoToken> queryUserTokenList(Long userId) {
+    public @NotNull List<NanoToken> queryUserTokenList(@NotNull Long userId) {
         var select = new SimpleJdbcSelect<>(NanoToken.class)
                 .withTableName("nano_token").whereEqual("user_id").limit(1);
         return select.usesJdbcTemplate(this.jdbcTemplate).query(Map.of("userId", userId));

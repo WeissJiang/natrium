@@ -8,6 +8,7 @@ import nano.web.security.model.Session;
 import nano.web.security.repository.ChatRepository;
 import nano.web.security.repository.TokenRepository;
 import nano.web.security.repository.UserRepository;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,21 +36,21 @@ public class SessionService {
     }
 
     @Transactional
-    public Session getSession(NanoChat chat, NanoUser user) {
+    public @NotNull Session getSession(@NotNull NanoChat chat, @NotNull NanoUser user) {
         this.updateOrCreateChatIfAbsent(chat);
         this.updateOrCreateUserIfAbsent(user);
         var token = this.getOrCreateTokenIfAbsent(user.getId(), chat.getId());
         return new Session(chat, user, token);
     }
 
-    private void updateOrCreateChatIfAbsent(NanoChat incomming) {
-        var exist = this.chatRepository.queryChat(incomming.getId());
-        if (!Objects.equals(exist, incomming)) {
-            this.chatRepository.upsertChat(incomming);
+    private void updateOrCreateChatIfAbsent(@NotNull NanoChat incoming) {
+        var exist = this.chatRepository.queryChat(incoming.getId());
+        if (!Objects.equals(exist, incoming)) {
+            this.chatRepository.upsertChat(incoming);
         }
     }
 
-    private void updateOrCreateUserIfAbsent(NanoUser incoming) {
+    private void updateOrCreateUserIfAbsent(@NotNull NanoUser incoming) {
         var exist = this.userRepository.queryUser(incoming.getId());
         if (exist == null) {
             this.userRepository.upsertUser(incoming);
@@ -68,7 +69,7 @@ public class SessionService {
     /**
      * Whether user changed
      */
-    private static boolean userNotChanged(NanoUser incoming, NanoUser exist) {
+    private static boolean userNotChanged(@NotNull NanoUser incoming, @NotNull NanoUser exist) {
         List<Function<NanoUser, ?>> getterList = List.of(
                 NanoUser::getUsername,
                 NanoUser::getFirstname,
@@ -81,7 +82,7 @@ public class SessionService {
         });
     }
 
-    private NanoToken getOrCreateTokenIfAbsent(Long userId, Long chatId) {
+    private @NotNull NanoToken getOrCreateTokenIfAbsent(@NotNull Long userId, @NotNull Long chatId) {
         var tokenKey = "%s-%s".formatted(userId, chatId);
         var token = this.tokenRepository.queryToken(tokenKey);
         var now = Timestamp.from(Instant.now());
