@@ -20,7 +20,7 @@ public class Scripting {
 
     private String base64Script;
 
-    public String eval(@NotNull String script) {
+    public @NotNull String eval(@NotNull String script) {
         try {
             // eval
             var value = this.getContext().eval("js", script);

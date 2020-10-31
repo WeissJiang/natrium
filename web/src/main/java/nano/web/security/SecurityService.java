@@ -115,7 +115,7 @@ public class SecurityService {
      * 创建验证中的Token
      * 不保存原始Token，保存脱敏后的Token
      */
-    public Map<String, String> createVerifyingToken(String username, String ua) {
+    public @NotNull Map<String, String> createVerifyingToken(@NotNull String username, String ua) {
         var originalToken = generateToken();
         var token = new NanoToken();
         token.setToken(TokenCode.desensitizeToken(originalToken));
@@ -133,7 +133,7 @@ public class SecurityService {
     /**
      * 检查Token验证状态
      */
-    public Map<String, String> getTokenVerification(String token) {
+    public @NotNull Map<String, String> getTokenVerification(@NotNull String token) {
         var nanoToken = this.tokenRepository.queryToken(token);
         Assert.state(nanoToken != null, "Token not found");
         var status = nanoToken.getStatus();

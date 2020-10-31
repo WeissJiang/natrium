@@ -44,56 +44,53 @@ public class SimpleJdbcSelect<T> {
         this.entityRowMapper = new BeanPropertyRowMapper<>(entityClass);
     }
 
-    public SimpleJdbcSelect<T> usesJdbcTemplate(NamedParameterJdbcTemplate jdbcTemplate) {
+    public @NotNull SimpleJdbcSelect<T> usesJdbcTemplate(@NotNull NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         return this;
     }
 
-    public SimpleJdbcSelect<T> withTableName(@NotNull String tableName) {
+    public @NotNull SimpleJdbcSelect<T> withTableName(@NotNull String tableName) {
         this.tableName = tableName;
         return this;
     }
 
-    public SimpleJdbcSelect<T> whereEqual(String @NotNull ... whereEqualColumns) {
+    public @NotNull SimpleJdbcSelect<T> whereEqual(String @NotNull ... whereEqualColumns) {
         this.whereEqualColumns = whereEqualColumns;
         return this;
     }
 
-    public SimpleJdbcSelect<T> whereIn(String @NotNull ... whereInColumns) {
+    public @NotNull SimpleJdbcSelect<T> whereIn(String @NotNull ... whereInColumns) {
         this.whereInColumns = whereInColumns;
         return this;
     }
 
-    public SimpleJdbcSelect<T> whereClause(@NotNull String whereClause) {
+    public @NotNull SimpleJdbcSelect<T> whereClause(@NotNull String whereClause) {
         this.whereClause = whereClause;
         return this;
     }
 
-    public SimpleJdbcSelect<T> limit(int limit) {
+    public @NotNull SimpleJdbcSelect<T> limit(int limit) {
         Assert.isTrue(limit >= 0, "limit < 0");
         this.limit = limit;
         return this;
     }
 
-    public SimpleJdbcSelect<T> offset(int offset) {
+    public @NotNull SimpleJdbcSelect<T> offset(int offset) {
         Assert.isTrue(offset >= 0, "offset < 0");
         this.offset = offset;
         return this;
     }
 
-    public List<T> query(@NotNull SqlParameterSource paramSource) {
-        this.jdbcTemplateProvided();
-        return this.jdbcTemplate.query(this.getSql(false), paramSource, this.entityRowMapper);
+    public @NotNull List<T> query(@NotNull SqlParameterSource paramSource) {
+        return this.jdbcTemplate().query(this.getSql(false), paramSource, this.entityRowMapper);
     }
 
-    public List<T> query(@NotNull Map<String, ?> paramMap) {
-        this.jdbcTemplateProvided();
-        return this.jdbcTemplate.query(this.getSql(false), paramMap, this.entityRowMapper);
+    public @NotNull List<T> query(@NotNull Map<String, ?> paramMap) {
+        return this.jdbcTemplate().query(this.getSql(false), paramMap, this.entityRowMapper);
     }
 
-    public List<T> query() {
-        this.jdbcTemplateProvided();
-        return this.jdbcTemplate.query(this.getSql(false), this.entityRowMapper);
+    public @NotNull List<T> query() {
+        return this.jdbcTemplate().query(this.getSql(false), this.entityRowMapper);
     }
 
     public @Nullable T queryOne(@NotNull SqlParameterSource paramSource) {
@@ -109,26 +106,23 @@ public class SimpleJdbcSelect<T> {
     }
 
     public int queryCount(@NotNull SqlParameterSource paramSource) {
-        this.jdbcTemplateProvided();
-        var count = this.jdbcTemplate.query(this.getSql(true), paramSource, this.countRowMapper);
+        var count = this.jdbcTemplate().query(this.getSql(true), paramSource, this.countRowMapper);
         return getCount(count);
     }
 
     public int queryCount(@NotNull Map<String, ?> paramMap) {
-        this.jdbcTemplateProvided();
-        var count = this.jdbcTemplate.query(this.getSql(true), paramMap, this.countRowMapper);
+        var count = this.jdbcTemplate().query(this.getSql(true), paramMap, this.countRowMapper);
         return getCount(count);
 
     }
 
     public int queryCount() {
-        this.jdbcTemplateProvided();
-        var count = this.jdbcTemplate.query(this.getSql(true), this.countRowMapper);
+        var count = this.jdbcTemplate().query(this.getSql(true), this.countRowMapper);
         return getCount(count);
     }
 
 
-    public String getSql(boolean count) {
+    public @NotNull String getSql(boolean count) {
         var sb = new StringBuilder();
         String columns;
         if (count) {
@@ -178,8 +172,9 @@ public class SimpleJdbcSelect<T> {
         return sb.append(";").toString();
     }
 
-    private void jdbcTemplateProvided() {
+    private @NotNull NamedParameterJdbcTemplate jdbcTemplate() {
         Assert.notNull(this.jdbcTemplate, "this.jdbcTemplate is null");
+        return this.jdbcTemplate;
     }
 
     private static int getCount(@NotNull List<Integer> count) {

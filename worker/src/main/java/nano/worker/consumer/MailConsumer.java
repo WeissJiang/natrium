@@ -3,6 +3,7 @@ package nano.worker.consumer;
 import nano.support.Json;
 import nano.support.mail.MailService;
 import nano.support.mail.TextMail;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.Queue;
@@ -21,13 +22,13 @@ public class MailConsumer {
     private MailService mailService;
 
     @RabbitListener(queuesToDeclare = @Queue("mail.text"))
-    public void consume(TextMail mail) throws MessagingException {
+    public void consume(@NotNull TextMail mail) throws MessagingException {
         log.info("send mail: {}", Json.encode(mail));
         this.mailService.sendTextMail(mail);
     }
 
     @Autowired
-    public void setMailService(MailService mailService) {
+    public void setMailService(@NotNull MailService mailService) {
         this.mailService = mailService;
     }
 }

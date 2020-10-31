@@ -1,5 +1,6 @@
 package nano.web.nano;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -47,7 +48,7 @@ public class NanoService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public String system() {
+    public @NotNull String system() {
         var nano = new StringBuilder();
         nano.append("Postgres: ").append(this.getPostgresVersion()).append("\n");
         for (String key : SYSTEM_PROPERTIES) {
@@ -73,7 +74,7 @@ public class NanoService {
         return nano.toString();
     }
 
-    public String getPostgresVersion() {
+    public @NotNull String getPostgresVersion() {
         try {
             var mapper = new SingleColumnRowMapper<String>();
             var version = this.jdbcTemplate.query("SELECT VERSION();", mapper);
@@ -85,7 +86,7 @@ public class NanoService {
     }
 
 
-    private String megabytes(long bytes) {
+    private @NotNull String megabytes(long bytes) {
         return "%sMB".formatted(DataSize.ofBytes(bytes).toMegabytes());
     }
 

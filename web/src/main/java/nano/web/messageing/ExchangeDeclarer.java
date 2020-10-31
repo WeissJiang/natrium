@@ -1,5 +1,6 @@
 package nano.web.messageing;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class ExchangeDeclarer {
     }
 
     @Autowired
-    public void setAmqpAdmin(AmqpAdmin amqpAdmin) {
+    public void setAmqpAdmin(@NotNull AmqpAdmin amqpAdmin) {
         this.amqpAdmin = amqpAdmin;
     }
 }

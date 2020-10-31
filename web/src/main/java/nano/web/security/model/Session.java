@@ -3,6 +3,8 @@ package nano.web.security.model;
 import nano.web.security.entity.NanoChat;
 import nano.web.security.entity.NanoToken;
 import nano.web.security.entity.NanoUser;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,26 +12,27 @@ import java.util.Map;
 public class Session {
 
     private final Map<String, Object> attributes = new HashMap<>();
+
     private final NanoChat chat;
     private final NanoUser user;
     private final NanoToken token;
 
-    public Session(NanoChat chat, NanoUser user, NanoToken token) {
+    public Session(@NotNull NanoChat chat, @NotNull NanoUser user, @NotNull NanoToken token) {
         this.chat = chat;
         this.user = user;
         this.token = token;
     }
 
-    public <T> T getAttribute(String key, Class<T> clazz) {
+    public <T> @Nullable T getAttribute(@NotNull String key, @NotNull Class<T> clazz) {
         var attribute = this.getAttribute(key);
         return clazz.cast(attribute);
     }
 
-    public Object getAttribute(String key) {
+    public @Nullable Object getAttribute(@NotNull String key) {
         return this.attributes.get(key);
     }
 
-    public void putAttribute(String key, String value) {
+    public void putAttribute(@NotNull String key, String value) {
         this.attributes.put(key, value);
     }
 
@@ -37,15 +40,15 @@ public class Session {
         return attributes;
     }
 
-    public NanoChat getChat() {
+    public @NotNull NanoChat getChat() {
         return chat;
     }
 
-    public NanoUser getUser() {
+    public @NotNull NanoUser getUser() {
         return user;
     }
 
-    public NanoToken getToken() {
+    public @NotNull NanoToken getToken() {
         return token;
     }
 }

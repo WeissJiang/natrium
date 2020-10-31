@@ -35,11 +35,11 @@ public class UserService {
     /**
      * 根据Token获取关联的User
      */
-    public UserDTO getUserByToken(String token) {
+    public @NotNull UserDTO getUserByToken(@NotNull String token) {
         this.tokenRepository.updateLastActiveTime(token, Timestamp.from(Instant.now()));
         var user = this.userRepository.queryUserByToken(token);
         Assert.notNull(user, "Token is not associated with a user");
-        return convert(user);
+        return convertToUserDTO(user);
     }
 
     public void createOrUpdateUser(NanoUser user) {
@@ -67,10 +67,10 @@ public class UserService {
 
     public List<UserDTO> getUserList() {
         var userList = this.userRepository.queryUserList();
-        return map(userList, UserService::convert);
+        return map(userList, UserService::convertToUserDTO);
     }
 
-    private static UserDTO convert(@NotNull NanoUser user) {
+    private static @NotNull UserDTO convertToUserDTO(@NotNull NanoUser user) {
         var userDTO = new UserDTO();
         userDTO.setId(String.valueOf(user.getId()));
         userDTO.setUsername(user.getUsername());
