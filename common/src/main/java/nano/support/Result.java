@@ -1,6 +1,7 @@
 package nano.support;
 
 import org.jetbrains.annotations.Nls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -15,13 +16,10 @@ public class Result<T> {
 
     private static final Result<?> EMPTY = new Result<>(null, null);
 
-    @Nullable
-    private final String error;
+    private final @Nullable String error;
+    private final @Nullable T payload;
 
-    @Nullable
-    private final T payload;
-
-    public Result(@Nullable @Nls String error, @Nullable T payload) {
+    public Result(@Nls @Nullable String error, @Nullable T payload) {
         this.error = error;
         this.payload = payload;
     }
@@ -49,23 +47,23 @@ public class Result<T> {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return new StringJoiner(", ", Result.class.getSimpleName() + "[", "]")
                 .add("error='" + error + "'")
                 .add("payload=" + payload)
                 .toString();
     }
 
-    public static <U> Result<U> of(U payload) {
+    public static @NotNull <U> Result<U> of(U payload) {
         return new Result<>(null, payload);
     }
 
-    public static Result<?> error(@Nls String error) {
+    public static @NotNull Result<?> error(@Nls String error) {
         return new Result<>(error, null);
     }
 
     @SuppressWarnings("unchecked")
-    public static <U> Result<U> empty() {
+    public static <U> @NotNull Result<U> empty() {
         return (Result<U>) EMPTY;
     }
 }

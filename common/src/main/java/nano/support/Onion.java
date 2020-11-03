@@ -38,7 +38,7 @@ public class Onion<T> {
     }
 
     @SafeVarargs
-    public static @NotNull <U> Middleware<U> compose(@NotNull Middleware<U>... middlewares) {
+    public static @NotNull <U> Middleware<U> compose(@NotNull Middleware<U> @NotNull ... middlewares) {
         return Arrays.stream(middlewares).reduce((ctx, nxt) -> nxt.next(), (before, after) -> (ctx, nxt) -> before.via(ctx, () -> after.via(ctx, nxt)));
     }
 }
