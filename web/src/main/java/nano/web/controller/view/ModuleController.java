@@ -1,10 +1,18 @@
 package nano.web.controller.view;
 
+import com.jayway.jsonpath.JsonPath;
 import nano.web.scripting.Scripting;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/modules")
@@ -12,10 +20,14 @@ public class ModuleController {
 
     private static final String MODULE_TEMPLATE = "module_template.mjs";
 
-    private final StaticDeps staticDeps;
+    private final Map<String, String> moduleUrlMap = new HashMap<>();
 
-    public ModuleController(StaticDeps staticDeps) {
-        this.staticDeps = staticDeps;
+    public ModuleController(@NotNull @Value("classpath:/static/deps.json") Resource depsJson,
+                            @NotNull @Value("${spring.profiles.active}") String activeProfile) throws IOException {
+        try (var is = depsJson.getInputStream()) {
+            Map<String, String> deps = JsonPath.parse(is).read("$.%s".formatted(activeProfile));
+            this.moduleUrlMap.putAll(deps);
+        }
     }
 
     @GetMapping(path = "/react", produces = Scripting.TEXT_JAVASCRIPT)
@@ -46,7 +58,7 @@ public class ModuleController {
      * @return module url
      */
     private String getUrl(String moduleName) {
-        return this.staticDeps.getModuleUrl(moduleName);
+        return this.moduleUrlMap.get(moduleName);
     }
 
 }
