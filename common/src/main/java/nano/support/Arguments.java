@@ -15,8 +15,12 @@ public class Arguments {
         return clazz.cast(this.args[index]);
     }
 
+    public int length() {
+        return this.args.length;
+    }
+
     private void checkIndex(int index) {
-        if (index < 0 || index >= this.args.length) {
+        if (index < 0 || index >= this.length()) {
             throw new IllegalArgumentException("The index exceeds the length of args");
         }
     }
