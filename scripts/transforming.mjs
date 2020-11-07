@@ -14,14 +14,15 @@ export async function transformEsm(filePath) {
         transformEsm.service = await build.startService()
     }
     const input = await readFileAsString(filePath)
-    const { js, warnings } = await transformEsm.service.transform(input, {
+    const transformed = await transformEsm.service.transform(input, {
         target: 'es2018',
         loader: 'jsx'
     })
+    const { code, warnings } = transformed
     if (warnings.length) {
         console.warn(...warnings)
     }
-    return js
+    return code
 }
 
 export async function transformCss(filePath) {
