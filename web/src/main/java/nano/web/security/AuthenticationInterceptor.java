@@ -32,7 +32,9 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             }
             if (authorized != null) {
                 var token = request.getHeader(X_TOKEN);
-                this.securityService.checkTokenPrivilege(desensitizeToken(token), List.of(authorized.value()));
+                var desensitizedToken = desensitizeToken(token);
+                this.securityService.checkTokenPrivilege(desensitizedToken, List.of(authorized.value()));
+                request.setAttribute(DESENSITIZED_X_TOKEN, desensitizedToken);
             }
         }
         return true;

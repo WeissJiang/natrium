@@ -16,6 +16,8 @@ public abstract class TokenCode {
 
     public static final String X_TOKEN = "X-Token";
 
+    public static final String DESENSITIZED_X_TOKEN = "DESENSITIZED_X_TOKEN";
+
     /**
      * 生成随机6位验证码
      */

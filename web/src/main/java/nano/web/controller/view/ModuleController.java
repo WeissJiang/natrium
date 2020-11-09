@@ -2,7 +2,6 @@ package nano.web.controller.view;
 
 import com.jayway.jsonpath.JsonPath;
 import nano.web.scripting.Scripting;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
@@ -22,11 +21,10 @@ public class ModuleController {
 
     private final Map<String, String> moduleUrlMap = new HashMap<>();
 
-    public ModuleController(@NotNull @Value("classpath:/static/deps.json") Resource depsJson,
-                            @NotNull @Value("${spring.profiles.active}") String activeProfile) throws IOException {
+    public ModuleController(@Value("classpath:/static/deps.json") Resource depsJson,
+                            @Value("${spring.profiles.active}") String activeProfile) throws IOException {
         try (var is = depsJson.getInputStream()) {
-            Map<String, String> deps = JsonPath.parse(is).read("$.%s".formatted(activeProfile));
-            this.moduleUrlMap.putAll(deps);
+            this.moduleUrlMap.putAll(JsonPath.parse(is).read("$.%s".formatted(activeProfile)));
         }
     }
 

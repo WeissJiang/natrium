@@ -9,8 +9,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import static nano.web.security.TokenCode.X_TOKEN;
-import static nano.web.security.TokenCode.desensitizeToken;
+import static nano.web.security.TokenCode.*;
+import static org.springframework.web.context.request.RequestAttributes.SCOPE_REQUEST;
 
 /**
  * Resolve token argument
@@ -29,8 +29,12 @@ public class TokenArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public String resolveArgument(@NotNull MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   @NotNull NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        var token = webRequest.getHeader(X_TOKEN);
-        Assert.notNull(token, "Missing token");
-        return desensitizeToken(token);
+        var desensitizedToken = (String) webRequest.getAttribute(DESENSITIZED_X_TOKEN, SCOPE_REQUEST);
+        if (desensitizedToken == null) {
+            var token = webRequest.getHeader(X_TOKEN);
+            Assert.notNull(token, "Missing token");
+            desensitizedToken = desensitizeToken(token);
+        }
+        return desensitizedToken;
     }
 }
