@@ -5,8 +5,8 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.cache.Cache;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
+import org.springframework.util.Assert;
 
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.Callable;
@@ -28,10 +28,13 @@ public class CacheInterceptor implements MethodInterceptor {
 
     @Override
     public Object invoke(@NotNull MethodInvocation invocation) {
-        return this.cache.get(new CacheKey(invocation), getValueLoader(invocation));
+        var locallyCacheable = invocation.getMethod().getAnnotation(LocallyCacheable.class);
+        Assert.notNull(locallyCacheable, "LocallyCacheable annotation missing");
+        var cacheKey = new CacheKey(locallyCacheable.value(), invocation.getArguments());
+        return this.cache.get(cacheKey, getValueLoader(invocation));
     }
 
-    private Callable<Object> getValueLoader(@NotNull MethodInvocation invocation) {
+    private static Callable<Object> getValueLoader(@NotNull MethodInvocation invocation) {
         return () -> {
             try {
                 return invocation.proceed();
@@ -50,14 +53,12 @@ public class CacheInterceptor implements MethodInterceptor {
      */
     public static class CacheKey {
 
-        private final Object target;
-        private final Method method;
+        private final String prefix;
         private final Object[] arguments;
 
-        public CacheKey(@NotNull MethodInvocation invocation) {
-            this.target = invocation.getThis();
-            this.method = invocation.getMethod();
-            this.arguments = invocation.getArguments();
+        public CacheKey(@NotNull String prefix, @NotNull Object[] arguments) {
+            this.prefix = prefix;
+            this.arguments = arguments;
         }
 
         @Override
@@ -65,14 +66,13 @@ public class CacheInterceptor implements MethodInterceptor {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             CacheKey cacheKey = (CacheKey) o;
-            return Objects.equals(target, cacheKey.target) &&
-                   Objects.equals(method, cacheKey.method) &&
+            return Objects.equals(prefix, cacheKey.prefix) &&
                    Arrays.equals(arguments, cacheKey.arguments);
         }
 
         @Override
         public int hashCode() {
-            int result = Objects.hash(target, method);
+            int result = Objects.hash(prefix);
             result = 31 * result + Arrays.hashCode(arguments);
             return result;
         }

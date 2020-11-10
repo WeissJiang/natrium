@@ -7,8 +7,5 @@ import java.lang.annotation.*;
 @Documented
 public @interface LocallyCacheable {
 
-    /**
-     * local cache option
-     */
     String value() default "";
 }
