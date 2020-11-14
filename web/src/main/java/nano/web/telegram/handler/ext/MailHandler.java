@@ -7,7 +7,7 @@ import nano.web.nano.Bot;
 import nano.web.telegram.BotContext;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 import javax.mail.MessagingException;
 
@@ -36,12 +36,12 @@ public class MailHandler implements Onion.Middleware<BotContext> {
 
     private void trySendMail(BotContext context) throws MessagingException {
         var email = context.getSession().getUser().getEmail();
-        if (StringUtils.isEmpty(email)) {
+        if (ObjectUtils.isEmpty(email)) {
             context.replyMessage("邮箱📮未设置，发送/setmail设置邮箱，如：\n/setmail somename@example.com");
             return;
         }
         var message = getMailBody(context.text());
-        if (StringUtils.isEmpty(message)) {
+        if (ObjectUtils.isEmpty(message)) {
             context.replyMessage("Mail内容为空，发送邮件：/mail {message}");
             return;
         }
@@ -59,7 +59,7 @@ public class MailHandler implements Onion.Middleware<BotContext> {
 
     private static boolean isMailCommand(String text) {
         int len = "/mail ".length();
-        if (StringUtils.isEmpty(text) || text.length() < len) {
+        if (ObjectUtils.isEmpty(text) || text.length() < len) {
             return false;
         }
         return "/mail ".equalsIgnoreCase(text.substring(0, len));

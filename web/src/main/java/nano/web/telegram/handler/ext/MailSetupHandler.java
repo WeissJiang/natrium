@@ -7,7 +7,7 @@ import nano.web.security.UserService;
 import nano.web.telegram.BotContext;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 import static nano.support.mail.MailService.EMAIL;
 
@@ -52,7 +52,7 @@ public class MailSetupHandler implements Onion.Middleware<BotContext> {
 
     private static boolean isSetMailCommand(String text) {
         int len = "/setmail ".length();
-        if (StringUtils.isEmpty(text) || text.length() < len) {
+        if (ObjectUtils.isEmpty(text) || text.length() < len) {
             return false;
         }
         return "/setmail ".equalsIgnoreCase(text.substring(0, len));

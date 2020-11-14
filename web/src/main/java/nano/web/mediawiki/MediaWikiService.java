@@ -2,7 +2,7 @@ package nano.web.mediawiki;
 
 import com.jayway.jsonpath.JsonPath;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriUtils;
 
@@ -24,7 +24,7 @@ public abstract class MediaWikiService {
         var queryApi = this.getQueryApi(language);
         var response = this.restTemplate.getForEntity(queryApi, String.class, title);
         var body = response.getBody();
-        if (StringUtils.isEmpty(body)) {
+        if (ObjectUtils.isEmpty(body)) {
             return null;
         }
         var documentContext = JsonPath.parse(body);
@@ -34,7 +34,7 @@ public abstract class MediaWikiService {
         }
         var extract = extractList.get(0);
         var url = this.getPageUrl(language, encodeTitle(title));
-        if (StringUtils.isEmpty(extract)) {
+        if (ObjectUtils.isEmpty(extract)) {
             return url;
         }
         return extract + "\n" + url;

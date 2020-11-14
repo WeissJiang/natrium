@@ -6,7 +6,7 @@ import nano.web.nano.Bot;
 import nano.web.telegram.BotContext;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 /**
  * ZH/EN translation
@@ -31,7 +31,7 @@ public class Nano026Handler implements Onion.Middleware<BotContext> {
 
     private void translate(BotContext context) {
         var text = context.text();
-        if (StringUtils.isEmpty(text)) {
+        if (ObjectUtils.isEmpty(text)) {
             context.sendMessage("⚠️The content is empty, please input the text to be translated");
             return;
         }

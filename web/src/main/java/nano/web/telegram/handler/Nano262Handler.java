@@ -6,7 +6,7 @@ import nano.web.scripting.Scripting;
 import nano.web.telegram.BotContext;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 /**
  * Evaluate JavaScript
@@ -31,12 +31,12 @@ public class Nano262Handler implements Onion.Middleware<BotContext> {
 
     private void evalScript(BotContext context) {
         var text = context.text();
-        if (StringUtils.isEmpty(text)) {
+        if (ObjectUtils.isEmpty(text)) {
             context.sendMessage("⚠️The script is empty");
             return;
         }
         var result = this.scripting.eval(text);
-        if (StringUtils.isEmpty(result)) {
+        if (ObjectUtils.isEmpty(result)) {
             return;
         }
         // Text of the message to be sent, 1-4096 characters after entities parsing

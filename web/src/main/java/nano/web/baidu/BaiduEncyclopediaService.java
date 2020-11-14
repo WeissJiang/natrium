@@ -1,7 +1,7 @@
 package nano.web.baidu;
 
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.regex.Pattern;
@@ -23,7 +23,7 @@ public class BaiduEncyclopediaService {
         var url = QUERY_API + "{0}";
         var response = this.restTemplate.getForEntity(url, String.class, keyword);
         var body = response.getBody();
-        if (StringUtils.isEmpty(body)) {
+        if (ObjectUtils.isEmpty(body)) {
             return null;
         }
         var m = pattern.matcher(body);
@@ -31,7 +31,7 @@ public class BaiduEncyclopediaService {
             return null;
         }
         var extract = m.group("desc");
-        if (StringUtils.isEmpty(extract)) {
+        if (ObjectUtils.isEmpty(extract)) {
             return null;
         }
         return extract + "\n" + QUERY_API + keyword;

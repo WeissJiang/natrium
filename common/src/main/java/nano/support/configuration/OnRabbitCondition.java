@@ -17,7 +17,7 @@ public class OnRabbitCondition extends SpringBootCondition {
     @Override
     public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
         var property = context.getEnvironment().getProperty("spring.rabbitmq.addresses");
-        if (!StringUtils.isEmpty(property)) {
+        if (StringUtils.hasText(property)) {
             return ConditionOutcome.match();
         }
         return ConditionOutcome.noMatch("spring.rabbitmq.addresses is empty");

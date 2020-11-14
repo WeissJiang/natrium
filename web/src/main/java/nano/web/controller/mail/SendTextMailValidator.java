@@ -6,7 +6,8 @@ import nano.support.validation.Validator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
 
 @Component
 public class SendTextMailValidator implements Validator {
@@ -15,13 +16,14 @@ public class SendTextMailValidator implements Validator {
     public @Nullable String validate(Object @NotNull ... args) {
         var arguments = new Arguments(args);
         var textMail = arguments.get(0, TextMail.class);
-        if (StringUtils.isEmpty(textMail.getSubject())) {
+        Assert.notNull(textMail, "textMail is null");
+        if (ObjectUtils.isEmpty(textMail.getSubject())) {
             return "TextMail \"subject\" is empty";
         }
-        if (StringUtils.isEmpty(textMail.getTo())) {
+        if (ObjectUtils.isEmpty(textMail.getTo())) {
             return "TextMail \"to\" is empty";
         }
-        if (StringUtils.isEmpty(textMail.getText())) {
+        if (ObjectUtils.isEmpty(textMail.getText())) {
             return "TextMail \"text\" is empty";
         }
         return null;

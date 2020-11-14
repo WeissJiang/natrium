@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import ua_parser.Parser;
 
@@ -49,7 +50,7 @@ public class SecurityService {
      * Check nano API Key
      */
     public void checkNanoApiKey(@Nullable String key) {
-        if (StringUtils.isEmpty(key)) {
+        if (ObjectUtils.isEmpty(key)) {
             throw new AuthenticationException("Missing API key");
         }
         var apiToken = this.configVars.getNanoApiKey();
@@ -62,7 +63,7 @@ public class SecurityService {
      * 检查Token权限
      */
     public void checkTokenPrivilege(@Nullable String token, @NotNull List<@NotNull NanoPrivilege> privilegeList) {
-        authState(!StringUtils.isEmpty(token), "Missing token");
+        authState(StringUtils.hasText(token), "Missing token");
         var nanoToken = this.tokenRepository.queryToken(token);
         authState(nanoToken != null, "Illegal token");
         authState(NanoToken.VALID.equals(nanoToken.getStatus()), "Invalid token");

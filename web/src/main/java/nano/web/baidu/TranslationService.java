@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -83,7 +82,7 @@ public class TranslationService {
     }
 
     private static String buildTranslateResult(String resultJson) {
-        if (StringUtils.isEmpty(resultJson)) {
+        if (ObjectUtils.isEmpty(resultJson)) {
             return "翻译结果为空";
         }
         var documentContext = JsonPath.parse(resultJson);

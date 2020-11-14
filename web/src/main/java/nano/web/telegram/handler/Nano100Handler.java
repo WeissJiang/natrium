@@ -8,7 +8,7 @@ import nano.web.nano.Bot;
 import nano.web.telegram.BotContext;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +49,7 @@ public class Nano100Handler implements Onion.Middleware<BotContext> {
 
     private void fetchAndSendExtract(BotContext context) {
         var text = context.text();
-        if (StringUtils.isEmpty(text)) {
+        if (ObjectUtils.isEmpty(text)) {
             context.sendMessage("⚠️The title is empty, please input title");
             return;
         }
