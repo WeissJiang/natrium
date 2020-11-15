@@ -18,7 +18,6 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import ua_parser.Parser;
 
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.HashMap;
@@ -36,7 +35,7 @@ public class SecurityService {
 
     private static final Logger log = LoggerFactory.getLogger(SecurityService.class);
 
-    private static final Parser userAgentParser = createUserAgentParser();
+    private static final Parser userAgentParser = new Parser();
 
     private final ConfigVars configVars;
     private final TokenRepository tokenRepository;
@@ -223,14 +222,6 @@ public class SecurityService {
                 log.debug(ex.getMessage(), ex);
             }
             return "Unknown";
-        }
-    }
-
-    private static Parser createUserAgentParser() {
-        try {
-            return new Parser();
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
         }
     }
 

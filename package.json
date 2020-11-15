@@ -34,7 +34,7 @@
   "dependencies": {
     "esbuild": "^0.8.7",
     "less": "^3.12.2",
-    "postcss": "^8.1.6",
+    "postcss": "^8.1.7",
     "postcss-modules": "^3.2.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
