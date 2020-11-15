@@ -35,7 +35,7 @@ public class SecurityService {
 
     private static final Logger log = LoggerFactory.getLogger(SecurityService.class);
 
-    private static final Parser userAgentParser = new Parser();
+    private final Parser userAgentParser = new Parser();
 
     private final ConfigVars configVars;
     private final TokenRepository tokenRepository;
@@ -82,7 +82,7 @@ public class SecurityService {
     /**
      * 删除Token，Token管理
      */
-    public void deleteSpecificToken(@NotNull String token, List<Integer> idList) {
+    public void deleteSpecificToken(@NotNull String token, @NotNull List<@NotNull Integer> idList) {
         var nanoTokenList = this.tokenRepository.queryTokenList(idList);
         if (CollectionUtils.isEmpty(nanoTokenList)) {
             return;
@@ -119,7 +119,7 @@ public class SecurityService {
         var originalToken = generateToken();
         var token = new NanoToken();
         token.setToken(TokenCode.desensitizeToken(originalToken));
-        token.setName(parseUserAgent(ua));
+        token.setName(this.parseUserAgent(ua));
         var verificationCode = generateVerificationCode();
         token.setStatus(NanoToken.verifyingStatus(username, verificationCode));
         var now = Timestamp.from(Instant.now());
@@ -200,22 +200,12 @@ public class SecurityService {
     }
 
     /**
-     * 接口验证是否超时，5分钟超时时间
-     */
-    private static boolean verifyingTimeout(NanoToken nanoToken) {
-        var creationTime = nanoToken.getCreationTime();
-        var now = Timestamp.from(Instant.now().minusSeconds(300));
-        return now.after(creationTime);
-    }
-
-    /**
      * 解析用户代理
      */
-    private static @NotNull String parseUserAgent(@Nullable String ua) {
+    private @NotNull String parseUserAgent(@Nullable String ua) {
         try {
-            Assert.notNull(userAgentParser, "userAgentParser is null");
             Assert.hasText(ua, "Illegal user agent");
-            var parsed = userAgentParser.parse(ua);
+            var parsed = this.userAgentParser.parse(ua);
             return "Website, %s on %s".formatted(parsed.userAgent.family, parsed.os.family);
         } catch (Exception ex) {
             if (log.isDebugEnabled()) {
@@ -223,6 +213,15 @@ public class SecurityService {
             }
             return "Unknown";
         }
+    }
+
+    /**
+     * 接口验证是否超时，5分钟超时时间
+     */
+    private static boolean verifyingTimeout(NanoToken nanoToken) {
+        var creationTime = nanoToken.getCreationTime();
+        var now = Timestamp.from(Instant.now().minusSeconds(300));
+        return now.after(creationTime);
     }
 
     public static void authState(boolean expression, @Nls String message) {
