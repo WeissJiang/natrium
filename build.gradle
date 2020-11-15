@@ -30,7 +30,7 @@ task staticBuild(type: YarnTask) {
 }
 
 node {
-    version = '15.2.0'
+    version = '14.15.0'
     yarnVersion = '1.22.10'
     download = true
 }
