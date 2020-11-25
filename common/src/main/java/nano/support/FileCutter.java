@@ -70,6 +70,7 @@ public class FileCutter {
                 tempFile.toFile().deleteOnExit();
                 split.put(partFilename, new FileSystemResource(tempFile));
                 if (read <= 0) {
+                    // All bytes read, break loop
                     break;
                 }
             }

@@ -83,7 +83,7 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
      * Rest template for sending HTTP request
      */
     @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+    public RestTemplate restTemplate(@NotNull RestTemplateBuilder builder) {
         return builder.build();
     }
 
@@ -147,7 +147,7 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
      * @see nano.web.security.Authorized
      */
     @Override
-    public void addInterceptors(InterceptorRegistry registry) {
+    public void addInterceptors(@NotNull InterceptorRegistry registry) {
         registry.addInterceptor(this.context.getBean(AuthenticationInterceptor.class)).addPathPatterns("/api/**");
     }
 
@@ -155,7 +155,7 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
      * 增加Scripting相关静态资源的media type
      */
     @Override
-    public void configureContentNegotiation(ContentNegotiationConfigurer cnc) {
+    public void configureContentNegotiation(@NotNull ContentNegotiationConfigurer cnc) {
         var js = MediaType.parseMediaType(Scripting.TEXT_JAVASCRIPT);
         cnc.mediaTypes(Map.of("mjs", js, "jsx", js, "ts", js, "tsx", js, "less", js));
     }
