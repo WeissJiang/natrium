@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import { fileURLToPath } from 'url'
-import { join as joinPath, dirname } from 'path'
-import { readdir, stat, mkdir, copyFile, writeFile } from 'fs/promises'
+import { dirname, join as joinPath } from 'path'
+import { copyFile, mkdir, readdir, stat, writeFile } from 'fs/promises'
 
-import { transformCss, transformEsm, readFileAsString } from './transforming.mjs'
+import { readFileAsString, transformCss, transformEsm } from './transforming.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -11,50 +11,71 @@ const staticPath = joinPath(__dirname, '..', 'web/static')
 const nodeModulesPath = joinPath(__dirname, '..', 'node_modules')
 const distPath = joinPath(__dirname, '..', 'web/dist')
 
-async function compileFile(srcFilePath, destFilePath) {
-    // js module
-    if (/.+\.(mjs|jsx|ts|tsx)$/.test(srcFilePath)) {
-        const transformed = await transformEsm(srcFilePath)
-        await writeFile(destFilePath, transformed)
+async function collectPaths(staticPath, distPath) {
+
+    const destDirs = []
+    const files = []
+
+    async function recurseCollect(srcPath, destPath) {
+        const currentFiles = await readdir(srcPath)
+        for (const filename of currentFiles) {
+            const srcFilePath = joinPath(srcPath, filename)
+            const destFilePath = joinPath(destPath, filename)
+            const fileStats = await stat(srcFilePath)
+            if (fileStats.isDirectory()) {
+                destDirs.push(destFilePath)
+                await recurseCollect(srcFilePath, destFilePath)
+            } else if (fileStats.isFile()) {
+                files.push({ srcFilePath, destFilePath, filename })
+            } else {
+                throw new Error('Unexpected file type')
+            }
+        }
     }
-    // css module
-    else if (/.+\.(less)$/.test(srcFilePath)) {
-        const transformed = await transformCss(srcFilePath)
-        await writeFile(destFilePath, transformed)
-    }
-    // others
-    else {
-        await copyFile(srcFilePath, destFilePath)
-    }
+
+    await recurseCollect(staticPath, distPath)
+
+    return { destDirs, files }
 }
 
-async function traverseDir(srcPath, destPath) {
-    const files = await readdir(srcPath)
-    for (const file of files) {
-        const srcFilePath = joinPath(srcPath, file)
-        const destFilePath = joinPath(destPath, file)
-        const fileStats = await stat(srcFilePath)
-        if (fileStats.isDirectory()) {
-            await mkdir(destFilePath, { recursive: true })
-            await traverseDir(srcFilePath, destFilePath)
-        } else if (fileStats.isFile()) {
-            await compileFile(srcFilePath, destFilePath)
+async function compileAndCopyFiles(files) {
+
+    async function compile(filename, filePath) {
+        // js module
+        if (/.+\.(mjs|jsx|ts|tsx)$/.test(filename)) {
+            return await transformEsm(filePath)
+        }
+        // css module
+        else if (/.+\.(less)$/.test(filename)) {
+            return await transformCss(filePath)
+        }
+        // others
+        else {
+        }
+    }
+
+    for (const { srcFilePath, destFilePath, filename } of files) {
+        const transformed = await compile(filename, srcFilePath)
+        if (transformed) {
+            await writeFile(destFilePath, transformed)
         } else {
-            throw new Error('Unexpected file type')
+            await copyFile(srcFilePath, destFilePath)
         }
     }
 }
 
-function getAllValues(object) {
-    const v = []
-    const rg = o => Object.values(o).forEach(it => typeof it === 'object' ? rg(it) : v.push(it))
-    rg(object)
-    return v
-}
-
 async function copyDeps() {
-    const json = await readFileAsString(joinPath(staticPath, 'deps.json'))
-    const deps = getAllValues(JSON.parse(json))
+    const depsJson = await readFileAsString(joinPath(staticPath, 'deps.json'))
+
+    function getAllValues(object) {
+        const v = []
+        const rg = o => Object.values(o).forEach(it => typeof it === 'object' ? rg(it) : v.push(it))
+        rg(object)
+        return v
+    }
+
+    const deps = getAllValues(JSON.parse(depsJson))
+
     if (!deps.length) {
         return
     }
@@ -69,12 +90,23 @@ async function copyDeps() {
         await mkdir(dirname(destPath), { recursive: true })
         await copyFile(srcPath, destPath)
     }
+}
 
+async function createDirs(dirs) {
+    for (const dir of dirs) {
+        await mkdir(dir, { recursive: true })
+    }
 }
 
 async function main() {
+    // create dist dir
     await mkdir(distPath, { recursive: true })
-    await traverseDir(staticPath, distPath)
+    // collect dir and file paths
+    const { destDirs, files } = await collectPaths(staticPath, distPath)
+    // create dest dirs
+    await createDirs(destDirs)
+    // compile and copy files
+    await compileAndCopyFiles(files)
     // copy modules if required
     await copyDeps()
     transformEsm.service.stop()
