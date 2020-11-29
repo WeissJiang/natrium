@@ -1,6 +1,7 @@
 package nano.web.security;
 
 import nano.support.Json;
+import nano.support.Sugar;
 import nano.web.controller.security.UserDTO;
 import nano.web.security.entity.NanoToken;
 import nano.web.security.entity.NanoUser;
@@ -58,7 +59,7 @@ public class UserService {
         return nanoTokens.stream()
                 .map(NanoToken::getPrivilege)
                 .map(Json::decodeValueAsList)
-                .map(it -> map(it, String::valueOf))
+                .map(Sugar::mapToString)
                 .flatMap(Collection::stream)
                 .distinct()
                 .map(NanoPrivilege::valueOf)

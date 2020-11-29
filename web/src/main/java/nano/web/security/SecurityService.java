@@ -66,7 +66,7 @@ public class SecurityService {
         var nanoToken = this.tokenRepository.queryToken(token);
         authState(nanoToken != null, "Illegal token");
         authState(NanoToken.VALID.equals(nanoToken.getStatus()), "Invalid token");
-        var tokenPrivileges = Json.decodeValueAsList(nanoToken.getPrivilege());
+        var tokenPrivileges = mapToString(Json.decodeValueAsList(nanoToken.getPrivilege()));
         var exists = tokenPrivileges.containsAll(map(privilegeList, NanoPrivilege::name));
         authState(exists, "Insufficient token privilege");
     }
@@ -140,8 +140,8 @@ public class SecurityService {
         Assert.hasText(status, "Token status requires not empty");
         var result = new HashMap<String, String>();
         switch (status) {
-            case NanoToken.INVALID -> throw new IllegalStateException("Token is invalid");
             case NanoToken.VALID -> result.put("verifying", "done");
+            case NanoToken.INVALID -> throw new IllegalStateException("Token is invalid");
             default -> {
                 // 验证中
                 if (status.startsWith(NanoToken.VERIFYING)) {

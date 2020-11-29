@@ -66,6 +66,10 @@ public abstract class Sugar {
         return list.stream().map(mapper).collect(Collectors.toList());
     }
 
+    public static @NotNull List<String> mapToString(@Nullable Collection<?> list) {
+        return map(list, String::valueOf);
+    }
+
     public static <T, K> @NotNull Map<K, T> toMap(@Nullable Collection<T> list, @NotNull Function<? super T, ? extends K> keyExtractor) {
         return toMap(list, keyExtractor, Function.identity());
     }
