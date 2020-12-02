@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.unit.DataSize;
 
 import java.lang.management.ManagementFactory;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class NanoService {
@@ -48,30 +50,33 @@ public class NanoService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public @NotNull String system() {
-        var nano = new StringBuilder();
-        nano.append("Postgres: ").append(this.getPostgresVersion()).append("\n");
-        for (String key : SYSTEM_PROPERTIES) {
-            var property = System.getProperty(key);
-            nano.append(key).append(" :").append(property).append("\n");
-        }
+    public @NotNull Map<String, String> system() {
+        var properties = new LinkedHashMap<String, String>();
+
+        properties.put("Postgres", this.getPostgresVersion());
+
+        // system properties
+        SYSTEM_PROPERTIES.forEach(key -> properties.put(key, System.getProperty(key)));
+
         var memoryMXBean = ManagementFactory.getMemoryMXBean();
 
+        // heap memory usage
         var heapMemoryUsage = memoryMXBean.getHeapMemoryUsage();
-        nano.append("heapMemoryUsage.init: ").append(megabytes(heapMemoryUsage.getInit())).append("\n");
-        nano.append("heapMemoryUsage.committed: ").append(megabytes(heapMemoryUsage.getCommitted())).append("\n");
-        nano.append("heapMemoryUsage.max: ").append(megabytes(heapMemoryUsage.getMax())).append("\n");
-        nano.append("heapMemoryUsage.used: ").append(megabytes(heapMemoryUsage.getUsed())).append("\n");
+        properties.put("heapMemoryUsage.init", megabytes(heapMemoryUsage.getInit()));
+        properties.put("heapMemoryUsage.committed:", megabytes(heapMemoryUsage.getCommitted()));
+        properties.put("heapMemoryUsage.max", megabytes(heapMemoryUsage.getMax()));
+        properties.put("heapMemoryUsage.used", megabytes(heapMemoryUsage.getUsed()));
 
+        // non heap memory usage
         var nonHeapMemoryUsage = memoryMXBean.getNonHeapMemoryUsage();
-        nano.append("nonHeapMemoryUsage.init: ").append(megabytes(nonHeapMemoryUsage.getInit())).append("\n");
-        nano.append("nonHeapMemoryUsage.committed: ").append(megabytes(nonHeapMemoryUsage.getCommitted())).append("\n");
-        nano.append("nonHeapMemoryUsage.max: ").append(megabytes(nonHeapMemoryUsage.getMax())).append("\n");
-        nano.append("nonHeapMemoryUsage.used: ").append(megabytes(nonHeapMemoryUsage.getUsed())).append("\n");
+        properties.put("nonHeapMemoryUsage.init", megabytes(nonHeapMemoryUsage.getInit()));
+        properties.put("nonHeapMemoryUsage.committed", megabytes(nonHeapMemoryUsage.getCommitted()));
+        properties.put("nonHeapMemoryUsage.max", megabytes(nonHeapMemoryUsage.getMax()));
+        properties.put("nonHeapMemoryUsage.used", megabytes(nonHeapMemoryUsage.getUsed()));
 
-        var objectPendingFinalizationCount = memoryMXBean.getObjectPendingFinalizationCount();
-        nano.append("objectPendingFinalizationCount: ").append(objectPendingFinalizationCount).append("\n");
-        return nano.toString();
+        // object pending finalization count
+        properties.put("objectPendingFinalizationCount", String.valueOf(memoryMXBean.getObjectPendingFinalizationCount()));
+        return properties;
     }
 
     public @NotNull String getPostgresVersion() {
