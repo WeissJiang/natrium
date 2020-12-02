@@ -79,6 +79,9 @@ public class NanoService {
         return properties;
     }
 
+    /**
+     * Get current Postgres version
+     */
     public @NotNull String getPostgresVersion() {
         try {
             var mapper = new SingleColumnRowMapper<String>();
@@ -91,6 +94,9 @@ public class NanoService {
     }
 
 
+    /**
+     * bytes -> mega bytes
+     */
     private @NotNull String megabytes(long bytes) {
         return "%sMB".formatted(DataSize.ofBytes(bytes).toMegabytes());
     }
