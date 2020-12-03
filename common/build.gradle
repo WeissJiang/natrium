@@ -21,6 +21,7 @@ dependencies {
     compileOnly "org.springframework.boot:spring-boot-starter-jdbc:${springBootVersion}"
     compileOnly "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
     // test
+    testImplementation "org.springframework.boot:spring-boot-starter-json:${springBootVersion}"
     testImplementation "org.springframework.boot:spring-boot-starter-mail:${springBootVersion}"
     testImplementation "org.springframework.boot:spring-boot-starter-jdbc:${springBootVersion}"
     testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
