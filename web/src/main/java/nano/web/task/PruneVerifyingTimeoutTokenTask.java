@@ -2,7 +2,7 @@ package nano.web.task;
 
 import nano.support.Task;
 import nano.web.nano.Cron;
-import nano.web.security.repository.TokenRepository;
+import nano.web.nano.repository.TokenRepository;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ public class PruneVerifyingTimeoutTokenTask implements Task {
     }
 
     @Override
-    public void execute(@NotNull Map<String, String> ignore) {
+    public void execute(@NotNull Map<String, ?> ignore) {
         var count = this.pruneVerifyingTimeoutToken();
         log.info("Prune verifying timeout token: {}", count);
     }

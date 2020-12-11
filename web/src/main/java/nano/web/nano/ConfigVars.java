@@ -1,5 +1,7 @@
 package nano.web.nano;
 
+import nano.web.nano.model.Bot;
+
 import java.util.Map;
 
 /**

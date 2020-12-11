@@ -4,7 +4,7 @@ import nano.support.Onion;
 import nano.web.baidu.BaiduEncyclopediaService;
 import nano.web.mediawiki.MoeService;
 import nano.web.mediawiki.WikiService;
-import nano.web.nano.Bot;
+import nano.web.nano.model.Bot;
 import nano.web.telegram.BotContext;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;

@@ -30,10 +30,24 @@ CREATE TABLE IF NOT EXISTS nano_token
     name             VARCHAR,
     chat_id          BIGINT,
     user_id          BIGINT,
-    status           VARCHAR DEFAULT 'VALID',
-    privilege        JSONB,
+    status           VARCHAR     DEFAULT 'VALID',
+    privilege        JSONB       DEFAULT '[]',
     last_active_time TIMESTAMPTZ,
-    creation_time    TIMESTAMPTZ,
+    creation_time    TIMESTAMPTZ DEFAULT NOW(),
     UNIQUE (token)
 );
 COMMENT ON COLUMN nano_token.status IS 'VALID,INVALID,VERIFYING:{username}:{code}';
+
+-- nano_task
+DROP TABLE IF EXISTS nano_task;
+CREATE TABLE IF NOT EXISTS nano_task
+(
+    id                  SERIAL PRIMARY KEY,
+    name                VARCHAR NOT NULL,
+    description         VARCHAR     DEFAULT '',
+    enabled             BOOL        DEFAULT TRUE,
+    options             JSONB       DEFAULT '{}',
+    time_interval       INTERVAL    DEFAULT '30s',
+    last_execution_time TIMESTAMPTZ DEFAULT NOW(),
+    creation_time       TIMESTAMPTZ DEFAULT NOW()
+);

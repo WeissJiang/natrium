@@ -1,9 +1,9 @@
 package nano.web.telegram.handler;
 
 import nano.support.Onion;
-import nano.web.nano.Bot;
+import nano.web.nano.model.Bot;
 import nano.web.security.SecurityService;
-import nano.web.security.entity.NanoToken;
+import nano.web.nano.entity.NanoToken;
 import nano.web.telegram.BotContext;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;

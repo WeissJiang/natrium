@@ -1,8 +1,8 @@
 package nano.web.telegram;
 
 import nano.web.controller.telegram.ChatDTO;
-import nano.web.security.entity.NanoChat;
-import nano.web.security.repository.ChatRepository;
+import nano.web.nano.entity.NanoChat;
+import nano.web.nano.repository.ChatRepository;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 

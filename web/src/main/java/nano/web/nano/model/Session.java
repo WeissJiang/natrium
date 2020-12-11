@@ -1,8 +1,8 @@
-package nano.web.security.model;
+package nano.web.nano.model;
 
-import nano.web.security.entity.NanoChat;
-import nano.web.security.entity.NanoToken;
-import nano.web.security.entity.NanoUser;
+import nano.web.nano.entity.NanoChat;
+import nano.web.nano.entity.NanoToken;
+import nano.web.nano.entity.NanoUser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

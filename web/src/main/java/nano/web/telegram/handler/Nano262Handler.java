@@ -1,7 +1,7 @@
 package nano.web.telegram.handler;
 
 import nano.support.Onion;
-import nano.web.nano.Bot;
+import nano.web.nano.model.Bot;
 import nano.web.scripting.Scripting;
 import nano.web.telegram.BotContext;
 import org.jetbrains.annotations.NotNull;

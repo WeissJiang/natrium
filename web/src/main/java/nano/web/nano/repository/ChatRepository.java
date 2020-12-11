@@ -1,7 +1,7 @@
-package nano.web.security.repository;
+package nano.web.nano.repository;
 
 import nano.support.jdbc.SimpleJdbcSelect;
-import nano.web.security.entity.NanoChat;
+import nano.web.nano.entity.NanoChat;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;

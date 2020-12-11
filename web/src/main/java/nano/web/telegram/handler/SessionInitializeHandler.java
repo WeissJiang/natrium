@@ -2,9 +2,9 @@ package nano.web.telegram.handler;
 
 import nano.support.Onion;
 import nano.web.security.SessionService;
-import nano.web.security.entity.NanoChat;
-import nano.web.security.entity.NanoUser;
-import nano.web.security.model.Session;
+import nano.web.nano.entity.NanoChat;
+import nano.web.nano.entity.NanoUser;
+import nano.web.nano.model.Session;
 import nano.web.telegram.BotContext;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;

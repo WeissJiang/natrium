@@ -2,7 +2,7 @@ package nano.web.telegram;
 
 import nano.support.Json;
 import nano.support.Onion;
-import nano.web.nano.Bot;
+import nano.web.nano.model.Bot;
 import nano.web.security.SessionService;
 import nano.web.telegram.handler.StartHandler;
 import org.junit.jupiter.api.Test;

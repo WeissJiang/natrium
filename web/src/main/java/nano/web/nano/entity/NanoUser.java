@@ -1,4 +1,4 @@
-package nano.web.security.entity;
+package nano.web.nano.entity;
 
 import java.util.Objects;
 

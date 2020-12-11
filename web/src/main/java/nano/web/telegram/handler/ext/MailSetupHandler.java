@@ -1,7 +1,7 @@
 package nano.web.telegram.handler.ext;
 
 import nano.support.Onion;
-import nano.web.nano.Bot;
+import nano.web.nano.model.Bot;
 import nano.web.security.NanoPrivilege;
 import nano.web.security.UserService;
 import nano.web.telegram.BotContext;

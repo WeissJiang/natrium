@@ -1,6 +1,6 @@
 package nano.web.telegram;
 
-import nano.web.nano.Bot;
+import nano.web.nano.model.Bot;
 import nano.web.nano.ConfigVars;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.ParameterizedTypeReference;

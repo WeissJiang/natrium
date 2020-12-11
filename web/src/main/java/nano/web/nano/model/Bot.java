@@ -1,4 +1,4 @@
-package nano.web.nano;
+package nano.web.nano.model;
 
 import java.util.Objects;
 
