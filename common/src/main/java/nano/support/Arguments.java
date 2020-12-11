@@ -12,7 +12,11 @@ public class Arguments {
 
     public <T> T get(int index, @NotNull Class<T> clazz) {
         this.checkIndex(index);
-        return clazz.cast(this.args[index]);
+        return clazz.cast(this.get(index));
+    }
+
+    public Object get(int index) {
+        return this.args[index];
     }
 
     public int length() {

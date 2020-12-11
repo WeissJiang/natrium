@@ -185,21 +185,6 @@ public class SecurityService {
     }
 
     /**
-     * 清理验证超时的Token
-     *
-     * @return prune count
-     */
-    public int pruneVerifyingTimeoutToken() {
-        var tokenList = this.tokenRepository.queryVerifyingTimeoutToken();
-        int count = 0;
-        if (!CollectionUtils.isEmpty(tokenList)) {
-            count = tokenList.size();
-            this.tokenRepository.batchDeleteByToken(tokenList);
-        }
-        return count;
-    }
-
-    /**
      * 解析用户代理
      */
     private @NotNull String parseUserAgent(@Nullable String ua) {

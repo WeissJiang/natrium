@@ -4,6 +4,7 @@ import nano.support.Result;
 import nano.web.security.Authorized;
 import nano.web.security.SecurityService;
 import nano.web.security.Token;
+import nano.web.task.PruneVerifyingTimeoutTokenTask;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +21,12 @@ public class TokenController {
 
     private final SecurityService securityService;
 
-    public TokenController(SecurityService securityService) {
+    private final PruneVerifyingTimeoutTokenTask pruneVerifyingTimeoutTokenTask;
+
+    public TokenController(SecurityService securityService,
+                           PruneVerifyingTimeoutTokenTask pruneVerifyingTimeoutTokenTask) {
         this.securityService = securityService;
+        this.pruneVerifyingTimeoutTokenTask = pruneVerifyingTimeoutTokenTask;
     }
 
     @PostMapping("/createVerifyingToken")
@@ -61,7 +66,7 @@ public class TokenController {
     @Authorized(NANO_API)
     @PostMapping("/pruneVerifyingTimeoutToken")
     public ResponseEntity<?> verifyingTimeoutToken() {
-        var count = this.securityService.pruneVerifyingTimeoutToken();
+        var count = this.pruneVerifyingTimeoutTokenTask.pruneVerifyingTimeoutToken();
         return ResponseEntity.ok(Result.of(Map.of("count", count)));
     }
 }
