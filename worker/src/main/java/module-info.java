@@ -1,4 +1,4 @@
-module nano.bot.worker {
+open module nano.bot.worker {
     requires nano.bot.common;
     requires org.jetbrains.annotations;
     requires spring.boot;

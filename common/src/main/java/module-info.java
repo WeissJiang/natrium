@@ -1,4 +1,4 @@
-module nano.bot.common {
+open module nano.bot.common {
     exports nano.support;
     exports nano.support.mail;
     exports nano.support.configuration;
