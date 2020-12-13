@@ -2,6 +2,10 @@ plugins {
     id 'java-library'
 }
 
+java {
+    modularity.inferModulePath = true
+}
+
 group = 'nano'
 
 sourceCompatibility = '15'
