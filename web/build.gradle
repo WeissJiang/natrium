@@ -45,7 +45,6 @@ dependencies {
     // aop
     implementation 'org.aspectj:aspectjweaver:1.9.6'
     // spring
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'

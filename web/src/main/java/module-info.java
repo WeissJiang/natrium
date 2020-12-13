@@ -1,4 +1,4 @@
-open module nano.bot.web {
+module nano.bot.web {
     requires json.path.module;
     requires ua.parser.module;
     requires spring.context;
