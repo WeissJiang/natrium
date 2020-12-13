@@ -1,7 +1,7 @@
 package nano.web.baidu;
 
-import com.jayway.jsonpath.JsonPath;
 import nano.web.nano.ConfigVars;
+import org.jianzhao.jsonpath.JsonPathModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -85,11 +85,12 @@ public class TranslationService {
         if (ObjectUtils.isEmpty(resultJson)) {
             return "翻译结果为空";
         }
-        var documentContext = JsonPath.parse(resultJson);
-        List<Map<String, String>> result = documentContext.read("$.trans_result");
+        var parsed = JsonPathModule.parse(resultJson);
+
+        List<Map<String, String>> result = JsonPathModule.read(parsed, "$.trans_result");
         if (ObjectUtils.isEmpty(result)) {
             log.warn("翻译异常：{}", resultJson);
-            return "翻译异常：" + documentContext.read("$.error_msg");
+            return "翻译异常：" + JsonPathModule.read(parsed, "$.error_msg");
         }
         return result.stream().map(it -> it.get("dst")).collect(Collectors.joining("\n"));
     }
