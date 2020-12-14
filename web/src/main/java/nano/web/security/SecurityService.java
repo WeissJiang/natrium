@@ -9,6 +9,7 @@ import nano.web.nano.repository.TokenRepository;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jianzhao.jsonpath.JsonPathModule;
 import org.jianzhao.uaparser.UserAgentParserModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -188,7 +189,11 @@ public class SecurityService {
     private @NotNull String parseUserAgent(@Nullable String ua) {
         try {
             Assert.hasText(ua, "Illegal user agent");
-            return UserAgentParserModule.parseToString(ua);
+            var client = UserAgentParserModule.parseToString(ua);
+            var parsed = JsonPathModule.parse(client);
+            var userAgentFamily = (String) JsonPathModule.read(parsed, "$.user_agent.family");
+            var osFamily = (String) JsonPathModule.read(parsed, "$.os.family");
+            return "Website, %s on %s".formatted(userAgentFamily, osFamily);
         } catch (Exception ex) {
             if (log.isDebugEnabled()) {
                 log.debug(ex.getMessage(), ex);
