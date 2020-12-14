@@ -1,7 +1,7 @@
 package nano.web.controller.view;
 
-import com.jayway.jsonpath.JsonPath;
 import nano.web.scripting.Scripting;
+import org.jianzhao.jsonpath.JsonPathModule;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
@@ -24,7 +24,8 @@ public class ModuleController {
     public ModuleController(@Value("classpath:/static/deps.json") Resource depsJson,
                             @Value("${spring.profiles.active}") String activeProfile) throws IOException {
         try (var is = depsJson.getInputStream()) {
-            this.moduleUrlMap.putAll(JsonPath.parse(is).read("$.%s".formatted(activeProfile)));
+            var jsonPath = "$.%s".formatted(activeProfile);
+            this.moduleUrlMap.putAll(JsonPathModule.read(is,jsonPath));
         }
     }
 

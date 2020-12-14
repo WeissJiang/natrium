@@ -1,6 +1,6 @@
 package nano.web.mediawiki;
 
-import com.jayway.jsonpath.JsonPath;
+import org.jianzhao.jsonpath.JsonPathModule;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
@@ -27,8 +27,7 @@ public abstract class MediaWikiService {
         if (ObjectUtils.isEmpty(body)) {
             return null;
         }
-        var documentContext = JsonPath.parse(body);
-        List<String> extractList = documentContext.read("$.query.pages.*.extract");
+        List<String> extractList = JsonPathModule.read(body, "$.query.pages.*.extract");
         if (CollectionUtils.isEmpty(extractList)) {
             return null;
         }

@@ -9,6 +9,8 @@ import nano.web.nano.repository.TokenRepository;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jianzhao.jsonpath.JsonPathModule;
+import org.jianzhao.uaparser.UserAgentParserModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,6 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-import ua_parser.Parser;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -34,8 +35,6 @@ import static nano.web.security.TokenCode.generateVerificationCode;
 public class SecurityService {
 
     private static final Logger log = LoggerFactory.getLogger(SecurityService.class);
-
-    private final Parser userAgentParser = new Parser();
 
     private final ConfigVars configVars;
     private final TokenRepository tokenRepository;
@@ -190,8 +189,11 @@ public class SecurityService {
     private @NotNull String parseUserAgent(@Nullable String ua) {
         try {
             Assert.hasText(ua, "Illegal user agent");
-            var parsed = this.userAgentParser.parse(ua);
-            return "Website, %s on %s".formatted(parsed.userAgent.family, parsed.os.family);
+            var client = UserAgentParserModule.parseToString(ua);
+            var parsed = JsonPathModule.parse(client);
+            var userAgentFamily = (String) JsonPathModule.read(parsed, "$.user_agent.family");
+            var osFamily = (String) JsonPathModule.read(parsed, "$.os.family");
+            return "Website, %s on %s".formatted(userAgentFamily, osFamily);
         } catch (Exception ex) {
             if (log.isDebugEnabled()) {
                 log.debug(ex.getMessage(), ex);

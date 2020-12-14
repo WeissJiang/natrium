@@ -1,7 +1,11 @@
 plugins {
-    id 'org.springframework.boot' version '2.4.0'
+    id 'org.springframework.boot' version '2.4.1'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'java'
+}
+
+java {
+    modularity.inferModulePath = true
 }
 
 group = 'nano'
@@ -11,6 +15,7 @@ targetCompatibility = '15'
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 processResources {
@@ -26,21 +31,20 @@ clean {
 }
 
 dependencies {
-    // AOP
-    implementation 'org.aspectj:aspectjweaver:1.9.6'
+    // user agent parser
+    implementation 'com.github.cbdyzj:ua-parser-module:1.5.4'
+    // json path
+    implementation 'com.github.cbdyzj:json-path-module:2.4.3'
     // webp
     implementation 'org.sejda.imageio:webp-imageio:0.1.6'
-    // user agent parser
-    implementation 'com.github.ua-parser:uap-java:1.5.0'
-    // json path
-    implementation 'com.jayway.jsonpath:json-path:2.4.0'
     // javascript
-    implementation 'org.graalvm.js:js:20.2.0'
-    implementation 'org.graalvm.js:js-scriptengine:20.2.0'
+    implementation 'org.graalvm.js:js:20.3.0'
+    implementation 'org.graalvm.js:js-scriptengine:20.3.0'
+    // aop
+    implementation 'org.aspectj:aspectjweaver:1.9.6'
     // postgresql
     implementation 'org.postgresql:postgresql:42.2.18'
     // spring
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'

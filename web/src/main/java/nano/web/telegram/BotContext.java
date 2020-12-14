@@ -1,13 +1,11 @@
 package nano.web.telegram;
 
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.PathNotFoundException;
 import nano.support.Json;
 import nano.web.nano.model.Bot;
-import nano.web.security.NanoPrivilege;
 import nano.web.nano.model.Session;
+import nano.web.security.NanoPrivilege;
 import org.jetbrains.annotations.NotNull;
+import org.jianzhao.jsonpath.JsonPathModule;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -16,17 +14,19 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
+import static nano.support.Sugar.cast;
 import static nano.support.Sugar.filter;
 
 public class BotContext {
 
     private final Bot bot;
 
+    private final Function<String, ?> read0;
     private final Map<String, ?> parameters;
-    private final DocumentContext documentContext;
 
     // -- context相关对象
 
@@ -38,7 +38,8 @@ public class BotContext {
     public BotContext(@NotNull Bot bot, @NotNull Map<String, ?> parameters) {
         this.bot = bot;
         this.parameters = parameters;
-        this.documentContext = JsonPath.parse(parameters);
+        var parsed = JsonPathModule.parse(parameters);
+        this.read0 = (jsonPath) -> JsonPathModule.read(parsed, jsonPath);
     }
 
     public Number chatId() {
@@ -105,8 +106,8 @@ public class BotContext {
      */
     public <T> T read(String jsonPath) {
         try {
-            return this.documentContext.read(jsonPath);
-        } catch (PathNotFoundException ex) {
+            return cast(this.read0.apply(jsonPath));
+        } catch (Exception ex) {
             return null;
         }
     }
@@ -136,7 +137,7 @@ public class BotContext {
 
     public String getFileUrl(String fileId) {
         var result = this.getTelegramService().getFile(this.bot(), fileId);
-        var filePath = (String) JsonPath.read(result, "$.result.file_path");
+        var filePath = (String) JsonPathModule.read(result, "$.result.file_path");
         Assert.notNull(filePath, "filePath is null");
         return TelegramService.getFileUrl(this.bot(), filePath);
     }

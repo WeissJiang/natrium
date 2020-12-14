@@ -2,6 +2,10 @@ plugins {
     id 'java-library'
 }
 
+java {
+    modularity.inferModulePath = true
+}
+
 group = 'nano'
 
 sourceCompatibility = '15'
@@ -11,7 +15,7 @@ repositories {
     mavenCentral()
 }
 
-def springBootVersion = '2.4.0'
+def springBootVersion = '2.4.1'
 
 dependencies {
     // jetbrains annotations
