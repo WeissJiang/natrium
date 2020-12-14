@@ -40,10 +40,10 @@ dependencies {
     // javascript
     implementation 'org.graalvm.js:js:20.3.0'
     implementation 'org.graalvm.js:js-scriptengine:20.3.0'
-    // postgresql
-    implementation 'org.postgresql:postgresql:42.2.18'
     // aop
     implementation 'org.aspectj:aspectjweaver:1.9.6'
+    // postgresql
+    implementation 'org.postgresql:postgresql:42.2.18'
     // spring
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-amqp'

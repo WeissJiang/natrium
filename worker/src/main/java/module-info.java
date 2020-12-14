@@ -1,5 +1,4 @@
 open module nano.bot.worker {
-    requires nano.bot.common;
     requires org.jetbrains.annotations;
     requires spring.boot;
     requires spring.boot.autoconfigure;
@@ -10,4 +9,5 @@ open module nano.bot.worker {
     requires spring.amqp;
     requires spring.context;
     requires spring.context.support;
+    requires nano.bot.common;
 }
