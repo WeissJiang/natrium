@@ -15,7 +15,7 @@ repositories {
     mavenCentral()
 }
 
-def springBootVersion = '2.4.0'
+def springBootVersion = '2.4.1'
 
 dependencies {
     // jetbrains annotations
