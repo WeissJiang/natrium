@@ -15,4 +15,20 @@ public class JsonTests {
         var expected = "{\"baz\":\"{\\\"foo\\\":\\\"bar\\\"}\"}";
         assertEquals(expected, json);
     }
+
+    @Test
+    public void testDecode() {
+        var appleJson = """
+                {
+                    "color": "red",
+                    "tastes": "weird",
+                    "shape": "circular"
+                }
+                """;
+        var apple = Json.decodeValue(appleJson, Apple.class);
+        var expected = new Apple();
+        expected.setColor("red");
+        expected.setTastes("weird");
+        assertEquals(expected, apple);
+    }
 }

@@ -29,25 +29,4 @@ public class EntityUtilsTests {
         assertIterableEquals(List.of("color", "tastes"), names);
     }
 
-    public static class Apple {
-
-        private String color;
-        private String tastes;
-
-        public String getColor() {
-            return color;
-        }
-
-        public void setColor(String color) {
-            this.color = color;
-        }
-
-        public String getTastes() {
-            return tastes;
-        }
-
-        public void setTastes(String tastes) {
-            this.tastes = tastes;
-        }
-    }
 }

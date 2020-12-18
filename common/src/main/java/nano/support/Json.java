@@ -3,6 +3,7 @@ package nano.support;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -30,7 +31,7 @@ public abstract class Json {
     static {
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
-
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         SimpleModule module = new SimpleModule();
         module.addSerializer(Instant.class, new InstantSerializer());
         module.addSerializer(Date.class, new DateSerializer());
