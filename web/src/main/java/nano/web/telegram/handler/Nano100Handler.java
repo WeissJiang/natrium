@@ -1,6 +1,7 @@
 package nano.web.telegram.handler;
 
 import nano.support.Onion;
+import nano.support.Sugar;
 import nano.web.baidu.BaiduEncyclopediaService;
 import nano.web.mediawiki.MoeService;
 import nano.web.mediawiki.WikiService;
@@ -13,6 +14,7 @@ import org.springframework.util.ObjectUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 /**
@@ -25,7 +27,7 @@ public class Nano100Handler implements Onion.Middleware<BotContext> {
     private final WikiService wikiService;
     private final BaiduEncyclopediaService baiduEncyclopediaService;
 
-    private final List<Function<String, String>> fetcherList = new ArrayList<>();
+    private final List<Function<String, CompletableFuture<String>>> fetcherList = new ArrayList<>();
 
     public Nano100Handler(MoeService moeService, WikiService wikiService, BaiduEncyclopediaService baiduEncyclopediaService) {
         this.moeService = moeService;
@@ -53,32 +55,43 @@ public class Nano100Handler implements Onion.Middleware<BotContext> {
             context.sendMessage("⚠️The title is empty, please input title");
             return;
         }
-        for (var fetcher : this.fetcherList) {
-            String extract = fetcher.apply(text);
-            if (extract != null) {
-                replyMessageWithoutPreview(context, extract);
-                return;
-            }
+        boolean[] done = {false};
+        this.fetcherList.stream()
+                .map(fetcher -> fetcher.apply(text))
+                .forEachOrdered(future -> {
+                    if (done[0]) {
+                        future.cancel(false);
+                        return;
+                    }
+                    var extract = future.join();
+                    if (extract != null) {
+                        done[0] = true;
+                        CompletableFuture.runAsync(() -> replyMessageWithoutPreview(context, extract));
+                    }
+                });
+        if (!done[0]) {
+            context.replyMessage("nano没有找到：" + text);
         }
-        context.replyMessage("nano没有找到：" + text);
     }
 
-    private String fetchWikiExtract(String title) {
-        for (var language : List.of("zh", "en", "ja")) {
-            var extract = this.wikiService.getPageExtract(title, language);
-            if (extract != null) {
-                return extract;
+    private CompletableFuture<String> fetchWikiExtract(String title) {
+        return CompletableFuture.supplyAsync(() -> {
+            for (var language : List.of("zh", "en", "ja")) {
+                var extract = this.wikiService.getPageExtract(title, language);
+                if (extract != null) {
+                    return extract;
+                }
             }
-        }
-        return null;
+            return null;
+        });
     }
 
-    private String fetchMoeExtract(String title) {
-        return this.moeService.getPageExtract(title, "zh");
+    private CompletableFuture<String> fetchMoeExtract(String title) {
+        return CompletableFuture.supplyAsync(() -> this.moeService.getPageExtract(title, "zh"));
     }
 
-    private String fetchBaiduEncyclopediaExtract(String title) {
-        return this.baiduEncyclopediaService.getPageExtract(title);
+    private CompletableFuture<String> fetchBaiduEncyclopediaExtract(String title) {
+        return CompletableFuture.supplyAsync(() -> this.baiduEncyclopediaService.getPageExtract(title));
     }
 
     private static void replyMessageWithoutPreview(BotContext context, String text) {
