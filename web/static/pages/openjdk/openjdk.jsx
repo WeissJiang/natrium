@@ -6,7 +6,9 @@ function VersionSelect() {
         <select name="version" defaultValue="11">
             <option value="8">OpenJDK 8 (LTS)</option>
             <option value="11">OpenJDK 11 (LTS)</option>
-            <option value="15">OpenJDK 15 (Latest)</option>
+            <option value="15">OpenJDK 15 (MTS)</option>
+            <option value="16">OpenJDK 16 (MTS)</option>
+            <option value="17">OpenJDK 17 (LTS)</option>
         </select>
     )
 }
