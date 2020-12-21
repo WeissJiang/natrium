@@ -23,4 +23,5 @@ open module nano.bot.web {
     requires spring.context.support;
     requires spring.jdbc;
     requires spring.boot.autoconfigure;
+    requires spring.tx;
 }

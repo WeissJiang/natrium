@@ -38,8 +38,8 @@ public class BotContext {
     public BotContext(@NotNull Bot bot, @NotNull Map<String, ?> parameters) {
         this.bot = bot;
         this.parameters = parameters;
-        var parsed = JsonPathModule.parse(parameters);
-        this.read0 = (jsonPath) -> JsonPathModule.read(parsed, jsonPath);
+        var context = JsonPathModule.parse(parameters);
+        this.read0 = context::read;
     }
 
     public Number chatId() {

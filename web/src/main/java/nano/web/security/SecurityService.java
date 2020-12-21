@@ -190,9 +190,9 @@ public class SecurityService {
         try {
             Assert.hasText(ua, "Illegal user agent");
             var client = UserAgentParserModule.parseToString(ua);
-            var parsed = JsonPathModule.parse(client);
-            var userAgentFamily = (String) JsonPathModule.read(parsed, "$.user_agent.family");
-            var osFamily = (String) JsonPathModule.read(parsed, "$.os.family");
+            var context = JsonPathModule.parse(client);
+            var userAgentFamily = (String) context.read("$.user_agent.family");
+            var osFamily = (String) context.read("$.os.family");
             return "Website, %s on %s".formatted(userAgentFamily, osFamily);
         } catch (Exception ex) {
             if (log.isDebugEnabled()) {

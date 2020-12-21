@@ -85,12 +85,12 @@ public class TranslationService {
         if (ObjectUtils.isEmpty(resultJson)) {
             return "翻译结果为空";
         }
-        var parsed = JsonPathModule.parse(resultJson);
+        var context = JsonPathModule.parse(resultJson);
 
-        List<Map<String, String>> result = JsonPathModule.read(parsed, "$.trans_result");
+        List<Map<String, String>> result = context.read("$.trans_result");
         if (ObjectUtils.isEmpty(result)) {
             log.warn("翻译异常：{}", resultJson);
-            return "翻译异常：" + JsonPathModule.read(parsed, "$.error_msg");
+            return "翻译异常：" + context.read("$.error_msg");
         }
         return result.stream().map(it -> it.get("dst")).collect(Collectors.joining("\n"));
     }
