@@ -23,5 +23,5 @@ open module nano.bot.common {
     requires static spring.jdbc;
     requires static spring.web;
     requires static spring.webmvc;
-    requires spring.boot.autoconfigure;
+    requires static spring.boot.autoconfigure;
 }

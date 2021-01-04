@@ -34,7 +34,7 @@ dependencies {
     // telex
     implementation 'com.github.cbdyzj:telex:0.0.2'
     // user agent parser
-    implementation 'com.github.cbdyzj:ua-parser-module:1.5.4'
+    implementation 'com.github.cbdyzj:ua-parser-module:1.5.5'
     // json path
     implementation 'com.github.cbdyzj:json-path-module:2.4.4'
     // webp
