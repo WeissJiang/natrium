@@ -32,7 +32,7 @@ public class Nano262Handler implements Onion.Middleware<BotContext> {
     private void evalScript(BotContext context) {
         var text = context.text();
         if (ObjectUtils.isEmpty(text)) {
-            context.sendMessage("⚠️The script is empty");
+            context.sendMessage("The script is empty");
             return;
         }
         var result = this.scripting.eval(text);
@@ -41,7 +41,7 @@ public class Nano262Handler implements Onion.Middleware<BotContext> {
         }
         // Text of the message to be sent, 1-4096 characters after entities parsing
         if (result.length() > 4096) {
-            context.sendMessage("⚠️Evaluated result is too long");
+            context.sendMessage("Evaluated result is too long");
             return;
         }
         context.replyMessage(result);

@@ -32,7 +32,7 @@ public class Nano026Handler implements Onion.Middleware<BotContext> {
     private void translate(BotContext context) {
         var text = context.text();
         if (ObjectUtils.isEmpty(text)) {
-            context.sendMessage("⚠️The content is empty, please input the text to be translated");
+            context.sendMessage("The content is empty, please input the text to be translated");
             return;
         }
         var translated = this.translationService.autoTranslate(text);

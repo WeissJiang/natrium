@@ -42,7 +42,7 @@ public class VerificationHandler implements Onion.Middleware<BotContext> {
     }
 
     /**
-     * 根据结果组织验证信息
+     * Build message
      */
     private static String buildMessage(Map<NanoToken, String> tokenResultMap) {
         var verified = new ArrayList<String>();
@@ -56,13 +56,13 @@ public class VerificationHandler implements Onion.Middleware<BotContext> {
         });
         var message = new StringBuilder();
         if (!verified.isEmpty()) {
-            message.append("验证成功：\n").append(String.join("\n", verified));
+            message.append("Verification successful:\n").append(String.join("\n", verified));
         }
         if (!timeout.isEmpty()) {
             if (message.length() > 0) {
                 message.append("\n");
             }
-            message.append("验证超时：\n").append(String.join("\n", timeout));
+            message.append("Verification successful:\n").append(String.join("\n", timeout));
         }
         return message.toString();
     }

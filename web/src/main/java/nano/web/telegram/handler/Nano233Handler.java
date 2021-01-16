@@ -34,13 +34,13 @@ public class Nano233Handler implements Onion.Middleware<BotContext> {
     private void getSticker(BotContext context) throws Exception {
         var stickerFileId = (String) context.read("$.message.sticker.file_id");
         if (stickerFileId == null) {
-            context.sendMessage("⚠️The sticker missing");
+            context.sendMessage("The sticker missing");
             return;
         }
         var webpUrl = context.getFileUrl(stickerFileId);
         var pngFilePath = convertWebpToJpeg(webpUrl);
         if (pngFilePath == null) {
-            context.sendMessage("⚠️The sticker is not supported");
+            context.sendMessage("The sticker is not supported");
             return;
         }
         context.replyPhoto(new FileSystemResource(pngFilePath));

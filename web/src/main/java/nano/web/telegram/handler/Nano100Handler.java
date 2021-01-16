@@ -52,7 +52,7 @@ public class Nano100Handler implements Onion.Middleware<BotContext> {
     private void fetchAndSendExtract(BotContext context) {
         var text = context.text();
         if (ObjectUtils.isEmpty(text)) {
-            context.sendMessage("⚠️The title is empty, please input title");
+            context.sendMessage("The title is empty, please input title");
             return;
         }
         boolean[] done = {false};
@@ -70,7 +70,7 @@ public class Nano100Handler implements Onion.Middleware<BotContext> {
                     }
                 });
         if (!done[0]) {
-            context.replyMessage("nano没有找到：" + text);
+            context.replyMessage("nano did not find: " + text);
         }
     }
 

@@ -37,16 +37,16 @@ public class MailHandler implements Onion.Middleware<BotContext> {
     private void trySendMail(BotContext context) throws MessagingException {
         var email = context.getSession().getUser().getEmail();
         if (ObjectUtils.isEmpty(email)) {
-            context.replyMessage("邮箱📮未设置，发送/setmail设置邮箱，如：\n/setmail somename@example.com");
+            context.replyMessage("The mail is not set, set mail: /setmail {email}");
             return;
         }
         var message = getMailBody(context.text());
         if (ObjectUtils.isEmpty(message)) {
-            context.replyMessage("Mail内容为空，发送邮件：/mail {message}");
+            context.replyMessage("Mail content is empty, send mail: /mail {message}");
             return;
         }
         this.mailService.sendTextMail(createTextMail(email, message));
-        context.replyMessage("邮件📧投递成功");
+        context.replyMessage("Mail delivered");
     }
 
     private static TextMail createTextMail(String email, String message) {

@@ -37,17 +37,17 @@ public class MailSetupHandler implements Onion.Middleware<BotContext> {
     private void trySetMailAddress(BotContext context) {
         var user = context.getSession().getUser();
         if (!context.userPrivilegeList().contains(NanoPrivilege.MAIL)) {
-            context.replyMessage("设置失败，无邮件📧服务权限");
+            context.replyMessage("Failed, no mail service permission");
             return;
         }
         var mailAddress = getMailAddress(context.text());
         if (!EMAIL.test(mailAddress)) {
-            context.replyMessage("非法的邮箱格式");
+            context.replyMessage("Illegal mail format");
             return;
         }
         user.setEmail(mailAddress);
         this.userService.createOrUpdateUser(user);
-        context.replyMessage("设置成功");
+        context.replyMessage("Succeed");
     }
 
     private static boolean isSetMailCommand(String text) {
