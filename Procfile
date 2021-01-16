@@ -1,2 +1,2 @@
-web: java $JAVA_OPTS -XX:+UseZGC -jar web/build/libs/web.jar --spring.profiles.active=prod --server.port=$PORT
-worker: java $JAVA_OPTS -jar worker/build/libs/worker.jar
+web: ./scripts/web.sh --spring.profiles.active=prod --server.port=$PORT
+worker: ./scripts/worker.sh
