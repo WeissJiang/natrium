@@ -34,8 +34,8 @@ public class NanoController {
     }
 
     @GetMapping("/beans")
-    public ResponseEntity<?> beans() {
-        var beans = this.nanoService.getBeanDefinitionNames();
+    public ResponseEntity<?> beans(@RequestParam(name = "q", required = false) String q) {
+        var beans = this.nanoService.getBeanDefinitionNames(q);
         return ResponseEntity.ok(beans);
     }
 

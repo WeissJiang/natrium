@@ -1,6 +1,7 @@
 package nano.web.nano;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -16,6 +17,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 @Service
 public class NanoService implements ApplicationContextAware {
@@ -102,9 +104,13 @@ public class NanoService implements ApplicationContextAware {
     /**
      * Get all bean definition names of the application
      */
-    public String[] getBeanDefinitionNames() {
+    public @NotNull String[] getBeanDefinitionNames(@Nullable String q) {
         var beanDefinitionNames = this.context.getBeanDefinitionNames();
-        return Arrays.stream(beanDefinitionNames).sorted().toArray(String[]::new);
+        var beans = Arrays.stream(beanDefinitionNames).sorted();
+        if (q != null) {
+            beans = beans.filter(it -> it.contains(q));
+        }
+        return beans.toArray(String[]::new);
     }
 
     /**
