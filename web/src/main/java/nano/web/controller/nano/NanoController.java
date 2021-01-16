@@ -33,6 +33,12 @@ public class NanoController {
         return ResponseEntity.ok(nano);
     }
 
+    @GetMapping("/beans")
+    public ResponseEntity<?> beans() {
+        var beans = this.nanoService.getBeanDefinitionNames();
+        return ResponseEntity.ok(beans);
+    }
+
     @Validated(NanoMessageValidator.class)
     @PostMapping("/message")
     public ResponseEntity<?> message(@RequestParam("m") String m) {

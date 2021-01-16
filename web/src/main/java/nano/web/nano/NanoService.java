@@ -3,18 +3,22 @@ package nano.web.nano;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.unit.DataSize;
 
 import java.lang.management.ManagementFactory;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 @Service
-public class NanoService {
+public class NanoService implements ApplicationContextAware {
 
     private static final Logger log = LoggerFactory.getLogger(NanoService.class);
 
@@ -43,6 +47,8 @@ public class NanoService {
             "java.vm.version",
             "java.class.version"
     );
+
+    private ApplicationContext context;
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -93,6 +99,13 @@ public class NanoService {
         }
     }
 
+    /**
+     * Get all bean definition names of the application
+     */
+    public String[] getBeanDefinitionNames() {
+        var beanDefinitionNames = this.context.getBeanDefinitionNames();
+        return Arrays.stream(beanDefinitionNames).sorted().toArray(String[]::new);
+    }
 
     /**
      * bytes -> mega bytes
@@ -101,4 +114,8 @@ public class NanoService {
         return "%sMB".formatted(DataSize.ofBytes(bytes).toMegabytes());
     }
 
+    @Override
+    public void setApplicationContext(@NotNull ApplicationContext applicationContext) throws BeansException {
+        this.context = applicationContext;
+    }
 }
