@@ -9,7 +9,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
- * 异常处理
+ * Handling exception
  * <p>
  * Before all middleware
  */

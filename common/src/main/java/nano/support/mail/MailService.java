@@ -12,7 +12,7 @@ import java.util.function.Predicate;
 import static java.util.regex.Pattern.compile;
 
 /**
- * 邮件服务
+ * Mail Service
  */
 public class MailService {
 
@@ -28,7 +28,7 @@ public class MailService {
     private JavaMailSender javaMailSender;
 
     /**
-     * 发送文本邮件
+     * Send text mail
      */
     public void sendTextMail(TextMail mail) throws MessagingException {
         Assert.hasText(this.fromAddress, "this.fromAddress is empty");

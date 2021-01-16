@@ -29,7 +29,7 @@ public class PruneVerifyingTimeoutTokenTask implements Task {
     }
 
     /**
-     * 清理验证超时的Token
+     * Prune verifying timeout token
      *
      * @return prune count
      */

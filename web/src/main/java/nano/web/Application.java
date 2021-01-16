@@ -88,7 +88,7 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     }
 
     /**
-     * 校验切面
+     * Validating  advisor
      *
      * @see Validated
      * @see Validator
@@ -142,7 +142,7 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     }
 
     /**
-     * 为API增加鉴权
+     * Authentication interceptor for API
      *
      * @see nano.web.security.Authorized
      */
@@ -152,7 +152,7 @@ public class Application implements ApplicationContextAware, WebMvcConfigurer {
     }
 
     /**
-     * 增加Scripting相关静态资源的media type
+     * Scripting resources media type
      */
     @Override
     public void configureContentNegotiation(@NotNull ContentNegotiationConfigurer cnc) {

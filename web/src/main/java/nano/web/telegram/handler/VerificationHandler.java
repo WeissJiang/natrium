@@ -14,7 +14,7 @@ import java.util.Map;
 import static nano.web.security.TokenCode.isVerificationCode;
 
 /**
- * 用户Token验证
+ * Token verification
  */
 @Component
 public class VerificationHandler implements Onion.Middleware<BotContext> {

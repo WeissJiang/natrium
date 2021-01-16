@@ -1,7 +1,7 @@
 package nano.web.security;
 
 /**
- * Token的权限
+ * Token privilege
  *
  * @see Authorized
  * @see nano.web.nano.entity.NanoToken

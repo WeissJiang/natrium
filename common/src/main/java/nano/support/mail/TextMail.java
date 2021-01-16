@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 /**
- * 文本邮件
+ * Text mail
  */
 public class TextMail {
 

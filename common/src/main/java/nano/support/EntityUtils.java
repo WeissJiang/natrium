@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * 实体相关的小工具
+ * Entity utils
  */
 public abstract class EntityUtils {
 

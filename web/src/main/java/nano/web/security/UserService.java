@@ -34,7 +34,7 @@ public class UserService {
     }
 
     /**
-     * 根据Token获取关联的User
+     * Get the associated user by token
      */
     public @NotNull UserDTO getUserByToken(@NotNull String token) {
         this.tokenRepository.updateLastActiveTime(token, Timestamp.from(Instant.now()));

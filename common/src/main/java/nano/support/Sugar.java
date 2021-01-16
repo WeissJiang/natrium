@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import static java.util.Objects.requireNonNull;
 
 /**
- * 一点语法糖
+ * Sugar
  *
  * @author cbdyzj
  * @see <a href="https://github.com/cbdyzj/sugar">sugar</a>

@@ -10,7 +10,7 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * Token相关
+ * Token code
  */
 public abstract class TokenCode {
 
@@ -19,7 +19,7 @@ public abstract class TokenCode {
     public static final String DESENSITIZED_X_TOKEN = "DESENSITIZED_X_TOKEN";
 
     /**
-     * 生成随机6位验证码
+     * Generating random verification code
      */
     public static @NotNull String generateVerificationCode() {
         var randomInt = ThreadLocalRandom.current().nextInt(1_000_000);
@@ -28,7 +28,7 @@ public abstract class TokenCode {
     }
 
     /**
-     * 字符串是否为验证码
+     * Is verification code
      */
     @Contract(value = "null -> false", pure = true)
     public static boolean isVerificationCode(@Nullable String text) {
@@ -36,14 +36,14 @@ public abstract class TokenCode {
     }
 
     /**
-     * 生成随机Token
+     * Generating random token
      */
     public static @NotNull String generateToken() {
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
 
     /**
-     * 生成Token摘要
+     * Generate token Digest
      */
     @Contract(value = "null -> null", pure = true)
     public static String desensitizeToken(@Nullable String originalToken) {

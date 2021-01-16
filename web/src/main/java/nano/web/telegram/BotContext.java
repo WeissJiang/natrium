@@ -28,7 +28,7 @@ public class BotContext {
     private final Function<String, ?> read0;
     private final Map<String, ?> parameters;
 
-    // -- context相关对象
+    // -- context
 
     private Session session;
 
