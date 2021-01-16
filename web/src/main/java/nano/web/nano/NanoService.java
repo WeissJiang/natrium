@@ -113,15 +113,15 @@ public class NanoService implements ApplicationContextAware {
         return beans.toArray(String[]::new);
     }
 
-    /**
-     * bytes -> mega bytes
-     */
-    private @NotNull String megabytes(long bytes) {
-        return "%sMB".formatted(DataSize.ofBytes(bytes).toMegabytes());
-    }
-
     @Override
     public void setApplicationContext(@NotNull ApplicationContext applicationContext) throws BeansException {
         this.context = applicationContext;
+    }
+
+    /**
+     * bytes -> mega bytes
+     */
+    private static @NotNull String megabytes(long bytes) {
+        return "%sMB".formatted(DataSize.ofBytes(bytes).toMegabytes());
     }
 }

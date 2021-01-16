@@ -1,4 +1,8 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
 plugins {
+    id 'io.spring.dependency-management'
+    id 'org.springframework.boot' apply  false
     id 'java-library'
 }
 
@@ -15,20 +19,24 @@ repositories {
     mavenCentral()
 }
 
-def springBootVersion = '2.4.1'
+dependencyManagement {
+    imports {
+        mavenBom SpringBootPlugin.BOM_COORDINATES
+    }
+}
 
 dependencies {
     // jetbrains annotations
     api 'org.jetbrains:annotations:20.1.0'
     // spring
-    compileOnly "org.springframework.boot:spring-boot-starter-mail:${springBootVersion}"
-    compileOnly "org.springframework.boot:spring-boot-starter-jdbc:${springBootVersion}"
-    compileOnly "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+    compileOnly "org.springframework.boot:spring-boot-starter-mail"
+    compileOnly "org.springframework.boot:spring-boot-starter-jdbc"
+    compileOnly "org.springframework.boot:spring-boot-starter-web"
     // test
-    testImplementation "org.springframework.boot:spring-boot-starter-json:${springBootVersion}"
-    testImplementation "org.springframework.boot:spring-boot-starter-mail:${springBootVersion}"
-    testImplementation "org.springframework.boot:spring-boot-starter-jdbc:${springBootVersion}"
-    testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+    testImplementation "org.springframework.boot:spring-boot-starter-json"
+    testImplementation "org.springframework.boot:spring-boot-starter-mail"
+    testImplementation "org.springframework.boot:spring-boot-starter-jdbc"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
 
 test {
