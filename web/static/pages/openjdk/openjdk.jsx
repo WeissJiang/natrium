@@ -1,5 +1,5 @@
 import React from '/modules/react'
-import { assertEquals } from '/modules/assertions.mjs'
+import { getOpenJDKInfo2 } from './api.mjs'
 
 function VersionSelect() {
     return (
@@ -43,6 +43,7 @@ function ArchSelect() {
     return (
         <select name="arch" defaultValue="x64">
             <option value="x64">x64</option>
+            <option value="aarch64">aarch64</option>
         </select>
     )
 }
@@ -110,21 +111,20 @@ function OpenJDK() {
     async function getUrl(ev) {
         ev.preventDefault()
         const form = new FormData(ev.target)
-        // get form data
-        const searchParams = new URLSearchParams({
+
+        const params = {
             release: 'latest',
             openjdk_impl: form.get('openjdk_impl'),
             os: form.get('os'),
             arch: form.get('arch'),
             type: form.get('type'),
-        })
+            version: form.get('version'),
+        }
 
         try {
             setLoading(true)
             setInfo(false)
-            const response = await fetch(`https://api.adoptopenjdk.net/v2/info/releases/openjdk${form.get('version')}?${searchParams}`)
-            assertEquals(response.status, 200, `response is ${response.status}`)
-            const data = await response.json()
+            const data = await getOpenJDKInfo2(params)
             setInfo(data)
             setLoading(false)
         } catch (ex) {
