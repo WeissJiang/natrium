@@ -122,12 +122,12 @@ public abstract class Sugar {
     /**
      * A one-line string template engine
      *
-     * @param template "hello {name}"
+     * @param template "hello ${name}"
      * @param scope    Map.of("name", "world")
      * @return "hello world"
      */
     public static @NotNull String render(@NotNull String template, @NotNull Map<String, ?> scope) {
-        return Pattern.compile("(\\{(\\w+)})").matcher(template).replaceAll(mr -> requireNonNull(scope.get(mr.group(2)), mr.group(1) + " not found in scope").toString());
+        return Pattern.compile("(\\$\\{(\\w+)})").matcher(template).replaceAll(mr -> requireNonNull(scope.get(mr.group(2)), mr.group(1) + " not found in scope").toString());
     }
 
     @Contract(value = "null -> true", pure = true)

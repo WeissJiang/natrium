@@ -1,3 +1,3 @@
-import '{moduleUrl}'
+import '${moduleUrl}'
 
-export default globalThis['{exportName}']
+export default globalThis['${exportName}']

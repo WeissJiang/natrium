@@ -34,7 +34,7 @@ dependencies {
     // user agent parser
     implementation 'com.github.cbdyzj:ua-parser-module:1.5.5'
     // json path
-    implementation 'com.github.cbdyzj:json-path-module:2.4.4'
+    implementation 'com.github.cbdyzj:json-path-module:2.4.5'
     // webp
     implementation 'org.sejda.imageio:webp-imageio:0.1.6'
     // javascript

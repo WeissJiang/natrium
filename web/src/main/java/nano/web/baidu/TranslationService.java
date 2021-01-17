@@ -89,14 +89,14 @@ public class TranslationService {
 
     private static String buildTranslateResult(String resultJson) {
         if (ObjectUtils.isEmpty(resultJson)) {
-            return "翻译结果为空";
+            return "The translation result is empty";
         }
         var context = JsonPathModule.parse(resultJson);
 
         List<Map<String, String>> result = context.read("$.trans_result");
         if (ObjectUtils.isEmpty(result)) {
-            log.warn("翻译异常：{}", resultJson);
-            return "翻译异常：" + context.read("$.error_msg");
+            log.warn("Translation error: {}", resultJson);
+            return "Translation error: " + context.read("$.error_msg");
         }
         return result.stream().map(it -> it.get("dst")).collect(Collectors.joining("\n"));
     }
