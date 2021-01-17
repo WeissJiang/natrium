@@ -5,7 +5,12 @@ function VersionSelect() {
     return (
         <select name="version" defaultValue="11">
             <option value="8">OpenJDK 8 (LTS)</option>
+            <option value="9">OpenJDK 9 (MTS)</option>
+            <option value="10">OpenJDK 10 (MTS)</option>
             <option value="11">OpenJDK 11 (LTS)</option>
+            <option value="12">OpenJDK 12 (MTS)</option>
+            <option value="13">OpenJDK 13 (MTS)</option>
+            <option value="14">OpenJDK 14 (MTS)</option>
             <option value="15">OpenJDK 15 (MTS)</option>
             <option value="16">OpenJDK 16 (MTS)</option>
             <option value="17">OpenJDK 17 (LTS)</option>
@@ -24,7 +29,7 @@ function ImplSelect() {
 
 function OSSelect() {
     return (
-        <select name="os" defaultValue="macos">
+        <select name="os" defaultValue="linux">
             <option value="mac">macOS</option>
             <option value="linux">Linux</option>
             <option value="windows">Windows</option>
