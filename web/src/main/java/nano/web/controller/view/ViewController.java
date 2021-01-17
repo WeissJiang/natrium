@@ -4,6 +4,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+/**
+ * View controller
+ *
+ * @author cbdyzj
+ * @see 2020.9.22
+ */
 @Controller
 public class ViewController {
 

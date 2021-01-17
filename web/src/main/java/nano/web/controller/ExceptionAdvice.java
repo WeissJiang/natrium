@@ -10,6 +10,12 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+/**
+ * Exception advice
+ *
+ * @author cbdyzj
+ * @see 2020.9.16
+ */
 @ControllerAdvice
 public class ExceptionAdvice {
 

@@ -13,6 +13,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 
 /**
  * Config Rabbit beans
+ *
+ * @author cbdyzj
+ * @since 2020.9.13
  */
 @ConditionalOnRabbit
 @Configuration(proxyBeanMethods = false)

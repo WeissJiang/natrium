@@ -12,7 +12,11 @@ import java.util.Objects;
 import java.util.concurrent.Callable;
 
 /**
+ * Cache interceptor
+ *
+ * @author cbdyzj
  * @see LocallyCacheable
+ * @since 2020.10.27
  */
 public class CacheInterceptor implements MethodInterceptor {
 
@@ -67,7 +71,7 @@ public class CacheInterceptor implements MethodInterceptor {
             if (o == null || getClass() != o.getClass()) return false;
             CacheKey cacheKey = (CacheKey) o;
             return Objects.equals(prefix, cacheKey.prefix) &&
-                   Arrays.equals(arguments, cacheKey.arguments);
+                    Arrays.equals(arguments, cacheKey.arguments);
         }
 
         @Override

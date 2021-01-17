@@ -3,6 +3,7 @@ package nano.support;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
@@ -26,7 +27,8 @@ public class EntityUtilsTests {
     @Test
     public void testEntityColumnNames() {
         var names = EntityUtils.entityColumnNames(Apple.class);
-        assertIterableEquals(List.of("color", "tastes"), names);
+        names = names.stream().sorted().collect(Collectors.toList());
+        assertIterableEquals(List.of("color", "id", "name", "tastes"), names);
     }
 
 }

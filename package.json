@@ -6,9 +6,9 @@
   "scripts": {
     "i": "yarn --ignore-optional install",
     "ip": "yarn --ignore-optional install --production",
-    "clean": "node scripts/static_clean.mjs",
-    "build": "node scripts/static_build.mjs",
-    "render": "deno run --no-check --reload scripts/static_render.mjs"
+    "clean": "node scripts/clean_static.mjs",
+    "build": "node scripts/build_static.mjs",
+    "render": "deno run --no-check --reload scripts/render_static.mjs"
   },
   "engines": {
     "node": ">=14",

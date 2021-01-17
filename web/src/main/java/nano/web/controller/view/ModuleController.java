@@ -13,6 +13,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Module controller
+ *
+ * @author cbdyzj
+ * @see 2020.9.22
+ */
 @Controller
 @RequestMapping("/modules")
 public class ModuleController {

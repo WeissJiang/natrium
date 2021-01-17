@@ -5,6 +5,9 @@ import org.springframework.web.client.RestTemplate;
 
 /**
  * 萌娘百科
+ *
+ * @author cbdyzj
+ * @see 2020.8.28
  */
 @Service
 public class MoeService extends MediaWikiService {

@@ -5,6 +5,9 @@ import org.springframework.web.client.RestTemplate;
 
 /**
  * Wikipedia
+ *
+ * @author cbdyzj
+ * @see 2020.8.28
  */
 @Service
 public class WikiService extends MediaWikiService {

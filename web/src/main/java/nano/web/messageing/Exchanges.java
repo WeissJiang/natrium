@@ -1,7 +1,7 @@
 package nano.web.messageing;
 
 /**
- * 交换列表
+ * Exchanges
  *
  * @see ExchangeDeclarer
  */

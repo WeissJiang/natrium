@@ -31,6 +31,12 @@ import static nano.web.security.NanoPrivilege.BASIC;
 import static nano.web.security.TokenCode.generateToken;
 import static nano.web.security.TokenCode.generateVerificationCode;
 
+/**
+ * Security and token service
+ *
+ * @author cbdyzj
+ * @since 2020.8.18
+ */
 @Service
 public class SecurityService {
 

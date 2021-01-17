@@ -23,6 +23,12 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * Translation service
+ *
+ * @author cbdyzj
+ * @since 2020.8.17
+ */
 @Service
 public class TranslationService {
 

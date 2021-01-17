@@ -19,7 +19,7 @@ repositories {
 }
 
 processResources {
-    dependsOn rootProject.staticBuild
+    dependsOn rootProject.buildStatic
 
     from("${projectDir}/dist") {
         into 'static'
@@ -27,7 +27,7 @@ processResources {
 }
 
 clean {
-    dependsOn rootProject.staticClean
+    dependsOn rootProject.cleanStatic
 }
 
 dependencies {

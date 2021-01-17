@@ -11,6 +11,9 @@ import java.util.List;
 
 /**
  * MediaWiki
+ *
+ * @author cbdyzj
+ * @see 2020.8.28
  */
 public abstract class MediaWikiService {
 

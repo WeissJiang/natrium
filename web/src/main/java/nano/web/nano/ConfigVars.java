@@ -5,7 +5,10 @@ import nano.web.nano.model.Bot;
 import java.util.Map;
 
 /**
- * 环境配置Key
+ * Config vars
+ *
+ * @author cbdyzj
+ * @since 2020.9.1
  */
 public class ConfigVars {
 

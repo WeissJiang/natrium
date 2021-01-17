@@ -6,6 +6,12 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.regex.Pattern;
 
+/**
+ * Baidu encyclopedia service
+ *
+ * @author cbdyzj
+ * @since 2020.8.28
+ */
 @Service
 public class BaiduEncyclopediaService {
 

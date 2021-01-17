@@ -39,6 +39,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Application entry of web
+ *
+ * @author cbdyzj
+ * @since 2020.8.16
+ */
 @EnableAsync
 @EnableScheduling
 @SpringBootApplication(proxyBeanMethods = false)
