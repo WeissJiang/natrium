@@ -64,27 +64,34 @@ async function compileAndCopyFiles(files) {
     }
 }
 
-async function copyDeps() {
-    const depsJson = await readFileAsString(joinPath(staticPath, 'deps.json'))
+async function copyModules() {
+    const modulesJson = await readFileAsString(joinPath(staticPath, 'modules.json'))
+    const regex = /^\/modules\//
 
-    function getAllValues(object) {
-        const v = []
-        const rg = o => Object.values(o).forEach(it => typeof it === 'object' ? rg(it) : v.push(it))
-        rg(object)
-        return v
+    function getModulePaths(jsonObject) {
+        const modulePaths = []
+
+        function search(item) {
+            for (const it of Object.values(item)) {
+                if (typeof it === 'object') {
+                    search(it)
+                } else if (regex.test(it)) {
+                    modulePaths.push(it)
+                }
+            }
+        }
+
+        search(jsonObject)
+        return modulePaths
     }
 
-    const deps = getAllValues(JSON.parse(depsJson))
+    const modules = getModulePaths(JSON.parse(modulesJson))
 
-    if (!deps.length) {
+    if (!modules.length) {
         return
     }
-    for (const dep of deps) {
-        const r = /^\/modules\//
-        if (!r.test(dep)) {
-            continue
-        }
-        const path = dep.replace(r, '')
+    for (const module of modules) {
+        const path = module.replace(regex, '')
         const srcPath = joinPath(nodeModulesPath, path)
         const destPath = joinPath(distPath, 'modules', path)
         await mkdir(dirname(destPath), { recursive: true })
@@ -108,7 +115,7 @@ async function main() {
     // compile and copy files
     await compileAndCopyFiles(files)
     // copy modules if required
-    await copyDeps()
+    await copyModules()
     transformEsm.service.stop()
 }
 

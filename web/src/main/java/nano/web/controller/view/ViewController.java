@@ -57,10 +57,17 @@ public class ViewController {
         return PAGE_TEMPLATE;
     }
 
-    @GetMapping("/util/name-key")
+    @GetMapping("/tools/name-key")
     public String nameKey(Model model) {
         model.addAttribute("title", "NameKey");
-        model.addAttribute("page", "/pages/util/name_key.jsx");
+        model.addAttribute("page", "/pages/tools/name_key.jsx");
+        return PAGE_TEMPLATE;
+    }
+
+    @GetMapping("/counter")
+    public String counter(Model model) {
+        model.addAttribute("title", "Mail");
+        model.addAttribute("page", "/pages/counter/counter.jsx");
         return PAGE_TEMPLATE;
     }
 }

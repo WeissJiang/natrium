@@ -1,4 +1,4 @@
-import { assertEquals } from '/modules/assertions.mjs'
+import { assertEquals } from '/utils/assertions.mjs'
 
 // See https://api.adoptopenjdk.net/
 

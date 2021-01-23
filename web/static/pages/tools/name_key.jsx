@@ -1,6 +1,6 @@
 import React from '/modules/react'
 
-import murmur3 from '/modules/murmurhash3_32.mjs'
+import murmur3 from '/utils/murmurhash3_32.mjs'
 
 const { useState } = React
 
@@ -16,7 +16,7 @@ function NameKey(props) {
     const [name, setName] = useState('')
 
     function handleNameChange(ev) {
-        const value = ev.target.value.trim()
+        const value = ev.target.value
         setName(value)
     }
 

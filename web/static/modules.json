@@ -1,0 +1,27 @@
+{
+  "react": {
+    "development": "/modules/react/umd/react.development.js",
+    "production": "/modules/react/umd/react.production.min.js",
+    "export": "React"
+  },
+  "react-dom": {
+    "development": "/modules/react-dom/umd/react-dom.development.js",
+    "production": "/modules/react-dom/umd/react-dom.production.min.js",
+    "export": "ReactDOM"
+  },
+  "react-dom-server": {
+    "development": "/modules/react-dom/umd/react-dom-server.browser.development.js",
+    "production": "/modules/react-dom/umd/react-dom-server.browser.production.min.js",
+    "export": "ReactDOMServer"
+  },
+  "redux": {
+    "development": "/modules/redux/dist/redux.js",
+    "production": "/modules/redux/dist/redux.min.js",
+    "export": "Redux"
+  },
+  "react-redux": {
+    "development": "/modules/react-redux/dist/react-redux.js",
+    "production": "/modules/react-redux/dist/react-redux.min.js",
+    "export": "ReactRedux"
+  }
+}

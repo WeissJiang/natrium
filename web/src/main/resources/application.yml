@@ -6,7 +6,7 @@ spring:
     name: nano-web
   profiles:
     include: nano
-    active: dev
+    active: development
   mvc:
     log-resolved-exception: false
   datasource:

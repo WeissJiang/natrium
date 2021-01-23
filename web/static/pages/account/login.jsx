@@ -1,6 +1,6 @@
 import React from '/modules/react'
 import { useUser, getBackUrl } from '/hooks/account.jsx'
-import { sleep } from '/modules/schedule.mjs'
+import { sleep } from '/utils/schedule.mjs'
 
 const { useState } = React
 

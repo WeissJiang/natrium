@@ -17,7 +17,7 @@ import java.util.List;
 import static nano.support.Sugar.forEach;
 import static nano.support.Sugar.map;
 
-@Profile("prod")
+@Profile("production")
 @Component
 public class Cron implements ApplicationContextAware {
 
