@@ -54,7 +54,7 @@ public class TranslationService {
         }
         // english to chinese
         else {
-            return this.translate(input, "en", "to");
+            return this.translate(input, "en", "zh");
         }
     }
 

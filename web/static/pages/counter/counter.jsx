@@ -41,8 +41,8 @@ function Counter(props) {
     )
 }
 
-function mapStateToProps(state) {
-    return { ...state }
+function mapStateToProps({ count }) {
+    return { count }
 }
 
 const WrappedCounter = ReactRedux.connect(mapStateToProps)(Counter)

@@ -1,19 +1,19 @@
 import React from '/modules/react'
-import dayjs from '/modules/dayjs'
+import moment from '/modules/dayjs'
 
 function Sandbox(props) {
 
     const [time, setTime] = React.useState('')
 
     function handleClick(){
-        setTime(dayjs().format('YYYY MM-DDTHH:mm:ss SSS [Z] A'))
+        setTime(moment().format('YYYY MM-DD HH:mm:ss SSS'))
     }
 
     return (
         <div>
-            <span>Sandbox: {time}</span>
+            <span>Time: {time}</span>
             <br/>
-            <button onClick={handleClick}>Click here</button>
+            <button onClick={handleClick}>Refresh time</button>
         </div>
     )
 }
