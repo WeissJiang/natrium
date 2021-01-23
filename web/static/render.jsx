@@ -7,6 +7,8 @@ export default async function (pageUrl, elementId) {
     const Page = lazy(() => import(pageUrl))
     ReactDOM.render(
         <Suspense fallback={null}>
-            <Page/>
-        </Suspense>, document.getElementById(elementId))
+            <Page />
+        </Suspense>,
+        document.getElementById(elementId),
+    )
 }

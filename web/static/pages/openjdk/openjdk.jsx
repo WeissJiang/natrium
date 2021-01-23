@@ -1,6 +1,8 @@
 import React from '/modules/react'
 import { getOpenJDKInfo2 } from './api.mjs'
 
+import style from './style.module.less'
+
 function VersionSelect() {
     return (
         <select name="version" defaultValue="11">
@@ -136,7 +138,7 @@ function OpenJDK() {
     }
 
     return (
-        <div>
+        <div className={style.container}>
             <form onSubmit={getUrl}>
                 <table>
                     <tbody>

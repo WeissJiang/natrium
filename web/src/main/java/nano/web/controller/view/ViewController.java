@@ -1,8 +1,11 @@
 package nano.web.controller.view;
 
+import nano.web.nano.ViewService;
+import nano.web.scripting.Scripting;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * View controller
@@ -13,61 +16,59 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ViewController {
 
-    private static final String PAGE_TEMPLATE = "page_template.html";
+    private final ViewService viewService;
+
+    public ViewController(ViewService viewService) {
+        this.viewService = viewService;
+    }
+
+    @GetMapping(path = "/modules/{moduleName}", produces = Scripting.TEXT_JAVASCRIPT)
+    public ModelAndView getModule(@PathVariable("moduleName") String moduleName) {
+        return this.viewService.buildModule(moduleName);
+    }
 
     @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("title", "nano");
-        model.addAttribute("page", "/pages/nano/index.jsx");
-        return PAGE_TEMPLATE;
+    public ModelAndView index() {
+        return this.viewService.buildPage("nano", "/pages/nano/index.jsx");
     }
 
     @GetMapping("/nano")
-    public String nano(Model model) {
-        model.addAttribute("title", "nano");
-        model.addAttribute("page", "/pages/nano/nano.jsx");
-        return PAGE_TEMPLATE;
+    public ModelAndView nano() {
+        return this.viewService.buildPage("nano", "/pages/nano/nano.jsx");
     }
 
     @GetMapping("/login")
-    public String login(Model model) {
-        model.addAttribute("title", "Login");
-        model.addAttribute("page", "/pages/account/login.jsx");
-        return PAGE_TEMPLATE;
+    public ModelAndView login() {
+        return this.viewService.buildPage("Login", "/pages/account/login.jsx");
     }
 
     @GetMapping("/token")
-    public String token(Model model) {
-        model.addAttribute("title", "Token");
-        model.addAttribute("page", "/pages/account/token.jsx");
-        return PAGE_TEMPLATE;
+    public ModelAndView token() {
+        return this.viewService.buildPage("Token", "/pages/account/token.jsx");
     }
 
     @GetMapping("/openjdk")
-    public String openjdk(Model model) {
-        model.addAttribute("title", "OpenJDK");
-        model.addAttribute("page", "/pages/openjdk/openjdk.jsx");
-        return PAGE_TEMPLATE;
+    public ModelAndView openjdk() {
+        return this.viewService.buildPage("OpenJDK", "/pages/openjdk/openjdk.jsx");
     }
 
     @GetMapping("/mail")
-    public String mail(Model model) {
-        model.addAttribute("title", "Mail");
-        model.addAttribute("page", "/pages/mail/mail.jsx");
-        return PAGE_TEMPLATE;
+    public ModelAndView mail() {
+        return this.viewService.buildPage("Mail", "/pages/mail/mail.jsx");
     }
 
     @GetMapping("/tools/name-key")
-    public String nameKey(Model model) {
-        model.addAttribute("title", "NameKey");
-        model.addAttribute("page", "/pages/tools/name_key.jsx");
-        return PAGE_TEMPLATE;
+    public ModelAndView nameKey() {
+        return this.viewService.buildPage("NameKey", "/pages/tools/name_key.jsx");
     }
 
     @GetMapping("/counter")
-    public String counter(Model model) {
-        model.addAttribute("title", "Counter");
-        model.addAttribute("page", "/pages/counter/counter.jsx");
-        return PAGE_TEMPLATE;
+    public ModelAndView counter() {
+        return this.viewService.buildPage("Counter", "/pages/counter/counter.jsx");
+    }
+
+    @GetMapping("/sandbox")
+    public ModelAndView sandbox() {
+        return this.viewService.buildPage("Sandbox", "/pages/sandbox/sandbox.jsx");
     }
 }
