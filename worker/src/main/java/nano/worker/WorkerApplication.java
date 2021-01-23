@@ -10,10 +10,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 2020.9.5
  */
 @SpringBootApplication(proxyBeanMethods = false)
-public class Application {
+public class WorkerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(WorkerApplication.class, args);
     }
 
 }

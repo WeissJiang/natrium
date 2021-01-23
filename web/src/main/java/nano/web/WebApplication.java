@@ -48,12 +48,12 @@ import java.util.Map;
 @EnableAsync
 @EnableScheduling
 @SpringBootApplication(proxyBeanMethods = false)
-public class Application implements ApplicationContextAware, WebMvcConfigurer {
+public class WebApplication implements ApplicationContextAware, WebMvcConfigurer {
 
     private ApplicationContext context;
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(WebApplication.class, args);
     }
 
     /**

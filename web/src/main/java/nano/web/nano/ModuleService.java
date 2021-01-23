@@ -30,11 +30,11 @@ public class ModuleService {
     }
 
     public Map<String, ?> getModuleModel(String moduleName) {
-        Map<String, String> module = this.modules.read("$.%s".formatted(moduleName));
+        Map<String, ?> module = this.modules.read("$.%s".formatted(moduleName));
         Assert.notNull(module, "module not found: " + moduleName);
-
-        var profile = module.get(this.currentProfile);
-        String exportName = module.get("export");
-        return Map.of("moduleUrl", profile, "exportName", exportName);
+        // build model
+        var moduleUrl = module.get(this.currentProfile);
+        var exportName = module.get("exportName");
+        return Map.of("moduleUrl", moduleUrl, "exportName", exportName);
     }
 }

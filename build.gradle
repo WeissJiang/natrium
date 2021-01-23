@@ -15,7 +15,7 @@ gradle.taskGraph.whenReady { graph ->
 }
 
 task installProductionNodeModules(type: YarnTask) {
-    args = ['ip']
+    args = ['i']
 }
 
 task cleanStatic(type: YarnTask) {

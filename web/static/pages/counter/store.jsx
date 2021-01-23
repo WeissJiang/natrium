@@ -10,7 +10,6 @@ function reducer(state, action) {
             count: action.payload
         }
     }
-
     return state
 }
 

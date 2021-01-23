@@ -66,7 +66,7 @@ public class ViewController {
 
     @GetMapping("/counter")
     public String counter(Model model) {
-        model.addAttribute("title", "Mail");
+        model.addAttribute("title", "Counter");
         model.addAttribute("page", "/pages/counter/counter.jsx");
         return PAGE_TEMPLATE;
     }

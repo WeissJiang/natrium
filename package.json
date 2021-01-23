@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "i": "yarn --ignore-optional install",
-    "ip": "yarn --ignore-optional install --production",
     "clean": "node scripts/clean_static.mjs",
     "build": "node scripts/build_static.mjs",
     "render": "deno run --no-check --reload scripts/render_static.mjs"
@@ -31,7 +30,7 @@
     "url": "https://github.com/cbdyzj/nano-bot/issues"
   },
   "homepage": "https://github.com/cbdyzj/nano-bot#readme",
-  "dependencies": {
+  "devDependencies": {
     "esbuild": "^0.8.34",
     "less": "^4.1.0",
     "postcss": "^8.2.4",
@@ -40,8 +39,5 @@
     "react-dom": "^17.0.1",
     "react-redux": "^7.2.2",
     "redux": "^4.0.5"
-  },
-  "devDependencies": {
-    "express": "^4.17.1"
   }
 }

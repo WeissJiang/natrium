@@ -1,5 +1,6 @@
 package nano.web.messageing;
 
+import nano.web.WebApplication;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.DirectExchange;
@@ -16,7 +17,7 @@ import static nano.web.messageing.Exchanges.NANO;
  * Declare exchanges on rabbit property set
  *
  * @see Exchanges
- * @see nano.web.Application#exchangeDeclarer
+ * @see WebApplication#exchangeDeclarer
  */
 public class ExchangeDeclarer {
 
