@@ -77,7 +77,12 @@ public class TranslationService {
         var url = URI.create(TRANSLATION_API);
         var request = new RequestEntity<>(form, headers, HttpMethod.POST, url);
         var response = this.restTemplate.exchange(request, String.class);
-        return buildTranslateResult(response.getBody());
+        try {
+            return buildTranslateResult(response.getBody());
+        } catch (Exception ex) {
+            log.warn("build translate result error: {}", response.getBody());
+            throw ex;
+        }
     }
 
     private static String buildTranslateResult(String resultJson) {

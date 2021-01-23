@@ -23,5 +23,9 @@
     "development": "/modules/react-redux/dist/react-redux.js",
     "production": "/modules/react-redux/dist/react-redux.min.js",
     "exportName": "ReactRedux"
+  },
+  "dayjs": {
+    "development": "https://cdn.skypack.dev/dayjs@1.10.4",
+    "production": "https://cdn.skypack.dev/dayjs@1.10.4"
   }
 }

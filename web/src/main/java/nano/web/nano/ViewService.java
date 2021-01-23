@@ -1,5 +1,6 @@
 package nano.web.nano;
 
+import org.jetbrains.annotations.NotNull;
 import org.jianzhao.jsonpath.JsonPathModule;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -35,11 +36,15 @@ public class ViewService {
      * model: moduleUrl, exportName
      */
     public ModelAndView buildModule(String moduleName) {
-        Map<String, ?> module = this.modules.read("$.%s".formatted(moduleName));
+        Map<String, String> module = this.modules.read("$.%s".formatted(moduleName));
         Assert.notNull(module, "module not found: " + moduleName);
-        // build
-        var moduleUrl = module.get(this.currentProfile);
+
         var exportName = module.get("exportName");
+        var moduleUrl = module.get(this.currentProfile);
+        if (exportName == null) {
+            return redirect(moduleUrl);
+        }
+
         var modal = Map.of("moduleUrl", moduleUrl, "exportName", exportName);
         var mav = new ModelAndView();
         mav.setViewName("module_template.mjs");
@@ -57,5 +62,12 @@ public class ViewService {
         mav.setViewName("page_template.html");
         mav.addAllObjects(model);
         return mav;
+    }
+
+    /**
+     * redirect
+     */
+    private static ModelAndView redirect(@NotNull String location) {
+        return new ModelAndView("redirect:" + location);
     }
 }
