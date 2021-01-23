@@ -1,4 +1,4 @@
-package nano.web.controller.view;
+package nano.web.controller.nano;
 
 import nano.web.nano.ViewService;
 import nano.web.scripting.Scripting;

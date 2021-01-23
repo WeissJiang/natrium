@@ -48,24 +48,17 @@ public class TranslationService {
     }
 
     public String autoTranslate(String input) {
-        var payload = new Payload();
-        payload.setInput(input);
+        // chinese to english
         if (chinese.test(input)) {
-            // 中译英
-            payload.setFrom("zh");
-            payload.setTo("en");
-        } else {
-            // 英译中
-            payload.setFrom("en");
-            payload.setTo("zh");
+            return this.translate(input, "zh", "en");
         }
-        return this.translate(payload);
+        // english to chinese
+        else {
+            return this.translate(input, "en", "to");
+        }
     }
 
-    public String translate(Payload payload) {
-        var input = payload.getInput();
-        var from = payload.getFrom();
-        var to = payload.getTo();
+    public String translate(String input, String from, String to) {
         var appId = this.configVars.getBaiduTranslationAppId();
         var secretKey = this.configVars.getBaiduTranslationSecretKey();
         var salt = Instant.now().toString();
@@ -100,37 +93,4 @@ public class TranslationService {
         }
         return result.stream().map(it -> it.get("dst")).collect(Collectors.joining("\n"));
     }
-
-    public static class Payload {
-
-        private String input;
-        private String from;
-        private String to;
-
-        public String getInput() {
-            return input;
-        }
-
-        public void setInput(String input) {
-            this.input = input;
-        }
-
-        public String getFrom() {
-            return from;
-        }
-
-        public void setFrom(String from) {
-            this.from = from;
-        }
-
-        public String getTo() {
-            return to;
-        }
-
-        public void setTo(String to) {
-            this.to = to;
-        }
-    }
-
-
 }
