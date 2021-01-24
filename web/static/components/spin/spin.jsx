@@ -4,9 +4,14 @@ import style from './style.module.less'
 
 function Spin(props) {
 
-    return (
-        <div>Spin</div>
-    )
+  return (
+    <div className={style.load}>
+      <hr />
+      <hr />
+      <hr />
+      <hr />
+    </div>
+  )
 }
 
 export default Spin
