@@ -1,8 +1,11 @@
 import React from '/modules/react'
 import ReactRedux from '/modules/react-redux'
 import { sleep } from '/utils/schedule.mjs'
+import CenterBox from '/components/center-box/center-box.jsx'
 
 import { CounterProvider } from './store.jsx'
+
+import style from './style.module.less'
 
 function Counter(props) {
 
@@ -11,7 +14,7 @@ function Counter(props) {
     function handleInputChange(ev) {
         props.dispatch({
             type: 'setCount',
-            payload: ev.target.value
+            payload: Number(ev.target.value) || 0
         })
     }
     function handleClickPlus() {
@@ -32,12 +35,13 @@ function Counter(props) {
     }
 
     return (
-        <div>
+        <CenterBox className={style.container}>
             <input type="text" value={props.count} onChange={handleInputChange} />
-            <br />
-            <button onClick={handleClickPlus}>+</button>
-            <button onClick={handleClickPlus1s} disabled={plus1sButtonDisabled}>+1s</button>
-        </div>
+            <div>
+                <button onClick={handleClickPlus}>+</button>
+                <button onClick={handleClickPlus1s} disabled={plus1sButtonDisabled}>+1s</button>
+            </div>
+        </CenterBox>
     )
 }
 
