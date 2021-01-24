@@ -25,7 +25,7 @@ export async function transformEsm(filePath) {
     return code
 }
 
-export async function transformCss(filePath) {
+export async function transformLess(filePath) {
     function inject(css, exports = {}) {
         const injection = `
         ;(function (encoded) {

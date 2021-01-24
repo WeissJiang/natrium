@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url'
 import { dirname, join as joinPath } from 'path'
 import { copyFile, mkdir, readdir, stat, writeFile } from 'fs/promises'
 
-import { readFileAsString, transformCss, transformEsm } from './transforming.mjs'
+import { readFileAsString, transformLess, transformEsm } from './transforming.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -47,7 +47,7 @@ async function compileAndCopyFiles(files) {
         }
         // css module
         else if (/.+\.(less)$/.test(filename)) {
-            return await transformCss(filePath)
+            return await transformLess(filePath)
         }
         // others
         else {
