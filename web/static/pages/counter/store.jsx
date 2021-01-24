@@ -13,7 +13,7 @@ function reducer(state, action) {
     return state
 }
 
-const initialState = { count: 7 }
+const initialState = { count: 7n }
 
 export const store = Redux.createStore(reducer, initialState)
 

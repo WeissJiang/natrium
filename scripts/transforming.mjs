@@ -15,7 +15,7 @@ export async function transformEsm(filePath) {
     }
     const input = await readFileAsString(filePath)
     const transformed = await transformEsm.service.transform(input, {
-        target: 'es2018',
+        target: 'es2020',
         loader: 'jsx'
     })
     const { code, warnings } = transformed
