@@ -17,10 +17,10 @@ function Counter(props) {
             payload: Number(ev.target.value) || 0
         })
     }
-    function handleClickPlus() {
+    function handleClickMinus() {
         props.dispatch({
             type: 'setCount',
-            payload: props.count + 1
+            payload: props.count - 1
         })
     }
 
@@ -38,7 +38,7 @@ function Counter(props) {
         <CenterBox className={style.container}>
             <input type="text" value={props.count} onChange={handleInputChange} />
             <div>
-                <button onClick={handleClickPlus}>+</button>
+                <button onClick={handleClickMinus}>-</button>
                 <button onClick={handleClickPlus1s} disabled={plus1sButtonDisabled}>+1s</button>
             </div>
         </CenterBox>
