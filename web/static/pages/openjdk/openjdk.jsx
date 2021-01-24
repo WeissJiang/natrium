@@ -1,4 +1,5 @@
 import React from '/modules/react'
+
 import { getOpenJDKInfo2 } from './api.mjs'
 
 import style from './style.module.less'
@@ -143,23 +144,23 @@ function OpenJDK() {
                 <table>
                     <tbody>
                     <tr>
-                        <td>Version:</td>
+                        <td>Version</td>
                         <td><VersionSelect/></td>
                     </tr>
                     <tr>
-                        <td>JVM:</td>
+                        <td>JVM</td>
                         <td><ImplSelect/></td>
                     </tr>
                     <tr>
-                        <td>Operate System:</td>
+                        <td>Operate System</td>
                         <td><OSSelect/></td>
                     </tr>
                     <tr>
-                        <td>Architecture:</td>
+                        <td>Architecture</td>
                         <td><ArchSelect/></td>
                     </tr>
                     <tr>
-                        <td>Type:</td>
+                        <td>Type</td>
                         <td><TypeSelect/></td>
                     </tr>
                     <tr>
