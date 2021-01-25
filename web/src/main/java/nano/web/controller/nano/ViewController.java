@@ -71,4 +71,10 @@ public class ViewController {
     public ModelAndView sandbox() {
         return this.viewService.buildPage("Sandbox", "/pages/sandbox/sandbox.jsx");
     }
+
+    @GetMapping("/epub")
+    public ModelAndView epub() {
+        return this.viewService.buildPage("ePub", "/pages/epub/epub.jsx");
+    }
+
 }

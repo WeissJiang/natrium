@@ -35,7 +35,7 @@ public class ViewService {
      * module_template.mjs
      * model: moduleUrl, exportName
      */
-    public ModelAndView buildModule(String moduleName) {
+    public @NotNull ModelAndView buildModule(@NotNull String moduleName) {
         Map<String, String> module = this.modules.read("$.%s".formatted(moduleName));
         Assert.notNull(module, "module not found: " + moduleName);
 
@@ -56,7 +56,7 @@ public class ViewService {
      * page_template.html
      * model: title, page
      */
-    public ModelAndView buildPage(String title, String page) {
+    public @NotNull ModelAndView buildPage(@NotNull String title, @NotNull String page) {
         var model = Map.of("title", title, "page", page);
         var mav = new ModelAndView();
         mav.setViewName("page_template.html");
@@ -67,7 +67,7 @@ public class ViewService {
     /**
      * redirect
      */
-    private static ModelAndView redirect(@NotNull String location) {
+    private static @NotNull ModelAndView redirect(@NotNull String location) {
         return new ModelAndView("redirect:" + location);
     }
 }

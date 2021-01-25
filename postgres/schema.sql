@@ -51,3 +51,15 @@ CREATE TABLE IF NOT EXISTS nano_task
     last_execution_time TIMESTAMPTZ DEFAULT NOW(),
     creation_time       TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- key_value
+DROP TABLE IF EXISTS key_value;
+CREATE TABLE IF NOT EXISTS key_value
+(
+    id                SERIAL PRIMARY KEY,
+    key               VARCHAR NOT NULL,
+    value             JSONB       DEFAULT '{}',
+    last_updated_time TIMESTAMPTZ,
+    creation_time     TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE (key)
+);
