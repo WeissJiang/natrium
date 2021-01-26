@@ -2,7 +2,7 @@ import React from '/modules/react'
 
 import style from './style.module.less'
 
-function Spin(props) {
+export default function Spin(props) {
 
   return (
     <div className={style.load}>
@@ -13,5 +13,3 @@ function Spin(props) {
     </div>
   )
 }
-
-export default Spin

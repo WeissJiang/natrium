@@ -48,7 +48,7 @@ function printJson(o) {
     return JSON.stringify(o, null, 2)
 }
 
-function Nano() {
+export default function Nano() {
     const { loading, token, redirectToLoginPageIfNotLogin } = useUser()
 
     const [userList, setUserList] = useState([])
@@ -94,4 +94,4 @@ function Nano() {
     );
 }
 
-export default Nano
+

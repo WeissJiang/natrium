@@ -38,7 +38,7 @@ async function fetchDeleteToken(token, idList) {
     return result.payload
 }
 
-function Token(props) {
+export default function Token(props) {
     const { loading, user, token, redirectToLoginPageIfNotLogin } = useUser()
     const [tokenList, setTokenList] = useState(null)
 
@@ -114,4 +114,4 @@ function Token(props) {
     )
 }
 
-export default Token
+

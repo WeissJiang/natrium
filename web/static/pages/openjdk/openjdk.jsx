@@ -106,7 +106,7 @@ function InfoTable(props) {
 /**
  * @see https://api.adoptopenjdk.net/README
  */
-function OpenJDK() {
+export default function OpenJDK() {
 
     const [loading, setLoading] = React.useState(false)
     const [info, setInfo] = React.useState(false)
@@ -183,4 +183,4 @@ function OpenJDK() {
     )
 }
 
-export default OpenJDK
+

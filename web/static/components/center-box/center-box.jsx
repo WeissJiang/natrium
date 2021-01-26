@@ -2,7 +2,7 @@ import React from '/modules/react'
 
 import style from './style.module.less'
 
-function CenterBox(props) {
+export default function CenterBox(props) {
 
     const className = [style.container, props.className].filter(it => !!it).join(' ')
 
@@ -13,4 +13,3 @@ function CenterBox(props) {
     )
 }
 
-export default CenterBox

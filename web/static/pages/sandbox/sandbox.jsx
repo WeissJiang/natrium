@@ -1,7 +1,7 @@
 import React from '/modules/react'
 import moment from '/modules/dayjs'
 
-function Sandbox(props) {
+export default function Sandbox(props) {
 
     const [time, setTime] = React.useState('')
 
@@ -18,4 +18,4 @@ function Sandbox(props) {
     )
 }
 
-export default Sandbox
+

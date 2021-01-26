@@ -13,7 +13,7 @@ function getNameKey(name) {
     return murmur3(name, 314) % 100
 }
 
-function NameKey(props) {
+export default function NameKey(props) {
 
     const [name, setName] = useState('')
 
@@ -35,4 +35,4 @@ function NameKey(props) {
     )
 }
 
-export default NameKey
+

@@ -38,7 +38,7 @@ function LoggedInBox(props) {
     )
 }
 
-function Login(props) {
+export default function Login(props) {
 
     const [verifying, setVerifying] = useState(false)
     const [verificationCode, setVerificationCode] = useState('')
@@ -150,4 +150,4 @@ function Login(props) {
     }
 }
 
-export default Login
+
