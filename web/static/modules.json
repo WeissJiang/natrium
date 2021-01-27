@@ -24,6 +24,11 @@
     "production": "/modules/react-redux/dist/react-redux.min.js",
     "exportName": "ReactRedux"
   },
+  "jszip": {
+    "development": "/modules/jszip/dist/jszip.min.js",
+    "production": "/modules/jszip/dist/jszip.min.js",
+    "exportName": "JSZip"
+  },
   "dayjs": {
     "development": "https://cdn.skypack.dev/dayjs@1.10.4",
     "production": "https://cdn.skypack.dev/dayjs@1.10.4"

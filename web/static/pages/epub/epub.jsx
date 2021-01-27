@@ -1,16 +1,20 @@
 import React from '/modules/react'
-import ReactDOMServer from '/modules/react-dom-server'
+import { saveAs } from '/utils/file_saver.mjs'
 
-import Template from './template.jsx'
+import { createBook } from './create-book.jsx'
 
-function renderToString() {
-    return ReactDOMServer.renderToStaticMarkup(<Template/>)
-}
+import style from './style.module.less'
 
 export default function Epub(props) {
-    console.log(renderToString())
+
+   async function handleClick() {
+        const bookBlob = await createBook()
+        saveAs(bookBlob, 'book.epub')
+   }
 
     return (
-        <div>ePub</div>
+        <div className={style.container}>
+            <button onClick={handleClick}>Create book</button>
+        </div>
     )
 }
