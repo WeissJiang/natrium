@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" version="3.0" xml:lang="en" unique-identifier="pub-id">
+    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+        <dc:language>zh-CN</dc:language>
+        <meta property="dcterms:modified">2021-01-30T10:22:23Z</meta>
+        <!-- Id, referenced above - in Reverse domain name notation -->
+        <dc:identifier id="pub-id">urn:uuid:858e445f-e926-4f8d-abac-45ccfdf66729</dc:identifier>
+        <!-- Basic Metadata -->
+        <dc:rights>Public domain in the USA.</dc:rights>
+        <dc:creator>${creator}</dc:creator>
+        <dc:contributor>${contributor}</dc:contributor>
+        <dc:title>${title}</dc:title>
+        <dc:subject>${subject}</dc:subject>
+        <dc:source>${source}</dc:source>
+    </metadata>
+    <manifest>
+        <!-- Front mater -->
+        <item id="toc" properties="nav" href="toc.xhtml" media-type="application/xhtml+xml"/>
+        <!-- Stylesheets -->
+        <item id="style" href="stylesheet.css" media-type="text/css"/>
+        <!-- Images -->
+<!--        <item id="i001_th" href="images/i001_th.jpg" media-type="image/jpeg"/>-->
+        ${images}
+        <!-- Chapters -->
+        <item id="page0" href="page0.xhtml" media-type="application/xhtml+xml"/>
+    </manifest>
+    <spine>
+        <!-- Frontmater -->
+        <itemref idref="toc" linear="no"/>
+        <!-- Chapters -->
+        <itemref linear="yes" idref="page0"/>
+    </spine>
+</package>
