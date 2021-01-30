@@ -1,8 +1,8 @@
-import React from '/modules/react'
-import ReactRedux from '/modules/react-redux'
-import { sleep } from '/utils/schedule.mjs'
-import CenterBox from '/components/center-box/center-box.jsx'
-import message from '/components/message/message.jsx'
+import React from 'react'
+import { connect } from 'react-redux'
+import { sleep } from '@/utils/schedule.mjs'
+import CenterBox from '@/components/center-box/center-box.jsx'
+import message from '@/components/message/message.jsx'
 
 import { CounterProvider } from './store.jsx'
 
@@ -59,7 +59,7 @@ function mapStateToProps({ count }) {
     return { count }
 }
 
-const WrappedCounter = ReactRedux.connect(mapStateToProps)(Counter)
+const WrappedCounter = connect(mapStateToProps)(Counter)
 
 export default function () {
     return (

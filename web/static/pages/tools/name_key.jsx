@@ -1,10 +1,8 @@
-import React from '/modules/react'
+import React,{ useState } from 'react'
 
-import murmur3 from '/utils/murmurhash3_32.mjs'
+import murmur3 from '@/utils/murmurhash3_32.mjs'
 
 import style from './style.module.less'
-
-const { useState } = React
 
 function getNameKey(name) {
     if (!name) {

@@ -1,5 +1,5 @@
-import React from '/modules/react'
-import moment from '/modules/dayjs'
+import React from 'react'
+import moment from 'dayjs'
 
 export default function Sandbox(props) {
 

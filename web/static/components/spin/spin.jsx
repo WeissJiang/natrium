@@ -1,4 +1,4 @@
-import React from '/modules/react'
+import React from 'react'
 
 import style from './style.module.less'
 

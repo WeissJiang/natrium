@@ -1,9 +1,6 @@
-import React from '/modules/react'
-import { useUser, getBackUrl } from '/hooks/account.jsx'
-import { sleep } from '/utils/schedule.mjs'
-
-const { useState } = React
-
+import React, { useState } from 'react'
+import { useUser, getBackUrl } from '@/hooks/account.jsx'
+import { sleep } from '@/utils/schedule.mjs'
 
 function VerifyingBox(props) {
     return (
@@ -21,7 +18,7 @@ function LoginForm(props) {
         <div>
             <form onSubmit={props.handleSubmit}>
                 <span>Please input Telegram name: </span>
-                <input type="text" name="username" required/>
+                <input type="text" name="username" required />
                 <button type="submit">Login</button>
             </form>
         </div>
@@ -69,7 +66,7 @@ export default function Login(props) {
         if (backUrl) {
             location.href = backUrl
         }
-        return <LoggedInBox user={user} handleLogout={handleLogout}/>
+        return <LoggedInBox user={user} handleLogout={handleLogout} />
     }
 
     // --- 用户未登录、Token不存在或无效
@@ -144,9 +141,9 @@ export default function Login(props) {
     }
 
     if (verifying) {
-        return <VerifyingBox verificationCode={verificationCode}/>
+        return <VerifyingBox verificationCode={verificationCode} />
     } else {
-        return <LoginForm handleSubmit={handleLoginFromSubmit}/>
+        return <LoginForm handleSubmit={handleLoginFromSubmit} />
     }
 }
 

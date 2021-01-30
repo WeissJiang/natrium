@@ -1,9 +1,7 @@
-import React from '/modules/react'
-import { useUser, redirectToLoginPage } from '/hooks/account.jsx'
+import React, { useState, useEffect } from 'react'
+import { useUser, redirectToLoginPage } from '@/hooks/account.jsx'
 
 import style from './style.module.less'
-
-const { useState, useEffect } = React
 
 function isoToLocal(iso) {
     if (!iso) {
@@ -89,7 +87,7 @@ export default function Token(props) {
             <table className={style['t-table']}>
                 <thead>
                 <tr>
-                    <th/>
+                    <th />
                     <th> NAME</th>
                     <th> PRIVILEGE</th>
                     <th> LAST ACTIVE</th>

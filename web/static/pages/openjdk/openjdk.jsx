@@ -1,4 +1,4 @@
-import React from '/modules/react'
+import React from 'react'
 
 import { getOpenJDKInfo2 } from './api.mjs'
 

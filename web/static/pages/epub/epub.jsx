@@ -1,5 +1,5 @@
-import React from '/modules/react'
-import { saveAs } from '/utils/file_saver.mjs'
+import React from 'react'
+import { saveAs } from 'file-saver'
 
 import { createBook } from './create-book.jsx'
 

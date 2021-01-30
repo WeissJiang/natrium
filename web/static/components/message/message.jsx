@@ -1,5 +1,5 @@
-import React from '/modules/react'
-import ReactDOM from '/modules/react-dom'
+import React from 'react'
+import ReactDOM from 'react-dom'
 
 import style from './style.module.less'
 

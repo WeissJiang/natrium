@@ -1,5 +1,5 @@
-import React from '/modules/react'
-import { useUser } from '/hooks/account.jsx'
+import React from 'react'
+import { useUser } from '@/hooks/account.jsx'
 
 import style from './style.module.less'
 

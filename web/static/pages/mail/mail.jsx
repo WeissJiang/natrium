@@ -1,4 +1,4 @@
-import React from '/modules/react'
+import React from 'react'
 
 export default function Mail(props) {
 

@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "i": "yarn --ignore-optional install",
-    "clean": "node scripts/clean_static.mjs",
-    "build": "node scripts/build_static.mjs",
-    "render": "deno run --no-check --reload scripts/render_static.mjs"
+    "start": "snowpack dev --config scripts/snowpack.config.cjs",
+    "build": "snowpack build --config scripts/snowpack.config.cjs",
+    "clean": "node scripts/clean_static.mjs"
   },
   "engines": {
     "node": ">=14",
@@ -31,14 +31,15 @@
   },
   "homepage": "https://github.com/cbdyzj/nano-bot#readme",
   "devDependencies": {
-    "esbuild": "^0.8.36",
+    "dayjs": "^1.10.4",
+    "file-saver": "^2.0.5",
     "jszip": "^3.5.0",
-    "less": "^4.1.0",
-    "postcss": "^8.2.4",
-    "postcss-modules": "^4.0.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-redux": "^7.2.2",
-    "redux": "^4.0.5"
+    "react-router-dom": "^5.2.0",
+    "redux": "^4.0.5",
+    "snowpack": "^3.0.11",
+    "snowpack-plugin-less": "^1.0.5"
   }
 }

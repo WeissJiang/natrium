@@ -1,4 +1,4 @@
-import JSZip from '/modules/jszip'
+import JSZip from 'jszip'
 
 import { getContainer, getPackage, getPage0, getToc, getStylesheet } from './templates/template.jsx'
 

@@ -1,6 +1,6 @@
-import React from '/modules/react'
-import ReactDOMServer from '/modules/react-dom-server'
-import render from '/utils/render.mjs'
+import React from 'react'
+import ReactDOMServer from 'react-dom/server'
+import render from '@/utils/render.mjs'
 
 export function renderToString(element) {
     return ReactDOMServer.renderToStaticMarkup(element)

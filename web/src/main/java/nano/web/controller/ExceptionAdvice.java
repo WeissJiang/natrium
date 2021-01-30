@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * @see 2020.9.16
  */
 @ControllerAdvice
-public class ExceptionAdvice {
+public class ExceptionAdvice  {
 
     private static final Logger log = LoggerFactory.getLogger(ExceptionAdvice.class);
 
