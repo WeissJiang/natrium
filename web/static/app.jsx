@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Switch, useLocation } from 'react-route
 
 import Spin from '@/components/spin/spin.jsx'
 
+import './styles/reset.css'
+
 const Index = lazy(() => import('@/pages/nano/index.jsx'))
 const Nano = lazy(() => import('@/pages/nano/nano.jsx'))
 const Login = lazy(() => import('@/pages/account/login.jsx'))
@@ -25,11 +27,9 @@ function NoMatch() {
     );
 }
 
-
 export default function App() {
     return (
         <Router>
-
             <Suspense fallback={<Spin />}>
                 <Switch>
                     <Route path="/" exact><Index /></Route>

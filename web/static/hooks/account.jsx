@@ -3,7 +3,6 @@ import { getLocalItem, setLocalItem, removeLocalItem } from '@/utils/storage.mjs
 
 const { useState, useEffect } = React
 
-
 export function redirectToLoginPage() {
     const loginUrl = '/login'
     const backUrl = new URL(location.href).pathname

@@ -28,14 +28,15 @@ export default function Epub(props) {
 
     return (
         <div className={style.container}>
-            <form onSubmit={handleSubmit(onSubmitForm)}>
-                <input type="file" name="images" ref={register({ required: true })} disabled={loading} multiple accept=".jpg,.jpeg,.png,.gif" />
-                {errors.images && 'Images is required.'}
-                <input type="text" name="title" ref={register} placeholder="Title" />
-                <input type="text" name="creator" ref={register} placeholder="Creator" />
-                <input type="text" name="filename" ref={register} placeholder="Filename" />
-                <input disabled={loading} type="submit" value="Create book" />
-                {loading && 'Book creating...'}
+            <form className={style['form-box']} onSubmit={handleSubmit(onSubmitForm)}>
+                <input disabled={loading} type="file" name="images" ref={register({ required: true })}
+                       multiple accept=".jpg,.jpeg,.png,.gif" />
+                <span>{errors.images && 'Images is required.'}</span>
+                <input disabled={loading} type="text" name="title" ref={register} placeholder="Title" />
+                <input disabled={loading} type="text" name="creator" ref={register} placeholder="Creator" />
+                <input disabled={loading} type="text" name="filename" ref={register} placeholder="Filename" />
+                <button disabled={loading}>Create book</button>
+                <span>{loading && 'Book creating...'}</span>
             </form>
         </div>
     )
