@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { sleep } from '@/utils/schedule.mjs'
-import CenterBox from '@/components/center-box/center-box.jsx'
+import CenterBox from '@/components/center-box/CenterBox.jsx'
 import message from '@/components/message/message.jsx'
 
 import { CounterProvider } from './store.jsx'

@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import saveAs from 'file-saver'
 import { useForm } from 'react-hook-form'
-import { createBook } from './create-book.jsx'
+import { createBook } from './epub.jsx'
 
 import style from './style.module.less'
 
-export default function Epub(props) {
+export default function Album(props) {
 
     const [loading, setLoading] = useState(false)
     const { register, handleSubmit, errors } = useForm()
@@ -35,7 +35,7 @@ export default function Epub(props) {
                 <input disabled={loading} type="text" name="title" ref={register} placeholder="Title" />
                 <input disabled={loading} type="text" name="creator" ref={register} placeholder="Creator" />
                 <input disabled={loading} type="text" name="filename" ref={register} placeholder="Filename" />
-                <button disabled={loading}>Create book</button>
+                <button disabled={loading}>Create Album</button>
                 <span>{loading && 'Book creating...'}</span>
             </form>
         </div>
