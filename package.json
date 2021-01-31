@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "i": "yarn --ignore-optional install",
-    "start": "snowpack dev --config scripts/snowpack.config.cjs",
+    "start": "snowpack dev --config scripts/snowpack.config.cjs --open=none",
     "build": "snowpack build --config scripts/snowpack.config.cjs",
     "clean": "node scripts/clean_static.mjs"
   },
@@ -36,6 +36,7 @@
     "jszip": "^3.5.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-hook-form": "^6.14.2",
     "react-redux": "^7.2.2",
     "react-router-dom": "^5.2.0",
     "redux": "^4.0.5",
