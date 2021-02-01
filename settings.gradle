@@ -7,4 +7,4 @@ pluginManagement {
 }
 
 rootProject.name = 'nano-bot'
-include 'common', 'web', 'worker'
+include 'client', 'common', 'web', 'worker'

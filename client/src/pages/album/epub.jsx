@@ -1,6 +1,6 @@
 import JSZip from 'jszip'
 
-import { getContainer, getPackage, getPage0, getToc, getStylesheet } from './templates/template.jsx'
+import { getContainer, getPackage, getPage0, getToc, getStylesheet } from './template.jsx'
 
 export async function createBook(data = {}) {
     const zip = new JSZip()

@@ -4,14 +4,13 @@
   "description": "nano",
   "main": "index.js",
   "scripts": {
-    "i": "yarn --ignore-optional install",
-    "start": "snowpack dev --config scripts/snowpack.config.cjs --open=none",
-    "build": "snowpack build --config scripts/snowpack.config.cjs",
-    "clean": "node scripts/clean_static.mjs"
+    "start": "snowpack dev --config snowpack.config.cjs --open=none",
+    "build": "snowpack build --config snowpack.config.cjs",
+    "clean": "del dist"
   },
   "engines": {
     "node": ">=14",
-    "yarn": ">=1.22"
+    "npm": ">=6"
   },
   "os": [
     "darwin",
@@ -25,13 +24,14 @@
   "type": "module",
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/cbdyzj/nano-bot/issues"
   },
   "homepage": "https://github.com/cbdyzj/nano-bot#readme",
   "devDependencies": {
     "dayjs": "^1.10.4",
+    "del-cli": "^3.0.1",
     "file-saver": "^2.0.5",
     "jszip": "^3.5.0",
     "react": "^17.0.1",

@@ -15,7 +15,7 @@
         <item id="toc" properties="nav" href="toc.xhtml" media-type="application/xhtml+xml"/>
         <item id="style" href="stylesheet.css" media-type="text/css"/>
         <item id="page0" href="page0.xhtml" media-type="application/xhtml+xml"/>
-        ${images}
+        ${items}
     </manifest>
     <spine>
         <itemref linear="yes" idref="page0"/>

@@ -2,13 +2,13 @@ import React from 'react'
 import ReactDOMServer from 'react-dom/server'
 import render from '@/utils/render.mjs'
 
-const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf('/') + 1);
+const prefix = '/templates/ebook/'
 const cache = new Map
 
 async function templated(name) {
     let item = cache.get(name)
     if (!item) {
-        const response = await fetch(__dirname + name)
+        const response = await fetch(prefix + name)
         item = await response.text()
         cache.set(name, item)
     }
@@ -33,11 +33,11 @@ export function renderToString(element) {
 
 export async function getPackage({ images, title, creator }) {
     const template = await templated('package.xml')
-    const injection = renderToString(images.map((it, i) => (
+    const items = renderToString(images.map((it, i) => (
         <item id={`image${i}`} href={`images/${i}.${it.name.split('.').pop()}`} media-type={it.type} />
     )))
     return render(template, {
-        images: injection,
+        items,
         identifier: new Date().getTime(),
         title: title || 'Title',
         creator: creator || 'Creator',

@@ -1,7 +1,3 @@
-plugins {
-    id 'com.github.node-gradle.node'
-}
-
 task stage {
     dependsOn subprojects.collect { ":${it.name}:build" }
 }
@@ -12,25 +8,4 @@ gradle.taskGraph.whenReady { graph ->
         graph.allTasks.findAll { it instanceof Test }
                 .each { it.enabled = false }
     }
-}
-
-task installProductionNodeModules(type: YarnTask) {
-    args = ['i']
-}
-
-task cleanStatic(type: YarnTask) {
-    args = ['clean']
-}
-
-task buildStatic(type: YarnTask) {
-    if (!file("${rootDir}/node_modules").exists()) {
-        dependsOn installProductionNodeModules
-    }
-    args = ['build']
-}
-
-node {
-    version = '15.6.0'
-    yarnVersion = '1.22.10'
-    download = true
 }

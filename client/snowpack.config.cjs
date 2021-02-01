@@ -1,12 +1,12 @@
 module.exports = {
     mount: {
-        '../web/static': '/',
+        './src': '/',
     },
     plugins: [
         'snowpack-plugin-less',
     ],
     alias: {
-        '@': '../web/static',
+        '@': './src',
     },
     routes: [
         { match: 'routes', src: '.*', dest: '/' }
@@ -14,6 +14,6 @@ module.exports = {
     packageOptions: {},
     devOptions: {},
     buildOptions: {
-        out: '../web/dist',
+        out: './dist',
     },
 }

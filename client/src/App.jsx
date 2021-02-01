@@ -5,7 +5,7 @@ import Spin from '@/components/spin/spin.jsx'
 
 import './styles/reset.css'
 
-const Index = lazy(() => import('@/pages/nano/index.jsx'))
+const Index = lazy(() => import('@/pages/nano/Index.jsx'))
 const Nano = lazy(() => import('@/pages/nano/Nano.jsx'))
 const Login = lazy(() => import('@/pages/account/Login.jsx'))
 const Token = lazy(() => import('@/pages/account/Token.jsx'))
@@ -24,7 +24,7 @@ function NoMatch() {
                 No match for <code>{location.pathname}</code>
             </h3>
         </div>
-    );
+    )
 }
 
 export default function App() {

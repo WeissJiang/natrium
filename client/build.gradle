@@ -1,0 +1,51 @@
+plugins {
+    id 'java-library'
+    id 'com.github.node-gradle.node'
+}
+
+java {
+    modularity.inferModulePath = true
+}
+
+group = 'nano'
+
+sourceCompatibility = '15'
+targetCompatibility = '15'
+
+task start(type: NpmTask) {
+    args = ['start']
+}
+
+task installNodeModules(type: NpmTask) {
+    args = ['install']
+}
+
+task buildStatic(type: NpmTask) {
+    if (!file('node_modules').exists()) {
+        dependsOn installNodeModules
+    }
+    args = ['run', 'build']
+}
+
+task cleanStatic(type: NpmTask) {
+    args = ['run', 'clean']
+}
+
+clean {
+    dependsOn cleanStatic
+}
+
+processResources {
+    dependsOn buildStatic
+
+    from('dist') {
+        into '/META-INF/resources'
+    }
+}
+
+node {
+    version = '15.6.0'
+    npmVersion = '6.14.11'
+    download = true
+}
+
