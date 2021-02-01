@@ -4,6 +4,7 @@ module.exports = {
     },
     plugins: [
         'snowpack-plugin-less',
+        ['@snowpack/plugin-postcss', { config: './postcss.config.cjs' }],
     ],
     alias: {
         '@': './src',
