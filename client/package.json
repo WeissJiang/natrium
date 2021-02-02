@@ -1,7 +1,7 @@
 {
-  "name": "nano-bot",
+  "name": "natrium",
   "version": "1.0.0",
-  "description": "nano",
+  "description": "natrium",
   "main": "index.js",
   "scripts": {
     "start": "snowpack dev --config ./snowpack.config.cjs --open=none",
@@ -19,16 +19,16 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cbdyzj/nano-bot.git"
+    "url": "git+https://github.com/cbdyzj/natrium.git"
   },
   "type": "module",
   "keywords": [],
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/cbdyzj/nano-bot/issues"
+    "url": "https://github.com/cbdyzj/natrium/issues"
   },
-  "homepage": "https://github.com/cbdyzj/nano-bot#readme",
+  "homepage": "https://github.com/cbdyzj/natrium#readme",
   "devDependencies": {
     "@snowpack/plugin-postcss": "^1.1.0",
     "autoprefixer": "^10.2.4",

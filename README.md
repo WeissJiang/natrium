@@ -1,4 +1,3 @@
-# nano-bot
+# natrium
 
-- https://nano-bot.herokuapp.com
-- https://t.me/nano_telegram_bot
+- https://natrium.herokuapp.com
