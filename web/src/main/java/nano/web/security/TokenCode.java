@@ -38,7 +38,7 @@ public abstract class TokenCode {
     /**
      * Generating random token
      */
-    public static @NotNull String generateToken() {
+    public static @NotNull String generateUUID() {
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
 

@@ -28,7 +28,7 @@ import java.util.Objects;
 
 import static nano.support.Sugar.*;
 import static nano.web.security.NanoPrivilege.BASIC;
-import static nano.web.security.TokenCode.generateToken;
+import static nano.web.security.TokenCode.generateUUID;
 import static nano.web.security.TokenCode.generateVerificationCode;
 
 /**
@@ -121,7 +121,7 @@ public class SecurityService {
      * 不保存原始Token，保存脱敏后的Token
      */
     public @NotNull Map<String, String> createVerifyingToken(@NotNull String username, String ua) {
-        var originalToken = generateToken();
+        var originalToken = generateUUID();
         var token = new NanoToken();
         token.setToken(TokenCode.desensitizeToken(originalToken));
         token.setName(this.parseUserAgent(ua));
