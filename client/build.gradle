@@ -23,7 +23,7 @@ task checkNodeModules {
 }
 
 task start(type: NpmTask) {
-    dependsOn installNodeModules
+    dependsOn checkNodeModules
     args = ['start']
 }
 

@@ -21,10 +21,11 @@ public class ObjectService {
     }
 
     public String putObject(NanoObject object) {
-        var key = TokenCode.generateUUID();
+        var key = TokenCode.generateUUID() + object.getExtension();
         var objectKey = getObjectKey(key);
         var objectValue = Map.of(
                 "name", object.getName(),
+                "extension", object.getExtension(),
                 "type", object.getType(),
                 "size", object.getSize(),
                 "data", Base64.getEncoder().encodeToString(object.getData())

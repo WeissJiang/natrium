@@ -7,6 +7,8 @@ import nano.web.security.Authorized;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,11 +46,17 @@ public class ObjectController {
     private static @NotNull NanoObject convertToObject(@NotNull MultipartFile file) {
         try {
             var object = new NanoObject();
-            object.setName(file.getName());
+            var filename = file.getOriginalFilename();
+            object.setName(filename);
             object.setType(file.getContentType());
             object.setSize(file.getSize());
             object.setData(file.getBytes());
-            file.getBytes();
+            // extension
+            var extension = StringUtils.getFilenameExtension(filename);
+            if (ObjectUtils.isEmpty(extension)) {
+                extension = "";
+            }
+            object.setExtension("." + extension);
             return object;
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
