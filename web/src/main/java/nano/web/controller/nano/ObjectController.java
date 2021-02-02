@@ -16,7 +16,7 @@ import java.io.UncheckedIOException;
 import static nano.web.security.NanoPrivilege.NANO_API;
 
 @RestController
-@RequestMapping("/api/object/")
+@RequestMapping("/api/object")
 public class ObjectController {
 
     private final ObjectService objectService;

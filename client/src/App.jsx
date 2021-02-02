@@ -11,6 +11,7 @@ const Login = lazy(() => import('@/pages/account/Login.jsx'))
 const Token = lazy(() => import('@/pages/account/Token.jsx'))
 const OpenJDK = lazy(() => import('@/pages/openjdk/OpenJDK.jsx'))
 const Mail = lazy(() => import('@/pages/mail/Mail.jsx'))
+const Object = lazy(() => import('@/pages/object/Object.jsx'))
 const NameKey = lazy(() => import('@/pages/tools/NameKey.jsx'))
 const Counter = lazy(() => import('@/pages/counter/Counter.jsx'))
 const Sandbox = lazy(() => import('@/pages/sandbox/Sandbox.jsx'))
@@ -38,6 +39,7 @@ export default function App() {
                     <Route path="/token"><Token /></Route>
                     <Route path="/openjdk"><OpenJDK /></Route>
                     <Route path="/mail"><Mail /></Route>
+                    <Route path="/object"><Object /></Route>
                     <Route path="/tools/name-key"><NameKey /></Route>
                     <Route path="/counter"><Counter /></Route>
                     <Route path="/sandbox"><Sandbox /></Route>
