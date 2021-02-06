@@ -1,7 +1,7 @@
 import React from 'react'
 import { useUser } from '@/hooks/account.jsx'
 
-import style from './style.module.less'
+import '@/styles/tailwind.css'
 
 const { useState } = React
 
@@ -77,16 +77,16 @@ export default function Nano() {
     }
 
     return (
-        <div className={style['nano-container']}>
+        <div className="max-w-full p-4">
             <div>
-                <button onClick={getList}>Get list</button>
+                <button className="px-2 py-1 border rounded bg-gray-300 hover:bg-white" onClick={getList}>Get list</button>
                 <div>User list</div>
                 <pre>{printJson(userList)}</pre>
                 <div>Chat list</div>
                 <pre>{printJson(chatList)}</pre>
             </div>
             <div>
-                <button onClick={setWebhook}>Set Webhook</button>
+                <button className="px-2 py-1 border rounded bg-gray-300 hover:bg-white" onClick={setWebhook}>Set Webhook</button>
                 <div>Result</div>
                 <pre>{printJson(result)}</pre>
             </div>

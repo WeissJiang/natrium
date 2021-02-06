@@ -1,3 +1,10 @@
+const { createServer } = require('http-proxy')
+
+function proxyTo(target) {
+    const proxy = createServer({ target })
+    return (req, res) => proxy.web(req, res)
+}
+
 module.exports = {
     mount: {
         './src': '/',
@@ -10,10 +17,14 @@ module.exports = {
         '@': './src',
     },
     routes: [
-        { match: 'routes', src: '.*', dest: '/' }
+        { src: '/api/.*', dest: proxyTo('http://localhost:8080'), },
+        { match: 'routes', src: '.*', dest: '/' },
     ],
     packageOptions: {},
-    devOptions: {},
+    devOptions: {
+        port: 8000,
+        open: 'none',
+    },
     buildOptions: {
         out: './dist',
     },
