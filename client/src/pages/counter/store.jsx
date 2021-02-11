@@ -2,7 +2,9 @@ import React from 'react'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 
-function reducer(state, action) {
+const initialState = { count: 7n }
+
+function reducer(state = initialState, action) {
     if (action.type === 'setCount') {
         return {
             ...state,
@@ -12,9 +14,7 @@ function reducer(state, action) {
     return state
 }
 
-const initialState = { count: 7n }
-
-export const store = createStore(reducer, initialState)
+export const store = createStore(reducer)
 
 export function CounterProvider(props) {
     return (

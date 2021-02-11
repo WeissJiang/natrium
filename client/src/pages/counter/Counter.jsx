@@ -1,5 +1,5 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { sleep } from '@/utils/schedule.mjs'
 import CenterBox from '@/components/center-box/CenterBox.jsx'
 import message from '@/components/message/message.jsx'
@@ -8,7 +8,7 @@ import { CounterProvider } from './store.jsx'
 
 import style from './style.module.less'
 
-function convertToBitInt(value, def) {
+function convertToBigInt(value, def) {
     try {
         return BigInt(value)
     } catch (err) {
@@ -19,18 +19,22 @@ function convertToBitInt(value, def) {
 
 function Counter(props) {
 
+    const count = useSelector(state => state.count)
+    const dispatch = useDispatch()
+
     const [plus1sButtonDisabled, setPlus1sButtonDisabled] = React.useState(false)
 
     function handleInputChange(ev) {
-        props.dispatch({
+        dispatch({
             type: 'setCount',
-            payload: convertToBitInt(ev.target.value, props.count)
+            payload: convertToBigInt(ev.target.value, count)
         })
     }
+
     function handleClickMinus() {
-        props.dispatch({
+        dispatch({
             type: 'setCount',
-            payload: props.count - 1n
+            payload: count - 1n
         })
     }
 
@@ -39,14 +43,14 @@ function Counter(props) {
         await sleep(1000)
         props.dispatch({
             type: 'setCount',
-            payload: props.count + 1n
+            payload: count + 1n
         })
         setPlus1sButtonDisabled(false)
     }
 
     return (
         <CenterBox className={style.container}>
-            <input type="text" value={String(props.count)} onChange={handleInputChange} />
+            <input type="text" value={String(count)} onChange={handleInputChange} />
             <div>
                 <button onClick={handleClickMinus}>-</button>
                 <button onClick={handleClickPlus1s} disabled={plus1sButtonDisabled}>+1s</button>
@@ -55,16 +59,10 @@ function Counter(props) {
     )
 }
 
-function mapStateToProps({ count }) {
-    return { count }
-}
-
-const WrappedCounter = connect(mapStateToProps)(Counter)
-
 export default function () {
     return (
         <CounterProvider>
-            <WrappedCounter />
+            <Counter />
         </CounterProvider>
     )
 }
