@@ -41,7 +41,7 @@ function Counter(props) {
     async function handleClickPlus1s() {
         setPlus1sButtonDisabled(true)
         await sleep(1000)
-        props.dispatch({
+        dispatch({
             type: 'setCount',
             payload: count + 1n
         })
