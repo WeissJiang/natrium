@@ -1,7 +1,7 @@
 import React from 'react'
 import { useUser } from '@/hooks/account.jsx'
 
-import '@/styles/tailwind.css'
+import '@/styles/utilities.css'
 
 const { useState } = React
 

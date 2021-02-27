@@ -12,7 +12,6 @@ module.exports = {
     plugins: [
         'snowpack-plugin-less',
         'snowpack-plugin-hash',
-        ['@snowpack/plugin-postcss', { config: './postcss.config.cjs' }],
     ],
     alias: {
         '@': './src',

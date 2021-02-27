@@ -30,15 +30,11 @@
   },
   "homepage": "https://github.com/cbdyzj/natrium#readme",
   "devDependencies": {
-    "@snowpack/plugin-postcss": "^1.1.0",
-    "autoprefixer": "^10.2.4",
     "dayjs": "^1.10.4",
     "del-cli": "^3.0.1",
     "file-saver": "^2.0.5",
     "http-proxy": "^1.18.1",
     "jszip": "^3.6.0",
-    "postcss": "^8.2.6",
-    "postcss-cli": "^8.3.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-hook-form": "^6.15.4",
@@ -47,7 +43,6 @@
     "redux": "^4.0.5",
     "snowpack": "^3.0.13",
     "snowpack-plugin-hash": "^0.14.2",
-    "snowpack-plugin-less": "^1.0.7",
-    "tailwindcss": "^2.0.3"
+    "snowpack-plugin-less": "^1.0.7"
   }
 }
