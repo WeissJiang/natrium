@@ -7,11 +7,6 @@ spring:
   profiles:
     include: nano
     active: development
-  web:
-    resources:
-      cache:
-        cachecontrol:
-          no-cache: true
   mvc:
     log-resolved-exception: false
   datasource:

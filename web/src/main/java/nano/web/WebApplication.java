@@ -78,14 +78,6 @@ public class WebApplication implements ApplicationContextAware, WebMvcConfigurer
     }
 
     /**
-     * Cache resources with ETag
-     */
-    @Bean
-    public ShallowEtagHeaderFilter shallowEtagHeaderFilter() {
-        return new ShallowEtagHeaderFilter();
-    }
-
-    /**
      * Rest template for sending HTTP request
      */
     @Bean
