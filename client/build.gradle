@@ -50,8 +50,8 @@ processResources {
 }
 
 node {
-    version = '15.8.0'
-    npmVersion = '7.5.3'
+    version = '15.10.0'
+    npmVersion = '7.6.0'
     download = true
 }
 

@@ -26,12 +26,12 @@ dependencies {
     // webp
     implementation 'org.sejda.imageio:webp-imageio:0.1.6'
     // javascript
-    implementation 'org.graalvm.js:js:20.3.0'
-    implementation 'org.graalvm.js:js-scriptengine:20.3.0'
+    implementation 'org.graalvm.js:js:21.0.0.2'
+    implementation 'org.graalvm.js:js-scriptengine:21.0.0.2'
     // aop
     implementation 'org.aspectj:aspectjweaver:1.9.6'
     // postgresql
-    implementation 'org.postgresql:postgresql:42.2.18'
+    implementation 'org.postgresql:postgresql:42.2.19'
     // spring
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
