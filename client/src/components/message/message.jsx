@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { render } from 'react-dom'
 
 import style from './style.module.less'
 
@@ -19,7 +19,7 @@ function getContainer() {
 
 function openNotification(text, { duration } = { duration: 3000 }) {
     const div = getContainer()
-    ReactDOM.render(<Notification text={text} />, div);
+    render(<Notification text={text} />, div)
     if (duration) {
         setTimeout(() => document.body.removeChild(div), duration)
     }

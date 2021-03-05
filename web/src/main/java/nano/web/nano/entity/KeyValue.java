@@ -13,7 +13,6 @@ public class KeyValue {
     private Timestamp lastUpdatedTime;
     private Timestamp creationTime;
 
-
     public Integer getId() {
         return id;
     }

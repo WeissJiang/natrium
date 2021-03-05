@@ -17,6 +17,7 @@ import java.io.UncheckedIOException;
 
 import static nano.web.security.NanoPrivilege.NANO_API;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/object")
 public class ObjectController {

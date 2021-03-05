@@ -39,7 +39,7 @@ public class KeyValueRepository {
     public void updateKeyValue(@NotNull String key, @NotNull String value) {
         var sql = """
                 UPDATE key_value
-                SET value             = :value,
+                SET value             = :value::JSONB,
                     last_updated_time = NOW()
                 WHERE key = :key;
                 """;
