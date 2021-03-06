@@ -1,5 +1,6 @@
 package nano.web.controller.nano;
 
+import nano.support.Result;
 import nano.web.nano.repository.KeyValueRepository;
 import nano.web.security.Authorized;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,8 @@ public class KeyValueController {
     public ResponseEntity<?> read(@PathVariable("key") String key) {
         var keyValue = this.keyValueRepository.queryKeyValue(key);
         if (keyValue == null) {
-            return ResponseEntity.notFound().build();
+            var notFoundError = Result.error("key %s not found".formatted(key));
+            return ResponseEntity.ok(notFoundError);
         }
         return ResponseEntity.ok(keyValue);
     }
@@ -32,7 +34,7 @@ public class KeyValueController {
     public ResponseEntity<?> create(@PathVariable("key") String key,
                                     @RequestBody String value) {
         this.keyValueRepository.createKeyValue(key, value);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(Result.empty());
     }
 
     @Authorized(NANO_API)
@@ -40,6 +42,6 @@ public class KeyValueController {
     public ResponseEntity<?> update(@PathVariable("key") String key,
                                     @RequestBody String value) {
         this.keyValueRepository.updateKeyValue(key, value);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(Result.empty());
     }
 }
