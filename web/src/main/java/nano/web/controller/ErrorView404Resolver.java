@@ -22,7 +22,7 @@ public class ErrorView404Resolver implements ErrorViewResolver {
     public ModelAndView resolveErrorView(HttpServletRequest request, HttpStatus status, Map<String, Object> model) {
         if (HttpStatus.NOT_FOUND.equals(status)
                 && HttpMethod.GET.name().equalsIgnoreCase(request.getMethod())) {
-            return new ModelAndView("forward:/", HttpStatus.OK);
+            return new ModelAndView("redirect:/");
         }
         return null;
     }

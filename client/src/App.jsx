@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react'
-import { BrowserRouter as Router, Route, Switch, useLocation } from 'react-router-dom'
+import { HashRouter as Router, Route, Switch, useLocation } from 'react-router-dom'
 
 import Spin from '@/components/spin/spin.jsx'
 

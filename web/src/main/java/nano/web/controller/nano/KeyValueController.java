@@ -23,10 +23,10 @@ public class KeyValueController {
     public ResponseEntity<?> read(@PathVariable("key") String key) {
         var keyValue = this.keyValueRepository.queryKeyValue(key);
         if (keyValue == null) {
-            var notFoundError = Result.error("key %s not found".formatted(key));
-            return ResponseEntity.ok(notFoundError);
+            var error = "key %s not found".formatted(key);
+            return ResponseEntity.ok(Result.error(error));
         }
-        return ResponseEntity.ok(keyValue);
+        return ResponseEntity.ok(Result.of(keyValue));
     }
 
     @Authorized(NANO_API)
