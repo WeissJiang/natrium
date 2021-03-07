@@ -8,7 +8,6 @@ import nano.support.validation.Validated;
 import nano.support.validation.Validator;
 import nano.web.messageing.ExchangeDeclarer;
 import nano.web.nano.ConfigVars;
-import nano.web.scripting.Scripting;
 import nano.web.security.AuthenticationInterceptor;
 import nano.web.security.Token;
 import nano.web.security.TokenArgumentResolver;
@@ -25,19 +24,15 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.MediaType;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.filter.ShallowEtagHeaderFilter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Application entry of web
@@ -147,15 +142,6 @@ public class WebApplication implements ApplicationContextAware, WebMvcConfigurer
     @Override
     public void addInterceptors(@NotNull InterceptorRegistry registry) {
         registry.addInterceptor(this.context.getBean(AuthenticationInterceptor.class)).addPathPatterns("/api/**");
-    }
-
-    /**
-     * Scripting resources media type
-     */
-    @Override
-    public void configureContentNegotiation(@NotNull ContentNegotiationConfigurer cnc) {
-        var js = MediaType.parseMediaType(Scripting.TEXT_JAVASCRIPT);
-        cnc.mediaTypes(Map.of("mjs", js, "jsx", js, "ts", js, "tsx", js, "less", js));
     }
 
     @Override

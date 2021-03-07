@@ -13,11 +13,6 @@ import java.nio.charset.StandardCharsets;
 @Component
 public class Scripting {
 
-    /**
-     * @see <a href="https://html.spec.whatwg.org/multipage/scripting.html#scriptingLanguages">Scripting languages</a>
-     */
-    public static final String TEXT_JAVASCRIPT = "text/javascript";
-
     private String base64Script;
 
     public @NotNull String eval(@NotNull String script) {
