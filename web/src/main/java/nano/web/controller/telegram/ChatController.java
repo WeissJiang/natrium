@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static nano.web.security.NanoPrivilege.NANO_API;
+import static nano.web.security.Privilege.NANO_API;
 
 /**
  * Handle chat requests
@@ -19,7 +19,7 @@ import static nano.web.security.NanoPrivilege.NANO_API;
  * @see ChatService
  * @see Authorized
  */
-@Authorized(NANO_API)
+@Authorized(privilege = NANO_API)
 @CrossOrigin
 @RestController
 @RequestMapping("/api/telegram")

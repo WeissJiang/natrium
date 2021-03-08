@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-import static nano.web.security.NanoPrivilege.BASIC;
-import static nano.web.security.NanoPrivilege.NANO_API;
+import static nano.web.security.Privilege.BASIC;
+import static nano.web.security.Privilege.NANO_API;
 
 @CrossOrigin
 @RestController
@@ -42,28 +42,28 @@ public class TokenController {
         return ResponseEntity.ok(Result.of(result));
     }
 
-    @Authorized(BASIC)
+    @Authorized(privilege = BASIC)
     @PostMapping("/deleteSelf")
     public ResponseEntity<?> deleteTokenSelf(@Token String token) {
         this.securityService.deleteTheToken(token);
         return ResponseEntity.ok(Result.empty());
     }
 
-    @Authorized(BASIC)
+    @Authorized(privilege = BASIC)
     @PostMapping("/delete")
     public ResponseEntity<?> deleteToken(@Token String token, @RequestParam("id") List<Integer> idList) {
         this.securityService.deleteSpecificToken(token, idList);
         return ResponseEntity.ok(Result.empty());
     }
 
-    @Authorized(BASIC)
+    @Authorized(privilege = BASIC)
     @GetMapping("/list")
     public ResponseEntity<?> getTokenList(@Token String token) {
         var tokenList = this.securityService.getAssociatedTokenList(token);
         return ResponseEntity.ok(Result.of(tokenList));
     }
 
-    @Authorized(NANO_API)
+    @Authorized(privilege = NANO_API)
     @PostMapping("/pruneVerifyingTimeoutToken")
     public ResponseEntity<?> verifyingTimeoutToken() {
         var count = this.pruneVerifyingTimeoutTokenTask.pruneVerifyingTimeoutToken();

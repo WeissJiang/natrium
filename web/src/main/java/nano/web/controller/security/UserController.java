@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static nano.web.security.NanoPrivilege.BASIC;
-import static nano.web.security.NanoPrivilege.NANO_API;
+import static nano.web.security.Privilege.BASIC;
+import static nano.web.security.Privilege.NANO_API;
 
 @CrossOrigin
 @RestController
@@ -24,14 +24,14 @@ public class UserController {
         this.userService = userService;
     }
 
-    @Authorized(BASIC)
+    @Authorized(privilege = BASIC)
     @GetMapping("/user")
     public ResponseEntity<?> getUser(@Token String token) {
         var userDTO = this.userService.getUserByToken(token);
         return ResponseEntity.ok(Result.of(userDTO));
     }
 
-    @Authorized(NANO_API)
+    @Authorized(privilege = NANO_API)
     @GetMapping("/list")
     public ResponseEntity<?> getUserList() {
         var userDTOList = this.userService.getUserList();

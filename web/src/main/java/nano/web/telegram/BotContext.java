@@ -3,7 +3,6 @@ package nano.web.telegram;
 import nano.support.Json;
 import nano.web.nano.model.Bot;
 import nano.web.nano.model.Session;
-import nano.web.security.NanoPrivilege;
 import org.jetbrains.annotations.NotNull;
 import org.jianzhao.jsonpath.JsonPathModule;
 import org.springframework.core.io.Resource;
@@ -62,12 +61,11 @@ public class BotContext {
         return this.read("$.message.message_id");
     }
 
-    public List<NanoPrivilege> userPrivilegeList() {
+    public List<String> userPrivilegeList() {
         var privilege = this.getSession().getToken().getPrivilege();
         return Json.decodeValueAsList(privilege)
                 .stream()
                 .map(String::valueOf)
-                .map(NanoPrivilege::valueOf)
                 .distinct()
                 .collect(Collectors.toList());
     }

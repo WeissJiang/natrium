@@ -9,7 +9,7 @@ import org.springframework.amqp.rabbit.core.RabbitMessagingTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static nano.web.security.NanoPrivilege.NANO_API;
+import static nano.web.security.Privilege.NANO_API;
 
 /**
  * Send mail
@@ -28,7 +28,7 @@ public class MailController {
     }
 
     @Validated(SendTextMailValidator.class)
-    @Authorized(NANO_API)
+    @Authorized(privilege = NANO_API)
     @PostMapping("/sendTextMail")
     public ResponseEntity<?> sendTextMail(@RequestBody TextMail mail) {
         this.rabbitMessagingTemplate.convertAndSend(Exchanges.MAIL, "text", mail);

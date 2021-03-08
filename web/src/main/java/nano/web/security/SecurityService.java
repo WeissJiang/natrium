@@ -13,6 +13,7 @@ import org.jianzhao.jsonpath.JsonPathModule;
 import org.jianzhao.uaparser.UserAgentParserModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -27,7 +28,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static nano.support.Sugar.*;
-import static nano.web.security.NanoPrivilege.BASIC;
+import static nano.web.security.Privilege.BASIC;
 import static nano.web.security.TokenCode.generateUUID;
 import static nano.web.security.TokenCode.generateVerificationCode;
 
@@ -43,11 +44,15 @@ public class SecurityService {
     private static final Logger log = LoggerFactory.getLogger(SecurityService.class);
 
     private final ConfigVars configVars;
+
     private final TokenRepository tokenRepository;
 
-    public SecurityService(ConfigVars configVars, TokenRepository tokenRepository) {
+    private final Environment env;
+
+    public SecurityService(ConfigVars configVars, TokenRepository tokenRepository, Environment env) {
         this.configVars = configVars;
         this.tokenRepository = tokenRepository;
+        this.env = env;
     }
 
     /**
@@ -64,20 +69,20 @@ public class SecurityService {
     }
 
     /**
-     * 检查Token权限
+     * Check token privilege
      */
-    public void checkTokenPrivilege(@Nullable String token, @NotNull List<@NotNull NanoPrivilege> privilegeList) {
+    public void checkTokenPrivilege(@Nullable String token, @NotNull List<@NotNull String> privilegeList) {
         authState(StringUtils.hasText(token), "Missing token");
         var nanoToken = this.tokenRepository.queryToken(token);
         authState(nanoToken != null, "Illegal token");
         authState(NanoToken.VALID.equals(nanoToken.getStatus()), "Invalid token");
         var tokenPrivileges = mapToString(Json.decodeValueAsList(nanoToken.getPrivilege()));
-        var exists = tokenPrivileges.containsAll(map(privilegeList, NanoPrivilege::name));
+        var exists = tokenPrivileges.containsAll(privilegeList);
         authState(exists, "Insufficient token privilege");
     }
 
     /**
-     * 删除Token，也作登出使用
+     * Delete token and log out
      */
     public void deleteTheToken(@NotNull String token) {
         Assert.hasText(token, "Illegal token");
@@ -85,7 +90,7 @@ public class SecurityService {
     }
 
     /**
-     * 删除Token，Token管理
+     * Delete token, token management
      */
     public void deleteSpecificToken(@NotNull String token, @NotNull List<@NotNull Integer> idList) {
         var nanoTokenList = this.tokenRepository.queryTokenList(idList);
@@ -99,7 +104,7 @@ public class SecurityService {
     }
 
     /**
-     * 根据Token，获取Token列表
+     * Get the token list by token
      */
     public List<TokenDTO> getAssociatedTokenList(String token) {
         Assert.hasText(token, "Illegal token");
@@ -117,8 +122,8 @@ public class SecurityService {
     }
 
     /**
-     * 创建验证中的Token
-     * 不保存原始Token，保存脱敏后的Token
+     * Create the token in validation
+     * Do not save the original token, save the desensitized token
      */
     public @NotNull Map<String, String> createVerifyingToken(@NotNull String username, String ua) {
         var originalToken = generateUUID();
@@ -130,13 +135,13 @@ public class SecurityService {
         var now = Timestamp.from(Instant.now());
         token.setCreationTime(now);
         token.setLastActiveTime(now);
-        token.setPrivilege(Json.encode(List.of(BASIC.name())));
+        token.setPrivilege(Json.encode(List.of(BASIC)));
         this.tokenRepository.createToken(token);
         return Map.of("token", originalToken, "verificationCode", verificationCode);
     }
 
     /**
-     * 检查Token验证状态
+     * Check token verification status
      */
     public @NotNull Map<String, String> getTokenVerification(@NotNull String token) {
         var nanoToken = this.tokenRepository.queryToken(token);
@@ -148,7 +153,7 @@ public class SecurityService {
             case NanoToken.VALID -> result.put("verifying", "done");
             case NanoToken.INVALID -> throw new IllegalStateException("Token is invalid");
             default -> {
-                // 验证中
+                // verifying
                 if (status.startsWith(NanoToken.VERIFYING)) {
                     if (verifyingTimeout(nanoToken)) {
                         result.put("verifying", "timeout");
@@ -164,7 +169,7 @@ public class SecurityService {
     }
 
     /**
-     * 验证Token
+     * Verify token
      */
     public Map<NanoToken, String> verifyToken(NanoUser user, NanoToken telegramToken, String verificationCode) {
         var nanoTokenList = this.tokenRepository.queryVerifyingToken(user.getUsername(), verificationCode);
@@ -190,7 +195,7 @@ public class SecurityService {
     }
 
     /**
-     * 解析用户代理
+     * Resolve user agent
      */
     private @NotNull String parseUserAgent(@Nullable String ua) {
         try {
@@ -209,7 +214,7 @@ public class SecurityService {
     }
 
     /**
-     * 接口验证是否超时，5分钟超时时间
+     * Verification timeout, 5 minutes timeout
      */
     private static boolean verifyingTimeout(NanoToken nanoToken) {
         var creationTime = nanoToken.getCreationTime();
@@ -221,5 +226,13 @@ public class SecurityService {
         if (!expression) {
             throw new AuthenticationException(message);
         }
+    }
+
+    /**
+     * Check ticket permission
+     */
+    public void checkTicketPermission(@Nullable String ticket, @NotNull List<@NotNull String> ticketNameList) {
+        var ticketValid = ticketNameList.stream().map(this.env::getProperty).anyMatch(it -> Objects.equals(ticket, it));
+        authState(ticketValid, "Insufficient ticket permission");
     }
 }

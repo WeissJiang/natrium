@@ -51,7 +51,7 @@ public class UserService {
         return this.tokenRepository.queryUserTokenList(userId);
     }
 
-    public List<NanoPrivilege> getUserPrivilege(Long userId) {
+    public List<String> getUserPrivilege(Long userId) {
         var nanoTokens = this.queryUserToken(userId);
         if (CollectionUtils.isEmpty(nanoTokens)) {
             return emptyList();
@@ -62,7 +62,6 @@ public class UserService {
                 .map(Sugar::mapToString)
                 .flatMap(Collection::stream)
                 .distinct()
-                .map(NanoPrivilege::valueOf)
                 .collect(Collectors.toList());
     }
 

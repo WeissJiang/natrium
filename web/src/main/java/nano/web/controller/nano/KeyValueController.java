@@ -6,11 +6,11 @@ import nano.web.security.Authorized;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static nano.web.security.NanoPrivilege.NANO_API;
+import static nano.web.security.Privilege.NANO_API;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/kv/")
+@RequestMapping("/api/kv")
 public class KeyValueController {
 
     private final KeyValueRepository keyValueRepository;
@@ -29,7 +29,7 @@ public class KeyValueController {
         return ResponseEntity.ok(Result.of(keyValue));
     }
 
-    @Authorized(NANO_API)
+    @Authorized(privilege = NANO_API)
     @PostMapping("/{key}")
     public ResponseEntity<?> create(@PathVariable("key") String key,
                                     @RequestBody String value) {
@@ -37,7 +37,7 @@ public class KeyValueController {
         return ResponseEntity.ok(Result.empty());
     }
 
-    @Authorized(NANO_API)
+    @Authorized(privilege = NANO_API)
     @PutMapping("/{key}")
     public ResponseEntity<?> update(@PathVariable("key") String key,
                                     @RequestBody String value) {

@@ -88,7 +88,7 @@ public class SessionService {
         var now = Timestamp.from(Instant.now());
         if (token == null) {
             token = new NanoToken();
-            token.setPrivilege(Json.encode(List.of(NanoPrivilege.BASIC.name())));
+            token.setPrivilege(Json.encode(List.of(Privilege.BASIC)));
             token.setName("Telegram");
             token.setCreationTime(now);
             token.setLastActiveTime(now);

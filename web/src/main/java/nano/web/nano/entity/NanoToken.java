@@ -1,6 +1,6 @@
 package nano.web.nano.entity;
 
-import nano.web.security.NanoPrivilege;
+import nano.web.security.Privilege;
 
 import java.sql.Timestamp;
 import java.util.Objects;
@@ -44,7 +44,7 @@ public class NanoToken {
     /**
      * 权限
      *
-     * @see NanoPrivilege
+     * @see Privilege
      */
     private String privilege;
 

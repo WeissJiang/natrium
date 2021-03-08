@@ -2,7 +2,7 @@ package nano.web.telegram.handler.ext;
 
 import nano.support.Onion;
 import nano.web.nano.model.Bot;
-import nano.web.security.NanoPrivilege;
+import nano.web.security.Privilege;
 import nano.web.security.UserService;
 import nano.web.telegram.BotContext;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +36,7 @@ public class MailSetupHandler implements Onion.Middleware<BotContext> {
 
     private void trySetMailAddress(BotContext context) {
         var user = context.getSession().getUser();
-        if (!context.userPrivilegeList().contains(NanoPrivilege.MAIL)) {
+        if (!context.userPrivilegeList().contains(Privilege.MAIL)) {
             context.replyMessage("Failed, no mail service permission");
             return;
         }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-import static nano.web.security.NanoPrivilege.NANO_API;
+import static nano.web.security.Privilege.NANO_API;
 
 /**
  * Handle Telegram requests
@@ -45,7 +45,7 @@ public class TelegramController {
         return ResponseEntity.ok().build();
     }
 
-    @Authorized(NANO_API)
+    @Authorized(privilege = NANO_API)
     @PostMapping("/setWebhook")
     public ResponseEntity<?> setWebhook() {
         var result = this.telegramService.setWebhook();

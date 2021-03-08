@@ -15,6 +15,10 @@ import java.util.concurrent.ThreadLocalRandom;
 public abstract class TokenCode {
 
     public static final String X_TOKEN = "X-Token";
+    public static final String TOKEN = "token";
+
+    public static final String X_TICKET = "X-Ticket";
+    public static final String TICKET = "ticket";
 
     public static final String DESENSITIZED_X_TOKEN = "DESENSITIZED_X_TOKEN";
 

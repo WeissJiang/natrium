@@ -8,7 +8,8 @@ import java.lang.annotation.*;
  * @author cbdyzj
  * @see SecurityService
  * @see AuthenticationInterceptor
- * @see NanoPrivilege
+ * @see Privilege
+ * @see Ticket
  * @since 2020.9.20
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
@@ -16,5 +17,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface Authorized {
 
-    NanoPrivilege[] value() default NanoPrivilege.BASIC;
+    String[] privilege() default {};
+
+    String[] ticket() default {};
 }

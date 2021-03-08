@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
-import static nano.web.security.NanoPrivilege.NANO_API;
+import static nano.web.security.Privilege.NANO_API;
 
 @CrossOrigin
 @RestController
@@ -28,7 +28,7 @@ public class ObjectController {
         this.objectService = objectService;
     }
 
-    @Authorized(NANO_API)
+    @Authorized(privilege = NANO_API)
     @PostMapping
     public ResponseEntity<?> putObject(@RequestParam("file") MultipartFile file) {
         var object = convertToObject(file);
