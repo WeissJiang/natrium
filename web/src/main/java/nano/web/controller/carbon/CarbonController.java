@@ -1,4 +1,4 @@
-package nano.web.controller;
+package nano.web.controller.carbon;
 
 import nano.support.Result;
 import nano.web.carbon.CarbonService;
