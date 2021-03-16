@@ -41,7 +41,7 @@ public class CarbonService {
     public @NotNull List<CarbonAppOverview> getAppList() {
         return map(this.getAppIdList(), it -> {
             var overview = new CarbonAppOverview();
-            var app = getApp(it);
+            var app = this.getApp(it);
             //
             overview.setId(app.getId());
             overview.setName(app.getName());
