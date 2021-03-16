@@ -46,6 +46,7 @@ public class CarbonService {
             overview.setId(app.getId());
             overview.setName(app.getName());
             overview.setDescription(app.getDescription());
+            overview.setUrl(app.getUrl());
             var pageList = requireNonNullElse(app.getPageList(), Collections.<CarbonPage>emptyList());
             overview.setPageCount(pageList.size());
             var keyCount = pageList.stream()
