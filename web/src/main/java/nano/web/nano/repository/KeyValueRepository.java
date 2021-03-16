@@ -2,13 +2,13 @@ package nano.web.nano.repository;
 
 import nano.support.jdbc.SimpleJdbcSelect;
 import nano.web.nano.entity.KeyValue;
-import nano.web.nano.entity.NanoToken;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 import static nano.support.EntityUtils.slim;
@@ -20,6 +20,16 @@ public class KeyValueRepository {
 
     public KeyValueRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public @NotNull List<String> queryKeyListByPattern(@NotNull String pattern) {
+        var sql = """
+                SELECT key
+                FROM key_value
+                WHERE key ~ :pattern;
+                """;
+        var rowMapper = new SingleColumnRowMapper<>(String.class);
+        return this.jdbcTemplate.query(slim(sql), Map.of("pattern", pattern), rowMapper);
     }
 
     public @Nullable KeyValue queryKeyValue(@NotNull String key) {

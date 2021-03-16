@@ -13,9 +13,12 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static nano.support.Sugar.map;
 
 /**
  * carbon service
@@ -31,6 +34,12 @@ public class CarbonService {
 
     public CarbonService(KeyValueRepository keyValueRepository) {
         this.keyValueRepository = keyValueRepository;
+    }
+
+    public @NotNull List<String> getAppIdList() {
+        var pattern = "^%s:".formatted(CARBON);
+        var keyList = this.keyValueRepository.queryKeyListByPattern(pattern);
+        return map(keyList, it -> it.replaceFirst(pattern, ""));
     }
 
     public void createApp(@NotNull CarbonApp app) {
