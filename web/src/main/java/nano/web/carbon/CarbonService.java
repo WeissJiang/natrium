@@ -2,22 +2,18 @@ package nano.web.carbon;
 
 import nano.support.Json;
 import nano.support.UniqueChecker;
-import nano.web.carbon.model.CarbonApp;
-import nano.web.carbon.model.CarbonKey;
-import nano.web.carbon.model.CarbonPage;
-import nano.web.carbon.model.CarbonText;
+import nano.web.carbon.model.*;
 import nano.web.nano.repository.KeyValueRepository;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.requireNonNullElse;
 import static nano.support.Sugar.map;
 
 /**
@@ -40,6 +36,26 @@ public class CarbonService {
         var pattern = "^%s:".formatted(CARBON);
         var keyList = this.keyValueRepository.queryKeyListByPattern(pattern);
         return map(keyList, it -> it.replaceFirst(pattern, ""));
+    }
+
+    public @NotNull List<CarbonAppOverview> getAppList() {
+        return map(this.getAppIdList(), it -> {
+            var overview = new CarbonAppOverview();
+            var app = getApp(it);
+            //
+            overview.setId(app.getId());
+            overview.setName(app.getName());
+            overview.setDescription(app.getDescription());
+            var pageList = requireNonNullElse(app.getPageList(), Collections.<CarbonPage>emptyList());
+            overview.setPageCount(pageList.size());
+            var keyCount = pageList.stream()
+                    .map(CarbonPage::getKeyList)
+                    .filter(Objects::nonNull)
+                    .mapToInt(Collection::size)
+                    .sum();
+            overview.setKeyCount(keyCount);
+            return overview;
+        });
     }
 
     public void createApp(@NotNull CarbonApp app) {

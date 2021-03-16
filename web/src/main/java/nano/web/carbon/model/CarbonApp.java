@@ -6,8 +6,9 @@ public class CarbonApp {
 
     private String id;
     private String name;
-    private String fallbackLocale;
+    private String description;
     private List<String> localeList;
+    private String fallbackLocale;
     private List<CarbonPage> pageList;
 
     public String getId() {
@@ -48,5 +49,13 @@ public class CarbonApp {
 
     public void setPageList(List<CarbonPage> pageList) {
         this.pageList = pageList;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

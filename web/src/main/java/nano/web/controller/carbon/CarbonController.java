@@ -30,8 +30,8 @@ public class CarbonController {
 
     @GetMapping("/app/list")
     public ResponseEntity<?> getAppList() {
-        var appIdList = this.carbonService.getAppIdList();
-        return ResponseEntity.ok(Result.of(appIdList));
+        var appList = this.carbonService.getAppList();
+        return ResponseEntity.ok(Result.of(appList));
     }
 
     @GetMapping("/app")
