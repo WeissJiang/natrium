@@ -7,6 +7,7 @@ public class CarbonApp {
     private String id;
     private String name;
     private String description;
+    private String url;
     private List<String> localeList;
     private String fallbackLocale;
     private List<CarbonPage> pageList;
@@ -25,6 +26,14 @@ public class CarbonApp {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getFallbackLocale() {
