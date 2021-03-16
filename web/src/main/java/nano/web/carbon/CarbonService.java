@@ -1,6 +1,7 @@
 package nano.web.carbon;
 
 import nano.support.Json;
+import nano.support.UniqueChecker;
 import nano.web.carbon.model.CarbonApp;
 import nano.web.carbon.model.CarbonKey;
 import nano.web.carbon.model.CarbonPage;
@@ -16,6 +17,11 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * carbon service
+ *
+ * @see <a href="https://carbonium.vercel.app/">carbon</a>
+ */
 @Service
 public class CarbonService {
 
@@ -47,9 +53,13 @@ public class CarbonService {
         if (CollectionUtils.isEmpty(pageList)) {
             return;
         }
+        var pageCodeUniqueChecker = new UniqueChecker<String>();
+        var keyKeyUniqueChecker = new UniqueChecker<String>();
         for (CarbonPage page : pageList) {
             Assert.notNull(page, "page must be not null");
             Assert.notNull(page.getCode(), "page code must be not null");
+            pageCodeUniqueChecker.check(page.getCode(), "duplicate page code");
+            //
             var keyList = page.getKeyList();
             if (CollectionUtils.isEmpty(keyList)) {
                 continue;
@@ -57,7 +67,9 @@ public class CarbonService {
             for (CarbonKey key : keyList) {
                 Assert.notNull(key, "key must be not null");
                 Assert.notNull(key.getKey(), "key key must be not null");
+                keyKeyUniqueChecker.check(key.getKey(), "duplicate key key");
                 Assert.notNull(key.getPageCode(), "key page code must be not null");
+                Assert.isTrue(Objects.equals(page.getCode(), key.getPageCode()), "Key page code does not match");
                 Assert.notEmpty(key.getOriginal(), "key original must be not empty");
             }
         }
