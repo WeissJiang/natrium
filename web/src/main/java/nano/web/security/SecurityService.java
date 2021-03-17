@@ -72,6 +72,9 @@ public class SecurityService {
      * Check token privilege
      */
     public void checkTokenPrivilege(@Nullable String token, @NotNull List<@NotNull String> privilegeList) {
+        if (CollectionUtils.isEmpty(privilegeList)) {
+            return;
+        }
         authState(StringUtils.hasText(token), "Missing token");
         var nanoToken = this.tokenRepository.queryToken(token);
         authState(nanoToken != null, "Illegal token");
@@ -232,6 +235,9 @@ public class SecurityService {
      * Check ticket permission
      */
     public void checkTicketPermission(@Nullable String ticket, @NotNull List<@NotNull String> ticketNameList) {
+        if (CollectionUtils.isEmpty(ticketNameList)) {
+            return;
+        }
         var ticketValid = ticketNameList.stream().map(this.env::getProperty).anyMatch(it -> Objects.equals(ticket, it));
         authState(ticketValid, "Insufficient ticket permission");
     }
