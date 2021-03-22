@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import static nano.web.security.Privilege.NANO_API;
 
+@Authorized(privilege = NANO_API)
 @CrossOrigin
 @RestController
 @RequestMapping("/api/carbon")
@@ -40,15 +41,13 @@ public class CarbonController {
         return ResponseEntity.ok(Result.of(app));
     }
 
-    @Authorized(privilege = NANO_API)
     @PostMapping("/app}")
     public ResponseEntity<?> createApp(@RequestBody CarbonApp app) {
         this.carbonService.createApp(app);
         return ResponseEntity.ok(Result.empty());
     }
 
-    @Authorized(privilege = NANO_API)
-    @PutMapping("/app}")
+    @PutMapping("/app")
     public ResponseEntity<?> updateApp(@RequestBody CarbonApp app) {
         this.carbonService.updateApp(app);
         return ResponseEntity.ok(Result.empty());
