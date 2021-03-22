@@ -96,7 +96,7 @@ public class CarbonService {
                 keyKeyUniqueChecker.check(key.getKey(), "duplicate key key");
                 Assert.notNull(key.getPageCode(), "key page code must be not null");
                 Assert.isTrue(Objects.equals(page.getCode(), key.getPageCode()), "Key page code does not match");
-                Assert.notEmpty(key.getOriginal(), "key original must be not empty");
+                Assert.notNull(key.getOriginal(), "key original must be not null");
             }
         }
     }

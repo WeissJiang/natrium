@@ -6,8 +6,9 @@ public class CarbonKey {
 
     private String key;
     private String pageCode;
-    private List<CarbonText> original;
+    private String original;
     private List<CarbonText> translation;
+    private String description;
 
     public String getKey() {
         return key;
@@ -25,11 +26,11 @@ public class CarbonKey {
         this.pageCode = pageCode;
     }
 
-    public List<CarbonText> getOriginal() {
+    public String getOriginal() {
         return original;
     }
 
-    public void setOriginal(List<CarbonText> original) {
+    public void setOriginal(String original) {
         this.original = original;
     }
 
@@ -39,5 +40,13 @@ public class CarbonKey {
 
     public void setTranslation(List<CarbonText> translation) {
         this.translation = translation;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
