@@ -38,7 +38,9 @@ clean {
 }
 
 processResources {
-    dependsOn buildStatic
+    if (!file('dist').exists() || gradle.startParameter.taskNames.contains('clean')) {
+        dependsOn buildStatic
+    }
 
     from('dist') {
         into '/META-INF/resources'
