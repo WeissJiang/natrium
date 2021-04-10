@@ -5,8 +5,8 @@ plugins {
 
 group = 'nano'
 
-sourceCompatibility = '15'
-targetCompatibility = '15'
+sourceCompatibility = '16'
+targetCompatibility = '16'
 
 task installNodeModules(type: NpmTask) {
     args = ['install']
@@ -48,8 +48,8 @@ processResources {
 }
 
 node {
-    version = '15.12.0'
-    npmVersion = '7.6.3'
+    version = '15.14.0'
+    npmVersion = '7.8.0'
     download = true
 }
 
