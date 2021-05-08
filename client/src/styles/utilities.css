@@ -94,3 +94,19 @@
 .w-screen {
     width: 100vw;
 }
+
+.hidden {
+    display: none;
+}
+
+.block {
+    display: block;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.mt-4 {
+    margin-top: 1rem
+}
