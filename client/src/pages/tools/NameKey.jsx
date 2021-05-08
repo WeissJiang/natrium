@@ -2,7 +2,7 @@ import React,{ useState } from 'react'
 
 import murmur3 from '@/utils/murmurhash3_32.mjs'
 
-import style from './style.module.less'
+import styles from './NameKey.module.css'
 
 function getNameKey(name) {
     if (!name) {
@@ -21,7 +21,7 @@ export default function NameKey(props) {
     }
 
     return (
-        <div className={style.container}>
+        <div className={styles.container}>
             <div>
                 <span>Name:</span>
                 <input type="text" value={name} onChange={ev => handleNameChange(ev)} />

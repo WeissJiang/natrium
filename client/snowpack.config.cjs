@@ -9,16 +9,12 @@ module.exports = {
     mount: {
         './src': '/',
     },
-    plugins: [
-        'snowpack-plugin-less',
-        'snowpack-plugin-hash',
-    ],
+    plugins: [],
     alias: {
         '@': './src',
     },
     routes: [
         { src: '/api/.*', dest: proxyTo('http://localhost:8080'), },
-        { match: 'routes', src: '.*', dest: '/' },
     ],
     packageOptions: {},
     devOptions: {

@@ -2,7 +2,7 @@ import React from 'react'
 
 import { getOpenJDKInfo2 } from './api.mjs'
 
-import style from './style.module.less'
+import styles from './OpenJDK.module.css'
 
 function VersionSelect() {
     return (
@@ -139,7 +139,7 @@ export default function OpenJDK() {
     }
 
     return (
-        <div className={style.container}>
+        <div className={styles.container}>
             <form onSubmit={getUrl}>
                 <table>
                     <tbody>

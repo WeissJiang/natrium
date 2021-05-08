@@ -4,14 +4,14 @@ import { getLocalItem, setLocalItem, removeLocalItem } from '@/utils/storage.mjs
 const { useState, useEffect } = React
 
 export function redirectToLoginPage() {
-    const loginUrl = '/#/login'
+    const loginUrl = '/pages/login/'
     const backUrl = location.hash
     const searchParams = new URLSearchParams({ backUrl })
     location.href = `${loginUrl}?${searchParams}`
 }
 
 export function getBackUrl() {
-    const search = new URL(location.href.replace('/#','')).search
+    const search = new URL(location.href).search
     return new URLSearchParams(search).get('backUrl')
 }
 

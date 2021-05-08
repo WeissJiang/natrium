@@ -50,16 +50,21 @@ export default function Login(props) {
 
     if (user) {
         async function handleLogout() {
-            const response = await fetch('/api/token/deleteSelf', {
-                method: 'POST',
-                headers: { 'X-Token': token }
-            })
-            const result = await response.json()
-            if (result.error) {
-                alert(result.error)
-                throw new Error(result.error)
+            try {
+                const response = await fetch('/api/token/deleteSelf', {
+                    method: 'POST',
+                    headers: { 'X-Token': token }
+                })
+                const result = await response.json()
+                if (result.error) {
+                    alert(result.error)
+                    console.error(result.error)
+                }else {
+                    setToken(null)
+                }
+            } catch (error) {
+                console.error(error.message)
             }
-            setToken(null)
         }
 
         const backUrl = getBackUrl()

@@ -1,10 +1,10 @@
 import React from 'react'
 
-import style from './style.module.less'
+import styles from './CenterBox.module.css'
 
 export default function CenterBox(props) {
 
-    const className = [style.container, props.className].filter(it => !!it).join(' ')
+    const className = [styles.container, props.className].filter(it => !!it).join(' ')
 
     return (
         <div style={props.style} className={className}>

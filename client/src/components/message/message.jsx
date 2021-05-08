@@ -1,11 +1,11 @@
 import React from 'react'
 import { render } from 'react-dom'
 
-import style from './style.module.less'
+import styles from './message.module.css'
 
 function Notification(props) {
     return (
-        <div className={style.notification}>
+        <div className={styles.notification}>
             <span>{props.text}</span>
         </div>
     )

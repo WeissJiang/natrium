@@ -1,11 +1,11 @@
 import React from 'react'
 
-import style from './style.module.less'
+import styles from './Spin.module.css'
 
 export default function Spin(props) {
 
   return (
-    <div className={style.load}>
+    <div className={styles.load}>
       <hr />
       <hr />
       <hr />

@@ -6,7 +6,7 @@ import message from '@/components/message/message.jsx'
 
 import { CounterProvider } from './store.jsx'
 
-import style from './style.module.less'
+import styles from './Counter.module.css'
 
 function convertToBigInt(value, def) {
     try {
@@ -49,7 +49,7 @@ function Counter(props) {
     }
 
     return (
-        <CenterBox className={style.container}>
+        <CenterBox className={styles.container}>
             <input type="text" value={String(count)} onChange={handleInputChange} />
             <div>
                 <button onClick={handleClickMinus}>-</button>
