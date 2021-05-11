@@ -1,8 +1,8 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { sleep } from '@/utils/schedule.mjs'
-import CenterBox from '@/components/CenterBox/CenterBox.jsx'
-import message from '@/components/message/message.jsx'
+import { sleep } from '../../utils/schedule.mjs'
+import CenterBox from '../../components/CenterBox/CenterBox.jsx'
+import message from '../../components/message/message.jsx'
 
 import { CounterProvider } from './store.jsx'
 

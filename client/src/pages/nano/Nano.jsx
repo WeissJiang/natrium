@@ -1,7 +1,7 @@
 import React from 'react'
-import { useUser } from '@/hooks/account.jsx'
+import { useUser } from '../../hooks/account.jsx'
 
-import '@/styles/utilities.css'
+import '../../styles/utilities.css'
 
 const { useState } = React
 

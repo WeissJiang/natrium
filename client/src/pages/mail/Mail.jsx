@@ -1,6 +1,6 @@
 import React from 'react'
 
-import '@/styles/utilities.css'
+import '../../styles/utilities.css'
 
 export default function Mail(props) {
 

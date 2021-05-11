@@ -9,14 +9,9 @@ module.exports = {
     mount: {
         './src': '/',
     },
-    plugins: [],
-    alias: {
-        '@': './src',
-    },
     routes: [
         { src: '/api/.*', dest: proxyTo('http://localhost:8080'), },
     ],
-    packageOptions: {},
     devOptions: {
         port: 8000,
         open: 'none',

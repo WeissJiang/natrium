@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { useUser, getBackUrl } from '@/hooks/account.jsx'
-import { sleep } from '@/utils/schedule.mjs'
+import { useUser, getBackUrl } from '../../hooks/account.jsx'
+import { sleep } from '../../utils/schedule.mjs'
 
 function VerifyingBox(props) {
     return (

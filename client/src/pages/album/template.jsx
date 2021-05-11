@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOMServer from 'react-dom/server'
-import render from '@/utils/render.mjs'
+import render from '../../utils/render.mjs'
 
 const prefix = '/templates/ebook/'
 const cache = new Map

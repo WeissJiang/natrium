@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useUser, redirectToLoginPage } from '@/hooks/account.jsx'
+import { useUser, redirectToLoginPage } from '../../hooks/account.jsx'
 
 import styles from './Token.module.css'
 

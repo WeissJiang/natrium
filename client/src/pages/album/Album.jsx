@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import saveAs from 'file-saver'
 import { createBook } from './epub.jsx'
 
-import '@/styles/reset.css'
-import '@/styles/utilities.css'
+import '../../styles/reset.css'
+import '../../styles/utilities.css'
 import styles from './Album.module.css'
 
 export default function Album(props) {
