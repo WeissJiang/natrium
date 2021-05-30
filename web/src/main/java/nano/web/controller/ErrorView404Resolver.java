@@ -20,10 +20,13 @@ public class ErrorView404Resolver implements ErrorViewResolver {
 
     @Override
     public ModelAndView resolveErrorView(HttpServletRequest request, HttpStatus status, Map<String, Object> model) {
-        if (HttpStatus.NOT_FOUND.equals(status)
-                && HttpMethod.GET.name().equalsIgnoreCase(request.getMethod())) {
-            return new ModelAndView("redirect:/");
+        if (!HttpStatus.NOT_FOUND.equals(status)
+                || !HttpMethod.GET.name().equalsIgnoreCase(request.getMethod())) {
+            return null;
         }
-        return null;
+        if (model.get("path") instanceof String path && path.endsWith("/")) {
+            return new ModelAndView("redirect:" + path + "index.html");
+        }
+        return new ModelAndView("redirect:/");
     }
 }
