@@ -2,13 +2,13 @@ import React from 'react'
 import ReactDOMServer from 'react-dom/server'
 import render from '../../utils/render.mjs'
 
-const prefix = '/templates/ebook/'
-const cache = new Map
+const cache = new Map()
 
 async function templated(name) {
     let item = cache.get(name)
     if (!item) {
-        const response = await fetch(prefix + name)
+        const url = new URL('../../templates/ebook/' + name, import.meta.url)
+        const response = await fetch(url)
         item = await response.text()
         cache.set(name, item)
     }

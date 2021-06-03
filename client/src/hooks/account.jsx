@@ -3,7 +3,7 @@ import { getLocalItem, setLocalItem, removeLocalItem } from '../utils/storage.mj
 
 const { useState, useEffect } = React
 
-const LOGIN_URL = '/pages/login/index.html'
+const LOGIN_URL = new URL('../pages/login/index.html', import.meta.url)
 
 export function redirectToLoginPage() {
     const backUrl = location.hash
