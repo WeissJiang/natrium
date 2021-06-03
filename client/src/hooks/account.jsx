@@ -6,7 +6,7 @@ const { useState, useEffect } = React
 const LOGIN_URL = new URL('../pages/login/index.html', import.meta.url)
 
 export function redirectToLoginPage() {
-    const backUrl = location.hash
+    const backUrl = location.href
     const searchParams = new URLSearchParams({ backUrl })
     location.href = `${LOGIN_URL}?${searchParams}`
 }
