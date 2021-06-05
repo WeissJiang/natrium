@@ -1,8 +1,29 @@
-import React,{ useState } from 'react'
+import React, { useState } from 'react'
+import styled from 'styled-components'
 
-import murmur3 from '../../utils/murmurhash3_32.mjs'
+import murmur3 from '../../utils/murmurhash3_32.js'
 
-import styles from './NameKey.module.css'
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 75vh;
+  font-size: 30px;
+
+  & div {
+    margin: 10px 0;
+  }
+
+  & input {
+    width: 180px;
+    margin: 0 10px;
+    border-width: 0 0 1px 0;
+    outline: none;
+    font-size: 30px;
+  }
+
+`
 
 function getNameKey(name) {
     if (!name) {
@@ -21,7 +42,7 @@ export default function NameKey(props) {
     }
 
     return (
-        <div className={styles.container}>
+        <Container>
             <div>
                 <span>Name:</span>
                 <input type="text" value={name} onChange={ev => handleNameChange(ev)} />
@@ -29,7 +50,7 @@ export default function NameKey(props) {
             <div>
                 <span>Name key: {getNameKey(name)}</span>
             </div>
-        </div>
+        </Container>
     )
 }
 

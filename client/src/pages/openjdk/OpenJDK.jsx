@@ -1,8 +1,46 @@
 import React from 'react'
+import styled from 'styled-components'
 
-import { getOpenJDKInfo2 } from './api.mjs'
+import { getOpenJDKInfo2 } from './api.js'
 
-import styles from './OpenJDK.module.css'
+const Container = styled.div`
+
+  & select {
+    width: 100%;
+  }
+
+  & td {
+    width: 150px;
+  }
+
+  & button {
+    box-sizing: border-box;
+    border-radius: 4px;
+    font-family: arial, sans-serif;
+    border: 1px solid rgba(0, 0, 0, 0);
+    line-height: 27px;
+    min-width: 80px;
+    text-align: center;
+    outline: none;
+    user-select: none;
+    background-color: #f8f9fa;
+    transition: color 0.3s;
+  }
+
+  & button:hover {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
+    border: 1px solid #dadce0;
+    color: #202124;
+  }
+
+  & button:active {
+    color: rgba(0, 0, 0, 0.3)
+  }
+
+  & button:disabled {
+    color: rgba(0, 0, 0, 0.3)
+  }
+`
 
 function VersionSelect() {
     return (
@@ -139,7 +177,7 @@ export default function OpenJDK() {
     }
 
     return (
-        <div className={styles.container}>
+        <Container>
             <form onSubmit={getUrl}>
                 <table>
                     <tbody>
@@ -179,7 +217,7 @@ export default function OpenJDK() {
                     return <span>loading...</span>
                 }
             })()}
-        </div>
+        </Container>
     )
 }
 

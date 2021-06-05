@@ -1,9 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useUser } from '../../hooks/account.jsx'
-
-import '../../styles/utilities.css'
-
-const { useState } = React
 
 async function getUserList(token) {
     const response = await fetch('/api/user/list', {
@@ -77,16 +73,16 @@ export default function Nano() {
     }
 
     return (
-        <div className="max-w-full p-4">
+        <div>
             <div>
-                <button className="px-2 py-1 border rounded bg-gray-300 hover:bg-white" onClick={getList}>Get list</button>
+                <button onClick={getList}>Get list</button>
                 <div>User list</div>
                 <pre>{printJson(userList)}</pre>
                 <div>Chat list</div>
                 <pre>{printJson(chatList)}</pre>
             </div>
             <div>
-                <button className="px-2 py-1 border rounded bg-gray-300 hover:bg-white" onClick={setWebhook}>Set Webhook</button>
+                <button onClick={setWebhook}>Set Webhook</button>
                 <div>Result</div>
                 <pre>{printJson(result)}</pre>
             </div>

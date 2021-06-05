@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useUser, redirectToLoginPage } from '../../hooks/account.jsx'
 
-import styles from './Token.module.css'
-
 function isoToLocal(iso) {
     if (!iso) {
         return ''
@@ -84,7 +82,7 @@ export default function Token(props) {
     return (
         <div>
             <span>hi, {user['firstname']}</span>
-            <table className={styles['t-table']}>
+            <table>
                 <thead>
                 <tr>
                     <th />
@@ -101,7 +99,7 @@ export default function Token(props) {
                         <td>{it['name']}</td>
                         <td>{JSON.parse(it['privilege']).join(', ')}</td>
                         <td>{isoToLocal(it['lastActiveTime'])}</td>
-                        <td className={styles['operation']}>
+                        <td>
                             <a href="" onClick={(ev) => handleDeleteToken(it, ev)}>DELETE</a>
                         </td>
                     </tr>

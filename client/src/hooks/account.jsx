@@ -1,5 +1,5 @@
 import React from 'react'
-import { getLocalItem, setLocalItem, removeLocalItem } from '../utils/storage.mjs'
+import { getLocalItem, setLocalItem, removeLocalItem } from '../utils/storage.js'
 
 const { useState, useEffect } = React
 

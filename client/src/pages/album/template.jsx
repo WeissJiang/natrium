@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOMServer from 'react-dom/server'
-import render from '../../utils/render.mjs'
+import render from '../../utils/render.js'
 
 const cache = new Map()
 
