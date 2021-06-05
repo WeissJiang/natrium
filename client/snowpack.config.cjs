@@ -5,13 +5,13 @@ function proxyTo(target) {
     return (req, res) => proxy.web(req, res)
 }
 
+const API = 'https://natrium.herokuapp.com/'
+
 module.exports = {
     mount: {
         './src': '/',
     },
-    routes: [
-        { src: '/api/.*', dest: proxyTo('http://localhost:8080'), },
-    ],
+    routes: [{ src: '/api/.*', dest: proxyTo(API) }],
     devOptions: {
         port: 8000,
         open: 'none',
