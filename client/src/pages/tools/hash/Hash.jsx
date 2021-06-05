@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-import murmur3 from '../../utils/murmurhash3_32.js'
+import murmur3 from '../../../utils/murmurhash3_32.js'
 
 const Container = styled.div`
   display: flex;
@@ -25,14 +25,14 @@ const Container = styled.div`
 
 `
 
-function getNameKey(name) {
+function getNameHash(name) {
     if (!name) {
         return 0
     }
     return murmur3(name, 314) % 100
 }
 
-export default function NameKey(props) {
+export default function Hash(props) {
 
     const [name, setName] = useState('')
 
@@ -48,7 +48,7 @@ export default function NameKey(props) {
                 <input type="text" value={name} onChange={ev => handleNameChange(ev)} />
             </div>
             <div>
-                <span>Name key: {getNameKey(name)}</span>
+                <span>Name Hash: {getNameHash(name)}</span>
             </div>
         </Container>
     )
