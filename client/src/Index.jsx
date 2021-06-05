@@ -16,7 +16,7 @@ const Container = styled.div`
 
 const Title = styled.div`
   position: relative;
-  border-bottom: 5rem;
+  bottom: 5rem;
   font-size: 4.5rem;
   line-height: 1;
   color: #fff;
