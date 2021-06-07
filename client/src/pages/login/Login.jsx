@@ -5,6 +5,7 @@ import useUser, { getBackUrl } from '../../hooks/useUser.js'
 import LoginFormPage from './LoginFormPage.jsx'
 import LoggedInPage from './LoggedInPage.jsx'
 import VerifyingPage from './VerifyingPage.jsx'
+import Loading from '../../components/Loading.jsx'
 
 async function pollingTokenVerification(token) {
     // 等5秒
@@ -36,7 +37,7 @@ export default function Login(props) {
     const { loading, user, token, setTokenStore, setToken } = useUser()
 
     if (loading) {
-        return <div>Loading...</div>
+        return <Loading />
     }
 
     // --- 用户已登录
