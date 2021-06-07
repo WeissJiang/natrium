@@ -1,7 +1,8 @@
-import { assertEquals } from '../../utils/assertions.js'
+import { assertEquals } from '../utils/assertions.js'
 
-// See https://api.adoptopenjdk.net/
-
+/**
+ * @see https://api.adoptopenjdk.net/
+ */
 export async function getOpenJDKInfo2(params) {
     const searchParams = new URLSearchParams(params)
     const response = await fetch(`https://api.adoptopenjdk.net/v2/info/releases/openjdk${params.version}?${searchParams}`)

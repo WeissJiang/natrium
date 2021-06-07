@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { getOpenJDKInfo2 } from './api.js'
+import { getOpenJDKInfo2 } from '../../apis/adoptopenjdk.js'
 
 const Container = styled.div`
 

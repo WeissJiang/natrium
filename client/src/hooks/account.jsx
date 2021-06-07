@@ -1,5 +1,6 @@
 import React from 'react'
 import { getLocalItem, setLocalItem, removeLocalItem } from '../utils/storage.js'
+import { getUser } from '../apis/user.js'
 
 const { useState, useEffect } = React
 
@@ -18,22 +19,8 @@ export function getBackUrl() {
 
 const TOKEN = 'token'
 
-async function fetchUser(token) {
-    const options = {
-        cache: 'no-cache',
-        headers: {
-            'X-Token': token
-        },
-    }
-    const response = await fetch('/api/user/user', options)
-    const result = await response.json()
-    if (result.error && response.status !== 403) {
-        alert(result.error)
-    }
-    return result.payload
-}
-
 function useToken() {
+
     const [token, setTokenState] = useState(() => getLocalItem(TOKEN))
 
     function setLocalToken(token) {
@@ -69,7 +56,7 @@ export function useUser() {
         }
         setLoading(true)
         ;(async () => {
-            const user = await fetchUser(token)
+            const user = await getUser(token)
             if (user) {
                 setUser(user)
             }

@@ -1,37 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useUser, redirectToLoginPage } from '../../hooks/account.jsx'
+import { deleteToken, getTokenList } from '../../apis/token.js'
 
 function isoToLocal(iso) {
     if (!iso) {
         return ''
     }
     return new Date(Date.parse(iso)).toLocaleString()
-}
-
-async function fetchTokenList(token) {
-    const response = await fetch('/api/token/list', {
-        headers: { 'X-Token': token }
-    })
-    const result = await response.json()
-    if (result.error) {
-        alert(result.error)
-    }
-    return result.payload || []
-}
-
-async function fetchDeleteToken(token, idList) {
-    const body = new URLSearchParams()
-    idList.forEach(id => body.append('id', id))
-    const response = await fetch('/api/token/delete', {
-        method: 'POST',
-        headers: { 'X-Token': token },
-        body,
-    })
-    const result = await response.json()
-    if (result.error && response.status !== 403) {
-        alert(result.error)
-    }
-    return result.payload
 }
 
 export default function Token(props) {
@@ -43,7 +18,7 @@ export default function Token(props) {
             return
         }
         ;(async () => {
-            const fetched = await fetchTokenList(token)
+            const fetched = await getTokenList(token)
             setTokenList(fetched || [])
         })()
     }, [user])
@@ -70,12 +45,12 @@ export default function Token(props) {
         if (!confirm('The following token will be permanently deleted, are you sure you want to continue?')) {
             return
         }
-        await fetchDeleteToken(token, [target.id])
+        await deleteToken(token, [target.id])
         if (target.current) {
             redirectToLoginPage()
             return
         }
-        const fetched = await fetchTokenList(token)
+        const fetched = await getTokenList(token)
         setTokenList(fetched)
     }
 

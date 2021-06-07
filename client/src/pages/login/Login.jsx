@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useUser, getBackUrl } from '../../hooks/account.jsx'
 import { sleep } from '../../utils/schedule.js'
+import { createVerifyingToken, getTokenVerification, logout } from '../../apis/token.js'
 
 function VerifyingBox(props) {
     return (
@@ -50,21 +51,8 @@ export default function Login(props) {
 
     if (user) {
         async function handleLogout() {
-            try {
-                const response = await fetch('/api/token/deleteSelf', {
-                    method: 'POST',
-                    headers: { 'X-Token': token }
-                })
-                const result = await response.json()
-                if (result.error) {
-                    alert(result.error)
-                    console.error(result.error)
-                }else {
-                    setToken(null)
-                }
-            } catch (error) {
-                console.error(error.message)
-            }
+            await logout(token)
+            setToken(null)
         }
 
         const backUrl = getBackUrl()
@@ -80,15 +68,8 @@ export default function Login(props) {
         // 等5秒
         await sleep(5000)
         while (true) {
-            const response = await fetch('/api/token/verification', {
-                headers: { 'X-Token': token }
-            })
-            const result = await response.json()
-            if (result.error) {
-                alert(result.error)
-                throw new Error(result.error)
-            }
-            const { verifying } = result.payload
+            const payload = await getTokenVerification(token)
+            const { verifying } = payload
             switch (verifying) {
                 case 'done': {
                     return
@@ -106,16 +87,8 @@ export default function Login(props) {
     }
 
     async function createTokenAndWaitVerifying(username) {
-        const response = await fetch('/api/token/createVerifyingToken', {
-            method: 'POST',
-            body: new URLSearchParams({ username })
-        })
-        const result = await response.json()
-        if (result.error) {
-            alert(result.error)
-            throw new Error(result.error)
-        }
-        const { token, verificationCode } = result.payload
+        const paylaod = await createVerifyingToken(username)
+        const { token, verificationCode } = paylaod
         setLocalToken(token)
         setVerifying(true)
         setVerificationCode(verificationCode)
