@@ -2,38 +2,30 @@ import React, { useState } from 'react'
 import { sleep } from '../../utils/schedule.js'
 import { createVerifyingToken, getTokenVerification, logout } from '../../apis/token.js'
 import useUser, { getBackUrl } from '../../hooks/useUser.js'
+import LoginFormPage from './LoginFormPage.jsx'
+import LoggedInPage from './LoggedInPage.jsx'
+import VerifyingPage from './VerifyingPage.jsx'
 
-function VerifyingBox(props) {
-    return (
-        <div>
-            <span>
-                Verification code: <strong>{props.verificationCode}</strong>, please send the code to
-                <a href="https://t.me/nano_telegram_bot" target="_blank"> nano. </a>
-            </span>
-        </div>
-    )
-}
-
-function LoginForm(props) {
-    return (
-        <div>
-            <form onSubmit={props.handleSubmit}>
-                <span>Please input Telegram name: </span>
-                <input type="text" name="username" required />
-                <button type="submit">Login</button>
-            </form>
-        </div>
-    )
-}
-
-function LoggedInBox(props) {
-    const { user, handleLogout } = props
-    return (
-        <div>
-            <span>hi, {user.firstname}</span>
-            <button onClick={handleLogout}>Logout</button>
-        </div>
-    )
+async function pollingTokenVerification(token) {
+    // 等5秒
+    await sleep(5000)
+    while (true) {
+        const payload = await getTokenVerification(token)
+        const { verifying } = payload
+        switch (verifying) {
+            case 'done': {
+                return
+            }
+            case 'pending': {
+                // noop
+                break
+            }
+            case 'timeout': {
+                throw new Error('timeout')
+            }
+        }
+        await sleep(2000)
+    }
 }
 
 export default function Login(props) {
@@ -50,42 +42,20 @@ export default function Login(props) {
     // --- 用户已登录
 
     if (user) {
+        const backUrl = getBackUrl()
+        if (backUrl) {
+            location.href = backUrl
+        }
+
         async function handleLogout() {
             await logout(token)
             setToken(null)
         }
 
-        const backUrl = getBackUrl()
-        if (backUrl) {
-            location.href = backUrl
-        }
-        return <LoggedInBox user={user} handleLogout={handleLogout} />
+        return <LoggedInPage user={user} handleLogout={handleLogout} />
     }
 
     // --- 用户未登录、Token不存在或无效
-
-    async function pollingTokenVerification(token) {
-        // 等5秒
-        await sleep(5000)
-        while (true) {
-            const payload = await getTokenVerification(token)
-            const { verifying } = payload
-            switch (verifying) {
-                case 'done': {
-                    return
-                }
-                case 'pending': {
-                    // noop
-                    break
-                }
-                case 'timeout': {
-                    throw new Error('timeout')
-                }
-            }
-            await sleep(2000)
-        }
-    }
-
     async function createTokenAndWaitVerifying(username) {
         const payload = await createVerifyingToken(username)
         const { token, verificationCode } = payload
@@ -119,9 +89,9 @@ export default function Login(props) {
     }
 
     if (verifying) {
-        return <VerifyingBox verificationCode={verificationCode} />
+        return <VerifyingPage verificationCode={verificationCode} />
     } else {
-        return <LoginForm handleSubmit={handleLoginFromSubmit} />
+        return <LoginFormPage handleSubmit={handleLoginFromSubmit} />
     }
 }
 
