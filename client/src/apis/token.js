@@ -45,7 +45,10 @@ export async function getTokenList(token) {
 }
 
 export async function deleteToken(token, tokenIdList) {
-    const body = tokenIdList.reduce((a, c) => a.append('id', c), new URLSearchParams())
+    const body = tokenIdList.reduce((searchParams, id) => {
+        searchParams.append('id', id)
+        return searchParams
+    }, new URLSearchParams())
     const response = await fetch('/api/token/delete', {
         method: 'POST',
         headers: { 'X-Token': token },

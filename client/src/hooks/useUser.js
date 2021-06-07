@@ -1,8 +1,7 @@
-import React from 'react'
-import { getLocalItem, setLocalItem, removeLocalItem } from '../utils/storage.js'
-import { getUser } from '../apis/user.js'
+import { useEffect, useState } from 'react'
 
-const { useState, useEffect } = React
+import { getUser } from '../apis/user.js'
+import { getLocalItem, removeLocalItem, setLocalItem } from '../utils/storage.js'
 
 const LOGIN_URL = new URL('../pages/login/index.html', import.meta.url)
 
@@ -17,13 +16,16 @@ export function getBackUrl() {
     return new URLSearchParams(search).get('backUrl')
 }
 
-const TOKEN = 'token'
+export const TOKEN = 'token'
 
-function useToken() {
+export default function useUser() {
 
     const [token, setTokenState] = useState(() => getLocalItem(TOKEN))
 
-    function setLocalToken(token) {
+    const [user, setUser] = useState(null)
+    const [loading, setLoading] = useState(true)
+
+    function setTokenStore(token) {
         if (token === null) {
             removeLocalItem(TOKEN)
         } else {
@@ -32,21 +34,9 @@ function useToken() {
     }
 
     function setToken(token) {
-        setLocalToken(token)
+        setTokenStore(token)
         setTokenState(token)
     }
-
-    return {
-        token,
-        setToken,
-        setLocalToken,
-    }
-}
-
-export function useUser() {
-    const { token, setToken, setLocalToken } = useToken()
-    const [user, setUser] = useState(null)
-    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         if (!token) {
@@ -64,21 +54,11 @@ export function useUser() {
         })()
     }, [token])
 
-    function redirectToLoginPageIfNotLogin() {
-        if (!loading && !user) {
-            redirectToLoginPage()
-            return true
-        }
-        return false
-    }
-
     return {
         loading,
         user,
         token,
         setToken,
-        setLocalToken,
-        redirectToLoginPageIfNotLogin,
+        setTokenStore,
     }
 }
-

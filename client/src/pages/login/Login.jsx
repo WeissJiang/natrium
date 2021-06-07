@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { useUser, getBackUrl } from '../../hooks/account.jsx'
 import { sleep } from '../../utils/schedule.js'
 import { createVerifyingToken, getTokenVerification, logout } from '../../apis/token.js'
+import useUser, { getBackUrl } from '../../hooks/useUser.js'
 
 function VerifyingBox(props) {
     return (
@@ -30,7 +30,7 @@ function LoggedInBox(props) {
     const { user, handleLogout } = props
     return (
         <div>
-            <span>hi, {user['firstname']}</span>
+            <span>hi, {user.firstname}</span>
             <button onClick={handleLogout}>Logout</button>
         </div>
     )
@@ -41,7 +41,7 @@ export default function Login(props) {
     const [verifying, setVerifying] = useState(false)
     const [verificationCode, setVerificationCode] = useState('')
 
-    const { loading, user, token, setLocalToken, setToken } = useUser()
+    const { loading, user, token, setTokenStore, setToken } = useUser()
 
     if (loading) {
         return <div>Loading...</div>
@@ -87,9 +87,9 @@ export default function Login(props) {
     }
 
     async function createTokenAndWaitVerifying(username) {
-        const paylaod = await createVerifyingToken(username)
-        const { token, verificationCode } = paylaod
-        setLocalToken(token)
+        const payload = await createVerifyingToken(username)
+        const { token, verificationCode } = payload
+        setTokenStore(token)
         setVerifying(true)
         setVerificationCode(verificationCode)
         try {

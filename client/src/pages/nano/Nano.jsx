@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
-import { useUser } from '../../hooks/account.jsx'
 import { getChatList, getUserList } from '../../apis/user.js'
 import { setWebhook } from '../../apis/webhook.js'
+import useUser, { redirectToLoginPage } from '../../hooks/useUser.js'
 
 function printJson(o) {
     return JSON.stringify(o, null, 2)
 }
 
 export default function Nano() {
-    const { loading, token, redirectToLoginPageIfNotLogin } = useUser()
+    const { loading, user, token } = useUser()
 
     const [userList, setUserList] = useState([])
     const [chatList, setChatList] = useState([])
@@ -19,7 +19,8 @@ export default function Nano() {
         return <div>Loading...</div>
     }
 
-    if (redirectToLoginPageIfNotLogin()) {
+    if (!user) {
+        redirectToLoginPage()
         return <div>Redirecting to login page...</div>
     }
 

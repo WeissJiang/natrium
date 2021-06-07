@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { useUser, redirectToLoginPage } from '../../hooks/account.jsx'
 import { deleteToken, getTokenList } from '../../apis/token.js'
+import useUser, { redirectToLoginPage } from '../../hooks/useUser.js'
 
 function isoToLocal(iso) {
     if (!iso) {
@@ -10,7 +10,7 @@ function isoToLocal(iso) {
 }
 
 export default function Token(props) {
-    const { loading, user, token, redirectToLoginPageIfNotLogin } = useUser()
+    const { loading, user, token } = useUser()
     const [tokenList, setTokenList] = useState(null)
 
     useEffect(() => {
@@ -27,7 +27,8 @@ export default function Token(props) {
         return <div>Loading...</div>
     }
 
-    if (redirectToLoginPageIfNotLogin()) {
+    if (!user) {
+        redirectToLoginPage()
         return <div>Redirecting to login page...</div>
     }
 
