@@ -30,8 +30,9 @@ const UsernameInput = styled.label`
     border: 1px solid #000;
     border-radius: 2px;
     font-size: 1.25rem;
-    line-height: 1.75em;
+    line-height: 1.75rem;
     outline: none;
+    padding: .25rem;
   }
 `
 

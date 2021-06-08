@@ -5,6 +5,7 @@ import useUser, { redirectToLoginPage } from '../../hooks/useUser.js'
 import Loading from '../../components/Loading.jsx'
 import Layout from '../../components/Layout.jsx'
 import { logout } from '../../apis/token.js'
+import Button from '../../components/Button.js'
 
 function printJson(o) {
     return JSON.stringify(o, null, 2)
@@ -47,14 +48,14 @@ export default function Nano() {
     return (
         <Layout username={user.firstname} onLogout={handleLogout}>
             <div style={{ padding: '1rem' }}>
-                <button onClick={handleGetUserList}>Get List</button>
+                <Button onClick={handleGetUserList}>Get List</Button>
                 <div>User List</div>
                 <pre>{printJson(userList)}</pre>
                 <div>Chat List</div>
                 <pre>{printJson(chatList)}</pre>
             </div>
             <div style={{ padding: '1rem' }}>
-                <button onClick={handleSetWebhook}>Set Webhook</button>
+                <Button onClick={handleSetWebhook}>Set Webhook</Button>
                 <div>Result</div>
                 <pre>{printJson(result)}</pre>
             </div>

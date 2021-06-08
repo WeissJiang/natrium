@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 
 const Table = styled.table`
-  width: calc(100% - 1rem);
-  margin: 1rem .5rem 0;
+  width: calc(100% - 2rem);
+  margin: 1rem;
   box-sizing: border-box;
   border: 1px solid #000;
   border-collapse: collapse;
