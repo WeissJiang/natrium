@@ -65,7 +65,7 @@ const ContentLoadingContainer = styled.div`
 function ContentLoading(props) {
 
     return (
-        <ContentLoadingContainer>Loading...</ContentLoadingContainer>
+        <ContentLoadingContainer>加载中...</ContentLoadingContainer>
     )
 }
 

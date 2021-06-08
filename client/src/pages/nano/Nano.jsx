@@ -3,13 +3,15 @@ import { getChatList, getUserList } from '../../apis/user.js'
 import { setWebhook } from '../../apis/webhook.js'
 import useUser, { redirectToLoginPage } from '../../hooks/useUser.js'
 import Loading from '../../components/Loading.jsx'
+import Layout from '../../components/Layout.jsx'
+import { logout } from '../../apis/token.js'
 
 function printJson(o) {
     return JSON.stringify(o, null, 2)
 }
 
 export default function Nano() {
-    const { loading, user, token } = useUser()
+    const { loading, user, token, setToken } = useUser()
 
     const [userList, setUserList] = useState([])
     const [chatList, setChatList] = useState([])
@@ -37,21 +39,26 @@ export default function Nano() {
         setResult(setWebhookResult || {})
     }
 
+    async function handleLogout() {
+        await logout(token)
+        setToken(null)
+    }
+
     return (
-        <div>
-            <div>
-                <button onClick={handleGetUserList}>Get list</button>
-                <div>User list</div>
+        <Layout username={user.firstname} onLogout={handleLogout}>
+            <div style={{ padding: '1rem' }}>
+                <button onClick={handleGetUserList}>Get List</button>
+                <div>User List</div>
                 <pre>{printJson(userList)}</pre>
-                <div>Chat list</div>
+                <div>Chat List</div>
                 <pre>{printJson(chatList)}</pre>
             </div>
-            <div>
+            <div style={{ padding: '1rem' }}>
                 <button onClick={handleSetWebhook}>Set Webhook</button>
                 <div>Result</div>
                 <pre>{printJson(result)}</pre>
             </div>
-        </div>
+        </Layout>
     )
 }
 
