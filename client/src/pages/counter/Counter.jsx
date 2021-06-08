@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { sleep } from '../../utils/schedule.js'
-import message from '../../components/message/message.jsx'
+import message from '../../components/message.jsx'
 import { CounterProvider } from './context.jsx'
-import Spin from '../../components/spin/Spin'
+import Spin from '../../components/Spin'
 
 const Container = styled.div`
   display: flex;

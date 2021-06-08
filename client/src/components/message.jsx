@@ -46,8 +46,9 @@ function openNotification(text, { duration } = { duration: 3000 }) {
     }
 }
 
-export default {
+const message = {
     info(text, options) {
         openNotification(text, options)
     }
 }
+export default message

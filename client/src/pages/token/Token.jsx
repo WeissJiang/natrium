@@ -1,7 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import styled from 'styled-components'
+
 import { deleteToken, getTokenList } from '../../apis/token.js'
 import useUser, { redirectToLoginPage } from '../../hooks/useUser.js'
 import Loading from '../../components/Loading.jsx'
+import Layout from '../../components/Layout.jsx'
+import Table from '../../components/Table.js'
 
 function isoToLocal(iso) {
     if (!iso) {
@@ -10,9 +14,29 @@ function isoToLocal(iso) {
     return new Date(Date.parse(iso)).toLocaleString()
 }
 
+const ErrorButton = styled.button`
+  box-sizing: border-box;
+  text-decoration: inherit;
+  margin: 0 .25rem;
+  padding: .125rem .5rem;
+  font-weight: 500;
+  font-size: .875rem;
+  line-height: 1.25rem;
+  border: none;
+  border-radius: 2px;
+  background-color: transparent;
+  cursor: pointer;
+  color: #ef4444;
+
+  &:hover {
+    color: #fff;
+    background-color: #ef4444;
+  }
+`
+
 export default function Token(props) {
     const { loading, user, token } = useUser()
-    const [tokenList, setTokenList] = useState(null)
+    const [tokenList, setTokenList] = useState([])
 
     useEffect(() => {
         if (!token || !user) {
@@ -33,18 +57,9 @@ export default function Token(props) {
         return <Loading>重定向到登录页...</Loading>
     }
 
-    if (!tokenList) {
-        return (
-            <div>
-                <span>hi, {user['firstname']}</span>
-                <div>Loading token...</div>
-            </div>
-        )
-    }
-
     async function handleDeleteToken(target, ev) {
         ev.preventDefault()
-        if (!confirm('The following token will be permanently deleted, are you sure you want to continue?')) {
+        if (!confirm('该Token将被永久删除，您确定要继续吗？')) {
             return
         }
         await deleteToken(token, [target.id])
@@ -57,33 +72,32 @@ export default function Token(props) {
     }
 
     return (
-        <div>
-            <span>hi, {user['firstname']}</span>
-            <table>
+        <Layout username={user.firstname} loading={!tokenList.length}>
+            <Table>
                 <thead>
                 <tr>
-                    <th />
-                    <th> NAME</th>
-                    <th> PRIVILEGE</th>
-                    <th> LAST ACTIVE</th>
-                    <th> OPERATION</th>
+                    <th>名字</th>
+                    <th>权限</th>
+                    <th>上次活跃</th>
+                    <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
                 {tokenList.map(it => (
-                    <tr key={it['id']}>
-                        <td>{it['current'] && '*'}</td>
-                        <td>{it['name']}</td>
-                        <td>{JSON.parse(it['privilege']).join(', ')}</td>
-                        <td>{isoToLocal(it['lastActiveTime'])}</td>
-                        <td>
-                            <a href="" onClick={(ev) => handleDeleteToken(it, ev)}>DELETE</a>
+                    <tr key={it.id}>
+                        <td>{it.name} {it.current && '*'}</td>
+                        <td>{JSON.parse(it.privilege).join(', ')}</td>
+                        <td style={{ textAlign: 'center' }}>{isoToLocal(it.lastActiveTime)}</td>
+                        <td style={{ textAlign: 'center' }}>
+                            <ErrorButton onClick={(ev) => handleDeleteToken(it, ev)}>
+                                删除
+                            </ErrorButton>
                         </td>
                     </tr>
                 ))}
                 </tbody>
-            </table>
-        </div>
+            </Table>
+        </Layout>
     )
 }
 
