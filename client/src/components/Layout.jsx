@@ -39,6 +39,8 @@ const HeaderContainer = styled.div`
       background-color: #fff;
       transition: color, background-color 200ms;
       cursor: pointer;
+      padding-left: .5rem;
+      padding-right: .5rem;
 
       &:hover {
         color: #fff;
