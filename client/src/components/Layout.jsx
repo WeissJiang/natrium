@@ -77,7 +77,7 @@ export default function Layout(props) {
                 <div className="left" />
                 <div className="right">
                     <span className="username">{props.username}</span>
-                    <button className="logout">登出</button>
+                    <button onClick={props.onLogout} className="logout">登出</button>
                 </div>
             </HeaderContainer>
             <ContentContainer>

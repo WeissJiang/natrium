@@ -11,6 +11,10 @@ const Table = styled.table`
     padding: .5rem .5rem;
     border: 1px solid #000;
   }
+  
+  & tr.mark {
+    background-color: #e4e4e7;
+  }
 
 `
 

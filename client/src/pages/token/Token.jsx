@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
 
-import { deleteToken, getTokenList } from '../../apis/token.js'
+import { deleteToken, getTokenList, logout } from '../../apis/token.js'
 import useUser, { redirectToLoginPage } from '../../hooks/useUser.js'
 import Loading from '../../components/Loading.jsx'
 import Layout from '../../components/Layout.jsx'
-import Table from '../../components/Table.js'
+import Table from './Table.js'
+import ErrorButton from './ErrorButton.js'
 
 function isoToLocal(iso) {
     if (!iso) {
@@ -14,28 +14,8 @@ function isoToLocal(iso) {
     return new Date(Date.parse(iso)).toLocaleString()
 }
 
-const ErrorButton = styled.button`
-  box-sizing: border-box;
-  text-decoration: inherit;
-  margin: 0 .25rem;
-  padding: .125rem .5rem;
-  font-weight: 500;
-  font-size: .875rem;
-  line-height: 1.25rem;
-  border: none;
-  border-radius: 2px;
-  background-color: transparent;
-  cursor: pointer;
-  color: #ef4444;
-
-  &:hover {
-    color: #fff;
-    background-color: #ef4444;
-  }
-`
-
 export default function Token(props) {
-    const { loading, user, token } = useUser()
+    const { loading, user, token, setToken } = useUser()
     const [tokenList, setTokenList] = useState([])
 
     useEffect(() => {
@@ -57,6 +37,11 @@ export default function Token(props) {
         return <Loading>重定向到登录页...</Loading>
     }
 
+    async function handleLogout() {
+        await logout(token)
+        setToken(null)
+    }
+
     async function handleDeleteToken(target, ev) {
         ev.preventDefault()
         if (!confirm('该Token将被永久删除，您确定要继续吗？')) {
@@ -72,7 +57,7 @@ export default function Token(props) {
     }
 
     return (
-        <Layout username={user.firstname} loading={!tokenList.length}>
+        <Layout loading={!tokenList.length} username={user.firstname} onLogout={handleLogout}>
             <Table>
                 <thead>
                 <tr>
@@ -84,8 +69,8 @@ export default function Token(props) {
                 </thead>
                 <tbody>
                 {tokenList.map(it => (
-                    <tr key={it.id}>
-                        <td>{it.name} {it.current && '*'}</td>
+                    <tr key={it.id} className={it.current ? 'mark' : ''}>
+                        <td>{it.name}</td>
                         <td>{JSON.parse(it.privilege).join(', ')}</td>
                         <td style={{ textAlign: 'center' }}>{isoToLocal(it.lastActiveTime)}</td>
                         <td style={{ textAlign: 'center' }}>
