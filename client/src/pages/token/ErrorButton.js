@@ -5,7 +5,6 @@ const ErrorButton = styled.button`
   text-decoration: inherit;
   margin: 0 .25rem;
   padding: .125rem .5rem;
-  font-weight: 500;
   font-size: .875rem;
   line-height: 1.25rem;
   border: none;
