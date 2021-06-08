@@ -12,7 +12,7 @@ const HeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: .25rem .5rem;
+  padding: .25rem 1rem;
   min-height: 40px;
   font-size: 1.125rem;
   line-height: 1.75rem;
@@ -41,8 +41,14 @@ const HeaderContainer = styled.div`
       cursor: pointer;
 
       &:hover {
-        background-color: #000;
         color: #fff;
+        background-color: #000;
+      }
+
+      &:active {
+        transform: scale(0.95, 0.95);
+        color: #fff;
+        background-color: #000;
       }
     }
   }

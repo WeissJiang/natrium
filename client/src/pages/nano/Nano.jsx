@@ -57,7 +57,7 @@ export default function Nano() {
             <ChatList list={chatList} />
             <hr />
             <div style={{ padding: '1rem' }}>
-                <Button onClick={handleSetWebhook}>Set Webhook</Button>
+                <Button onClick={handleSetWebhook}>设置Webhook</Button>
                 <pre>{printJson(setWebhookResult)}</pre>
             </div>
         </Layout>

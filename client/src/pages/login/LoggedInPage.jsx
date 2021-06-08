@@ -1,12 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import Button from '../../components/Button.js'
-
-const Container = styled.div`
-  box-sizing: border-box;
-  padding: 2rem;
-  height: 100vh;
-`
+import Layout from '../../components/Layout.jsx'
 
 const TextContainer = styled.div`
   margin-top: 25vh;
@@ -20,15 +15,14 @@ const TextContainer = styled.div`
   gap: .5rem;
 `
 
-
 export default function LoggedInPage(props) {
 
     return (
-        <Container>
+        <Layout username={props.user.firstname} onLogout={props.handleLogout}>
             <TextContainer>
                 <span>Hi, {props.user.firstname}</span>
                 <Button onClick={props.handleLogout}>登出</Button>
             </TextContainer>
-        </Container>
+        </Layout>
     )
 }
