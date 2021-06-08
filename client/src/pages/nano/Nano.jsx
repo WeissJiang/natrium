@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { getChatList, getUserList } from '../../apis/user.js'
 import { setWebhook } from '../../apis/webhook.js'
 import useUser, { redirectToLoginPage } from '../../hooks/useUser.js'
@@ -6,6 +6,8 @@ import Loading from '../../components/Loading.jsx'
 import Layout from '../../components/Layout.jsx'
 import { logout } from '../../apis/token.js'
 import Button from '../../components/Button.js'
+import UserList from './UserList'
+import ChatList from './ChatList'
 
 function printJson(o) {
     return JSON.stringify(o, null, 2)
@@ -17,7 +19,18 @@ export default function Nano() {
     const [userList, setUserList] = useState([])
     const [chatList, setChatList] = useState([])
 
-    const [result, setResult] = useState({})
+    const [setWebhookResult, setSetWebhookResult] = useState({})
+
+    useEffect(() => {
+        if (loading || !user) {
+            return
+        }
+        (async () => {
+            const [fetchedUserList, fetchedChatList] = await Promise.all([getUserList(token), getChatList(token)])
+            setUserList(fetchedUserList || [])
+            setChatList(fetchedChatList || [])
+        })()
+    }, [loading, user])
 
     if (loading) {
         return <Loading />
@@ -28,36 +41,24 @@ export default function Nano() {
         return <Loading>重定向到登录页...</Loading>
     }
 
-    async function handleGetUserList() {
-        const fetchedUserList = await getUserList(token)
-        const fetchedChatList = await getChatList(token)
-        setUserList(fetchedUserList || [])
-        setChatList(fetchedChatList || [])
-    }
-
-    async function handleSetWebhook() {
-        const setWebhookResult = await setWebhook(token)
-        setResult(setWebhookResult || {})
-    }
-
     async function handleLogout() {
         await logout(token)
         setToken(null)
     }
 
+    async function handleSetWebhook() {
+        const result = await setWebhook(token)
+        setSetWebhookResult(result || {})
+    }
+
     return (
         <Layout username={user.firstname} onLogout={handleLogout}>
-            <div style={{ padding: '1rem' }}>
-                <Button onClick={handleGetUserList}>Get List</Button>
-                <div>User List</div>
-                <pre>{printJson(userList)}</pre>
-                <div>Chat List</div>
-                <pre>{printJson(chatList)}</pre>
-            </div>
+            <UserList list={userList} />
+            <ChatList list={chatList} />
+            <hr />
             <div style={{ padding: '1rem' }}>
                 <Button onClick={handleSetWebhook}>Set Webhook</Button>
-                <div>Result</div>
-                <pre>{printJson(result)}</pre>
+                <pre>{printJson(setWebhookResult)}</pre>
             </div>
         </Layout>
     )

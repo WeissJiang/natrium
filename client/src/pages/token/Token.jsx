@@ -4,7 +4,7 @@ import { deleteToken, getTokenList, logout } from '../../apis/token.js'
 import useUser, { redirectToLoginPage } from '../../hooks/useUser.js'
 import Loading from '../../components/Loading.jsx'
 import Layout from '../../components/Layout.jsx'
-import Table from './Table.js'
+import Table from '../../components/Table.js'
 import ErrorButton from './ErrorButton.js'
 
 function isoToLocal(iso) {
@@ -58,7 +58,7 @@ export default function Token(props) {
 
     return (
         <Layout loading={!tokenList.length} username={user.firstname} onLogout={handleLogout}>
-            <Table>
+            <Table style={{ margin: '1rem', width: 'calc(100% - 2rem)' }}>
                 <thead>
                 <tr>
                     <th>名字</th>
