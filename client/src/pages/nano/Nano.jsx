@@ -18,7 +18,7 @@ export default function Nano() {
 
     const [userList, setUserList] = useState([])
     const [chatList, setChatList] = useState([])
-    const [dataLoading, setDataLoading] = useState(false)
+    const [dataLoading, setDataLoading] = useState(true)
 
     const [setWebhookResult, setSetWebhookResult] = useState({})
 
@@ -28,7 +28,6 @@ export default function Nano() {
         }
         (async () => {
             try {
-                setDataLoading(true)
                 const [fetchedUserList, fetchedChatList] = await Promise.all([getUserList(token), getChatList(token)])
                 setUserList(fetchedUserList || [])
                 setChatList(fetchedChatList || [])
