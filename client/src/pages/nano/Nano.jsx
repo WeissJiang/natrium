@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { getChatList, getUserList } from '../../apis/user.js'
 import { setWebhook } from '../../apis/webhook.js'
 import useUser, { redirectToLoginPage } from '../../hooks/useUser.js'
+import Loading from '../../components/Loading.jsx'
 
 function printJson(o) {
     return JSON.stringify(o, null, 2)
@@ -16,12 +17,12 @@ export default function Nano() {
     const [result, setResult] = useState({})
 
     if (loading) {
-        return <div>Loading...</div>
+        return <Loading />
     }
 
     if (!user) {
         redirectToLoginPage()
-        return <div>Redirecting to login page...</div>
+        return <Loading>重定向到登录页...</Loading>
     }
 
     async function handleGetUserList() {
@@ -51,7 +52,7 @@ export default function Nano() {
                 <pre>{printJson(result)}</pre>
             </div>
         </div>
-    );
+    )
 }
 
 

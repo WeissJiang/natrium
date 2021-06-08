@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { deleteToken, getTokenList } from '../../apis/token.js'
 import useUser, { redirectToLoginPage } from '../../hooks/useUser.js'
+import Loading from '../../components/Loading.jsx'
 
 function isoToLocal(iso) {
     if (!iso) {
@@ -24,12 +25,12 @@ export default function Token(props) {
     }, [user])
 
     if (loading) {
-        return <div>Loading...</div>
+        return <Loading />
     }
 
     if (!user) {
         redirectToLoginPage()
-        return <div>Redirecting to login page...</div>
+        return <Loading>重定向到登录页...</Loading>
     }
 
     if (!tokenList) {

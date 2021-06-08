@@ -20,9 +20,11 @@ const LoadingText = styled.div`
 
 export default function Loading(props) {
 
+    const text = props.children || '加载中...'
+
     return (
         <LoadingContainer>
-            <LoadingText>加载中...</LoadingText>
+            <LoadingText>{text}</LoadingText>
         </LoadingContainer>
     )
 }
