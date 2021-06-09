@@ -16,13 +16,13 @@ function printJson(o) {
 }
 
 const ContentContainer = styled.div`
-  max-width: 840px;
+  max-width: 800px;
   margin: 0 auto;
 `
 
 const SetWebhookContainer = styled.div`
   box-sizing: border-box;
-  padding-right: 1rem;
+  padding: 1rem;
   border-top: 1px solid #000;
 `
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import styled from 'styled-components'
 
 import { deleteToken, getTokenList, logout } from '../../apis/token.js'
 import useUser, { redirectToLoginPage } from '../../hooks/useUser.js'
@@ -6,6 +7,11 @@ import Loading from '../../components/Loading.jsx'
 import Layout from '../../components/Layout.jsx'
 import Table from '../../components/Table.js'
 import ErrorButton from './ErrorButton.js'
+
+const ContentContainer = styled.div`
+  max-width: 800px;
+  margin: 0 auto;
+`
 
 function isoToLocal(iso) {
     if (!iso) {
@@ -58,30 +64,32 @@ export default function Token(props) {
 
     return (
         <Layout loading={!tokenList.length} username={user.firstname} onLogout={handleLogout}>
-            <Table style={{ margin: '1rem', width: 'calc(100% - 2rem)' }}>
-                <thead>
-                <tr>
-                    <th>名字</th>
-                    <th>权限</th>
-                    <th>上次活跃</th>
-                    <th>操作</th>
-                </tr>
-                </thead>
-                <tbody>
-                {tokenList.map(it => (
-                    <tr key={it.id} className={it.current ? 'mark' : ''}>
-                        <td>{it.name}</td>
-                        <td>{JSON.parse(it.privilege).join(', ')}</td>
-                        <td style={{ textAlign: 'center' }}>{isoToLocal(it.lastActiveTime)}</td>
-                        <td style={{ textAlign: 'center' }}>
-                            <ErrorButton onClick={(ev) => handleDeleteToken(it, ev)}>
-                                删除
-                            </ErrorButton>
-                        </td>
+            <ContentContainer>
+                <Table style={{ margin: '1rem' }}>
+                    <thead>
+                    <tr>
+                        <th>名字</th>
+                        <th>权限</th>
+                        <th>上次活跃</th>
+                        <th>操作</th>
                     </tr>
-                ))}
-                </tbody>
-            </Table>
+                    </thead>
+                    <tbody>
+                    {tokenList.map(it => (
+                        <tr key={it.id} className={it.current ? 'mark' : ''}>
+                            <td>{it.name}</td>
+                            <td>{JSON.parse(it.privilege).join(', ')}</td>
+                            <td style={{ textAlign: 'center' }}>{isoToLocal(it.lastActiveTime)}</td>
+                            <td style={{ textAlign: 'center' }}>
+                                <ErrorButton onClick={(ev) => handleDeleteToken(it, ev)}>
+                                    删除
+                                </ErrorButton>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </Table>
+            </ContentContainer>
         </Layout>
     )
 }
