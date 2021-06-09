@@ -9,7 +9,7 @@ import Table from '../../components/Table.js'
 import ErrorButton from './ErrorButton.js'
 
 const ContentContainer = styled.div`
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
 `
 

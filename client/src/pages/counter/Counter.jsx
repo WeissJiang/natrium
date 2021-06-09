@@ -1,11 +1,10 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { sleep } from '../../utils/schedule.js'
 import message from '../../components/message.jsx'
 import { CounterProvider } from './context.jsx'
-import Spin from '../../components/Spin'
 
 const Container = styled.div`
   display: flex;

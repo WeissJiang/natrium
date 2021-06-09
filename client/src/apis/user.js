@@ -1,6 +1,5 @@
 export async function getUser(token) {
     const response = await fetch('/api/user/user', {
-        cache: 'no-cache',
         headers: {
             'X-Token': token
         },
