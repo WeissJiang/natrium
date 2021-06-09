@@ -7,8 +7,6 @@ spring:
   profiles:
     include: nano
     active: development
-  mvc:
-    log-resolved-exception: false
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/postgres}
