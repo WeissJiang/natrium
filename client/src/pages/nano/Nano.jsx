@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react'
+import styled from 'styled-components'
+
 import { getChatList, getUserList } from '../../apis/user.js'
 import { setWebhook } from '../../apis/webhook.js'
 import useUser, { redirectToLoginPage } from '../../hooks/useUser.js'
@@ -6,12 +8,23 @@ import Loading from '../../components/Loading.jsx'
 import Layout from '../../components/Layout.jsx'
 import { logout } from '../../apis/token.js'
 import Button from '../../components/Button.js'
-import UserList from './UserList'
-import ChatList from './ChatList'
+import UserList from './UserList.jsx'
+import ChatList from './ChatList.jsx'
 
 function printJson(o) {
     return JSON.stringify(o, null, 2)
 }
+
+const ContentContainer = styled.div`
+  max-width: 840px;
+  margin: 0 auto;
+`
+
+const SetWebhookContainer = styled.div`
+  box-sizing: border-box;
+  padding-right: 1rem;
+  border-top: 1px solid #000;
+`
 
 export default function Nano() {
     const { loading, user, token, setToken } = useUser()
@@ -58,13 +71,14 @@ export default function Nano() {
 
     return (
         <Layout loading={dataLoading} username={user.firstname} onLogout={handleLogout}>
-            <UserList list={userList} />
-            <ChatList list={chatList} />
-            <hr />
-            <div style={{ padding: '1rem' }}>
-                <Button onClick={handleSetWebhook}>设置Webhook</Button>
-                <pre>{printJson(setWebhookResult)}</pre>
-            </div>
+            <ContentContainer>
+                <UserList list={userList} />
+                <ChatList list={chatList} />
+                <SetWebhookContainer>
+                    <Button onClick={handleSetWebhook}>设置Webhook</Button>
+                    <pre>{printJson(setWebhookResult)}</pre>
+                </SetWebhookContainer>
+            </ContentContainer>
         </Layout>
     )
 }

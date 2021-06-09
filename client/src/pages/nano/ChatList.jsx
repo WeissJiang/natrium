@@ -21,7 +21,7 @@ export default function ChatList(props) {
     return (
         <Container>
             <div className="title">会话列表</div>
-            <Table style={{ width: '100%' }}>
+            <Table>
                 <thead>
                 <tr>
                     <th>ID</th>

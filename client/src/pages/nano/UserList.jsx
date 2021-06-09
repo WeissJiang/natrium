@@ -22,7 +22,7 @@ export default function UserList(props) {
     return (
         <Container>
             <div className="title">用户列表</div>
-            <Table style={{ width: '100%' }}>
+            <Table>
                 <thead>
                 <tr>
                     <th>ID</th>

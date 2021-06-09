@@ -20,6 +20,7 @@ const HeaderContainer = styled.div`
   position: sticky;
   top: 0;
   background-color: #fff;
+  z-index: 10;
 
   & > .right {
     display: flex;
