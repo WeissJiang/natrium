@@ -25,27 +25,29 @@ public class SimpleResource implements Resource {
         this.delegate = delegate;
     }
 
-    public Reader getAsReader(Charset charset) throws IOException {
+    public Reader getAsReader(Charset charset) {
         var inputStream = this.getInputStream();
         return new InputStreamReader(inputStream, charset);
     }
 
-    public Reader getAsReader() throws IOException {
+    public Reader getAsReader() {
         return this.getAsReader(utf8);
     }
 
-    public byte[] getAllBytes() throws IOException {
+    public byte[] getAllBytes() {
         var inputStream = this.getInputStream();
         try (inputStream) {
             return inputStream.readAllBytes();
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
         }
     }
 
-    public String getAsString() throws IOException {
+    public String getAsString() {
         return this.getAsString(utf8);
     }
 
-    public String getAsString(Charset charset) throws IOException {
+    public String getAsString(Charset charset) {
         var bytes = this.getAllBytes();
         return new String(bytes, charset);
     }
@@ -56,33 +58,59 @@ public class SimpleResource implements Resource {
     }
 
     @Override
-    public @NotNull URL getURL() throws IOException {
-        return this.delegate.getURL();
+    public @NotNull URL getURL() {
+        try {
+            return this.delegate.getURL();
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
     }
 
     @Override
-    public @NotNull URI getURI() throws IOException {
-        return this.delegate.getURI();
+    public @NotNull URI getURI() {
+        try {
+            return this.delegate.getURI();
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+
+        }
     }
 
     @Override
-    public @NotNull File getFile() throws IOException {
-        return this.delegate.getFile();
+    public @NotNull File getFile() {
+        try {
+            return this.delegate.getFile();
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+
+        }
     }
 
     @Override
-    public long contentLength() throws IOException {
-        return this.delegate.contentLength();
+    public long contentLength() {
+        try {
+            return this.delegate.contentLength();
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
     }
 
     @Override
-    public long lastModified() throws IOException {
-        return this.delegate.lastModified();
+    public long lastModified() {
+        try {
+            return this.delegate.lastModified();
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
     }
 
     @Override
-    public @NotNull Resource createRelative(@NotNull String relativePath) throws IOException {
-        return this.delegate.createRelative(relativePath);
+    public @NotNull Resource createRelative(@NotNull String relativePath) {
+        try {
+            return this.delegate.createRelative(relativePath);
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
     }
 
     @Override
@@ -96,7 +124,12 @@ public class SimpleResource implements Resource {
     }
 
     @Override
-    public @NotNull InputStream getInputStream() throws IOException {
-        return this.delegate.getInputStream();
+    public @NotNull InputStream getInputStream() {
+        try {
+            return this.delegate.getInputStream();
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
     }
+
 }

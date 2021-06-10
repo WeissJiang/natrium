@@ -16,7 +16,6 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static nano.support.Sugar.map;
@@ -62,7 +61,7 @@ public class UserService {
                 .map(Sugar::mapToString)
                 .flatMap(Collection::stream)
                 .distinct()
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<UserDTO> getUserList() {

@@ -107,8 +107,7 @@ public abstract class Sugar {
             return null;
         }
         // if is List
-        if (collection instanceof List) {
-            var list = (List<T>) collection;
+        if (collection instanceof List<T> list) {
             return list.get(list.size() - 1);
         }
         // other collection

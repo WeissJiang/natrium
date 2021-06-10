@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static nano.support.Sugar.cast;
@@ -67,7 +66,7 @@ public class BotContext {
                 .stream()
                 .map(String::valueOf)
                 .distinct()
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public Instant date() {
