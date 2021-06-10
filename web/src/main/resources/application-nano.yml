@@ -8,6 +8,10 @@ nano:
       name: nano
       username: nano_telegram_bot
       token: token
+    nano-000:
+      name: nano-000
+      username: nano_000_bot
+      token: token
     nano-026:
       name: nano-026
       username: nano_026_bot
