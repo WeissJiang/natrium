@@ -7,7 +7,7 @@ import useUser, { redirectToLoginPage } from '../../hooks/useUser.js'
 import Loading from '../../components/Loading.jsx'
 import Layout from '../../components/Layout.jsx'
 import { logout } from '../../apis/token.js'
-import Button from '../../components/Button.js'
+import BlackButton from '../../components/BlackButton.js'
 import UserList from './UserList.jsx'
 import ChatList from './ChatList.jsx'
 
@@ -75,7 +75,7 @@ export default function Nano() {
                 <UserList list={userList} />
                 <ChatList list={chatList} />
                 <SetWebhookContainer>
-                    <Button onClick={handleSetWebhook}>设置Webhook</Button>
+                    <BlackButton onClick={handleSetWebhook}>设置Webhook</BlackButton>
                     <pre>{printJson(setWebhookResult)}</pre>
                 </SetWebhookContainer>
             </ContentContainer>

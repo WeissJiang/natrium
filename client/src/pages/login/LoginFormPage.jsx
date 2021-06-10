@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import Button from '../../components/Button.js'
+import BlackButton from '../../components/BlackButton.js'
 
 const Container = styled.div`
   box-sizing: border-box;
@@ -36,7 +36,7 @@ const UsernameInput = styled.label`
   }
 `
 
-const LoginButton = styled(Button)`
+const LoginButton = styled(BlackButton)`
   margin-top: 1rem;
 `
 

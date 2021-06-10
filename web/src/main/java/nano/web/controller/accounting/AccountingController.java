@@ -26,7 +26,7 @@ public class AccountingController {
         return ResponseEntity.ok(Result.of(data));
     }
 
-    @PostMapping("/monthData}")
+    @PostMapping("/monthData")
     public ResponseEntity<?> createApp(@RequestBody AccountingMonthData data) {
         this.accountingService.createAccountingMonthData(data);
         return ResponseEntity.ok(Result.empty());

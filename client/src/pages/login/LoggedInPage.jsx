@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import Button from '../../components/Button.js'
+import BlackButton from '../../components/BlackButton.js'
 import Layout from '../../components/Layout.jsx'
 
 const TextContainer = styled.div`
@@ -21,7 +21,7 @@ export default function LoggedInPage(props) {
         <Layout username={props.user.firstname} onLogout={props.handleLogout}>
             <TextContainer>
                 <span>Hi, {props.user.firstname}</span>
-                <Button onClick={props.handleLogout}>登出</Button>
+                <BlackButton onClick={props.handleLogout}>登出</BlackButton>
             </TextContainer>
         </Layout>
     )

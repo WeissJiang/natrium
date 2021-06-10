@@ -41,7 +41,7 @@ public class CarbonController {
     }
 
     @Authorized(privilege = NANO_API)
-    @PostMapping("/app}")
+    @PostMapping("/app")
     public ResponseEntity<?> createApp(@RequestBody CarbonApp app) {
         this.carbonService.createApp(app);
         return ResponseEntity.ok(Result.empty());

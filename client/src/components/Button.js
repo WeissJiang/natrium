@@ -1,33 +1,33 @@
 import styled from 'styled-components'
 
-
 const Button = styled.button`
   box-sizing: border-box;
-  color: #000;
-  border: solid 1px #000;
-  border-radius: 2px;
-  font-size: 1.25rem;
-  font-weight: 500;
-  background-color: unset;
-  line-height: 1.75rem;
-  min-height: 2.5rem;
-  min-width: 8rem;
-  transition-property: background-color, color, transform;
-  transition-duration: 200ms;
-  padding: 0 1.5rem;
+  background-color: #f8f9fa;
+  border: 1px solid #f8f9fa;
+  border-radius: 4px;
+  color: #3c4043;
+  font-size: 14px;
+  margin: 11px 4px;
+  padding: 0 16px;
+  line-height: 27px;
+  height: 36px;
+  min-width: 54px;
+  text-align: center;
   cursor: pointer;
-  box-shadow: rgba(0, 0, 0, 0) 0 0 0 0, rgba(0, 0, 0, 0) 0 0 0 0, rgba(0, 0, 0, 0.1) 0 1px 3px 0, rgba(0, 0, 0, 0.06) 0 1px 2px 0;
+  user-select: none;
 
   &:hover {
-    color: #fff;
-    background-color: #000;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
+    background-color: #f8f9fa;
+    border: 1px solid #dadce0;
+    color: #202124;
   }
 
-  &:active {
-    transform: scale(0.95, 0.95);
-    color: #fff;
-    background-color: #000;
+  &:focus {
+    border: 1px solid #4285f4;
+    outline: none;
   }
 `
+
 
 export default Button
