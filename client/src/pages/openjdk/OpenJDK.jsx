@@ -2,43 +2,25 @@ import React from 'react'
 import styled from 'styled-components'
 
 import { getOpenJDKInfo2 } from '../../apis/adoptopenjdk.js'
+import Button from '../../components/Button.js'
+import Table from '../../components/Table.js'
 
 const Container = styled.div`
+  max-width: 800px;
+  padding: 2rem 4rem;
+  margin: 0 auto;
 
-  & select {
-    width: 100%;
-  }
+  & form {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 1rem;
 
-  & td {
-    width: 150px;
-  }
-
-  & button {
-    box-sizing: border-box;
-    border-radius: 4px;
-    font-family: arial, sans-serif;
-    border: 1px solid rgba(0, 0, 0, 0);
-    line-height: 27px;
-    min-width: 80px;
-    text-align: center;
-    outline: none;
-    user-select: none;
-    background-color: #f8f9fa;
-    transition: color 0.3s;
-  }
-
-  & button:hover {
-    box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
-    border: 1px solid #dadce0;
-    color: #202124;
-  }
-
-  & button:active {
-    color: rgba(0, 0, 0, 0.3)
-  }
-
-  & button:disabled {
-    color: rgba(0, 0, 0, 0.3)
+    & select {
+      width: 100%;
+      background: none;
+      border: none;
+    }
   }
 `
 
@@ -98,46 +80,49 @@ function TypeSelect() {
     )
 }
 
-function InfoTable(props) {
+function InformationTable(props) {
     const link = (url, name) => <a href={url}>{name || url && new URL(url).pathname.split('/').pop()}</a>
     const b2mb = size => size && (((size | 0) / 1024 / 1024).toFixed(2) + 'MB')
     return (
-        <table>
-            <tbody>
-            <tr>
-                <td>Release:</td>
-                <td>{link(props.release_link, props.release_name)}</td>
-            </tr>
-            <tr>
-                <td>Binary:</td>
-                <td>{link(props.binary_link, props.binary_name)}</td>
-            </tr>
-            <tr>
-                <td>Binary checksum:</td>
-                <td>{link(props.checksum_link)}</td>
-            </tr>
-            <tr>
-                <td>Binary size:</td>
-                <td>{b2mb(props.binary_size)}</td>
-            </tr>
-            <tr>
-                <td>Installer:</td>
-                <td>{link(props.installer_link, props.installer_name)}</td>
-            </tr>
-            <tr>
-                <td>Installer checksum:</td>
-                <td>{link(props.installer_checksum_link)}</td>
-            </tr>
-            <tr>
-                <td>Installer size:</td>
-                <td>{b2mb(props.installer_size)}</td>
-            </tr>
-            <tr>
-                <td>Updated at:</td>
-                <td>{props.updated_at}</td>
-            </tr>
-            </tbody>
-        </table>
+        <>
+            <h2>Download Information</h2>
+            <Table style={props.style}>
+                <tbody>
+                <tr>
+                    <td>Release:</td>
+                    <td>{link(props.release_link, props.release_name)}</td>
+                </tr>
+                <tr>
+                    <td>Binary:</td>
+                    <td>{link(props.binary_link, props.binary_name)}</td>
+                </tr>
+                <tr>
+                    <td>Binary checksum:</td>
+                    <td>{link(props.checksum_link)}</td>
+                </tr>
+                <tr>
+                    <td>Binary size:</td>
+                    <td>{b2mb(props.binary_size)}</td>
+                </tr>
+                <tr>
+                    <td>Installer:</td>
+                    <td>{link(props.installer_link, props.installer_name)}</td>
+                </tr>
+                <tr>
+                    <td>Installer checksum:</td>
+                    <td>{link(props.installer_checksum_link)}</td>
+                </tr>
+                <tr>
+                    <td>Installer size:</td>
+                    <td>{b2mb(props.installer_size)}</td>
+                </tr>
+                <tr>
+                    <td>Updated at:</td>
+                    <td>{props.updated_at}</td>
+                </tr>
+                </tbody>
+            </Table>
+        </>
     )
 }
 
@@ -147,7 +132,7 @@ function InfoTable(props) {
 export default function OpenJDK() {
 
     const [loading, setLoading] = React.useState(false)
-    const [info, setInfo] = React.useState(false)
+    const [information, setInformation] = React.useState(false)
 
     async function getUrl(ev) {
         ev.preventDefault()
@@ -164,13 +149,13 @@ export default function OpenJDK() {
 
         try {
             setLoading(true)
-            setInfo(false)
+            setInformation(false)
             const data = await getOpenJDKInfo2(params)
-            setInfo(data)
+            setInformation(data)
             setLoading(false)
         } catch (ex) {
             alert(ex.message)
-            setInfo(false)
+            setInformation(false)
             setLoading(false)
         }
 
@@ -178,43 +163,40 @@ export default function OpenJDK() {
 
     return (
         <Container>
+            <h1>Download AdoptOpenJDK</h1>
             <form onSubmit={getUrl}>
-                <table>
+                <Table>
                     <tbody>
                     <tr>
                         <td>Version</td>
-                        <td><VersionSelect/></td>
+                        <td><VersionSelect /></td>
                     </tr>
                     <tr>
                         <td>JVM</td>
-                        <td><ImplSelect/></td>
+                        <td><ImplSelect /></td>
                     </tr>
                     <tr>
                         <td>Operate System</td>
-                        <td><OSSelect/></td>
+                        <td><OSSelect /></td>
                     </tr>
                     <tr>
                         <td>Architecture</td>
-                        <td><ArchSelect/></td>
+                        <td><ArchSelect /></td>
                     </tr>
                     <tr>
                         <td>Type</td>
-                        <td><TypeSelect/></td>
-                    </tr>
-                    <tr>
-                        <td/>
-                        <td>
-                            <button type="submit" disabled={loading}>Get JDK Info</button>
-                        </td>
+                        <td><TypeSelect /></td>
                     </tr>
                     </tbody>
-                </table>
+                </Table>
+                <Button type="submit" disabled={loading}>Get JDK</Button>
             </form>
             {(function () {
-                if (info) {
-                    return <InfoTable {...Object.assign({}, info, info.binaries[0])}/>
+                if (information) {
+                    return <InformationTable
+                        style={{ marginTop: '1rem' }} {...Object.assign({}, information, information.binaries[0])} />
                 } else if (loading) {
-                    return <span>loading...</span>
+                    return <div style={{ marginTop: '1rem' }}>Loading...</div>
                 }
             })()}
         </Container>
