@@ -27,11 +27,10 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     public boolean preHandle(@NotNull HttpServletRequest request,
                              @NotNull HttpServletResponse response,
                              @NotNull Object handler) {
-        if (!(handler instanceof HandlerMethod)) {
+        if (!(handler instanceof HandlerMethod handlerMethod)) {
             return true;
         }
 
-        var handlerMethod = (HandlerMethod) handler;
         var authorized = handlerMethod.getMethodAnnotation(Authorized.class);
         if (authorized == null) {
             authorized = handlerMethod.getBeanType().getAnnotation(Authorized.class);
