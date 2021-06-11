@@ -131,13 +131,14 @@ public class Nano000Handler implements Onion.Middleware<BotContext> {
         }
         var dateView = dataViewOptional.get();
         var template = """
-                ${date}总金额：${totalAmount}
+                ${date}
+                总金额：${totalAmount}
                 已经下发：${singleAmount} * ${quantity} = ${handOutAmount}
                 结余：${lastBalance} + ${balanceAmount} = ${rawBalance}
                 扣除下发结余：${balanceAmountTheDay}
                 """;
         var scope = Map.of(
-                "date", dateView.getDate(),
+                "date", getDateText(dateView.getDate()),
                 "totalAmount", format(dateView.getTotalAmount()),
                 "singleAmount", format(dateView.getSingleAmount()),
                 "quantity", format(dateView.getQuantity()),
@@ -148,6 +149,11 @@ public class Nano000Handler implements Onion.Middleware<BotContext> {
                 "balanceAmountTheDay", format(dateView.getBalanceAmountTheDay())
         );
         return render(template, scope);
+    }
+
+    private static @NotNull String getDateText(@NotNull String dashDate) {
+        var split = dashDate.split("-");
+        return "%s年%s月%s日".formatted(split[0], split[1], split[2]);
     }
 
     private static String format(int number) {
