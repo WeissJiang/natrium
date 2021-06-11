@@ -104,13 +104,19 @@ public class Nano000Handler implements Onion.Middleware<BotContext> {
         if (split.length >= 2) {
             date = split[1];
         }
+        if (!date.matches("[0-9]{4}-[0-9]{2}-[0-9]{2}")) {
+            context.replyMessage("非法日期，日期格式：/accounting <yyyy-MM-dd>，如：/accounting 2021-06-01");
+            return;
+        }
         var month = date.substring(0, 7);
         var monthData = this.accountingService.getAccountingMonthDataView(month);
         if (monthData == null) {
+            context.replyMessage("该月份无数据");
             return;
         }
         var message = buildAccountingMessage(monthData, date);
         if (message == null) {
+            context.replyMessage("该月份无数据");
             return;
         }
         context.replyMessage(message);
