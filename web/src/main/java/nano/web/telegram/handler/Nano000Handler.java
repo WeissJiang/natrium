@@ -36,6 +36,7 @@ public class Nano000Handler implements Onion.Middleware<BotContext> {
             if (!userPrivilegeList.contains(Privilege.ACCOUNTING)
                     && !userPrivilegeList.contains(Privilege.NANO_API)) {
                 context.replyMessage("权限不足");
+                return;
             }
             var text = context.text();
             if (ObjectUtils.isEmpty(text)) {
