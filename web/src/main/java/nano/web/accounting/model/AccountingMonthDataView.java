@@ -47,6 +47,7 @@ public class AccountingMonthDataView {
             lastBalance = balanceAmountTheDay;
             monthlySummary += totalAmount;
         }
+        this.month = accountingMonthData.getMonth();
         this.detail = detail;
         this.beginningBalance = accountingMonthData.getBeginningBalance();
         this.monthlySummary = monthlySummary;
