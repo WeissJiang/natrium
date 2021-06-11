@@ -38,6 +38,7 @@ public class AccountingMonthDataView {
             item.setQuantity(quantity);
             item.setHandOutAmount(handOutAmount);
             item.setBalanceAmountTheDay(balanceAmountTheDay);
+            item.setLastBalance(lastBalance);
             detail.add(item);
         }
         this.detail = detail;
@@ -55,6 +56,7 @@ public class AccountingMonthDataView {
         private Integer singleAmount;
         private Integer handOutAmount;
         private Integer balanceAmountTheDay;
+        private Integer lastBalance;
 
         public String getDate() {
             return date;
@@ -66,6 +68,14 @@ public class AccountingMonthDataView {
 
         public Integer getTotalAmount() {
             return totalAmount;
+        }
+
+        public Integer getLastBalance() {
+            return lastBalance;
+        }
+
+        public void setLastBalance(Integer lastBalance) {
+            this.lastBalance = lastBalance;
         }
 
         public void setTotalAmount(Integer totalAmount) {

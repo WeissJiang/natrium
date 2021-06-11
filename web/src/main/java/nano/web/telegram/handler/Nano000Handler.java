@@ -1,6 +1,5 @@
 package nano.web.telegram.handler;
 
-import nano.support.Json;
 import nano.support.Onion;
 import nano.web.accounting.AccountingService;
 import nano.web.accounting.model.AccountingMonthDataView;
@@ -10,10 +9,14 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
+import java.text.NumberFormat;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.Objects;
+
+import static nano.support.Sugar.render;
 
 @Component
 public class Nano000Handler implements Onion.Middleware<BotContext> {
@@ -63,7 +66,27 @@ public class Nano000Handler implements Onion.Middleware<BotContext> {
         if (dataViewOptional.isEmpty()) {
             return null;
         }
-        var dateView = dataViewOptional.get()
-        return Json.encode(dateView);
+        var dateView = dataViewOptional.get();
+        var template = """
+                ${date}总金额：${totalAmount}
+                已经下发：${singleAmount} * ${quantity}
+                结余：${lastBalance} + ${balanceAmount} = ${rawBalance}
+                扣除下发结余：${balanceAmountTheDay}
+                """;
+        var scope = Map.of(
+                "date", dateView.getDate(),
+                "totalAmount", format(dateView.getTotalAmount()),
+                "singleAmount", format(dateView.getSingleAmount()),
+                "quantity", format(dateView.getSingleAmount()),
+                "lastBalance", format(dateView.getLastBalance()),
+                "balanceAmount", format(dateView.getBalanceAmount()),
+                "rawBalance", format(dateView.getLastBalance() + dateView.getBalanceAmount()),
+                "balanceAmountTheDay", format(dateView.getBalanceAmountTheDay())
+        );
+        return render(template, scope);
+    }
+
+    private static String format(int number) {
+        return NumberFormat.getInstance().format(number);
     }
 }
