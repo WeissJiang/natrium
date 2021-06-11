@@ -4,6 +4,7 @@ import nano.support.Onion;
 import nano.web.accounting.AccountingService;
 import nano.web.accounting.model.AccountingMonthDataView;
 import nano.web.nano.model.Bot;
+import nano.web.security.Privilege;
 import nano.web.telegram.BotContext;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import java.text.NumberFormat;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -30,6 +32,11 @@ public class Nano000Handler implements Onion.Middleware<BotContext> {
     @Override
     public void via(@NotNull BotContext context, Onion.@NotNull Next next) throws Exception {
         if (Bot.NANO_000.equals(context.bot().getName())) {
+            var userPrivilegeList = context.userPrivilegeList();
+            if (!userPrivilegeList.contains(Privilege.ACCOUNTING)
+                    && !userPrivilegeList.contains(Privilege.NANO_API)) {
+                context.replyMessage("权限不足");
+            }
             var text = context.text();
             if (ObjectUtils.isEmpty(text)) {
                 return;
