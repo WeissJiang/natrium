@@ -120,7 +120,15 @@ public class Nano000Handler implements Onion.Middleware<BotContext> {
             context.replyMessage("该月份无数据");
             return;
         }
-        context.replyMessage(message);
+        var payload = Map.of(
+                "chat_id", context.chatId(),
+                "reply_to_message_id", context.messageId(),
+                "parse_mode", "HTML",
+                "disable_web_page_preview", true,
+                "text", message
+        );
+
+        context.getTelegramService().sendMessage(context.bot(), payload);
     }
 
     private static String buildAccountingMessage(@NotNull AccountingMonthDataView monthData, @NotNull String date) {
@@ -131,11 +139,12 @@ public class Nano000Handler implements Onion.Middleware<BotContext> {
         }
         var dateView = dataViewOptional.get();
         var template = """
-                ${date}
-                总金额：${totalAmount}
-                已经下发：${singleAmount} * ${quantity} = ${handOutAmount}
-                结余：${lastBalance} + ${balanceAmount} = ${rawBalance}
-                扣除下发结余：${balanceAmountTheDay}
+                <b>${date}</b>
+                
+                <b>总金额：</b>${totalAmount}
+                <b>已经下发：</b>${singleAmount} * ${quantity} = ${handOutAmount}
+                <b>结余：</b>${lastBalance} + ${balanceAmount} = ${rawBalance}
+                <b>扣除下发结余：</b>${balanceAmountTheDay}
                 """;
         var scope = Map.of(
                 "date", getDateText(dateView.getDate()),
