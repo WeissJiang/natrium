@@ -3,6 +3,7 @@ package nano.web.controller.accounting;
 import nano.support.Result;
 import nano.web.accounting.AccountingService;
 import nano.web.accounting.model.AccountingMonthData;
+import nano.web.accounting.model.AccountingMonthDataView;
 import nano.web.security.Authorized;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,20 +23,20 @@ public class AccountingController {
 
     @GetMapping("/monthData")
     public ResponseEntity<?> getApp(@RequestParam("month") String month) {
-        var result = this.accountingService.getAccountingMonthData(month);
+        var result = this.accountingService.getAccountingMonthDataView(month);
         return ResponseEntity.ok(Result.of(result));
     }
 
     @PostMapping("/monthData")
     public ResponseEntity<?> createApp(@RequestBody AccountingMonthData data) {
-        var result = this.accountingService.createAccountingMonthData(data);
-        return ResponseEntity.ok(Result.of(result));
+        this.accountingService.createAccountingMonthData(data);
+        return ResponseEntity.ok(Result.of(new AccountingMonthDataView(data)));
     }
 
     @PutMapping("/monthData")
     public ResponseEntity<?> updateApp(@RequestBody AccountingMonthData data) {
-        var result = this.accountingService.updateAccountingMonthData(data);
-        return ResponseEntity.ok(Result.of(result));
+        this.accountingService.updateAccountingMonthData(data);
+        return ResponseEntity.ok(Result.of(new AccountingMonthDataView(data)));
     }
 
 }

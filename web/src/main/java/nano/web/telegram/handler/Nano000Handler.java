@@ -2,6 +2,7 @@ package nano.web.telegram.handler;
 
 import nano.support.Onion;
 import nano.web.accounting.AccountingService;
+import nano.web.accounting.model.AccountingDateData;
 import nano.web.accounting.model.AccountingMonthDataView;
 import nano.web.nano.model.Bot;
 import nano.web.security.Privilege;
@@ -14,7 +15,6 @@ import java.text.NumberFormat;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -41,33 +41,82 @@ public class Nano000Handler implements Onion.Middleware<BotContext> {
             if (ObjectUtils.isEmpty(text)) {
                 return;
             }
-            if (context.commands().stream().noneMatch(it -> it.contains("/accounting"))) {
-                return;
+            if (context.commands().stream().anyMatch(it -> it.contains("/accounting"))) {
+                handleAccounting(context);
+            } else if (context.commands().stream().anyMatch(it -> it.contains("/record"))) {
+                handleRecord(context);
             }
-            var now = Instant.now();
-            var date = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                    .withZone(ZoneOffset.of("+8"))
-                    .format(now);
-            var split = text.split(" ");
-            if (split.length >= 2) {
-                date = split[1];
-            }
-            var month = date.substring(0, 7);
-            var monthData = this.accountingService.getAccountingMonthData(month);
-            if (monthData == null) {
-                return;
-            }
-            var message = buildMessage(monthData, date);
-            if (message == null) {
-                return;
-            }
-            context.replyMessage(message);
+
         } else {
             next.next();
         }
     }
 
-    private static String buildMessage(@NotNull AccountingMonthDataView monthData, @NotNull String date) {
+    private void handleRecord(BotContext context) {
+        var text = context.text();
+        var now = Instant.now();
+        var date = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                .withZone(ZoneOffset.of("+8"))
+                .format(now);
+        var month = date.substring(0, 7);
+        var monthData = this.accountingService.getAccountingMonthData(month);
+        if (monthData == null) {
+            monthData = this.accountingService.createThisEmptyMonthData();
+        }
+        var split = text.split(" ");
+        if (split.length < 2) {
+            context.replyMessage("非法数据，数据格式：/record <总金额>,<笔数>，如：/record 10000,10");
+            return;
+        }
+        var data = split[1];
+        var split2 = data.split(",");
+        if (split2.length < 2) {
+            context.replyMessage("非法数据，数据格式：/record <总金额>,<笔数>，如：/record 10000,10");
+            return;
+        }
+        int totalAmount;
+        int quantity;
+        try {
+            totalAmount = Integer.parseInt(split2[0]);
+            quantity = Integer.parseInt(split2[1]);
+        } catch (NumberFormatException ex) {
+            context.replyMessage("非法数据，数据格式：/record <总金额>,<笔数>，如：/record 10000,10");
+            return;
+        }
+        var dateOptional = monthData.getDetail().stream().filter(it -> it.getDate().equals(date)).findFirst();
+        if (dateOptional.isEmpty()) {
+            return;
+        }
+        var theDate = dateOptional.get();
+        theDate.setQuantity(quantity);
+        theDate.setTotalAmount(totalAmount);
+        this.accountingService.updateAccountingMonthData(monthData);
+        context.replyMessage("录入成功");
+    }
+
+    private void handleAccounting(@NotNull BotContext context) {
+        var text = context.text();
+        var now = Instant.now();
+        var date = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                .withZone(ZoneOffset.of("+8"))
+                .format(now);
+        var split = text.split(" ");
+        if (split.length >= 2) {
+            date = split[1];
+        }
+        var month = date.substring(0, 7);
+        var monthData = this.accountingService.getAccountingMonthDataView(month);
+        if (monthData == null) {
+            return;
+        }
+        var message = buildAccountingMessage(monthData, date);
+        if (message == null) {
+            return;
+        }
+        context.replyMessage(message);
+    }
+
+    private static String buildAccountingMessage(@NotNull AccountingMonthDataView monthData, @NotNull String date) {
         var detail = monthData.getDetail();
         var dataViewOptional = detail.stream().filter(it -> Objects.equals(it.getDate(), date)).findFirst();
         if (dataViewOptional.isEmpty()) {
