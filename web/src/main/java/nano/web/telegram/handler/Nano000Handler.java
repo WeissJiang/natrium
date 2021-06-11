@@ -69,7 +69,7 @@ public class Nano000Handler implements Onion.Middleware<BotContext> {
         var dateView = dataViewOptional.get();
         var template = """
                 ${date}总金额：${totalAmount}
-                已经下发：${singleAmount} * ${quantity}
+                已经下发：${singleAmount} * ${quantity} = ${handOutAmount}
                 结余：${lastBalance} + ${balanceAmount} = ${rawBalance}
                 扣除下发结余：${balanceAmountTheDay}
                 """;
@@ -77,8 +77,9 @@ public class Nano000Handler implements Onion.Middleware<BotContext> {
                 "date", dateView.getDate(),
                 "totalAmount", format(dateView.getTotalAmount()),
                 "singleAmount", format(dateView.getSingleAmount()),
-                "quantity", format(dateView.getSingleAmount()),
+                "quantity", format(dateView.getQuantity()),
                 "lastBalance", format(dateView.getLastBalance()),
+                "handOutAmount", format(dateView.getHandOutAmount()),
                 "balanceAmount", format(dateView.getBalanceAmount()),
                 "rawBalance", format(dateView.getLastBalance() + dateView.getBalanceAmount()),
                 "balanceAmountTheDay", format(dateView.getBalanceAmountTheDay())

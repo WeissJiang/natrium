@@ -17,29 +17,35 @@ public class AccountingMonthDataView {
         var lastBalance = accountingMonthData.getBeginningBalance();
         var monthlySummary = 0;
         for (var it : accountingMonthData.getDetail()) {
-            var date = it.getDate();
-            var totalAmount = it.getTotalAmount();
-            var serviceFee = (int) Math.floor(0.061 * totalAmount);
-            var balanceAmount = totalAmount - serviceFee;
-            var singleAmount = 49900;
-            var quantity = it.getQuantity();
-            var handOutAmount = singleAmount * quantity;
-            var balanceAmountTheDay = lastBalance + balanceAmount - handOutAmount;
+            var item = new AccountingDateDataView();
+            item.setDate(it.getDate());
+            item.setLastBalance(lastBalance);
 
+            var totalAmount = it.getTotalAmount();
+            item.setTotalAmount(it.getTotalAmount());
+
+            var serviceFee = (int) Math.floor(0.061 * totalAmount);
+            item.setServiceFee(serviceFee);
+
+            var balanceAmount = totalAmount - serviceFee;
+            item.setBalanceAmount(balanceAmount);
+
+            var singleAmount = 49900;
+            item.setSingleAmount(singleAmount);
+
+            var quantity = it.getQuantity();
+            item.setQuantity(quantity);
+
+            var handOutAmount = singleAmount * quantity;
+            item.setHandOutAmount(handOutAmount);
+
+            var balanceAmountTheDay = lastBalance + balanceAmount - handOutAmount;
+            item.setBalanceAmountTheDay(balanceAmountTheDay);
+
+            detail.add(item);
+            //
             lastBalance = balanceAmountTheDay;
             monthlySummary += totalAmount;
-
-            var item = new AccountingDateDataView();
-            item.setDate(date);
-            item.setTotalAmount(totalAmount);
-            item.setServiceFee(serviceFee);
-            item.setBalanceAmount(balanceAmount);
-            item.setSingleAmount(singleAmount);
-            item.setQuantity(quantity);
-            item.setHandOutAmount(handOutAmount);
-            item.setBalanceAmountTheDay(balanceAmountTheDay);
-            item.setLastBalance(lastBalance);
-            detail.add(item);
         }
         this.detail = detail;
         this.beginningBalance = accountingMonthData.getBeginningBalance();
