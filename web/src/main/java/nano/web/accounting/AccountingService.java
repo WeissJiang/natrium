@@ -2,6 +2,7 @@ package nano.web.accounting;
 
 import nano.support.Json;
 import nano.web.accounting.model.AccountingMonthData;
+import nano.web.accounting.model.AccountingMonthDataView;
 import nano.web.nano.repository.KeyValueRepository;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +19,7 @@ public class AccountingService {
         this.keyValueRepository = keyValueRepository;
     }
 
-    public @Nullable AccountingMonthData getAccountingMonthData(@NotNull String month) {
+    public @Nullable AccountingMonthDataView getAccountingMonthData(@NotNull String month) {
         var keyValue = this.keyValueRepository.queryKeyValue("%s:%s".formatted(ACCOUNTING, month));
         if (keyValue == null) {
             return null;
@@ -27,14 +28,20 @@ public class AccountingService {
         if (value == null) {
             return null;
         }
-        return Json.decodeValue(value, AccountingMonthData.class);
+        var monthData = Json.decodeValue(value, AccountingMonthData.class);
+        if (monthData == null) {
+            return null;
+        }
+        return new AccountingMonthDataView(monthData);
     }
 
-    public void createAccountingMonthData(@NotNull AccountingMonthData data) {
+    public @NotNull AccountingMonthDataView createAccountingMonthData(@NotNull AccountingMonthData data) {
         this.keyValueRepository.createKeyValue("%s:%s".formatted(ACCOUNTING, data.getMonth()), Json.encode(data));
+        return new AccountingMonthDataView(data);
     }
 
-    public void updateAccountingMonthData(@NotNull AccountingMonthData data) {
+    public @NotNull AccountingMonthDataView updateAccountingMonthData(@NotNull AccountingMonthData data) {
         this.keyValueRepository.updateKeyValue("%s:%s".formatted(ACCOUNTING, data.getMonth()), Json.encode(data));
+        return new AccountingMonthDataView(data);
     }
 }

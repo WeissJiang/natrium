@@ -22,20 +22,20 @@ public class AccountingController {
 
     @GetMapping("/monthData")
     public ResponseEntity<?> getApp(@RequestParam("month") String month) {
-        var data = this.accountingService.getAccountingMonthData(month);
-        return ResponseEntity.ok(Result.of(data));
+        var result = this.accountingService.getAccountingMonthData(month);
+        return ResponseEntity.ok(Result.of(result));
     }
 
     @PostMapping("/monthData")
     public ResponseEntity<?> createApp(@RequestBody AccountingMonthData data) {
-        this.accountingService.createAccountingMonthData(data);
-        return ResponseEntity.ok(Result.empty());
+        var result = this.accountingService.createAccountingMonthData(data);
+        return ResponseEntity.ok(Result.of(result));
     }
 
     @PutMapping("/monthData")
     public ResponseEntity<?> updateApp(@RequestBody AccountingMonthData data) {
-        this.accountingService.updateAccountingMonthData(data);
-        return ResponseEntity.ok(Result.empty());
+        var result = this.accountingService.updateAccountingMonthData(data);
+        return ResponseEntity.ok(Result.of(result));
     }
 
 }

@@ -3,17 +3,17 @@ package nano.web.telegram.handler;
 import nano.support.Json;
 import nano.support.Onion;
 import nano.web.accounting.AccountingService;
+import nano.web.accounting.model.AccountingMonthDataView;
 import nano.web.nano.model.Bot;
 import nano.web.telegram.BotContext;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 @Component
 public class Nano000Handler implements Onion.Middleware<BotContext> {
@@ -47,9 +47,23 @@ public class Nano000Handler implements Onion.Middleware<BotContext> {
             if (monthData == null) {
                 return;
             }
-            context.replyMessage(Json.encode(monthData));
+            var message = buildMessage(monthData, date);
+            if (message == null) {
+                return;
+            }
+            context.replyMessage(message);
         } else {
             next.next();
         }
+    }
+
+    private static String buildMessage(@NotNull AccountingMonthDataView monthData, @NotNull String date) {
+        var detail = monthData.getDetail();
+        var dataViewOptional = detail.stream().filter(it -> Objects.equals(it.getDate(), date)).findFirst();
+        if (dataViewOptional.isEmpty()) {
+            return null;
+        }
+        var dateView = dataViewOptional.get()
+        return Json.encode(dateView);
     }
 }

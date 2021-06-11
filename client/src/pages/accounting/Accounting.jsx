@@ -151,7 +151,7 @@ export default function Accounting(props) {
         setMonth(ev.target.value)
     }
 
-    const data = getData(monthData?.detail, monthData?.beginningBalance)
+    const dataView = monthData
 
     function getTitle() {
         if (!month) {
@@ -162,12 +162,12 @@ export default function Accounting(props) {
     }
 
     async function handleEditBeginningBalance() {
-        let beginningBalance = prompt('修改期初结余', String(data.beginningBalance))
+        let beginningBalance = prompt('修改期初结余', String(dataView.beginningBalance))
         if (!beginningBalance) {
             return
         }
         beginningBalance = Number(beginningBalance)
-        if (beginningBalance === data.beginningBalance) {
+        if (beginningBalance === dataView.beginningBalance) {
             return
         }
         // sync
@@ -176,9 +176,9 @@ export default function Accounting(props) {
             beginningBalance,
         }
         setDataLoading(true)
-        await updateMonthData(token, newMonthData)
+        const newMonthDataView =  await updateMonthData(token, newMonthData)
         setDataLoading(false)
-        setMonthData(newMonthData)
+        setMonthData(newMonthDataView)
     }
 
     async function handleEditTotalAmount(item) {
@@ -205,9 +205,9 @@ export default function Accounting(props) {
             })
         }
         setDataLoading(true)
-        await updateMonthData(token, newMonthData)
+        const newMonthDataView = await updateMonthData(token, newMonthData)
         setDataLoading(false)
-        setMonthData(newMonthData)
+        setMonthData(newMonthDataView)
     }
 
     async function handleEditQuantity(item) {
@@ -234,9 +234,9 @@ export default function Accounting(props) {
             })
         }
         setDataLoading(true)
-        await updateMonthData(token, newMonthData)
+        const newMonthDataView = await updateMonthData(token, newMonthData)
         setDataLoading(false)
-        setMonthData(newMonthData)
+        setMonthData(newMonthDataView)
     }
 
     async function handleInitMonth() {
@@ -252,8 +252,8 @@ export default function Accounting(props) {
             }),
         }
         setDataLoading(true)
-        await createMonthData(token, newMonthData)
-        setMonthData(newMonthData)
+        const newMonthDataView = await createMonthData(token, newMonthData)
+        setMonthData(newMonthDataView)
         setDataLoading(false)
     }
 
@@ -279,9 +279,9 @@ export default function Accounting(props) {
                         <tbody>
                         <tr>
                             <EditableTableData onClick={handleEditBeginningBalance}>
-                                {Number(data.beginningBalance).toLocaleString()}
+                                {Number(dataView.beginningBalance).toLocaleString()}
                             </EditableTableData>
-                            <td>{Number(data.monthlySummary).toLocaleString()}</td>
+                            <td>{Number(dataView.monthlySummary).toLocaleString()}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -300,7 +300,7 @@ export default function Accounting(props) {
                         </tr>
                         </thead>
                         <tbody>
-                        {data.detail.map(it => {
+                        {dataView.detail.map(it => {
                             return (
                                 <tr key={it.date}>
                                     <td>{it.date}</td>
