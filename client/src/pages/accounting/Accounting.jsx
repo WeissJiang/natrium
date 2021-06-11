@@ -151,7 +151,7 @@ export default function Accounting(props) {
         setMonth(ev.target.value)
     }
 
-    const dataView = monthData
+    const dataView = monthData || { detail: [], beginningBalance: 0, monthlySummary: 0 }
 
     function getTitle() {
         if (!month) {
@@ -176,7 +176,7 @@ export default function Accounting(props) {
             beginningBalance,
         }
         setDataLoading(true)
-        const newMonthDataView =  await updateMonthData(token, newMonthData)
+        const newMonthDataView = await updateMonthData(token, newMonthData)
         setDataLoading(false)
         setMonthData(newMonthDataView)
     }
@@ -320,7 +320,6 @@ export default function Accounting(props) {
                         })}
                         </tbody>
                     </StickyTable>
-
                 </ContentContainer>
             </Layout>
         </>
