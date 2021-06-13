@@ -14,6 +14,9 @@ spring:
     password: ${JDBC_DATABASE_PASSWORD:password}
     hikari:
       maximum-pool-size: 8
+  sql:
+    init:
+      mode: never
   rabbitmq:
     addresses: ${CLOUDAMQP_URL:}
   mail:
