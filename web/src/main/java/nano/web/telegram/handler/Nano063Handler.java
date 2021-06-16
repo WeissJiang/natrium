@@ -1,5 +1,6 @@
 package nano.web.telegram.handler;
 
+import com.github.houbb.nlp.common.segment.impl.CommonSegments;
 import com.github.houbb.pinyin.util.PinyinHelper;
 import nano.support.LanguageUtils;
 import nano.support.Onion;
@@ -9,6 +10,8 @@ import nano.web.telegram.BotContext;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
+
+import java.util.Objects;
 
 @Component
 public class Nano063Handler implements Onion.Middleware<BotContext> {
@@ -42,7 +45,20 @@ public class Nano063Handler implements Onion.Middleware<BotContext> {
         } else {
             zhText = this.translationService.translate(text, "en", "zh");
         }
-        var pinyin = PinyinHelper.toPinyin(zhText);
-        context.replyMessage(zhText + "\n---\n" + pinyin);
+        // merge pinyin
+        var textSegments = CommonSegments.simple().segment(zhText);
+        var pinyinSegments = PinyinHelper.toPinyin(zhText).split(" ");
+        var len = Math.min(textSegments.size(), pinyinSegments.length);
+        var sb = new StringBuilder();
+        for (int i = 0; i < len; i++) {
+            var _text = textSegments.get(i);
+            var _pinyin = pinyinSegments[i];
+            if (Objects.equals(_text, _pinyin)) {
+                sb.append(_text);
+            } else {
+                sb.append(_text).append("(").append(_pinyin).append(")");
+            }
+        }
+        context.replyMessage(sb.toString());
     }
 }
