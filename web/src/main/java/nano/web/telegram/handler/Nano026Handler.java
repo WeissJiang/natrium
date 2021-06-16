@@ -1,5 +1,6 @@
 package nano.web.telegram.handler;
 
+import nano.support.LanguageUtils;
 import nano.support.Onion;
 import nano.web.baidu.TranslationService;
 import nano.web.nano.model.Bot;
@@ -35,7 +36,12 @@ public class Nano026Handler implements Onion.Middleware<BotContext> {
             context.sendMessage("The content is empty, please input the text to be translated");
             return;
         }
-        var translated = this.translationService.autoTranslate(text);
+        String translated;
+        if (LanguageUtils.containsChinese(text)) {
+            translated = this.translationService.translate(text, "zh", "en");
+        } else {
+            translated = this.translationService.translate(text, "en", "zh");
+        }
         context.replyMessage(translated);
     }
 }

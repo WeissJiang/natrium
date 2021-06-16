@@ -34,8 +34,6 @@ public class TranslationService {
 
     private static final Logger log = LoggerFactory.getLogger(TranslationService.class);
 
-    private static final Predicate<String> chinese = Pattern.compile("[\u4e00-\u9fa5]").asPredicate();
-
     private static final String TRANSLATION_API = "https://fanyi-api.baidu.com/api/trans/vip/translate";
 
     private final RestTemplate restTemplate;
@@ -45,17 +43,6 @@ public class TranslationService {
     public TranslationService(RestTemplate restTemplate, ConfigVars configVars) {
         this.restTemplate = restTemplate;
         this.configVars = configVars;
-    }
-
-    public String autoTranslate(String input) {
-        // chinese to english
-        if (chinese.test(input)) {
-            return this.translate(input, "zh", "en");
-        }
-        // english to chinese
-        else {
-            return this.translate(input, "en", "zh");
-        }
     }
 
     public String translate(String input, String from, String to) {
