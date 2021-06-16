@@ -16,6 +16,10 @@ nano:
       name: nano-026
       username: nano_026_bot
       token: token
+    nano-063:
+      name: nano-063
+      username: nano_063_bot
+      token: token
     nano-100:
       name: nano-100
       username: nano_100_bot

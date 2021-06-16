@@ -16,6 +16,8 @@ repositories {
 }
 
 dependencies {
+    // pinyin
+    implementation 'com.github.houbb:pinyin:0.2.1'
     // user agent parser
     implementation 'com.github.cbdyzj:ua-parser-module:1.5.5'
     // json path
