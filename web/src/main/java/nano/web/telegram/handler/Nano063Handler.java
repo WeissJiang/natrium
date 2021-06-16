@@ -53,10 +53,9 @@ public class Nano063Handler implements Onion.Middleware<BotContext> {
         for (int i = 0; i < len; i++) {
             var _text = textSegments.get(i);
             var _pinyin = pinyinSegments[i];
-            if (Objects.equals(_text, _pinyin)) {
-                sb.append(_text);
-            } else {
-                sb.append(_text).append("(").append(_pinyin).append(")");
+            sb.append(_text);
+            if (!Objects.equals(_text, _pinyin)) {
+                sb.append("（").append(_pinyin).append("）");
             }
         }
         context.replyMessage(sb.toString());
