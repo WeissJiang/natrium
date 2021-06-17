@@ -7,6 +7,7 @@ import nano.web.messageing.Exchanges;
 import nano.web.nano.NanoService;
 import nano.web.security.Authorized;
 import org.springframework.amqp.rabbit.core.RabbitMessagingTemplate;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,5 +57,17 @@ public class NanoController {
     @PostMapping("/$")
     public ResponseEntity<?> $(@RequestBody String[] command) {
         return ResponseEntity.ok(new String(Zx.$(command).join(), StandardCharsets.UTF_8));
+    }
+
+    @Authorized(privilege = NANO_API)
+    @GetMapping("/screenshot")
+    public ResponseEntity<?> screenshot(@RequestParam("url") String url) {
+        var command = new String[]{
+                "bash",
+                "-c",
+                "./client/.gradle/nodejs/node*/bin/node ./client/scripts/screenshot.js %s".formatted(url)};
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .body(Zx.$(command).join());
     }
 }
