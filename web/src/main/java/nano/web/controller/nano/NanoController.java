@@ -1,12 +1,18 @@
 package nano.web.controller.nano;
 
-import nano.support.validation.Validated;
 import nano.support.Result;
+import nano.support.Zx;
+import nano.support.validation.Validated;
 import nano.web.messageing.Exchanges;
 import nano.web.nano.NanoService;
+import nano.web.security.Authorized;
 import org.springframework.amqp.rabbit.core.RabbitMessagingTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.nio.charset.StandardCharsets;
+
+import static nano.web.security.Privilege.NANO_API;
 
 @CrossOrigin
 @RestController
@@ -44,5 +50,11 @@ public class NanoController {
     public ResponseEntity<?> message(@RequestParam("m") String m) {
         this.messagingTemplate.convertAndSend(Exchanges.NANO, "nano", m);
         return ResponseEntity.ok(Result.of("OK"));
+    }
+
+    @Authorized(privilege = NANO_API)
+    @PostMapping("/$")
+    public ResponseEntity<?> $(@RequestBody String[] command) {
+        return ResponseEntity.ok(new String(Zx.$(command).join(), StandardCharsets.UTF_8));
     }
 }
