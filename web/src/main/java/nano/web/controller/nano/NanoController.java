@@ -11,7 +11,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
 
 import static nano.web.security.Privilege.NANO_API;
 
@@ -62,12 +65,9 @@ public class NanoController {
     @Authorized(privilege = NANO_API)
     @GetMapping("/screenshot")
     public ResponseEntity<?> screenshot(@RequestParam("url") String url) {
-        var command = new String[]{
-                "bash",
-                "-c",
-                "./client/.gradle/nodejs/node*/bin/node ./client/scripts/screenshot.js %s".formatted(url)};
-        return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_PNG)
-                .body(Zx.$(command).join());
+        var NODE = "./client/.gradle/nodejs/node*/bin/node";
+        var SCREENSHOT_JS = "./client/scripts/screenshot.js";
+        var command = List.of("bash", "-c", "%s %s %s".formatted(NODE, SCREENSHOT_JS, url)).toArray(String[]::new);
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(Zx.$(command).join());
     }
 }
