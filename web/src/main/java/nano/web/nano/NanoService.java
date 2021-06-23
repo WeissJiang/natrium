@@ -126,14 +126,12 @@ public class NanoService implements ApplicationContextAware {
     }
 
     /**
-     * Screenshot me
+     * Node random
      */
-    public byte[] screenshotMe() {
+    public byte[] nodeRandom() {
         var NODE = "./client/.gradle/nodejs/node*/bin/node";
-        var SCREENSHOT_JS = "./client/scripts/screenshot.js";
-        var port = this.context.getEnvironment().getProperty("server.port");
-        var url = "http://localhost:%s/".formatted(port);
-        var command = new String[]{"bash", "-c", "%s %s %s".formatted(NODE, SCREENSHOT_JS, url)};
+        var SCREENSHOT_JS = "./client/scripts/random.js";
+        var command = new String[]{"bash", "-c", "%s %s".formatted(NODE, SCREENSHOT_JS)};
         return Zx.$(command).join();
     }
 }

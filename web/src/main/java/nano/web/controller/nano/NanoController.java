@@ -59,9 +59,9 @@ public class NanoController {
         return ResponseEntity.ok(new String(Zx.$(command).join(), StandardCharsets.UTF_8));
     }
 
-    @GetMapping("/screenshot")
-    public ResponseEntity<?> screenshot() {
-        var screenshot = this.nanoService.screenshotMe();
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(screenshot);
+    @GetMapping("/node/random")
+    public ResponseEntity<?> nodeRandom() {
+        var random = this.nanoService.nodeRandom();
+        return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(random);
     }
 }
