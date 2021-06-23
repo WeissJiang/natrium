@@ -1,5 +1,6 @@
 package nano.web.nano;
 
+import nano.support.Zx;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -17,7 +18,6 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 @Service
 public class NanoService implements ApplicationContextAware {
@@ -123,5 +123,17 @@ public class NanoService implements ApplicationContextAware {
      */
     private static @NotNull String megabytes(long bytes) {
         return "%sMB".formatted(DataSize.ofBytes(bytes).toMegabytes());
+    }
+
+    /**
+     * Screenshot me
+     */
+    public byte[] screenshotMe() {
+        var NODE = "./client/.gradle/nodejs/node*/bin/node";
+        var SCREENSHOT_JS = "./client/scripts/screenshot.js";
+        var port = this.context.getEnvironment().getProperty("server.port");
+        var url = "http://localhost:%s/".formatted(port);
+        var command = new String[]{"bash", "-c", "%s %s %s".formatted(NODE, SCREENSHOT_JS, url)};
+        return Zx.$(command).join();
     }
 }
