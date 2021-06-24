@@ -14,7 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.List;
 
+import static nano.support.Sugar.map;
 import static nano.web.security.Privilege.NANO_API;
 
 @CrossOrigin
@@ -29,19 +31,33 @@ public class ObjectController {
     }
 
     @Authorized(privilege = NANO_API)
-    @PostMapping
-    public ResponseEntity<?> putObject(@RequestParam("file") MultipartFile file) {
-        var object = convertToObject(file);
-        var key = this.objectService.putObject(object);
-        return ResponseEntity.ok(Result.of(key));
+    @GetMapping("/list")
+    public ResponseEntity<?> getObjectList() {
+        var list = this.objectService.getObjectList();
+        return ResponseEntity.ok(Result.of(list));
     }
 
-    @GetMapping("/{key}")
+    @GetMapping("/-/{key}")
     public ResponseEntity<byte[]> getObject(@PathVariable("key") String key) {
         var object = this.objectService.getObject(key);
         var mediaType = MediaType.parseMediaType(object.getType());
         var data = object.getData();
         return ResponseEntity.ok().contentType(mediaType).body(data);
+    }
+
+    @Authorized(privilege = NANO_API)
+    @PostMapping("/drop")
+    public ResponseEntity<?> dropObject(@RequestBody List<String> keyList) {
+        this.objectService.batchDropObject(keyList);
+        return ResponseEntity.ok(Result.empty());
+    }
+
+    @Authorized(privilege = NANO_API)
+    @PostMapping("/put")
+    public ResponseEntity<?> putObject(@RequestParam("file") MultipartFile... fileList) {
+        var objectList = map(List.of(fileList), ObjectController::convertToObject);
+        var keyList = this.objectService.batchPutObject(objectList);
+        return ResponseEntity.ok(Result.of(keyList));
     }
 
     private static @NotNull NanoObject convertToObject(@NotNull MultipartFile file) {

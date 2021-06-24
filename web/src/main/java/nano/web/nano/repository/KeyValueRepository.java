@@ -46,6 +46,15 @@ public class KeyValueRepository {
         this.jdbcTemplate.update(slim(sql), Map.of("key", key, "value", value));
     }
 
+    public void deleteKeyValue(@NotNull List<@NotNull String> keyList) {
+        var sql = """
+                DELETE
+                FROM key_value
+                WHERE key IN (:key);
+                """;
+        this.jdbcTemplate.update(slim(sql), Map.of("key", keyList));
+    }
+
     public void updateKeyValue(@NotNull String key, @NotNull String value) {
         var sql = """
                 UPDATE key_value
