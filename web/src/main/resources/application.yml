@@ -8,6 +8,10 @@ spring:
   profiles:
     include: nano
     active: development
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 200MB
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/postgres}
