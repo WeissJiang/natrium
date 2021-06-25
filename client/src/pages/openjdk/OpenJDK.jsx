@@ -14,7 +14,7 @@ const Container = styled.div`
     display: flex;
     align-items: flex-end;
     flex-wrap: wrap;
-    gap: 1rem;
+    justify-content: space-between;
 
     & select {
       width: 100%;
@@ -83,10 +83,16 @@ function TypeSelect() {
 function InformationTable(props) {
     const link = (url, name) => <a href={url}>{name || url && new URL(url).pathname.split('/').pop()}</a>
     const b2mb = size => size && (((size | 0) / 1024 / 1024).toFixed(2) + 'MB')
+
+    const tableStyle = {
+        marginTop: '1rem',
+        width: '100%',
+    }
+
     return (
         <>
             <h2>Download Information</h2>
-            <Table style={props.style}>
+            <Table style={tableStyle}>
                 <tbody>
                 <tr>
                     <td>Release:</td>
@@ -193,8 +199,7 @@ export default function OpenJDK() {
             </form>
             {(function () {
                 if (information) {
-                    return <InformationTable
-                        style={{ marginTop: '1rem' }} {...Object.assign({}, information, information.binaries[0])} />
+                    return <InformationTable {...Object.assign({}, information, information.binaries[0])} />
                 } else if (loading) {
                     return <div style={{ marginTop: '1rem' }}>Loading...</div>
                 }

@@ -1,6 +1,6 @@
 package nano.web.mediawiki;
 
-import org.jianzhao.jsonpath.JsonPathModule;
+import nano.web.util.JsonPathModule;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
