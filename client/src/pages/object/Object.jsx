@@ -88,8 +88,13 @@ export default function Object() {
         if (!confirmed) {
             return
         }
-        await dropObject(token, [ev.key])
-        await loadObjectList()
+        try {
+            setDataLoading(true)
+            await dropObject(token, [ev.key])
+            await loadObjectList()
+        } finally {
+            setDataLoading(false)
+        }
     }
 
     async function handleSelectFile(ev) {
