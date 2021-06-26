@@ -7,6 +7,7 @@ import Layout from '../../components/Layout.jsx'
 import { dropObject, getObjectList, putObject } from '../../apis/object.js'
 import Table from '../../components/Table.js'
 import { formatBytes } from '../../utils/bytes.js'
+import { withNanoApi } from '../../apis/env.js'
 
 const ContentContainer = styled.div`
   max-width: 800px;
@@ -141,7 +142,7 @@ export default function Object() {
                             <td style={{ textAlign: 'center' }}>{it.type}</td>
                             <td style={{ textAlign: 'center' }}>{formatBytes(it.size)}</td>
                             <td style={{ textAlign: 'center' }}>
-                                <Anchor target="_blank" href={`/api/object/-/${it.key}`}>
+                                <Anchor target="_blank" href={withNanoApi(`/api/object/-/${it.key}`)}>
                                     Open
                                 </Anchor>
                                 <Anchor as="button" onClick={() => handleClickDelete(it)}>
