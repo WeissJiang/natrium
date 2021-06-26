@@ -7,7 +7,6 @@ import BlackButton from '../../components/BlackButton.js'
 
 const Container = styled.div`
   max-width: 600px;
-  padding: 2rem 4rem;
   margin: 0 auto;
 
   & form {
