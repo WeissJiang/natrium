@@ -1,5 +1,5 @@
 nano:
-  nano-api: https://natrium.herokuapp.com
+  nano-api: https://natrium.herokuapp.com/
   nano-api-key: key
   baidu-translation-app-id:
   baidu-translation-secret-key:

@@ -1,5 +1,7 @@
+import { withNanoApi } from './env.js'
+
 export async function getMonthData(token, month) {
-    const response = await fetch(`/api/accounting/monthData?month=${month}`, {
+    const response = await fetch(withNanoApi(`/api/accounting/monthData?month=${month}`), {
         method: 'GET',
         headers: { 'X-Token': token },
     })
@@ -11,7 +13,7 @@ export async function getMonthData(token, month) {
 }
 
 export async function createMonthData(token, monthData) {
-    const response = await fetch('/api/accounting/monthData', {
+    const response = await fetch(withNanoApi('/api/accounting/monthData'), {
         method: 'POST',
         headers: {
             'X-Token': token,
@@ -27,7 +29,7 @@ export async function createMonthData(token, monthData) {
 }
 
 export async function updateMonthData(token, monthData) {
-    const response = await fetch('/api/accounting/monthData', {
+    const response = await fetch(withNanoApi('/api/accounting/monthData'), {
         method: 'PUT',
         headers: {
             'X-Token': token,

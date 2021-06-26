@@ -1,5 +1,7 @@
+import { withNanoApi } from './env.js'
+
 export async function setWebhook(token) {
-    const response = await fetch('/api/telegram/setWebhook', {
+    const response = await fetch(withNanoApi('/api/telegram/setWebhook'), {
         method: 'POST',
         headers: { 'X-Token': token },
     })

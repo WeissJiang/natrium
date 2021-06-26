@@ -1,5 +1,7 @@
+import { withNanoApi } from './env.js'
+
 export async function getUser(token) {
-    const response = await fetch('/api/user/user', {
+    const response = await fetch(withNanoApi('/api/user/user'), {
         headers: {
             'X-Token': token
         },
@@ -12,7 +14,7 @@ export async function getUser(token) {
 }
 
 export async function getUserList(token) {
-    const response = await fetch('/api/user/list', {
+    const response = await fetch(withNanoApi('/api/user/list'), {
         method: 'GET',
         headers: { 'X-Token': token },
     })
@@ -24,7 +26,7 @@ export async function getUserList(token) {
 }
 
 export async function getChatList(token) {
-    const response = await fetch('/api/telegram/chat/list', {
+    const response = await fetch(withNanoApi('/api/telegram/chat/list'), {
         method: 'GET',
         headers: { 'X-Token': token },
     })

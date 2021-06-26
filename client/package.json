@@ -4,8 +4,8 @@
   "description": "natrium",
   "main": "index.js",
   "scripts": {
-    "start": "snowpack dev --config ./snowpack.config.cjs",
-    "build": "snowpack build --config ./snowpack.config.cjs",
+    "start": "snowpack dev --config ./snowpack.config.js",
+    "build": "snowpack build --config ./snowpack.config.js",
     "clean": "del dist"
   },
   "engines": {

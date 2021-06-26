@@ -14,7 +14,10 @@ import org.springframework.util.Assert;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.UncheckedIOException;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -49,7 +52,8 @@ public class TelegramService {
         var result = new HashMap<String, Object>();
         for (var bot : this.configVars.getBots().values()) {
             String botName = bot.getName();
-            var url = "%s/api/telegram/webhook/%s/%s".formatted(nanoApi, botName, apiKey);
+            var endpoint = "/api/telegram/webhook/%s/%s".formatted(botName, apiKey);
+            var url = createUrl(endpoint, nanoApi);
             var r = this.call(bot, "setWebhook", Map.of("url", url));
             result.put(botName, r);
         }
@@ -129,4 +133,11 @@ public class TelegramService {
         return TELEGRAM_API.formatted(token, method);
     }
 
+    private static String createUrl(String spec, String context) {
+        try {
+            return new URL(new URL(context), spec).toString();
+        } catch (MalformedURLException ex) {
+            throw new UncheckedIOException(ex);
+        }
+    }
 }

@@ -1,5 +1,7 @@
+import { withNanoApi } from './env.js'
+
 export async function logout(token) {
-    const response = await fetch('/api/token/deleteSelf', {
+    const response = await fetch(withNanoApi('/api/token/deleteSelf'), {
         method: 'POST',
         headers: { 'X-Token': token },
     })
@@ -11,7 +13,7 @@ export async function logout(token) {
 }
 
 export async function getTokenVerification(token) {
-    const response = await fetch('/api/token/verification', {
+    const response = await fetch(withNanoApi('/api/token/verification'), {
         headers: { 'X-Token': token }
     })
     const result = await response.json()
@@ -22,7 +24,7 @@ export async function getTokenVerification(token) {
 }
 
 export async function createVerifyingToken(username) {
-    const response = await fetch('/api/token/createVerifyingToken', {
+    const response = await fetch(withNanoApi('/api/token/createVerifyingToken'), {
         method: 'POST',
         body: new URLSearchParams({ username })
     })
@@ -34,7 +36,7 @@ export async function createVerifyingToken(username) {
 }
 
 export async function getTokenList(token) {
-    const response = await fetch('/api/token/list', {
+    const response = await fetch(withNanoApi('/api/token/list'), {
         headers: { 'X-Token': token }
     })
     const result = await response.json()
@@ -49,7 +51,7 @@ export async function deleteToken(token, tokenIdList) {
         searchParams.append('id', id)
         return searchParams
     }, new URLSearchParams())
-    const response = await fetch('/api/token/delete', {
+    const response = await fetch(withNanoApi('/api/token/delete'), {
         method: 'POST',
         headers: { 'X-Token': token },
         body,

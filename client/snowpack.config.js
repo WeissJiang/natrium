@@ -1,17 +1,18 @@
-const { createServer } = require('http-proxy')
+import HttpProxy from 'http-proxy'
 
 function proxyTo(target) {
-    const proxy = createServer({ target })
+    const proxy = HttpProxy.createServer({ target })
     return (req, res) => proxy.web(req, res)
 }
 
-const PROD_API = 'https://natrium.herokuapp.com/'
-const LOCAL_API = 'http://localhost:8080/'
+const API_TYPE = {
+    PROD_API: 'https://natrium.herokuapp.com/',
+    LOCAL_API: 'http://localhost:8080/',
+}
 
-// noinspection UnnecessaryLocalVariableJS
-const API = LOCAL_API
+const API = API_TYPE.LOCAL_API
 
-module.exports = {
+export default {
     mount: {
         './src': '/',
     },
