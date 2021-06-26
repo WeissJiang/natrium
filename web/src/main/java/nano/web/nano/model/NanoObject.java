@@ -2,11 +2,20 @@ package nano.web.nano.model;
 
 public class NanoObject {
 
+    private String key;
     private String name;
     private String type;
     private Number size;
     private byte[] data;
     private String extension;
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 
     public String getExtension() {
         return extension;

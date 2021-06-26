@@ -63,3 +63,13 @@ CREATE TABLE IF NOT EXISTS key_value
     creation_time     TIMESTAMPTZ DEFAULT NOW(),
     UNIQUE (key)
 );
+
+-- nano_blob
+DROP TABLE IF EXISTS nano_blob;
+CREATE TABLE IF NOT EXISTS nano_blob
+(
+    id   SERIAL PRIMARY KEY,
+    key  VARCHAR NOT NULL,
+    blob TEXT DEFAULT '',
+    UNIQUE (key)
+);

@@ -4,6 +4,7 @@ import nano.support.jdbc.SimpleJdbcSelect;
 import nano.web.nano.entity.KeyValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -29,6 +30,16 @@ public class KeyValueRepository {
                 WHERE key ~ :pattern;
                 """;
         var rowMapper = new SingleColumnRowMapper<>(String.class);
+        return this.jdbcTemplate.query(slim(sql), Map.of("pattern", pattern), rowMapper);
+    }
+
+    public @NotNull List<KeyValue> queryListByPattern(@NotNull String pattern) {
+        var sql = """
+                SELECT key, value, last_updated_time, creation_time
+                FROM key_value
+                WHERE key ~ :pattern;
+                """;
+        var rowMapper = new BeanPropertyRowMapper<>(KeyValue.class);
         return this.jdbcTemplate.query(slim(sql), Map.of("pattern", pattern), rowMapper);
     }
 

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
+import styled from 'styled-components'
 import useUser, { redirectToLoginPage } from '../../hooks/useUser.js'
 import Loading from '../../components/Loading.jsx'
 import { logout } from '../../apis/token.js'
-import Layout from '../../components/Layout'
+import Layout from '../../components/Layout.jsx'
 import { dropObject, getObjectList, putObject } from '../../apis/object.js'
-import Table from '../../components/Table'
-import styled from 'styled-components'
+import Table from '../../components/Table.js'
+import { formatBytes } from '../../utils/bytes.js'
 
 const ContentContainer = styled.div`
   max-width: 800px;
@@ -69,7 +70,7 @@ export default function Object() {
     }, [loading, user])
 
     if (loading) {
-        return <Loading />
+        return <Loading/>
     }
 
     if (!user) {
@@ -87,7 +88,7 @@ export default function Object() {
         if (!confirmed) {
             return
         }
-        await dropObject(token, [ev])
+        await dropObject(token, [ev.key])
         await loadObjectList()
     }
 
@@ -112,22 +113,30 @@ export default function Object() {
                     <span className="title">Object List</span>
                     <Anchor as="label" href="#" style={{ marginLeft: '.25rem' }}>
                         Add
-                        <input onChange={handleSelectFile} multiple type="file" style={{ display: 'none' }} />
+                        <input onChange={handleSelectFile} multiple type="file" style={{ display: 'none' }}/>
                     </Anchor>
                 </div>
                 <Table style={{ width: '100%' }}>
                     <thead>
                     <tr>
+                        <th>Key</th>
                         <th>Name</th>
+                        <th>Type</th>
+                        <th>Size</th>
                         <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
                     {objectList.map(it => (
-                        <tr key={it}>
-                            <td style={{ textAlign: 'center' }}>{it}</td>
+                        <tr key={it.key}>
                             <td style={{ textAlign: 'center' }}>
-                                <Anchor target="_blank" href={`/api/object/-/${it}`}>
+                                <span title={it.key}>{it.key.substring(0, 6)}</span>
+                            </td>
+                            <td style={{ textAlign: 'center' }}>{it.name}</td>
+                            <td style={{ textAlign: 'center' }}>{it.type}</td>
+                            <td style={{ textAlign: 'center' }}>{formatBytes(it.size)}</td>
+                            <td style={{ textAlign: 'center' }}>
+                                <Anchor target="_blank" href={`/api/object/-/${it.key}`}>
                                     Open
                                 </Anchor>
                                 <Anchor as="button" onClick={() => handleClickDelete(it)}>
@@ -138,7 +147,7 @@ export default function Object() {
                     ))}
                     {!objectList.length && (
                         <tr>
-                            <td style={{ textAlign: 'center', padding: '1rem' }} colSpan="2">Empty</td>
+                            <td style={{ textAlign: 'center', padding: '1rem' }} colSpan="5">Empty</td>
                         </tr>
                     )}
                     </tbody>

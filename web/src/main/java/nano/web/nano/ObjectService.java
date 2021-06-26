@@ -1,11 +1,14 @@
 package nano.web.nano;
 
 import nano.support.Json;
+import nano.web.nano.entity.KeyValue;
 import nano.web.nano.model.NanoObject;
 import nano.web.nano.repository.KeyValueRepository;
+import nano.web.nano.repository.NanoBlobRepository;
 import nano.web.security.TokenCode;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
@@ -27,25 +30,30 @@ public class ObjectService {
     };
 
     private final KeyValueRepository keyValueRepository;
+    private final NanoBlobRepository nanoBlobRepository;
 
-    public ObjectService(KeyValueRepository keyValueRepository) {
+    public ObjectService(KeyValueRepository keyValueRepository, NanoBlobRepository nanoBlobRepository) {
         this.keyValueRepository = keyValueRepository;
+        this.nanoBlobRepository = nanoBlobRepository;
     }
 
+    @Transactional
     public String putObject(@NotNull NanoObject object) {
-        var key = TokenCode.generateUUID() + object.getExtension();
+        var key = TokenCode.generateUUID();
         var objectKey = getObjectKey(key);
         var objectValue = Map.of(
+                "key", key,
                 "name", object.getName(),
                 "extension", object.getExtension(),
                 "type", object.getType(),
-                "size", object.getSize(),
-                "data", Base64.getEncoder().encodeToString(object.getData())
+                "size", object.getSize()
         );
         this.keyValueRepository.createKeyValue(objectKey, Json.encode(objectValue));
+        this.nanoBlobRepository.upsertBlob(objectKey, Base64.getEncoder().encodeToString(object.getData()));
         return key;
     }
 
+    @Transactional
     public List<String> batchPutObject(@NotNull List<@NotNull NanoObject> objectList) {
         if (CollectionUtils.isEmpty(objectList)) {
             return Collections.emptyList();
@@ -53,12 +61,14 @@ public class ObjectService {
         return objectList.stream().map(this::putObject).toList();
     }
 
+    @Transactional
     public void batchDropObject(@NotNull List<@NotNull String> keyList) {
         if (CollectionUtils.isEmpty(keyList)) {
             return;
         }
         var internalKeyList = map(keyList, ObjectService::getObjectKey);
         this.keyValueRepository.deleteKeyValue(internalKeyList);
+        this.nanoBlobRepository.deleteBlob(internalKeyList);
     }
 
     public @NotNull NanoObject getObject(@NotNull String key) {
@@ -66,26 +76,35 @@ public class ObjectService {
             var objectKey = getObjectKey(_key);
             var keyValue = this.keyValueRepository.queryKeyValue(objectKey);
             Assert.notNull(keyValue, "object is not exist, key: " + objectKey);
-            var objectJson = keyValue.getValue();
-            var objectMap = Json.decodeValueAsMap(objectJson);
-            var object = new NanoObject();
-            object.setName(String.valueOf(objectMap.get("name")));
-            object.setSize((Number) objectMap.get("size"));
-            object.setType(String.valueOf(objectMap.get("type")));
-            var encodedData = String.valueOf(objectMap.get("data"));
+            var object = mapToNanoObject(keyValue);
+            // Get data
+            var nanoBlob = this.nanoBlobRepository.queryBlob(objectKey);
+            var encodedData = nanoBlob.getBlob();
             var data = Base64.getDecoder().decode(encodedData);
             object.setData(data);
             return object;
         });
     }
 
-    public @NotNull List<@NotNull String> getObjectList() {
+    public @NotNull List<@NotNull NanoObject> getObjectList() {
         var pattern = "^%s:".formatted(OBJECT);
-        var keyList = this.keyValueRepository.queryKeyListByPattern(pattern);
-        return map(keyList, it -> it.replaceFirst(pattern, ""));
+        var keyList = this.keyValueRepository.queryListByPattern(pattern);
+        return map(keyList, ObjectService::mapToNanoObject);
     }
 
     private static @NotNull String getObjectKey(@NotNull String key) {
         return "object:%s".formatted(key);
+    }
+
+    private static NanoObject mapToNanoObject(@NotNull KeyValue keyValue) {
+        var objectJson = keyValue.getValue();
+        var objectMap = Json.decodeValueAsMap(objectJson);
+        var object = new NanoObject();
+        object.setKey(String.valueOf(objectMap.get("key")));
+        object.setName(String.valueOf(objectMap.get("name")));
+        object.setSize((Number) objectMap.get("size"));
+        object.setType(String.valueOf(objectMap.get("type")));
+        object.setExtension(String.valueOf(objectMap.get("extension")));
+        return object;
     }
 }
