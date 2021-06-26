@@ -1,7 +1,6 @@
 package nano.web.telegram.handler;
 
 import nano.support.Onion;
-import nano.support.Sugar;
 import nano.web.baidu.BaiduEncyclopediaService;
 import nano.web.mediawiki.MoeService;
 import nano.web.mediawiki.WikiService;
