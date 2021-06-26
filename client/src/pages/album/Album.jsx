@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import saveAs from 'file-saver'
 
 import { createBook } from './epub.js'
+import Table from '../../components/Table'
 
 const Container = styled.div`
   display: flex;
@@ -13,72 +14,82 @@ const Container = styled.div`
   & .form-box {
     height: 70%;
     width: 100%;
+    padding: 2rem;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
   }
+  
+  & table {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  & .text-center {
+    text-align: center;
+  }
 
   & input {
-    margin: .5em;
-    max-width: 60%;
-    border-width: 0 0 .5px 0;
+    width: 100%;
     outline: none;
-    font-size: 22px;
+    border: none;
+    border-bottom: 1px solid #000;
     text-align: center;
+    
+    &:disabled {
+      background-color: inherit;
+    }
   }
 
   & span.selector {
     box-sizing: border-box;
-    border-radius: 4px;
-    padding: 8px 12px;
+    border-radius: 2px;
+    font-size: .875rem;
+    padding: .125rem 2rem;
     border: 1px dashed #999;
-    font-weight: bold;
   }
 
-  & span.tip {
+  & span.ellipsis {
+    display: block;
     color: #999999;
+    max-width: 380px;
     font-size: 14px;
-    max-width: 50%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     cursor: default;
   }
 
-  & button {
-    border-radius: 4px;
-    font-family: arial, sans-serif;
-    font-size: 14px;
-    margin: 16px 4px;
-    padding: 0 16px;
-    border: 1px solid rgba(0, 0, 0, 0);
-    line-height: 27px;
-    width: 180px;
-    height: 40px;
-    text-align: center;
-    outline: none;
-    user-select: none;
-    background-color: #f8f9fa;
-    transition: color 0.3s;
-  }
+  & button.submit {
+    font-size: 1rem;
+    line-height: 1.5rem;
+    box-sizing: border-box;
+    border: 1px solid #000;
+    border-radius: 2px;
+    background-color: #fff;
+    transition: color, background-color 200ms;
+    cursor: pointer;
+    padding-left: .5rem;
+    padding-right: .5rem;
 
-  & button:hover {
-    box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
-    border: 1px solid #dadce0;
-    color: #202124;
-  }
+    &:hover {
+      color: #fff;
+      background-color: #000;
+    }
 
-  & button:active {
-    color: rgba(0, 0, 0, 0.3)
-  }
+    &:active {
+      transform: scale(0.95, 0.95);
+      color: #fff;
+      background-color: #000;
+    }
 
-  & button:disabled {
-    color: rgba(0, 0, 0, 0.3)
-  }
-
-  & button {
-    width: 180px;
+    &:disabled {
+      opacity: .75;
+      color: #000;
+      background-color: #fff;
+      cursor: not-allowed;
+    }
   }
 `
 
@@ -124,17 +135,51 @@ export default function Album(props) {
     return (
         <Container>
             <form className="form-box" onSubmit={handleSubmit}>
-                <input disabled={loading} type="text" name="title" placeholder="Title" />
-                <input disabled={loading} type="text" name="creator" placeholder="Creator" />
-                <input disabled={loading} type="text" name="filename" placeholder="Filename" />
-                <label style={{ cursor: 'pointer', marginTop: '1rem', }}>
-                    <span className="selector">Select Images</span>
-                    <input style={{ display: 'none' }} disabled={loading} type="file" onChange={handleFilesSelected}
-                           name="images" required multiple accept=".jpg,.jpeg,.png,.gif" />
-                </label>
-                <span title={selectedFileName} style={{ marginTop: '1rem', }} className="tip">{selectedFileName}</span>
-                <button disabled={loading}>Create Album</button>
-                <span>{loading && 'Book creating...'}</span>
+                <Table>
+                    <tbody>
+                    <tr>
+                        <td className="text-center">Title</td>
+                        <td><input disabled={loading} type="text" name="title" placeholder="Enter"/></td>
+                    </tr>
+                    <tr>
+                        <td className="text-center">Creator</td>
+                        <td><input disabled={loading} type="text" name="creator" placeholder="Enter"/></td>
+                    </tr>
+                    <tr>
+                        <td className="text-center">Filename</td>
+                        <td><input disabled={loading} type="text" name="filename" placeholder="Enter"/></td>
+                    </tr>
+                    <tr>
+                        <td className="text-center">Images</td>
+                        <td className="text-center">
+                            <label style={{ cursor: 'pointer', marginTop: '1rem', }}>
+                                <span className="selector">Select</span>
+                                <input style={{ display: 'none' }} disabled={loading} type="file"
+                                       onChange={handleFilesSelected}
+                                       name="images" required multiple accept=".jpg,.jpeg,.png,.gif"/>
+                            </label>
+                        </td>
+                    </tr>
+                    {selectedFileName && (
+                        <tr>
+                            <td className="text-center" colSpan="2">
+                            <span title={selectedFileName} className="ellipsis">
+                                {selectedFileName}
+                            </span>
+                            </td>
+                        </tr>
+                    )}
+                    <tr>
+                        <td className="text-center" colSpan="2">
+                            <button className="submit" disabled={loading}>Create Album</button>
+                            <br/>
+                            <span style={{ marginTop: '1rem', }}>
+                                {loading && 'Book creating...'}
+                            </span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </Table>
             </form>
         </Container>
     )
