@@ -2,11 +2,11 @@ import React from 'react'
 import styled from 'styled-components'
 
 import { getOpenJDKInfo2 } from '../../apis/adoptopenjdk.js'
-import Button from '../../components/Button.js'
 import Table from '../../components/Table.js'
+import BlackButton from '../../components/BlackButton.js'
 
 const Container = styled.div`
-  max-width: 800px;
+  max-width: 600px;
   padding: 2rem 4rem;
   margin: 0 auto;
 
@@ -195,7 +195,7 @@ export default function OpenJDK() {
                     </tr>
                     </tbody>
                 </Table>
-                <Button type="submit" disabled={loading}>Get JDK</Button>
+                <BlackButton type="submit" disabled={loading}>Get JDK</BlackButton>
             </form>
             {(function () {
                 if (information) {

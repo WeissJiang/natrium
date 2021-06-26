@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 
-
 const BlackButton = styled.button`
   box-sizing: border-box;
   color: #000;
