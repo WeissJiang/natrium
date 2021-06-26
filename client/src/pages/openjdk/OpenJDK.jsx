@@ -175,27 +175,29 @@ export default function OpenJDK() {
                     <tbody>
                     <tr>
                         <td>Version</td>
-                        <td><VersionSelect /></td>
+                        <td><VersionSelect/></td>
                     </tr>
                     <tr>
                         <td>JVM</td>
-                        <td><ImplSelect /></td>
+                        <td><ImplSelect/></td>
                     </tr>
                     <tr>
                         <td>Operate System</td>
-                        <td><OSSelect /></td>
+                        <td><OSSelect/></td>
                     </tr>
                     <tr>
                         <td>Architecture</td>
-                        <td><ArchSelect /></td>
+                        <td><ArchSelect/></td>
                     </tr>
                     <tr>
                         <td>Type</td>
-                        <td><TypeSelect /></td>
+                        <td><TypeSelect/></td>
                     </tr>
                     </tbody>
                 </Table>
-                <BlackButton type="submit" disabled={loading}>Get JDK</BlackButton>
+                <BlackButton type="submit" disabled={loading}>
+                    Fetch
+                </BlackButton>
             </form>
             {(function () {
                 if (information) {

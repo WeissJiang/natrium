@@ -5,12 +5,12 @@ const BlackButton = styled.button`
   color: #000;
   border: solid 1px #000;
   border-radius: 2px;
-  font-size: 1.25rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
   font-weight: 500;
   background-color: unset;
-  line-height: 1.75rem;
-  min-height: 2.5rem;
-  min-width: 8rem;
+  min-height: 2rem;
+  min-width: 6rem;
   transition-property: background-color, color, transform;
   transition-duration: 200ms;
   padding: 0 1.5rem;
