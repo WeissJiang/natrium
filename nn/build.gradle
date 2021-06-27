@@ -1,0 +1,25 @@
+plugins {
+    id 'java-library'
+}
+
+group = 'nano'
+
+sourceCompatibility = '16'
+targetCompatibility = '16'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // math
+    implementation  'org.apache.commons:commons-math3:3.6.1'
+    // modules
+    implementation project(':common')
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+}
+
+test {
+    useJUnitPlatform()
+}
