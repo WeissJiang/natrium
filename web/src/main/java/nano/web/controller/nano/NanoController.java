@@ -7,11 +7,14 @@ import nano.web.messageing.Exchanges;
 import nano.web.nano.NanoService;
 import nano.web.security.Authorized;
 import org.springframework.amqp.rabbit.core.RabbitMessagingTemplate;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import static nano.web.security.Privilege.NANO_API;
 
@@ -60,8 +63,16 @@ public class NanoController {
     }
 
     @GetMapping("/node/random")
-    public ResponseEntity<?> nodeRandom() {
-        var random = this.nanoService.nodeRandom();
-        return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body(random);
+    public ResponseEntity<?> nodeRandom(@RequestParam(name = "q", defaultValue = "1") Integer q) {
+        var sw = new StopWatch();
+        sw.start();
+        var random = Stream.generate(this.nanoService::nodeRandom).limit(q).map(bytesToString()).toList();
+        sw.stop();
+        var time = sw.getLastTaskTimeMillis();
+        return ResponseEntity.ok(Map.of("time", time, "random", random));
+    }
+
+    private static Function<byte[], String> bytesToString() {
+        return ba -> new String(ba, StandardCharsets.UTF_8);
     }
 }

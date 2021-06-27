@@ -133,9 +133,9 @@ public class TelegramService {
         return TELEGRAM_API.formatted(token, method);
     }
 
-    private static String createUrl(String spec, String context) {
+    private static @NotNull String createUrl(@NotNull String endpoint, @NotNull String base) {
         try {
-            return new URL(new URL(context), spec).toString();
+            return new URL(new URL(base), endpoint).toString();
         } catch (MalformedURLException ex) {
             throw new UncheckedIOException(ex);
         }
