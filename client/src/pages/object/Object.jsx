@@ -85,7 +85,7 @@ export default function Object() {
     }
 
     async function handleClickDelete(ev) {
-        const confirmed = confirm('Delete ' + ev)
+        const confirmed = confirm(`Delete ${ev.name || ev.key} ?`)
         if (!confirmed) {
             return
         }
