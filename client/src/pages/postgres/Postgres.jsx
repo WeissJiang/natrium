@@ -14,6 +14,7 @@ const ContentContainer = styled.div`
   padding: 1rem;
 
   & div.form-container {
+    display: flow-root;
     position: sticky;
     left: 0;
   }
@@ -65,7 +66,7 @@ const ContentContainer = styled.div`
     &:disabled {
       background-color: #fff;
       color: #000;
-      opacity: .75;
+      opacity: .5;
     }
   }
 `
@@ -137,10 +138,11 @@ export default function Postgres() {
                     <textarea ref={textAreaRef} className="input-sql" value={sql} onSelect={handleSqlSelect}
                               onChange={handleSqlChange}/>
                     <br/>
-                    <button className="button-query" onClick={handleClickQuery}>
+                    <button disabled={dataLoading} className="button-query" onClick={handleClickQuery}>
                         查询
                     </button>
                 </div>
+                {dataLoading && <div>查询中...</div>}
                 {!dataLoading && !!data.length && (
                     <Table>
                         <thead>
