@@ -1,6 +1,7 @@
 package nano.web.nano;
 
 import nano.support.Zx;
+import nano.web.nano.repository.QueryRepository;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.unit.DataSize;
 
 import java.lang.management.ManagementFactory;
@@ -54,8 +56,11 @@ public class NanoService implements ApplicationContextAware {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public NanoService(JdbcTemplate jdbcTemplate) {
+    private final QueryRepository queryRepository;
+
+    public NanoService(JdbcTemplate jdbcTemplate, QueryRepository queryRepository) {
         this.jdbcTemplate = jdbcTemplate;
+        this.queryRepository = queryRepository;
     }
 
     public @NotNull Map<String, String> system() {
@@ -133,5 +138,10 @@ public class NanoService implements ApplicationContextAware {
         var SCREENSHOT_JS = "./client/scripts/random.js";
         var command = new String[]{"bash", "-c", "%s %s".formatted(NODE, SCREENSHOT_JS)};
         return Zx.$(command).join();
+    }
+
+    public List<Map<String, Object>> postgresQuery(@NotNull String sql) {
+        Assert.hasText(sql, "SQL must be not empty");
+        return this.queryRepository.query(sql);
     }
 }

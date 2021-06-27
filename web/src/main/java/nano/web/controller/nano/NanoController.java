@@ -74,6 +74,13 @@ public class NanoController {
         return ResponseEntity.ok(Map.of("time", time, "random", random));
     }
 
+    @Authorized(privilege = NANO_API)
+    @PostMapping("/postgres/query")
+    public ResponseEntity<?> postgresQuery(@RequestBody String sql) {
+        var data = this.nanoService.postgresQuery(sql);
+        return ResponseEntity.ok(Result.of(data));
+    }
+
     private static Function<byte[], String> bytesToString() {
         return ba -> new String(ba, StandardCharsets.UTF_8);
     }
