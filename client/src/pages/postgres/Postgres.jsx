@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
 import useUser, { redirectToLoginPage } from '../../hooks/useUser.js'
 import Loading from '../../components/Loading.jsx'
@@ -75,7 +75,9 @@ export default function Postgres() {
 
     const [dataLoading, setDataLoading] = useState(false)
     const [sql, setSql] = useState('')
+    const [selectedSql, setSelectedSql] = useState('')
     const [data, setData] = useState([])
+    const textAreaRef = useRef()
 
     if (loading) {
         return <Loading/>
@@ -92,18 +94,25 @@ export default function Postgres() {
     }
 
     async function handleClickQuery() {
-        if (!sql) {
+        let querySql = selectedSql
+        if (!querySql) {
+            querySql = sql
+        }
+        if (!querySql) {
             alert('请输入SQL')
             return
         }
         try {
             setDataLoading(true)
-            const data = await applyQuery(token, sql)
+            const data = await applyQuery(token, querySql)
             setData(data)
         } catch (err) {
             alert(err.message)
         } finally {
             setDataLoading(false)
+            if (textAreaRef.current) {
+                textAreaRef.current.focus()
+            }
         }
     }
 
@@ -111,28 +120,37 @@ export default function Postgres() {
         setSql(ev.target.value)
     }
 
+    function handleSqlSelect(ev) {
+        const target = ev.target
+        const start = target.selectionStart
+        const end = target.selectionEnd
+        const val = target.value.substring(start, end)
+        setSelectedSql(val)
+    }
+
     const headers = data.length ? Object.keys(data[0]) : []
 
     return (
-        <Layout loading={dataLoading} username={user.firstname} onLogout={handleLogout}>
+        <Layout username={user.firstname} onLogout={handleLogout}>
             <ContentContainer>
                 <div className="form-container">
-                    <textarea className="input-sql" value={sql} onChange={handleSqlChange}/>
+                    <textarea ref={textAreaRef} className="input-sql" value={sql} onSelect={handleSqlSelect}
+                              onChange={handleSqlChange}/>
                     <br/>
                     <button className="button-query" onClick={handleClickQuery}>
                         查询
                     </button>
                 </div>
-                {!!data.length && (
+                {!dataLoading && !!data.length && (
                     <Table>
                         <thead>
                         <tr>
-                            {headers.map(it => (<th>{it}</th>))}
+                            {headers.map(it => (<th key={it}>{it}</th>))}
                         </tr>
                         </thead>
                         <tbody>
-                        {data.map(item => (
-                            <tr>
+                        {data.map((item, index) => (
+                            <tr key={index}>
                                 {headers.map(it => {
                                     let val = item[it]
                                     if (val && typeof val === 'object') {
@@ -144,7 +162,7 @@ export default function Postgres() {
                                     if (val === null) {
                                         val = (<span className="text-null">null</span>)
                                     }
-                                    return (<td className="text-center">{val}</td>)
+                                    return (<td key={it} className="text-center">{val}</td>)
                                 })}
                             </tr>
                         ))}
