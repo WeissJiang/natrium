@@ -1,17 +1,14 @@
 package nano.support.http;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.springframework.core.io.Resource;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.net.http.HttpRequest;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 
 public class MultiPartBodyPublisher {
@@ -95,13 +92,13 @@ public class MultiPartBodyPublisher {
             return "application/octet-stream";
         }
 
-        static FilePartSpec from(@NotNull Path path) {
-            Objects.requireNonNull(path, "path must be not null");
+        static FilePartSpec from(String name, @NotNull Resource resource) {
+            Objects.requireNonNull(resource, "supplier must be not null");
             return new FilePartSpec() {
                 @Override
                 public InputStream getInputStream() {
                     try {
-                        return Files.newInputStream(path);
+                        return resource.getInputStream();
                     } catch (IOException ex) {
                         throw new UncheckedIOException(ex);
                     }
@@ -109,23 +106,9 @@ public class MultiPartBodyPublisher {
 
                 @Override
                 public @NotNull String getFilename() {
-                    return path.getFileName().toString();
-                }
-
-                @Override
-                public @Nullable String getContentType() {
-                    try {
-                        return Files.probeContentType(path);
-                    } catch (IOException ex) {
-                        throw new UncheckedIOException(ex);
-                    }
+                    return name;
                 }
             };
-        }
-
-        static FilePartSpec from(@NotNull File file) {
-            Objects.requireNonNull(file, "file must be not null");
-            return from(file.toPath());
         }
     }
 }
