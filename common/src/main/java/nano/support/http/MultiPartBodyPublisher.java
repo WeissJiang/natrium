@@ -8,9 +8,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.net.http.HttpRequest;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.Flow;
 
 public class MultiPartBodyPublisher {
 
@@ -77,10 +79,31 @@ public class MultiPartBodyPublisher {
                     var next = filePartIterator.next();
                     var name = next.getKey();
                     var filePart = next.getValue();
-                    String partHeader = "--" + boundary + "\r\n" +
+                    var partHeader = "--" + boundary + "\r\n" +
                             "Content-Disposition: form-data; name=\"" + name + "\"; filename=\"" + filePart.getFilename() + "\"\r\n" +
                             "Content-Type: " + filePart.getContentType() + "\r\n\r\n";
-                    this.byteArrayIterator = new ByteArrayIterator(filePart.getInputStream());
+                    this.byteArrayIterator = new Iterator<>() {
+                        private final Iterator<byte[]> fileByteArrayIterator = new ByteArrayIterator(filePart.getInputStream());
+                        private boolean drained = false;
+
+                        @Override
+                        public boolean hasNext() {
+                            return this.fileByteArrayIterator.hasNext() || !this.drained;
+                        }
+
+                        @Override
+                        public byte[] next() {
+                            if (this.drained) {
+                                throw new NoSuchElementException("stream is drained");
+                            }
+                            if (this.fileByteArrayIterator.hasNext()) {
+                                return this.fileByteArrayIterator.next();
+                            } else {
+                                this.drained = true;
+                                return "\r\n".getBytes(utf8);
+                            }
+                        }
+                    };
                     return partHeader.getBytes(utf8);
                 }
                 return finalBoundaryIterator.next();
@@ -116,5 +139,34 @@ public class MultiPartBodyPublisher {
                 }
             };
         }
+    }
+
+    public static void main(String[] args) {
+        MultiPartBodyPublisher publisher = new MultiPartBodyPublisher();
+        publisher.addPart("hello", "jojo");
+        publisher.addPart("hekd", "sdasd");
+        HttpRequest.BodyPublisher build = publisher.build();
+        build.subscribe(new Flow.Subscriber<ByteBuffer>() {
+            @Override
+            public void onSubscribe(Flow.Subscription subscription) {
+                subscription.request(1);
+                subscription.request(1);
+            }
+
+            @Override
+            public void onNext(ByteBuffer item) {
+                System.out.println(new String(item.array()));
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
     }
 }
