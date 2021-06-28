@@ -2,6 +2,7 @@ package nano.web.telegram;
 
 import nano.support.Json;
 import nano.support.http.MultiPartBodyPublisher;
+import nano.support.io.SimpleResource;
 import nano.web.nano.model.Bot;
 import nano.web.nano.ConfigVars;
 import org.jetbrains.annotations.NotNull;
@@ -158,7 +159,7 @@ public class TelegramService {
             } else if (value instanceof MultiPartBodyPublisher.FilePartSpec) {
                 publisher.addPart(name, (MultiPartBodyPublisher.FilePartSpec) value);
             } else if (value instanceof Resource) {
-                publisher.addPart(name, toFilePartSpec(name, (Supplier<?>) (((Resource) value)::getFilename)));
+                publisher.addPart(name, toFilePartSpec(name, (Supplier<?>) (new SimpleResource((Resource) value)::getInputStream)));
             } else {
                 publisher.addPart(name, String.valueOf(value));
             }
