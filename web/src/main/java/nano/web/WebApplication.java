@@ -32,6 +32,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.net.http.HttpClient;
 import java.util.List;
 
 /**
@@ -79,6 +80,14 @@ public class WebApplication implements ApplicationContextAware, WebMvcConfigurer
     @Bean
     public RestTemplate restTemplate(@NotNull RestTemplateBuilder builder) {
         return builder.build();
+    }
+
+    /**
+     * HTTP Client
+     */
+    @Bean
+    public HttpClient httpClient() {
+        return HttpClient.newHttpClient();
     }
 
     /**

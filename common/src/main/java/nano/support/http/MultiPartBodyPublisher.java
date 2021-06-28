@@ -8,11 +8,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.net.http.HttpRequest;
-import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.concurrent.Flow;
 
 public class MultiPartBodyPublisher {
 
@@ -139,34 +137,5 @@ public class MultiPartBodyPublisher {
                 }
             };
         }
-    }
-
-    public static void main(String[] args) {
-        MultiPartBodyPublisher publisher = new MultiPartBodyPublisher();
-        publisher.addPart("hello", "jojo");
-        publisher.addPart("hekd", "sdasd");
-        HttpRequest.BodyPublisher build = publisher.build();
-        build.subscribe(new Flow.Subscriber<ByteBuffer>() {
-            @Override
-            public void onSubscribe(Flow.Subscription subscription) {
-                subscription.request(1);
-                subscription.request(1);
-            }
-
-            @Override
-            public void onNext(ByteBuffer item) {
-                System.out.println(new String(item.array()));
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
     }
 }

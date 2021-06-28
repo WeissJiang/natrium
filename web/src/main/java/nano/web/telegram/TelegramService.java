@@ -32,13 +32,13 @@ public class TelegramService {
     private static final String TELEGRAM_FILE_API = "https://api.telegram.org/file/bot%s/%s";
 
     private final HttpClient httpClient;
-
     private final ConfigVars configVars;
 
-    public TelegramService(@NotNull ConfigVars configVars) {
+    public TelegramService(@NotNull ConfigVars configVars, @NotNull HttpClient httpClient) {
         Assert.notNull(configVars, "configVars must be not null");
+        Assert.notNull(httpClient, "httpClient must be not null");
         this.configVars = configVars;
-        this.httpClient = HttpClient.newHttpClient();
+        this.httpClient = httpClient;
     }
 
     public Map<String, ?> setWebhook() {
@@ -126,8 +126,6 @@ public class TelegramService {
                 .build();
         try {
             var body = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
-            System.out.println("body");
-            System.out.println(body);
             return Json.decodeValueAsMap(body);
         } catch (IOException | InterruptedException ex) {
             if (ex instanceof IOException) {
