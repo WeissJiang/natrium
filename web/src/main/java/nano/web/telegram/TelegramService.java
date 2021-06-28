@@ -157,6 +157,8 @@ public class TelegramService {
                 publisher.addPart(name, toFilePartSpec(name, (Supplier<?>) value));
             } else if (value instanceof MultiPartBodyPublisher.FilePartSpec) {
                 publisher.addPart(name, (MultiPartBodyPublisher.FilePartSpec) value);
+            } else if (value instanceof Resource) {
+                publisher.addPart(name, toFilePartSpec(name, (Supplier<?>) (((Resource) value)::getFilename)));
             } else {
                 publisher.addPart(name, String.valueOf(value));
             }
@@ -195,7 +197,7 @@ public class TelegramService {
     /**
      * Telegram API caller, Call POST Form
      */
-    public Map<String, ?> callPostForm(@NotNull Bot bot, @NotNull String method, @NotNull Map<String, ?> payload) {
+    public Map<String, ?> callPostForm0(@NotNull Bot bot, @NotNull String method, @NotNull Map<String, ?> payload) {
         var telegramApi = getTelegramApi(bot, method);
         var url = URI.create(telegramApi);
         var formData = new LinkedMultiValueMap<String, Object>();
@@ -205,6 +207,25 @@ public class TelegramService {
         var request = RequestEntity.post(url).headers(headers).body(formData);
         var response = this.restTemplate.exchange(request, STRING_OBJECT_MAP_TYPE);
         return response.getBody();
+    }
+
+    public Map<String, ?> callPostForm(@NotNull Bot bot, @NotNull String method, @NotNull Map<String, ?> payload) {
+        var telegramApi = getTelegramApi(bot, method);
+        var url = URI.create(telegramApi);
+        var request = HttpRequest.newBuilder()
+                .uri(url)
+                .header("Content-Type", "multipart/form-data")
+                .POST(toBodyPublisher(payload))
+                .build();
+        try {
+            var body = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
+            return Json.decodeValueAsMap(body);
+        } catch (IOException | InterruptedException ex) {
+            if (ex instanceof IOException) {
+                throw new UncheckedIOException((IOException) ex);
+            }
+            throw new RuntimeException(ex);
+        }
     }
 
     public static String getFileUrl(@NotNull Bot bot, @NotNull String filePath) {
