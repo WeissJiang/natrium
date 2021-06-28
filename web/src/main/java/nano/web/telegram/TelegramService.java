@@ -1,11 +1,11 @@
 package nano.web.telegram;
 
 import nano.support.Json;
+import nano.support.NeverException;
 import nano.support.http.MultiPartBodyPublisher;
 import nano.web.nano.ConfigVars;
 import nano.web.nano.model.Bot;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -27,9 +27,6 @@ import java.util.Objects;
  */
 @Service
 public class TelegramService {
-
-    private static final ParameterizedTypeReference<Map<String, ?>> STRING_OBJECT_MAP_TYPE = new ParameterizedTypeReference<>() {
-    };
 
     private static final String TELEGRAM_API = "https://api.telegram.org/bot%s/%s";
     private static final String TELEGRAM_FILE_API = "https://api.telegram.org/file/bot%s/%s";
@@ -109,12 +106,23 @@ public class TelegramService {
      * POST Form Data to Telegram API
      */
     public Map<String, ?> postFormData(@NotNull Bot bot, @NotNull String method, @NotNull Map<String, ?> payload) {
+        Objects.requireNonNull(payload, "payload must be not null");
         var telegramApi = getTelegramApi(bot, method);
         var url = URI.create(telegramApi);
+
+        var publisher = new MultiPartBodyPublisher();
+        for (var it : payload.entrySet()) {
+            if (it.getValue() instanceof Resource resource) {
+                publisher.addPart(it.getKey(), MultiPartBodyPublisher.FilePartSpec.from(resource));
+            } else {
+                publisher.addPart(it.getKey(), String.valueOf(it.getValue()));
+            }
+        }
+
         var request = HttpRequest.newBuilder()
                 .uri(url)
-                .header("Content-Type", "multipart/form-data")
-                .POST(toBodyPublisher(payload))
+                .header("Content-Type", "multipart/form-data; boundary=" + publisher.getBoundary())
+                .POST(publisher.build())
                 .build();
         try {
             var body = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
@@ -125,27 +133,8 @@ public class TelegramService {
             if (ex instanceof IOException) {
                 throw new UncheckedIOException((IOException) ex);
             }
-            throw new RuntimeException(ex);
+            throw new NeverException(ex);
         }
-    }
-
-    /**
-     * Build BodyPublisher from payload
-     *
-     * @param payload payload
-     * @return BodyPublisher
-     */
-    public static HttpRequest.BodyPublisher toBodyPublisher(@NotNull Map<String, ?> payload) {
-        Objects.requireNonNull(payload, "payload must be not null");
-        var publisher = new MultiPartBodyPublisher();
-        payload.forEach((name, value) -> {
-            if (value instanceof Resource resource) {
-                publisher.addPart(name, MultiPartBodyPublisher.FilePartSpec.from(name, resource));
-            } else {
-                publisher.addPart(name, String.valueOf(value));
-            }
-        });
-        return publisher.build();
     }
 
     public static String getFileUrl(@NotNull Bot bot, @NotNull String filePath) {

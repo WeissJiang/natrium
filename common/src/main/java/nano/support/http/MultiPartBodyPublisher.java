@@ -1,6 +1,7 @@
 package nano.support.http;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ public class MultiPartBodyPublisher {
 
     private final HashMap<String, String> stringParts = new HashMap<>();
     private final HashMap<String, FilePartSpec> fileParts = new HashMap<>();
+    private final String boundary = UUID.randomUUID().toString();
 
     public void addPart(@NotNull String name, @NotNull String value) {
         Objects.requireNonNull(name, "name must be not null");
@@ -37,8 +39,12 @@ public class MultiPartBodyPublisher {
         return HttpRequest.BodyPublishers.ofByteArrays(this::getPartByteIterator);
     }
 
+    public String getBoundary() {
+        return this.boundary;
+    }
+
     private @NotNull Iterator<byte[]> getPartByteIterator() {
-        var boundary = UUID.randomUUID().toString();
+        var boundary = this.boundary;
 
         var stringPartIterator = this.stringParts.entrySet().iterator();
         var filePartIterator = this.fileParts.entrySet().iterator();
@@ -92,7 +98,7 @@ public class MultiPartBodyPublisher {
             return "application/octet-stream";
         }
 
-        static FilePartSpec from(String name, @NotNull Resource resource) {
+        static FilePartSpec from(@NotNull Resource resource) {
             Objects.requireNonNull(resource, "supplier must be not null");
             return new FilePartSpec() {
                 @Override
@@ -105,8 +111,8 @@ public class MultiPartBodyPublisher {
                 }
 
                 @Override
-                public @NotNull String getFilename() {
-                    return name;
+                public @Nullable String getFilename() {
+                    return resource.getFilename();
                 }
             };
         }
