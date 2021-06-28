@@ -65,7 +65,7 @@ public class MultiPartBodyPublisher {
                     var name = next.getKey();
                     var value = next.getValue();
                     String part = "--" + boundary + "\r\n" +
-                            "Content-Disposition: form-data; name=" + name + "\r\n" +
+                            "Content-Disposition: form-data; name=\"" + name + "\"\r\n" +
                             "Content-Type: text/plain; charset=UTF-8\r\n\r\n" +
                             value + "\r\n";
                     return part.getBytes(utf8);
@@ -78,7 +78,7 @@ public class MultiPartBodyPublisher {
                     var name = next.getKey();
                     var filePart = next.getValue();
                     String partHeader = "--" + boundary + "\r\n" +
-                            "Content-Disposition: form-data; name=" + name + "; filename=" + filePart.getFilename() + "\r\n" +
+                            "Content-Disposition: form-data; name=\"" + name + "\"; filename=\"" + filePart.getFilename() + "\"\r\n" +
                             "Content-Type: " + filePart.getContentType() + "\r\n\r\n";
                     this.byteArrayIterator = new ByteArrayIterator(filePart.getInputStream());
                     return partHeader.getBytes(utf8);
