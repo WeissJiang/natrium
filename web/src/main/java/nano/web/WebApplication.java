@@ -75,6 +75,7 @@ public class WebApplication implements ApplicationContextAware, WebMvcConfigurer
     /**
      * Rest template for sending HTTP request
      */
+    @Deprecated
     @Bean
     public RestTemplate restTemplate(@NotNull RestTemplateBuilder builder) {
         return builder.build();
