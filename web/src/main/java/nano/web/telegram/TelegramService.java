@@ -125,8 +125,8 @@ public class TelegramService {
         var url = URI.create(telegramApi);
         var request = HttpRequest.newBuilder()
                 .uri(url)
-                .header("Content-Type", "multipart/form-data")
-                .POST(toBodyPublisher(payload))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(Json.encode(payload)))
                 .build();
         try {
             var body = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
