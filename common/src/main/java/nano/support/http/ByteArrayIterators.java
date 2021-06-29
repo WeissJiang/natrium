@@ -18,7 +18,7 @@ public abstract class ByteArrayIterators {
 
             @Override
             public boolean hasNext() {
-                return this.drained;
+                return !this.drained;
             }
 
             @Override
