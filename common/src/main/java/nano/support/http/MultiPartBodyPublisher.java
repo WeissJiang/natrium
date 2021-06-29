@@ -55,8 +55,7 @@ public class MultiPartBodyPublisher {
             var value = entry.getValue();
             var part = "--" + this.boundary + "\r\n" +
                     "Content-Disposition: form-data; name=\"" + name + "\"\r\n" +
-                    "Content-Type: text/plain; charset=UTF-8\r\n\r\n" +
-                    value + "\r\n";
+                    "Content-Type: text/plain; charset=UTF-8\r\n\r\n" + value + "\r\n";
             return ByteArrayIterators.singleton(part.getBytes(UTF_8));
         });
     }
@@ -65,9 +64,11 @@ public class MultiPartBodyPublisher {
         return ByteArrayIterators.map(this.fileParts.entrySet().iterator(), entry -> {
             var name = entry.getKey();
             var filePart = entry.getValue();
-            var partHeader = "--" + boundary + "\r\n" +
-                    "Content-Disposition: form-data; name=\"" + name + "\"; filename=\"" + filePart.getFilename() + "\"\r\n" +
-                    "Content-Type: " + filePart.getContentType() + "\r\n\r\n";
+            var filename = filePart.getFilename();
+            var contentType = filePart.getContentType();
+            var partHeader = "--" + this.boundary + "\r\n" +
+                    "Content-Disposition: form-data; name=\"" + name + "\"; filename=\"" + filename + "\"\r\n" +
+                    "Content-Type: " + contentType + "\r\n\r\n";
             return ByteArrayIterators.compose(
                     ByteArrayIterators.singleton(partHeader.getBytes(UTF_8)),
                     ByteArrayIterators.from(filePart.getInputStream()),
@@ -77,7 +78,7 @@ public class MultiPartBodyPublisher {
     }
 
     private Iterator<byte[]> getFinalBoundaryByteArrayIterator() {
-        return ByteArrayIterators.singleton(("--" + boundary + "--").getBytes(UTF_8));
+        return ByteArrayIterators.singleton(("--" + this.boundary + "--").getBytes(UTF_8));
     }
 
     @FunctionalInterface
@@ -108,8 +109,7 @@ public class MultiPartBodyPublisher {
 
                 @Override
                 public String getFilename() {
-                    var filename = resource.getFilename();
-                    return Objects.requireNonNullElse(filename, "");
+                    return Objects.requireNonNullElse(resource.getFilename(), "");
                 }
 
                 @Override

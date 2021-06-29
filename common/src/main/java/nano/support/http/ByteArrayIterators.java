@@ -58,18 +58,19 @@ public abstract class ByteArrayIterators {
         if (iterator.length == 0) {
             return Collections.emptyIterator();
         }
-
         return new Iterator<>() {
             private int index = 0;
 
             @Override
             public boolean hasNext() {
-                for (; this.index < iterator.length; this.index++) {
-                    if (iterator[this.index].hasNext()) {
-                        return true;
-                    }
+                if (iterator[this.index].hasNext()) {
+                    return true;
                 }
-                return false;
+                this.index = this.index + 1;
+                if (this.index == iterator.length) {
+                    return false;
+                }
+                return this.hasNext();
             }
 
             @Override
