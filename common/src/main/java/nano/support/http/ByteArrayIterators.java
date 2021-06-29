@@ -58,6 +58,7 @@ public abstract class ByteArrayIterators {
         if (iterator.length == 0) {
             return Collections.emptyIterator();
         }
+        var count = iterator.length;
         return new Iterator<>() {
             private int index = 0;
 
@@ -66,10 +67,10 @@ public abstract class ByteArrayIterators {
                 if (iterator[this.index].hasNext()) {
                     return true;
                 }
-                this.index = this.index + 1;
-                if (this.index == iterator.length) {
+                if (this.index == count) {
                     return false;
                 }
+                this.index = this.index + 1;
                 return this.hasNext();
             }
 
