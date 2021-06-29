@@ -115,7 +115,7 @@ public class MultiPartBodyPublisher {
                 @Override
                 public String getContentType() {
                     var contentType = URLConnection.guessContentTypeFromName(this.getFilename());
-                    return Objects.requireNonNull(contentType, "application/octet-stream");
+                    return Objects.requireNonNullElse(contentType, "application/octet-stream");
                 }
             };
         }
