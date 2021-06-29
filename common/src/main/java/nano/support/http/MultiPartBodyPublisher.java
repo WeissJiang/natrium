@@ -1,12 +1,12 @@
 package nano.support.http;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.net.URLConnection;
 import java.net.http.HttpRequest;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -16,8 +16,8 @@ public class MultiPartBodyPublisher {
 
     private final static Charset utf8 = StandardCharsets.UTF_8;
 
-    private final HashMap<String, String> stringParts = new HashMap<>();
-    private final HashMap<String, FilePartSpec> fileParts = new HashMap<>();
+    private final Map<String, String> stringParts = new HashMap<>();
+    private final Map<String, FilePart> fileParts = new HashMap<>();
     private final String boundary = UUID.randomUUID().toString();
 
     public void addPart(@NotNull String name, @NotNull String value) {
@@ -26,7 +26,7 @@ public class MultiPartBodyPublisher {
         this.stringParts.put(name, value);
     }
 
-    public void addPart(@NotNull String name, @NotNull FilePartSpec filePart) {
+    public void addPart(@NotNull String name, @NotNull MultiPartBodyPublisher.FilePart filePart) {
         Objects.requireNonNull(name, "name must be not null");
         Objects.requireNonNull(filePart, "filePart must be not null");
         this.fileParts.put(name, filePart);
@@ -109,19 +109,23 @@ public class MultiPartBodyPublisher {
         };
     }
 
-    public interface FilePartSpec {
-
-        String getFilename();
+    @FunctionalInterface
+    public interface FilePart {
 
         InputStream getInputStream();
+
+        default String getFilename() {
+            return "";
+        }
 
         default String getContentType() {
             return "application/octet-stream";
         }
 
-        static FilePartSpec from(@NotNull Resource resource) {
+        static @NotNull FilePart from(@NotNull Resource resource) {
             Objects.requireNonNull(resource, "supplier must be not null");
-            return new FilePartSpec() {
+            return new FilePart() {
+
                 @Override
                 public InputStream getInputStream() {
                     try {
@@ -132,8 +136,17 @@ public class MultiPartBodyPublisher {
                 }
 
                 @Override
-                public @Nullable String getFilename() {
-                    return resource.getFilename();
+                public String getFilename() {
+                    return "";
+//                    var filename = resource.getFilename();
+//                    return Objects.requireNonNullElse(filename, "");
+                }
+
+                @Override
+                public String getContentType() {
+                    return "application/octet-stream";
+//                    var contentType = URLConnection.guessContentTypeFromName(this.getFilename());
+//                    return Objects.requireNonNull(contentType, "application/octet-stream");
                 }
             };
         }

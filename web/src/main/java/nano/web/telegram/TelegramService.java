@@ -112,10 +112,12 @@ public class TelegramService {
 
         var publisher = new MultiPartBodyPublisher();
         for (var it : payload.entrySet()) {
-            if (it.getValue() instanceof Resource resource) {
-                publisher.addPart(it.getKey(), MultiPartBodyPublisher.FilePartSpec.from(resource));
+            var name = it.getKey();
+            var part = it.getValue();
+            if (part instanceof Resource resource) {
+                publisher.addPart(name, MultiPartBodyPublisher.FilePart.from(resource));
             } else {
-                publisher.addPart(it.getKey(), String.valueOf(it.getValue()));
+                publisher.addPart(name, String.valueOf(part));
             }
         }
 
