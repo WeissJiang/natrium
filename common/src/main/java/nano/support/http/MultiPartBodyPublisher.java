@@ -8,13 +8,11 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.net.URLConnection;
 import java.net.http.HttpRequest;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public class MultiPartBodyPublisher {
+import static java.nio.charset.StandardCharsets.UTF_8;
 
-    private final static Charset utf8 = StandardCharsets.UTF_8;
+public class MultiPartBodyPublisher {
 
     private final Map<String, String> stringParts = new HashMap<>();
     private final Map<String, FilePart> fileParts = new HashMap<>();
@@ -36,77 +34,50 @@ public class MultiPartBodyPublisher {
         if (this.stringParts.isEmpty() && this.fileParts.isEmpty()) {
             throw new IllegalStateException("Must have at least one part to build multipart message.");
         }
-        return HttpRequest.BodyPublishers.ofByteArrays(this::getPartByteIterator);
+        return HttpRequest.BodyPublishers.ofByteArrays(this::getByteIterator);
     }
 
     public String getBoundary() {
         return this.boundary;
     }
 
-    private @NotNull Iterator<byte[]> getPartByteIterator() {
-        var boundary = this.boundary;
+    private @NotNull Iterator<byte[]> getByteIterator() {
+        return ByteArrayIterators.compose(
+                this.getStringPartByteArrayIterator(),
+                this.getFilePartByteArrayIterator(),
+                this.getFinalBoundaryByteArrayIterator()
+        );
+    }
 
-        var stringPartIterator = this.stringParts.entrySet().iterator();
-        var filePartIterator = this.fileParts.entrySet().iterator();
-        var finalBoundaryIterator = List.of(("--" + boundary + "--").getBytes(utf8)).iterator();
-        return new Iterator<>() {
+    private Iterator<byte[]> getStringPartByteArrayIterator() {
+        return ByteArrayIterators.map(this.stringParts.entrySet().iterator(), entry -> {
+            var name = entry.getKey();
+            var value = entry.getValue();
+            var part = "--" + this.boundary + "\r\n" +
+                    "Content-Disposition: form-data; name=\"" + name + "\"\r\n" +
+                    "Content-Type: text/plain; charset=UTF-8\r\n\r\n" +
+                    value + "\r\n";
+            return ByteArrayIterators.singleton(part.getBytes(UTF_8));
+        });
+    }
 
-            private Iterator<byte[]> byteArrayIterator = Collections.emptyIterator();
+    private Iterator<byte[]> getFilePartByteArrayIterator() {
+        return ByteArrayIterators.map(this.fileParts.entrySet().iterator(), entry -> {
+            var name = entry.getKey();
+            var filePart = entry.getValue();
+            var partHeader = "--" + boundary + "\r\n" +
+                    "Content-Disposition: form-data; name=\"" + name + "\"; filename=\"" + filePart.getFilename() + "\"\r\n" +
+                    "Content-Type: " + filePart.getContentType() + "\r\n\r\n";
+            return ByteArrayIterators.compose(
+                    ByteArrayIterators.singleton(partHeader.getBytes(UTF_8)),
+                    ByteArrayIterators.from(filePart.getInputStream()),
+                    ByteArrayIterators.singleton("\r\n".getBytes(UTF_8))
+            );
+        });
+    }
 
-            @Override
-            public boolean hasNext() {
-                return finalBoundaryIterator.hasNext();
-            }
-
-            @Override
-            public byte[] next() {
-                if (stringPartIterator.hasNext()) {
-                    var next = stringPartIterator.next();
-                    var name = next.getKey();
-                    var value = next.getValue();
-                    String part = "--" + boundary + "\r\n" +
-                            "Content-Disposition: form-data; name=\"" + name + "\"\r\n" +
-                            "Content-Type: text/plain; charset=UTF-8\r\n\r\n" +
-                            value + "\r\n";
-                    return part.getBytes(utf8);
-                }
-                if (this.byteArrayIterator.hasNext()) {
-                    return this.byteArrayIterator.next();
-                }
-                if (filePartIterator.hasNext()) {
-                    var next = filePartIterator.next();
-                    var name = next.getKey();
-                    var filePart = next.getValue();
-                    var partHeader = "--" + boundary + "\r\n" +
-                            "Content-Disposition: form-data; name=\"" + name + "\"; filename=\"" + filePart.getFilename() + "\"\r\n" +
-                            "Content-Type: " + filePart.getContentType() + "\r\n\r\n";
-                    this.byteArrayIterator = new Iterator<>() {
-                        private final Iterator<byte[]> fileByteArrayIterator = new ByteArrayIterator(filePart.getInputStream());
-                        private boolean drained = false;
-
-                        @Override
-                        public boolean hasNext() {
-                            return this.fileByteArrayIterator.hasNext() || !this.drained;
-                        }
-
-                        @Override
-                        public byte[] next() {
-                            if (this.drained) {
-                                throw new NoSuchElementException("stream is drained");
-                            }
-                            if (this.fileByteArrayIterator.hasNext()) {
-                                return this.fileByteArrayIterator.next();
-                            } else {
-                                this.drained = true;
-                                return "\r\n".getBytes(utf8);
-                            }
-                        }
-                    };
-                    return partHeader.getBytes(utf8);
-                }
-                return finalBoundaryIterator.next();
-            }
-        };
+    private Iterator<byte[]> getFinalBoundaryByteArrayIterator() {
+        return ByteArrayIterators.singleton(("--" + boundary + "--").getBytes(UTF_8));
     }
 
     @FunctionalInterface
@@ -137,16 +108,14 @@ public class MultiPartBodyPublisher {
 
                 @Override
                 public String getFilename() {
-                    return "";
-//                    var filename = resource.getFilename();
-//                    return Objects.requireNonNullElse(filename, "");
+                    var filename = resource.getFilename();
+                    return Objects.requireNonNullElse(filename, "");
                 }
 
                 @Override
                 public String getContentType() {
-                    return "application/octet-stream";
-//                    var contentType = URLConnection.guessContentTypeFromName(this.getFilename());
-//                    return Objects.requireNonNull(contentType, "application/octet-stream");
+                    var contentType = URLConnection.guessContentTypeFromName(this.getFilename());
+                    return Objects.requireNonNull(contentType, "application/octet-stream");
                 }
             };
         }

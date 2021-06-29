@@ -19,6 +19,7 @@ public class FormBodyPublisher {
     private final List<Pair<String, String>> data = new ArrayList<>();
 
     public void append(@NotNull String name, @Nullable String value) {
+        Objects.requireNonNull(name, "name must be not null");
         value = Objects.requireNonNullElse(value, "");
         this.data.add(Pair.of(name, value));
     }
@@ -32,6 +33,7 @@ public class FormBodyPublisher {
     public static FormBodyPublisher from(@NotNull Map<String, ?> map) {
         var publisher = new FormBodyPublisher();
         map.forEach((name, value) -> {
+            Objects.requireNonNull(name, "name must be not null");
             if (value == null || value instanceof String) {
                 publisher.append(name, (String) value);
             } else {
