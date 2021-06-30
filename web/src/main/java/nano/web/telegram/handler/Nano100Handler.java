@@ -1,9 +1,9 @@
 package nano.web.telegram.handler;
 
 import nano.support.Onion;
-import nano.web.baidu.BaiduEncyclopediaService;
-import nano.web.mediawiki.MoeService;
-import nano.web.mediawiki.WikiService;
+import nano.web.baidu.BaiduWikiService;
+import nano.web.mediawiki.MoeWikiService;
+import nano.web.mediawiki.WikipediaService;
 import nano.web.nano.model.Bot;
 import nano.web.telegram.BotContext;
 import org.jetbrains.annotations.NotNull;
@@ -22,20 +22,20 @@ import java.util.function.Function;
 @Component
 public class Nano100Handler implements Onion.Middleware<BotContext> {
 
-    private final MoeService moeService;
-    private final WikiService wikiService;
-    private final BaiduEncyclopediaService baiduEncyclopediaService;
+    private final MoeWikiService moeWikiService;
+    private final WikipediaService wikipediaService;
+    private final BaiduWikiService baiduWikiService;
 
     private final List<Function<String, CompletableFuture<String>>> fetcherList = new ArrayList<>();
 
-    public Nano100Handler(MoeService moeService, WikiService wikiService, BaiduEncyclopediaService baiduEncyclopediaService) {
-        this.moeService = moeService;
-        this.wikiService = wikiService;
-        this.baiduEncyclopediaService = baiduEncyclopediaService;
+    public Nano100Handler(MoeWikiService moeWikiService, WikipediaService wikipediaService, BaiduWikiService baiduWikiService) {
+        this.moeWikiService = moeWikiService;
+        this.wikipediaService = wikipediaService;
+        this.baiduWikiService = baiduWikiService;
         // add fetchers
-        this.fetcherList.add(this::fetchWikiExtract);
-        this.fetcherList.add(this::fetchMoeExtract);
-        this.fetcherList.add(this::fetchBaiduEncyclopediaExtract);
+        this.fetcherList.add(this::fetchWikipedia);
+        this.fetcherList.add(this::fetchMoeWiki);
+        this.fetcherList.add(this::fetchBaiduEncyclopedia);
     }
 
     @Override
@@ -73,10 +73,10 @@ public class Nano100Handler implements Onion.Middleware<BotContext> {
         }
     }
 
-    private CompletableFuture<String> fetchWikiExtract(String title) {
+    private CompletableFuture<String> fetchWikipedia(String title) {
         return CompletableFuture.supplyAsync(() -> {
             for (var language : List.of("zh", "en", "ja")) {
-                var extract = this.wikiService.getPageExtract(title, language);
+                var extract = this.wikipediaService.fetchWiki(title, language);
                 if (extract != null) {
                     return extract;
                 }
@@ -85,12 +85,12 @@ public class Nano100Handler implements Onion.Middleware<BotContext> {
         });
     }
 
-    private CompletableFuture<String> fetchMoeExtract(String title) {
-        return CompletableFuture.supplyAsync(() -> this.moeService.getPageExtract(title, "zh"));
+    private CompletableFuture<String> fetchMoeWiki(String title) {
+        return CompletableFuture.supplyAsync(() -> this.moeWikiService.fetchWiki(title, "zh"));
     }
 
-    private CompletableFuture<String> fetchBaiduEncyclopediaExtract(String title) {
-        return CompletableFuture.supplyAsync(() -> this.baiduEncyclopediaService.getPageExtract(title));
+    private CompletableFuture<String> fetchBaiduEncyclopedia(String title) {
+        return CompletableFuture.supplyAsync(() -> this.baiduWikiService.fetchWiki(title));
     }
 
     private static void replyMessageWithoutPreview(BotContext context, String text) {

@@ -20,19 +20,16 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.net.http.HttpClient;
 import java.util.List;
 
 /**
@@ -71,23 +68,6 @@ public class WebApplication implements ApplicationContextAware, WebMvcConfigurer
         var resolver = new SugarViewResolver();
         resolver.setPrefix("classpath:/templates/");
         return resolver;
-    }
-
-    /**
-     * Rest template for sending HTTP request
-     */
-    @Deprecated
-    @Bean
-    public RestTemplate restTemplate(@NotNull RestTemplateBuilder builder) {
-        return builder.build();
-    }
-
-    /**
-     * HTTP Client
-     */
-    @Bean
-    public HttpClient httpClient() {
-        return HttpClient.newHttpClient();
     }
 
     /**

@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
@@ -51,13 +52,20 @@ public abstract class Json {
         return invoke(() -> mapper.readValue(str, clazz));
     }
 
+    public static <T> T decodeValue(InputStream stream, Class<T> clazz) {
+        return invoke(() -> mapper.readValue(stream, clazz));
+    }
+
     public static <T> T decodeValue(String str, TypeReference<T> type) {
         return invoke(() -> mapper.readValue(str, type));
-
     }
 
     public static <T> T decodeValue(ByteBuffer buf, TypeReference<T> type) {
         return invoke(() -> mapper.readValue(buf.array(), type));
+    }
+
+    public static <T> T decodeValue(InputStream stream, TypeReference<T> type) {
+        return invoke(() -> mapper.readValue(stream, type));
     }
 
     public static <T> T decodeValue(ByteBuffer buf, Class<T> clazz) {
@@ -72,6 +80,21 @@ public abstract class Json {
         return decodeValue(str, OBJECT_LIST_TYPE);
     }
 
+    public static Map<String, ?> decodeValueAsMap(InputStream stream) {
+        return decodeValue(stream, STRING_OBJECT_MAP_TYPE);
+    }
+
+    public static List<?> decodeValueAsList(InputStream stream) {
+        return decodeValue(stream, OBJECT_LIST_TYPE);
+    }
+
+    public static Map<String, ?> decodeValueAsMap(ByteBuffer buf) {
+        return decodeValue(buf, STRING_OBJECT_MAP_TYPE);
+    }
+
+    public static List<?> decodeValueAsList(ByteBuffer buf) {
+        return decodeValue(buf, OBJECT_LIST_TYPE);
+    }
 
     private static <T> T invoke(ATE<T> actionThrowsException) {
         try {

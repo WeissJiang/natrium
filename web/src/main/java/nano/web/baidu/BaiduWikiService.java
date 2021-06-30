@@ -1,10 +1,13 @@
 package nano.web.baidu;
 
+import nano.support.http.Fetch;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.client.RestTemplate;
 
+import java.net.URLEncoder;
 import java.util.regex.Pattern;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Baidu encyclopedia service
@@ -13,22 +16,15 @@ import java.util.regex.Pattern;
  * @since 2020.8.28
  */
 @Service
-public class BaiduEncyclopediaService {
+public class BaiduWikiService {
 
     private static final Pattern pattern = Pattern.compile("<meta name=\"description\" content=\"(?<desc>.+)\">");
 
-    private static final String QUERY_API = "https://baike.baidu.com/item/";
+    private static final String QUERY_URL = "https://baike.baidu.com/item/%s";
 
-    private final RestTemplate restTemplate;
-
-    public BaiduEncyclopediaService(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
-
-    public String getPageExtract(String keyword) {
-        var url = QUERY_API + "{0}";
-        var response = this.restTemplate.getForEntity(url, String.class, keyword);
-        var body = response.getBody();
+    public String fetchWiki(String title) {
+        String encodeTitle = URLEncoder.encode(title, UTF_8);
+        var body = Fetch.fetchString(QUERY_URL.formatted(encodeTitle));
         if (ObjectUtils.isEmpty(body)) {
             return null;
         }
@@ -40,7 +36,6 @@ public class BaiduEncyclopediaService {
         if (ObjectUtils.isEmpty(extract)) {
             return null;
         }
-        return extract + "\n" + QUERY_API + keyword;
+        return extract + "\n" + QUERY_URL.formatted(title);
     }
-
 }

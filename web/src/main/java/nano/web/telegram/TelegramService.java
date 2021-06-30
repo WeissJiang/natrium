@@ -1,7 +1,7 @@
 package nano.web.telegram;
 
 import nano.support.Json;
-import nano.support.NeverException;
+import nano.support.http.Fetch;
 import nano.support.http.MultiPartBodyPublisher;
 import nano.web.nano.ConfigVars;
 import nano.web.nano.model.Bot;
@@ -10,14 +10,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -31,14 +28,11 @@ public class TelegramService {
     private static final String TELEGRAM_API = "https://api.telegram.org/bot%s/%s";
     private static final String TELEGRAM_FILE_API = "https://api.telegram.org/file/bot%s/%s";
 
-    private final HttpClient httpClient;
     private final ConfigVars configVars;
 
-    public TelegramService(@NotNull ConfigVars configVars, @NotNull HttpClient httpClient) {
+    public TelegramService(@NotNull ConfigVars configVars) {
         Assert.notNull(configVars, "configVars must be not null");
-        Assert.notNull(httpClient, "httpClient must be not null");
         this.configVars = configVars;
-        this.httpClient = httpClient;
     }
 
     public Map<String, ?> setWebhook() {
@@ -83,23 +77,12 @@ public class TelegramService {
     public Map<String, ?> postJson(@NotNull Bot bot, @NotNull String method, @NotNull Map<String, ?> payload) {
         var telegramApi = getTelegramApi(bot, method);
         var url = URI.create(telegramApi);
-        var request = HttpRequest.newBuilder()
-                .uri(url)
+        var request = HttpRequest.newBuilder(url)
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(Json.encode(payload)))
                 .build();
-        try {
-            var body = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
-            if (body == null) {
-                return null;
-            }
-            return Json.decodeValueAsMap(body);
-        } catch (IOException | InterruptedException ex) {
-            if (ex instanceof IOException ioe) {
-                throw new UncheckedIOException(ioe);
-            }
-            throw new RuntimeException(ex);
-        }
+        var response = Fetch.fetch(request);
+        return Json.decodeValueAsMap(response.body());
     }
 
     /**
@@ -110,7 +93,7 @@ public class TelegramService {
         var telegramApi = getTelegramApi(bot, method);
         var url = URI.create(telegramApi);
 
-        var publisher = new MultiPartBodyPublisher();
+        var publisher = Fetch.newMultiPartBodyPublisher();
         for (var it : payload.entrySet()) {
             var name = it.getKey();
             var part = it.getValue();
@@ -126,15 +109,8 @@ public class TelegramService {
                 .header("Content-Type", "multipart/form-data; boundary=" + publisher.getBoundary())
                 .POST(publisher.build())
                 .build();
-        try {
-            var body = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
-            return Json.decodeValueAsMap(body);
-        } catch (IOException | InterruptedException ex) {
-            if (ex instanceof IOException) {
-                throw new UncheckedIOException((IOException) ex);
-            }
-            throw new NeverException(ex);
-        }
+        var response = Fetch.fetch(request);
+        return Json.decodeValueAsMap(response.body());
     }
 
     public static String getFileUrl(@NotNull Bot bot, @NotNull String filePath) {
