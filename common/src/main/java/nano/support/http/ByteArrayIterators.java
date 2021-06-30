@@ -81,6 +81,7 @@ public abstract class ByteArrayIterators {
     }
 
     public static @NotNull Iterator<byte @NotNull []> from(@NotNull InputStream inputStream) {
+
         return new Iterator<>() {
 
             private final byte[] buffer = new byte[8192];
@@ -93,27 +94,38 @@ public abstract class ByteArrayIterators {
 
             @Override
             public byte[] next() {
-                if (this.drained) {
-                    throw new NoSuchElementException("stream is drained");
-                }
-                int read;
-                try {
-                    read = inputStream.read(this.buffer);
-                } catch (IOException ex) {
-                    throw new UncheckedIOException(ex);
-                }
+                this.ensureNotDrained();
+                int read = this.readBytes();
                 if (read > 0) {
                     var actualBytes = new byte[read];
                     System.arraycopy(this.buffer, 0, actualBytes, 0, read);
                     return actualBytes;
                 } else {
                     this.drained = true;
-                    try {
-                        inputStream.close();
-                    } catch (IOException ex) {
-                        throw new UncheckedIOException(ex);
-                    }
+                    this.closeStream();
                     return new byte[0];
+                }
+            }
+
+            private int readBytes() {
+                try {
+                    return inputStream.read(this.buffer);
+                } catch (IOException ex) {
+                    throw new UncheckedIOException(ex);
+                }
+            }
+
+            private void closeStream() {
+                try {
+                    inputStream.close();
+                } catch (IOException ex) {
+                    throw new UncheckedIOException(ex);
+                }
+            }
+
+            private void ensureNotDrained() {
+                if (this.drained) {
+                    throw new NoSuchElementException("Stream is drained");
                 }
             }
         };
