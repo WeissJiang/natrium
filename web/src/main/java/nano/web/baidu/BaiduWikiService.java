@@ -36,6 +36,6 @@ public class BaiduWikiService {
         if (ObjectUtils.isEmpty(extract)) {
             return null;
         }
-        return extract + "\n" + QUERY_URL.formatted(title);
+        return extract + "\n" + QUERY_URL.formatted(encodeTitle);
     }
 }
