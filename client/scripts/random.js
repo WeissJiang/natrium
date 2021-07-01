@@ -1,1 +1,1 @@
-process.stdout.write(Math.random().toString());
+process.stdout.write(Math.random().toString())

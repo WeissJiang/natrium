@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, createRef } from 'react'
 import styled from 'styled-components'
 import { EditorView } from '@codemirror/view'
 import { EditorState } from '@codemirror/state'
@@ -11,7 +11,7 @@ export default class CMEditor extends Component {
 
     constructor(props) {
         super(props);
-        this.containerRef = React.createRef()
+        this.containerRef = createRef()
     }
 
     componentDidMount() {
