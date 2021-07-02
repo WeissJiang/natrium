@@ -28,6 +28,7 @@
   "devDependencies": {
     "@codemirror/state": "^0.18.7",
     "@codemirror/view": "^0.18.17",
+    "create-react-class": "^15.7.0",
     "del-cli": "^4.0.0",
     "file-saver": "^2.0.5",
     "github-markdown-css": "^4.0.0",
