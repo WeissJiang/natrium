@@ -36,14 +36,10 @@ public abstract class ByteArrayIterators {
 
             @Override
             public boolean hasNext() {
-                if (this.delegate.hasNext()) {
-                    return true;
+                while (!this.delegate.hasNext() && iterator.hasNext()) {
+                    this.delegate = mapper.apply(iterator.next());
                 }
-                if (!iterator.hasNext()) {
-                    return false;
-                }
-                this.delegate = mapper.apply(iterator.next());
-                return this.hasNext();
+                return this.delegate.hasNext();
             }
 
             @Override
