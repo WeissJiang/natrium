@@ -1,14 +1,12 @@
 package nano.web.scripting;
 
+import nano.support.io.SimpleResource;
 import org.graalvm.polyglot.Context;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 @Component
 public class Scripting {
@@ -26,11 +24,8 @@ public class Scripting {
     }
 
     @Value("classpath:/scripting/base64.js")
-    public void setBase64Script(@NotNull Resource base64ScriptResource) throws IOException {
-        var is = base64ScriptResource.getInputStream();
-        try (is) {
-            this.base64Script = new String(is.readAllBytes(), StandardCharsets.UTF_8);
-        }
+    public void setBase64Script(@NotNull Resource script) {
+        this.base64Script = new SimpleResource(script).getAsString();
     }
 
     private @NotNull Context getContext() {

@@ -52,6 +52,15 @@ public class SimpleResource implements Resource {
         return new String(bytes, charset);
     }
 
+    public String getAsString(String charset) {
+        try {
+            var bytes = this.getAllBytes();
+            return new String(bytes, charset);
+        } catch (UnsupportedEncodingException ex) {
+            throw new UncheckedIOException(ex);
+        }
+    }
+
     @Override
     public boolean exists() {
         return this.delegate.exists();
