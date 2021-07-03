@@ -1,5 +1,6 @@
 package nano.support.http;
 
+import nano.support.Iterables;
 import nano.support.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.io.Resource;
@@ -44,7 +45,7 @@ public class MultiPartBodyPublisher {
     }
 
     private @NotNull Iterable<byte[]> getBytes() {
-        return ByteArrayIterable.compose(
+        return Iterables.compose(
                 this.getStringPartBytes(),
                 this.getFilePartByteArray(),
                 this.getFinalBoundaryBytes()
@@ -52,7 +53,7 @@ public class MultiPartBodyPublisher {
     }
 
     private @NotNull Iterable<byte[]> getStringPartBytes() {
-        return ByteArrayIterable.map(this.stringPartList, entry -> {
+        return Iterables.map(this.stringPartList, entry -> {
             var name = entry.getLeft();
             var value = entry.getRight();
             var part = "--" + this.boundary + "\r\n" +
@@ -63,7 +64,7 @@ public class MultiPartBodyPublisher {
     }
 
     private @NotNull Iterable<byte[]> getFilePartByteArray() {
-        return ByteArrayIterable.map(this.filePartList, entry -> {
+        return Iterables.map(this.filePartList, entry -> {
             var name = entry.getLeft();
             var filePart = entry.getRight();
             var filename = filePart.getFilename();
@@ -71,9 +72,9 @@ public class MultiPartBodyPublisher {
             var partHeader = "--" + this.boundary + "\r\n" +
                     "Content-Disposition: form-data; name=\"" + name + "\"; filename=\"" + filename + "\"\r\n" +
                     "Content-Type: " + contentType + "\r\n\r\n";
-            return ByteArrayIterable.compose(
+            return Iterables.compose(
                     List.of(partHeader.getBytes(UTF_8)),
-                    ByteArrayIterable.from(filePart::getInputStream),
+                    new ByteArrayIterable(filePart::getInputStream),
                     List.of("\r\n".getBytes(UTF_8))
             );
         });
