@@ -15,7 +15,7 @@ public class ValidateInterceptor implements MethodInterceptor {
     private final BeanFactory beanFactory;
 
     public ValidateInterceptor(@NotNull BeanFactory beanFactory) {
-        Assert.notNull(beanFactory, "BeanFactory must be not null");
+        Assert.notNull(beanFactory, "beanFactory must be not null");
         this.beanFactory = beanFactory;
     }
 
@@ -25,7 +25,7 @@ public class ValidateInterceptor implements MethodInterceptor {
         var arguments = invocation.getArguments();
         // validate
         var validated = method.getAnnotation(Validated.class);
-        Assert.notNull(validated, "Validated annotation is null");
+        Assert.notNull(validated, "validated annotation is null");
         for (var validatorClass : validated.value()) {
             var validator = this.beanFactory.getBean(validatorClass);
             var message = validator.validate(arguments);

@@ -38,38 +38,32 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         if (authorized == null) {
             return true;
         }
-        var checkToken = this.getCheckToken(request, List.of(authorized.privilege()));
-        var checkTicket = this.getCheckTicket(request, List.of(authorized.ticket()));
+        var tokenChecker = this.tokenChecker(request, List.of(authorized.privilege()));
+        var ticketChecker = this.ticketChecker(request, List.of(authorized.ticket()));
         // privilege or ticket
         if (authorized.privilege().length > 0 && authorized.ticket().length > 0) {
-            var checkList = List.of(checkToken, checkTicket);
-            var exceptions = checkList.stream()
-                    .map(it -> {
-                        try {
-                            it.run();
-                            return null;
-                        } catch (Exception ex) {
-                            return ex;
-                        }
-                    })
-                    .filter(Objects::nonNull);
-            if (exceptions.count() == checkList.size()) {
-                var message = exceptions.map(Throwable::getMessage).collect(Collectors.joining(","));
+            var checkerList = List.of(tokenChecker, ticketChecker);
+            var errors = checkerList.stream()
+                    .map(AuthenticationInterceptor::runChecker)
+                    .filter(Objects::nonNull)
+                    .map(Exception::getMessage);
+            if (errors.count() == checkerList.size()) {
+                var message = errors.collect(Collectors.joining(","));
                 throw new AuthenticationException(message);
             }
         }
         // privilege
         else if (authorized.privilege().length > 0) {
-            checkToken.run();
+            tokenChecker.run();
         }
         // ticket
         else if (authorized.ticket().length > 0) {
-            checkTicket.run();
+            ticketChecker.run();
         }
         return true;
     }
 
-    private Runnable getCheckToken(@NotNull HttpServletRequest request, List<String> privilegeList) {
+    private Runnable tokenChecker(@NotNull HttpServletRequest request, List<String> privilegeList) {
         return () -> {
             var token = getToken(request);
             var desensitizedToken = desensitizeToken(token);
@@ -78,7 +72,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         };
     }
 
-    private Runnable getCheckTicket(@NotNull HttpServletRequest request, List<String> ticketNameList) {
+    private Runnable ticketChecker(@NotNull HttpServletRequest request, List<String> ticketNameList) {
         return () -> this.securityService.checkTicketPermission(getTicket(request), ticketNameList);
     }
 
@@ -96,5 +90,14 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             ticket = request.getParameter(TICKET);
         }
         return ticket;
+    }
+
+    private static @Nullable Exception runChecker(@NotNull Runnable runnable) {
+        try {
+            runnable.run();
+            return null;
+        } catch (Exception ex) {
+            return ex;
+        }
     }
 }

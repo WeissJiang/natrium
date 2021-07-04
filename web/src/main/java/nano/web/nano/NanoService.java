@@ -124,7 +124,7 @@ public class NanoService implements ApplicationContextAware {
     }
 
     /**
-     * bytes -> mega bytes
+     * bytes -> megabytes
      */
     private static @NotNull String megabytes(long bytes) {
         return "%sMB".formatted(DataSize.ofBytes(bytes).toMegabytes());

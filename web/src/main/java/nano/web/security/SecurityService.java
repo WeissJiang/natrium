@@ -80,7 +80,7 @@ public class SecurityService {
         authState(nanoToken != null, "Illegal token");
         authState(NanoToken.VALID.equals(nanoToken.getStatus()), "Invalid token");
         var tokenPrivileges = mapToString(Json.decodeValueAsList(nanoToken.getPrivilege()));
-        var exists =privilegeList.stream().anyMatch(tokenPrivileges::contains);
+        var exists = privilegeList.stream().anyMatch(tokenPrivileges::contains);
         authState(exists, "Insufficient token privilege");
     }
 
