@@ -4,7 +4,7 @@ import ua_parser.Parser;
 
 import java.util.Objects;
 
-public class UserAgentParserModule {
+public abstract class UserAgentParserModule {
 
     private static final Parser parser = new Parser();
 

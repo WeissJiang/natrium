@@ -13,31 +13,25 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 import static java.util.Collections.emptyList;
-import static nano.support.Sugar.cast;
 import static nano.support.Sugar.filter;
 
 public class BotContext {
 
     private final Bot bot;
 
-    private final Function<String, ?> read0;
     private final Map<String, ?> parameters;
-
-    // -- context
+    private final JsonPathModule.ReadContext parameterContext;
 
     private Session session;
-
     private TelegramService telegramService;
 
 
     public BotContext(@NotNull Bot bot, @NotNull Map<String, ?> parameters) {
         this.bot = bot;
         this.parameters = parameters;
-        var context = JsonPathModule.parse(parameters);
-        this.read0 = context::read;
+        this.parameterContext = JsonPathModule.parse(parameters);
     }
 
     public Number chatId() {
@@ -103,13 +97,11 @@ public class BotContext {
      */
     public <T> T read(String jsonPath) {
         try {
-            return cast(this.read0.apply(jsonPath));
+            return this.parameterContext.read(jsonPath);
         } catch (Exception ex) {
             return null;
         }
     }
-
-    // -- proxy to TelegramService
 
     public void sendMessage(String text) {
         var payload = Map.of(

@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 
-public class JsonPathModule {
+public abstract class JsonPathModule {
 
     public static ReadContext parse(@NotNull Object object) {
         return JsonPath.parse(object)::read;
@@ -37,6 +37,7 @@ public class JsonPathModule {
         }
     }
 
+    @FunctionalInterface
     public interface ReadContext {
 
         <T> T read(String jsonPath);

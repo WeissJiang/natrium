@@ -12,6 +12,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.nio.ByteBuffer;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
@@ -33,7 +34,7 @@ public abstract class Json {
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        SimpleModule module = new SimpleModule();
+        var module = new SimpleModule();
         module.addSerializer(Instant.class, new InstantSerializer());
         module.addSerializer(Date.class, new DateSerializer());
         module.addSerializer(byte[].class, new ByteArraySerializer());
@@ -96,20 +97,21 @@ public abstract class Json {
         return decodeValue(buf, OBJECT_LIST_TYPE);
     }
 
-    private static <T> T invoke(ATE<T> actionThrowsException) {
+    private static <T> T invoke(ActionThrowsIOException<T> action) {
         try {
-            return actionThrowsException.invoke();
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            return action.invoke();
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
         }
     }
 
-    interface ATE<T> {
+    interface ActionThrowsIOException<T> {
 
-        T invoke() throws Exception;
+        T invoke() throws IOException;
     }
 
     private static class InstantSerializer extends JsonSerializer<Instant> {
+
         @Override
         public void serialize(Instant value, JsonGenerator gen, SerializerProvider provider) throws IOException {
             gen.writeString(DateTimeFormatter.ISO_INSTANT.format(value));
@@ -117,6 +119,7 @@ public abstract class Json {
     }
 
     private static class DateSerializer extends JsonSerializer<Date> {
+
         @Override
         public void serialize(Date value, JsonGenerator gen, SerializerProvider provider) throws IOException {
             gen.writeString(DateTimeFormatter.ISO_INSTANT.format(value.toInstant()));
@@ -124,6 +127,7 @@ public abstract class Json {
     }
 
     private static class ByteArraySerializer extends JsonSerializer<byte[]> {
+
         private final Base64.Encoder BASE64 = Base64.getEncoder();
 
         @Override

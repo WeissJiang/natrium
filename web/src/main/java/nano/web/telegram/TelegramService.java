@@ -92,25 +92,25 @@ public class TelegramService {
         Objects.requireNonNull(payload, "payload must be not null");
         var telegramApi = getTelegramApi(bot, method);
         var url = URI.create(telegramApi);
-
-        var publisher = Fetch.newMultiPartBodyPublisher();
-        for (var it : payload.entrySet()) {
-            var name = it.getKey();
-            var part = it.getValue();
-            if (part instanceof Resource resource) {
-                publisher.addPart(name, MultiPartBodyPublisher.FilePart.from(resource));
-            } else {
-                publisher.addPart(name, String.valueOf(part));
-            }
-        }
-
-        var request = HttpRequest.newBuilder()
-                .uri(url)
+        var publisher = buildMultiPartBodyPublisher(payload);
+        var request = HttpRequest.newBuilder(url)
                 .header("Content-Type", "multipart/form-data; boundary=" + publisher.getBoundary())
                 .POST(publisher.build())
                 .build();
         var response = Fetch.fetch(request);
         return Json.decodeValueAsMap(response.body());
+    }
+
+    private static MultiPartBodyPublisher buildMultiPartBodyPublisher(@NotNull Map<String, ?> payload) {
+        var publisher = Fetch.newMultiPartBodyPublisher();
+        payload.forEach((name, part) -> {
+            if (part instanceof Resource resource) {
+                publisher.addPart(name, MultiPartBodyPublisher.FilePart.from(resource));
+            } else {
+                publisher.addPart(name, String.valueOf(part));
+            }
+        });
+        return publisher;
     }
 
     public static String getFileUrl(@NotNull Bot bot, @NotNull String filePath) {
