@@ -7,4 +7,4 @@ pluginManagement {
 }
 
 rootProject.name = 'natrium'
-include 'client', 'common', 'web', 'worker', 'nn'
+include 'www', 'common', 'service', 'worker', 'nn'
