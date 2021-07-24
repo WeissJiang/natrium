@@ -22,7 +22,7 @@ dependencyManagement {
 
 dependencies {
     // jetbrains annotations
-    api 'org.jetbrains:annotations:20.1.0'
+    api 'org.jetbrains:annotations:21.0.1'
     // spring
     compileOnly "org.springframework.boot:spring-boot-starter-mail"
     compileOnly "org.springframework.boot:spring-boot-starter-jdbc"

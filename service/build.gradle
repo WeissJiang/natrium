@@ -26,9 +26,9 @@ dependencies {
     implementation 'org.graalvm.js:js:21.1.0'
     implementation 'org.graalvm.js:js-scriptengine:21.1.0'
     // aop
-    implementation 'org.aspectj:aspectjweaver:1.9.6'
+    implementation 'org.aspectj:aspectjweaver:1.9.7'
     // postgresql
-    implementation 'org.postgresql:postgresql:42.2.22'
+    implementation 'org.postgresql:postgresql:42.2.23'
     // spring
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
