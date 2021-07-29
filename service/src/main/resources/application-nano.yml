@@ -3,26 +3,32 @@ nano:
   nano-api-key: key
   baidu-translation-app-id:
   baidu-translation-secret-key:
-  bot-list:
-    - name: nano
+  bots:
+    nano:
+      name: nano
       username: nano_telegram_bot
       token: token
-    - name: nano-000
+    nano-000:
+      name: nano-000
       username: nano_000_bot
       token: token
-    - name: nano-026
+    nano-026:
+      name: nano-026
       username: nano_026_bot
       token: token
-    - name: nano-063
+    nano-063:
+      name: nano-063
       username: nano_063_bot
       token: token
-    - name: nano-100
+    nano-100:
+      name: nano-100
       username: nano_100_bot
       token: token
-    - name: nano-233
+    nano-233:
+      name: nano-233
       username: nano_233_bot
       token: token
-    - name: nano-262
+    nano-262:
+      name: nano-262
       username: nano_262_bot
       token: token
-

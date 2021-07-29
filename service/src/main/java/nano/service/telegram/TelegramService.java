@@ -38,7 +38,7 @@ public class TelegramService {
         var apiKey = this.appConfig.nanoApiKey();
         var nanoApi = this.appConfig.nanoApi();
         var result = new HashMap<String, Object>();
-        for (var bot : this.appConfig.botList()) {
+        for (var bot : this.appConfig.bots().values()) {
             String botName = bot.name();
             var endpoint = "/api/telegram/webhook/%s/%s".formatted(botName, apiKey);
             var url = createUrl(endpoint, nanoApi);

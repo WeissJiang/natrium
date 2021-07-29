@@ -66,16 +66,12 @@ public class ServiceApplication implements ApplicationContextAware, WebMvcConfig
                 configVars.get("nano-api-key").toString(),
                 configVars.get("baidu-translation-app-id").toString(),
                 configVars.get("baidu-translation-secret-key").toString(),
-                new ArrayList<>()
+                new HashMap<>()
         );
-        if (configVars.get("bot-list") instanceof Map<?, ?> botListMap) {
-            botListMap.values()
-                    .stream()
-                    .map(Json::encode)
-                    .map(it -> Json.decodeValue(it, Bot.class))
-                    .forEach(appConfig.botList()::add);
+        if (configVars.get("bots") instanceof Map<?, ?> botListMap) {
+            botListMap.forEach((name, bot) ->
+                    appConfig.bots().put(name.toString(), Json.decodeValue(Json.encode(bot), Bot.class)));
         }
-
         return appConfig;
     }
 

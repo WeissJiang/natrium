@@ -2,7 +2,7 @@ package nano.service.nano;
 
 import nano.service.nano.model.Bot;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public record AppConfig(
@@ -10,13 +10,10 @@ public record AppConfig(
         String nanoApiKey,
         String baiduTranslationAppId,
         String baiduTranslationSecretKey,
-        List<Bot> botList
+        Map<String, Bot> bots
 ) {
 
     public Bot getBot(String name) {
-        return this.botList.stream()
-                .filter(it -> Objects.equals(it.name(), name))
-                .findFirst()
-                .orElseThrow();
+        return Objects.requireNonNull(this.bots.get(name));
     }
 }
