@@ -28,7 +28,7 @@ public class VerificationHandler implements Onion.Middleware<BotContext> {
     public void via(@NotNull BotContext context, Onion.@NotNull Next next) throws Exception {
         var text = context.text();
         var session = context.getSession();
-        if (Bot.NANO.equals(context.bot().getName()) && session != null && TokenCode.isVerificationCode(text)) {
+        if (Bot.NANO.equals(context.bot().name()) && session != null && TokenCode.isVerificationCode(text)) {
             var user = session.getUser();
             var token = session.getToken();
             var tokenResultMap = this.securityService.verifyToken(user, token, text);

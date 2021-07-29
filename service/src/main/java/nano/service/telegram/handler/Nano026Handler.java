@@ -23,7 +23,7 @@ public class Nano026Handler implements Onion.Middleware<BotContext> {
 
     @Override
     public void via(@NotNull BotContext context, Onion.@NotNull Next next) throws Exception {
-        if (Bot.NANO_026.equals(context.bot().getName())) {
+        if (Bot.NANO_026.equals(context.bot().name())) {
             this.translate(context);
         } else {
             next.next();

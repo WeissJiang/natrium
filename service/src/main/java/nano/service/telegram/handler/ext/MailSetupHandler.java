@@ -27,7 +27,7 @@ public class MailSetupHandler implements Onion.Middleware<BotContext> {
     public void via(@NotNull BotContext context, Onion.@NotNull Next next) throws Exception {
         var text = context.text();
         var bot = context.bot();
-        if (Bot.NANO.equals(bot.getName()) && isSetMailCommand(text)) {
+        if (Bot.NANO.equals(bot.name()) && isSetMailCommand(text)) {
             this.trySetMailAddress(context);
         } else {
             next.next();

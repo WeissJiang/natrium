@@ -1,21 +1,24 @@
 package nano.service;
 
 import nano.service.messageing.ExchangeDeclarer;
+import nano.service.nano.AppConfig;
+import nano.service.nano.model.Bot;
 import nano.service.security.AuthenticationInterceptor;
 import nano.service.security.Authorized;
 import nano.service.security.Token;
 import nano.service.security.TokenArgumentResolver;
+import nano.support.Json;
 import nano.support.configuration.ConditionalOnRabbit;
 import nano.support.mail.MailService;
 import nano.support.templating.SugarViewResolver;
 import nano.support.validation.ValidateInterceptor;
 import nano.support.validation.Validated;
 import nano.support.validation.Validator;
-import nano.service.nano.ConfigVars;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.aop.support.annotation.AnnotationMatchingPointcut;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,7 +34,10 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Application entry of web
@@ -51,12 +57,35 @@ public class ServiceApplication implements ApplicationContextAware, WebMvcConfig
     }
 
     /**
-     * App config vars
+     * App config
+     */
+    @Bean
+    public AppConfig appConfig(@Qualifier("configVars") Map<String, ?> configVars) {
+        var appConfig = new AppConfig(
+                configVars.get("nano-api").toString(),
+                configVars.get("nano-api-key").toString(),
+                configVars.get("baidu-translation-app-id").toString(),
+                configVars.get("baidu-translation-secret-key").toString(),
+                new ArrayList<>()
+        );
+        if (configVars.get("bot-list") instanceof Map<?, ?> botListMap) {
+            botListMap.values()
+                    .stream()
+                    .map(Json::encode)
+                    .map(it -> Json.decodeValue(it, Bot.class))
+                    .forEach(appConfig.botList()::add);
+        }
+
+        return appConfig;
+    }
+
+    /**
+     * config vars
      */
     @Bean
     @ConfigurationProperties("nano")
-    public ConfigVars configVars() {
-        return new ConfigVars();
+    public Map<String, ?> configVars() {
+        return new HashMap<>();
     }
 
     /**

@@ -30,7 +30,7 @@ public class Nano000Handler implements Onion.Middleware<BotContext> {
 
     @Override
     public void via(@NotNull BotContext context, Onion.@NotNull Next next) throws Exception {
-        if (Bot.NANO_000.equals(context.bot().getName())) {
+        if (Bot.NANO_000.equals(context.bot().name())) {
             var userPrivilegeList = context.userPrivilegeList();
             if (!userPrivilegeList.contains(Privilege.ACCOUNTING)
                     && !userPrivilegeList.contains(Privilege.NANO_API)) {

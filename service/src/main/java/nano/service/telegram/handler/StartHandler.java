@@ -22,7 +22,7 @@ public class StartHandler implements Onion.Middleware<BotContext> {
     public void via(@NotNull BotContext context, Onion.@NotNull Next next) throws Exception {
         var commands = context.commands();
         var bot = context.bot();
-        if (commands.contains("/start") || commands.contains("/start@" + bot.getUsername())) {
+        if (commands.contains("/start") || commands.contains("/start@" + bot.username())) {
             replyStartMessage(context);
         } else {
             next.next();
@@ -31,7 +31,7 @@ public class StartHandler implements Onion.Middleware<BotContext> {
 
     private static void replyStartMessage(BotContext context) {
         var bot = context.bot();
-        switch (bot.getName()) {
+        switch (bot.name()) {
             case Bot.NANO -> replyNanoStart(context);
             case Bot.NANO_026 -> context.replyMessage("ZH/EN translation");
             case Bot.NANO_100 -> context.replyMessage("Encyclopedia");

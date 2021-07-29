@@ -1,10 +1,10 @@
 package nano.service.telegram;
 
+import nano.service.nano.AppConfig;
+import nano.service.nano.model.Bot;
 import nano.support.Json;
 import nano.support.http.Fetch;
 import nano.support.http.MultiPartBodyPublisher;
-import nano.service.nano.ConfigVars;
-import nano.service.nano.model.Bot;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -28,19 +28,18 @@ public class TelegramService {
     private static final String TELEGRAM_API = "https://api.telegram.org/bot%s/%s";
     private static final String TELEGRAM_FILE_API = "https://api.telegram.org/file/bot%s/%s";
 
-    private final ConfigVars configVars;
+    private final AppConfig appConfig;
 
-    public TelegramService(@NotNull ConfigVars configVars) {
-        Assert.notNull(configVars, "configVars must be not null");
-        this.configVars = configVars;
+    public TelegramService(@NotNull AppConfig appConfig) {
+        this.appConfig = appConfig;
     }
 
     public Map<String, ?> setWebhook() {
-        var apiKey = this.configVars.getNanoApiKey();
-        var nanoApi = this.configVars.getNanoApi();
+        var apiKey = this.appConfig.nanoApiKey();
+        var nanoApi = this.appConfig.nanoApi();
         var result = new HashMap<String, Object>();
-        for (var bot : this.configVars.getBots().values()) {
-            String botName = bot.getName();
+        for (var bot : this.appConfig.botList()) {
+            String botName = bot.name();
             var endpoint = "/api/telegram/webhook/%s/%s".formatted(botName, apiKey);
             var url = createUrl(endpoint, nanoApi);
             var r = this.postJson(bot, "setWebhook", Map.of("url", url));
@@ -114,12 +113,12 @@ public class TelegramService {
     }
 
     public static String getFileUrl(@NotNull Bot bot, @NotNull String filePath) {
-        var token = bot.getToken();
+        var token = bot.token();
         return TELEGRAM_FILE_API.formatted(token, filePath);
     }
 
     public static String getTelegramApi(@NotNull Bot bot, @NotNull String method) {
-        var token = bot.getToken();
+        var token = bot.token();
         return TELEGRAM_API.formatted(token, method);
     }
 

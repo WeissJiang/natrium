@@ -1,8 +1,8 @@
 package nano.service.telegram;
 
+import nano.service.nano.AppConfig;
 import nano.support.Onion;
 import nano.support.Onion.Middleware;
-import nano.service.nano.ConfigVars;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +71,7 @@ public class BotHandler implements ApplicationContextAware {
      */
     private @NotNull BotContext buildContext(@NotNull String botName, Map<String, ?> parameters) {
         var ctx = this.context;
-        var bot = ctx.getBean(ConfigVars.class).getBots().get(botName);
+        var bot = ctx.getBean(AppConfig.class).getBot(botName);
         Assert.notNull(bot, "No matching Bot found");
         var context = new BotContext(bot, parameters);
         // build context

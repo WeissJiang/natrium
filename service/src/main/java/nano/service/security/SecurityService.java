@@ -1,13 +1,13 @@
 package nano.service.security;
 
-import nano.support.Json;
 import nano.service.controller.security.TokenDTO;
-import nano.service.nano.ConfigVars;
+import nano.service.nano.AppConfig;
 import nano.service.nano.entity.NanoToken;
 import nano.service.nano.entity.NanoUser;
 import nano.service.nano.repository.TokenRepository;
 import nano.service.util.JsonPathModule;
 import nano.service.util.UserAgentParserModule;
+import nano.support.Json;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,9 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static nano.support.Sugar.*;
 import static nano.service.security.TokenCode.generateUUID;
 import static nano.service.security.TokenCode.generateVerificationCode;
+import static nano.support.Sugar.*;
 
 /**
  * Security and token service
@@ -42,14 +42,14 @@ public class SecurityService {
 
     private static final Logger log = LoggerFactory.getLogger(SecurityService.class);
 
-    private final ConfigVars configVars;
+    private final AppConfig appConfig;
 
     private final TokenRepository tokenRepository;
 
     private final Environment env;
 
-    public SecurityService(ConfigVars configVars, TokenRepository tokenRepository, Environment env) {
-        this.configVars = configVars;
+    public SecurityService(AppConfig appConfig, TokenRepository tokenRepository, Environment env) {
+        this.appConfig = appConfig;
         this.tokenRepository = tokenRepository;
         this.env = env;
     }
@@ -61,7 +61,7 @@ public class SecurityService {
         if (ObjectUtils.isEmpty(key)) {
             throw new AuthenticationException("Missing API key");
         }
-        var apiToken = this.configVars.getNanoApiKey();
+        var apiToken = this.appConfig.nanoApiKey();
         if (!key.equals(apiToken)) {
             throw new AuthenticationException("Illegal API key");
         }

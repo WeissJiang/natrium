@@ -27,7 +27,7 @@ public class MailHandler implements Onion.Middleware<BotContext> {
     public void via(@NotNull BotContext context, Onion.@NotNull Next next) throws Exception {
         var text = context.text();
         var bot = context.bot();
-        if (Bot.NANO.equals(bot.getName()) && isMailCommand(text)) {
+        if (Bot.NANO.equals(bot.name()) && isMailCommand(text)) {
             this.trySendMail(context);
         } else {
             next.next();

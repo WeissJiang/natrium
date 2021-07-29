@@ -21,7 +21,7 @@ public class Nano233Handler implements Onion.Middleware<BotContext> {
 
     @Override
     public void via(@NotNull BotContext context, Onion.@NotNull Next next) throws Exception {
-        if (Bot.NANO_233.equals(context.bot().getName())) {
+        if (Bot.NANO_233.equals(context.bot().name())) {
             this.getSticker(context);
         } else {
             next.next();

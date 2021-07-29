@@ -1,6 +1,6 @@
 package nano.service.baidu;
 
-import nano.service.nano.ConfigVars;
+import nano.service.nano.AppConfig;
 import nano.service.util.JsonPathModule;
 import nano.support.http.Fetch;
 import org.jetbrains.annotations.NotNull;
@@ -29,19 +29,17 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @Service
 public class TranslationService {
 
-    private static final Logger log = LoggerFactory.getLogger(TranslationService.class);
-
     private static final String TRANSLATION_API = "https://fanyi-api.baidu.com/api/trans/vip/translate";
 
-    private final ConfigVars configVars;
+    private final AppConfig appConfig;
 
-    public TranslationService(ConfigVars configVars) {
-        this.configVars = configVars;
+    public TranslationService(AppConfig appConfig) {
+        this.appConfig = appConfig;
     }
 
     public String translate(String input, String from, String to) {
-        var appId = this.configVars.getBaiduTranslationAppId();
-        var secretKey = this.configVars.getBaiduTranslationSecretKey();
+        var appId = this.appConfig.baiduTranslationAppId();
+        var secretKey = this.appConfig.baiduTranslationSecretKey();
         var salt = Instant.now().toString();
         var data = (appId + input + salt + secretKey).getBytes(UTF_8);
         var sign = DigestUtils.md5DigestAsHex(data);
