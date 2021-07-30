@@ -38,9 +38,9 @@ public class MailService {
         var message = mailSender.createMimeMessage();
         var helper = new MimeMessageHelper(message);
         helper.setFrom(this.fromAddress);
-        helper.setTo(mail.getTo());
-        helper.setSubject(mail.getSubject());
-        helper.setText(mail.getText());
+        helper.setTo(mail.to());
+        helper.setSubject(mail.subject());
+        helper.setText(mail.text());
         mailSender.send(message);
     }
 

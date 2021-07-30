@@ -17,13 +17,13 @@ public class SendTextMailValidator implements Validator {
         var arguments = new Arguments(args);
         var textMail = arguments.get(0, TextMail.class);
         Assert.notNull(textMail, "textMail is null");
-        if (ObjectUtils.isEmpty(textMail.getSubject())) {
+        if (ObjectUtils.isEmpty(textMail.subject())) {
             return "TextMail \"subject\" is empty";
         }
-        if (ObjectUtils.isEmpty(textMail.getTo())) {
+        if (ObjectUtils.isEmpty(textMail.to())) {
             return "TextMail \"to\" is empty";
         }
-        if (ObjectUtils.isEmpty(textMail.getText())) {
+        if (ObjectUtils.isEmpty(textMail.text())) {
             return "TextMail \"text\" is empty";
         }
         return null;

@@ -54,8 +54,8 @@ public class MultiPartBodyPublisher {
 
     private @NotNull Iterable<byte[]> getStringPartBytes() {
         return Iterables.map(this.stringPartList, entry -> {
-            var name = entry.getLeft();
-            var value = entry.getRight();
+            var name = entry.left();
+            var value = entry.right();
             var part = "--" + this.boundary + "\r\n" +
                     "Content-Disposition: form-data; name=\"" + name + "\"\r\n" +
                     "Content-Type: text/plain; charset=UTF-8\r\n\r\n" + value + "\r\n";
@@ -65,8 +65,8 @@ public class MultiPartBodyPublisher {
 
     private @NotNull Iterable<byte[]> getFilePartByteArray() {
         return Iterables.map(this.filePartList, entry -> {
-            var name = entry.getLeft();
-            var filePart = entry.getRight();
+            var name = entry.left();
+            var filePart = entry.right();
             var filename = filePart.getFilename();
             var contentType = filePart.getContentType();
             var partHeader = "--" + this.boundary + "\r\n" +

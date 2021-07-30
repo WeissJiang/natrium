@@ -44,7 +44,7 @@ public class FormBodyPublisher {
     }
 
     private static String stringify(Pair<String, String> pair) {
-        return String.join("=", encode(pair.getLeft()), encode(pair.getRight()));
+        return String.join("=", encode(pair.left()), encode(pair.right()));
     }
 
     private static String encode(String s) {

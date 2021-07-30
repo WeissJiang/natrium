@@ -50,11 +50,8 @@ public class MailHandler implements Onion.Middleware<BotContext> {
     }
 
     private static TextMail createTextMail(String email, String message) {
-        var mail = new TextMail();
-        mail.setTo(email);
-        mail.setSubject("Shinonome Lab Mail Service");
-        mail.setText(message);
-        return mail;
+        var subject = "Nano Mail Service";
+        return new TextMail(email, subject, message);
     }
 
     private static boolean isMailCommand(String text) {
