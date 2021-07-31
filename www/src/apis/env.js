@@ -1,4 +1,4 @@
-const NANO_API_BASE = import.meta.env.SNOWPACK_PUBLIC_NANO_API_BASE
+const NANO_API_BASE = import.meta.env['SNOWPACK_PUBLIC_NANO_API_BASE']
 
 export function withNanoApi(endpoint) {
     if (!NANO_API_BASE) {

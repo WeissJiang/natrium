@@ -26,9 +26,7 @@ public class JsonTests {
                 }
                 """;
         var apple = Json.decodeValue(appleJson, Apple.class);
-        var expected = new Apple();
-        expected.setColor("red");
-        expected.setTastes("weird");
+        var expected = new Apple(null, null, "red", "weird");
         assertEquals(expected, apple);
     }
 }

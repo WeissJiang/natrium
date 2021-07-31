@@ -2,7 +2,7 @@ package nano.support.jdbc;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -41,7 +41,7 @@ public class SimpleJdbcSelect<T> {
 
     public SimpleJdbcSelect(@NotNull Class<T> entityClass) {
         this.entityClass = entityClass;
-        this.entityRowMapper = new BeanPropertyRowMapper<>(entityClass);
+        this.entityRowMapper = DataClassRowMapper.newInstance(entityClass);
     }
 
     public @NotNull SimpleJdbcSelect<T> usesJdbcTemplate(@NotNull NamedParameterJdbcTemplate jdbcTemplate) {
@@ -128,7 +128,7 @@ public class SimpleJdbcSelect<T> {
         if (count) {
             columns = "COUNT(*)";
         } else {
-            columns = String.join(", ", entityColumnNames(this.entityClass));
+            columns = String.join(", ", getEntityColumnNames(this.entityClass));
         }
         Assert.hasText(this.tableName, "this.tableName");
         sb.append("SELECT ").append(columns).append(" FROM ").append(tableName);

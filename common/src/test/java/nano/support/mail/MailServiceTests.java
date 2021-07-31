@@ -18,11 +18,7 @@ public class MailServiceTests {
         var mailService = new MailService();
         mailService.setFromAddress("from");
         mailService.setJavaMailSender(mockMailSender);
-        var mail = new TextMail(
-                "to",
-                "subject",
-                "text"
-        );
+        var mail = new TextMail("to", "subject", "text");
         mailService.sendTextMail(mail);
         // verify
         Mockito.verify(mockMailSender, Mockito.times(1)).send(mockMimeMessage);

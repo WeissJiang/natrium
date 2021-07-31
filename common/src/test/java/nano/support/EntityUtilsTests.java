@@ -25,7 +25,7 @@ public class EntityUtilsTests {
 
     @Test
     public void testEntityColumnNames() {
-        var names = EntityUtils.entityColumnNames(Apple.class);
+        var names = EntityUtils.getEntityColumnNames(Apple.class);
         names = names.stream().sorted().toList();
         assertIterableEquals(List.of("color", "id", "name", "tastes"), names);
     }
