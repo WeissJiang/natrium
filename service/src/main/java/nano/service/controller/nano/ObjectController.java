@@ -40,8 +40,8 @@ public class ObjectController {
     @GetMapping("/-/{key}")
     public ResponseEntity<byte[]> getObject(@PathVariable("key") String key) {
         var object = this.objectService.getObject(key);
-        var mediaType = MediaType.parseMediaType(object.getType());
-        var data = object.getData();
+        var mediaType = MediaType.parseMediaType(object.type());
+        var data = object.data();
         return ResponseEntity.ok().contentType(mediaType).body(data);
     }
 
@@ -62,19 +62,17 @@ public class ObjectController {
 
     private static @NotNull NanoObject convertToObject(@NotNull MultipartFile file) {
         try {
-            var object = new NanoObject();
             var filename = file.getOriginalFilename();
-            object.setName(filename);
-            object.setType(file.getContentType());
-            object.setSize(file.getSize());
-            object.setData(file.getBytes());
-            // extension
+            var contentType = file.getContentType();
+            var size = file.getSize();
+            var data = file.getBytes();
             var extension = StringUtils.getFilenameExtension(filename);
             if (ObjectUtils.isEmpty(extension)) {
                 extension = "";
+            } else {
+                extension = "." + extension;
             }
-            object.setExtension("." + extension);
-            return object;
+            return new NanoObject(null, filename, contentType, size, data, extension);
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }

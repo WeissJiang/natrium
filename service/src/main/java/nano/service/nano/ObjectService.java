@@ -43,13 +43,13 @@ public class ObjectService {
         var objectKey = getObjectKey(key);
         var objectValue = Map.of(
                 "key", key,
-                "name", object.getName(),
-                "extension", object.getExtension(),
-                "type", object.getType(),
-                "size", object.getSize()
+                "name", object.name(),
+                "extension", object.extension(),
+                "type", object.type(),
+                "size", object.size()
         );
         this.keyValueRepository.createKeyValue(objectKey, Json.encode(objectValue));
-        this.nanoBlobRepository.upsertBlob(objectKey, Base64.getEncoder().encodeToString(object.getData()));
+        this.nanoBlobRepository.upsertBlob(objectKey, Base64.getEncoder().encodeToString(object.data()));
         return key;
     }
 
@@ -76,35 +76,34 @@ public class ObjectService {
             var objectKey = getObjectKey(_key);
             var keyValue = this.keyValueRepository.queryKeyValue(objectKey);
             Assert.notNull(keyValue, "object is not exist, key: " + objectKey);
-            var object = mapToNanoObject(keyValue);
             // Get data
             var nanoBlob = this.nanoBlobRepository.queryBlob(objectKey);
             var encodedData = nanoBlob.getBlob();
             var data = Base64.getDecoder().decode(encodedData);
-            object.setData(data);
-            return object;
+            return mapToNanoObject(keyValue, data);
         });
     }
 
     public @NotNull List<@NotNull NanoObject> getObjectList() {
         var pattern = "^%s:".formatted(OBJECT);
         var keyList = this.keyValueRepository.queryListByPattern(pattern);
-        return map(keyList, ObjectService::mapToNanoObject);
+        return map(keyList, it -> mapToNanoObject(it, null));
     }
 
     private static @NotNull String getObjectKey(@NotNull String key) {
         return "object:%s".formatted(key);
     }
 
-    private static NanoObject mapToNanoObject(@NotNull KeyValue keyValue) {
+    private static NanoObject mapToNanoObject(@NotNull KeyValue keyValue, byte[] data) {
         var objectJson = keyValue.getValue();
         var objectMap = Json.decodeValueAsMap(objectJson);
-        var object = new NanoObject();
-        object.setKey(String.valueOf(objectMap.get("key")));
-        object.setName(String.valueOf(objectMap.get("name")));
-        object.setSize((Number) objectMap.get("size"));
-        object.setType(String.valueOf(objectMap.get("type")));
-        object.setExtension(String.valueOf(objectMap.get("extension")));
-        return object;
+        return new NanoObject(
+                String.valueOf(objectMap.get("key")),
+                String.valueOf(objectMap.get("name")),
+                String.valueOf(objectMap.get("type")),
+                (Number) objectMap.get("size"),
+                data,
+                String.valueOf(objectMap.get("extension"))
+        );
     }
 }
