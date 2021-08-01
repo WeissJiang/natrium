@@ -23,8 +23,8 @@ dependencies {
     // webp
     implementation 'org.sejda.imageio:webp-imageio:0.1.6'
     // javascript
-    implementation 'org.graalvm.js:js:21.1.0'
-    implementation 'org.graalvm.js:js-scriptengine:21.1.0'
+    implementation 'org.graalvm.js:js:21.2.0'
+    implementation 'org.graalvm.js:js-scriptengine:21.2.0'
     // aop
     implementation 'org.aspectj:aspectjweaver:1.9.7'
     // postgresql

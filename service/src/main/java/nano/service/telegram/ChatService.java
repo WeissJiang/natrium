@@ -21,10 +21,10 @@ public class ChatService {
 
     public List<ChatDTO> getChatList() {
         var chatList = this.chatRepository.queryChatList();
-        return map(chatList, ChatService::convert);
+        return map(chatList, ChatService::convertToChatDTO);
     }
 
-    private static ChatDTO convert(@NotNull NanoChat chat) {
+    private static ChatDTO convertToChatDTO(@NotNull NanoChat chat) {
         return new ChatDTO(
                 String.valueOf(chat.id()),
                 chat.username(),

@@ -62,7 +62,7 @@ public class SecurityService {
             throw new AuthenticationException("Missing API key");
         }
         var apiToken = this.appConfig.nanoApiKey();
-        if (!key.equals(apiToken)) {
+        if (!Objects.equals(key, apiToken)) {
             throw new AuthenticationException("Illegal API key");
         }
     }
@@ -224,6 +224,17 @@ public class SecurityService {
     }
 
     /**
+     * Check ticket permission
+     */
+    public void checkTicketPermission(@Nullable String ticket, @NotNull List<@NotNull String> ticketNameList) {
+        if (CollectionUtils.isEmpty(ticketNameList)) {
+            return;
+        }
+        var ticketValid = ticketNameList.stream().map(this.env::getProperty).anyMatch(it -> Objects.equals(ticket, it));
+        authState(ticketValid, "Insufficient ticket permission");
+    }
+
+    /**
      * Verification timeout, 5 minutes timeout
      */
     private static boolean verifyingTimeout(NanoToken nanoToken) {
@@ -236,16 +247,5 @@ public class SecurityService {
         if (!expression) {
             throw new AuthenticationException(message);
         }
-    }
-
-    /**
-     * Check ticket permission
-     */
-    public void checkTicketPermission(@Nullable String ticket, @NotNull List<@NotNull String> ticketNameList) {
-        if (CollectionUtils.isEmpty(ticketNameList)) {
-            return;
-        }
-        var ticketValid = ticketNameList.stream().map(this.env::getProperty).anyMatch(it -> Objects.equals(ticket, it));
-        authState(ticketValid, "Insufficient ticket permission");
     }
 }

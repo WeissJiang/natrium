@@ -61,6 +61,16 @@ public class CarbonService {
         });
     }
 
+    public @NotNull CarbonApp getApp(@NotNull String appId) {
+        var keyValue = this.keyValueRepository.queryKeyValue("%s:%s".formatted(CARBON, appId));
+        Assert.notNull(keyValue, "carbon app record is absent");
+        var value = keyValue.value();
+        Assert.notNull(value, "carbon app value is absent");
+        var app = Json.decodeValue(value, CarbonApp.class);
+        Assert.notNull(app, "app is absent");
+        return app;
+    }
+
     public void createApp(@NotNull CarbonApp app) {
         validateApp(app);
         this.keyValueRepository.createKeyValue("%s:%s".formatted(CARBON, app.id()), Json.encode(app));
@@ -70,6 +80,33 @@ public class CarbonService {
         validateApp(app);
         this.keyValueRepository.updateKeyValue("%s:%s".formatted(CARBON, app.id()), Json.encode(app));
     }
+
+    public @NotNull CarbonText getText(@NotNull String appId, @NotNull String key, @NotNull String locale) {
+        var app = this.getApp(appId);
+        var pageList = app.pageList();
+        Assert.notEmpty(pageList, "app has no pages");
+        var carbonKey = pageList.stream()
+                .map(CarbonPage::keyList)
+                .filter(Objects::nonNull)
+                .flatMap(Collection::stream)
+                .filter(it -> Objects.equals(key, it.key()))
+                .findFirst()
+                .orElse(null);
+        Assert.notNull(carbonKey, "key is absent");
+        var translation = carbonKey.translation();
+        Assert.notEmpty(translation, "translation is empty");
+        var textMap = translation.stream()
+                .collect(Collectors.toMap(CarbonText::locale, Function.identity()));
+        var text = textMap.get(locale);
+        if (text == null) {
+            var fallbackLocale = app.fallbackLocale();
+            text = textMap.get(fallbackLocale);
+        }
+        Assert.notNull(text, "key text is absent");
+        return text;
+    }
+
+
 
     private static void validateApp(@NotNull CarbonApp app) {
         Assert.notNull(app, "app must be not null");
@@ -102,40 +139,4 @@ public class CarbonService {
             }
         }
     }
-
-    public @NotNull CarbonText getText(@NotNull String appId, @NotNull String key, @NotNull String locale) {
-        var app = this.getApp(appId);
-        var pageList = app.pageList();
-        Assert.notEmpty(pageList, "app has no pages");
-        var carbonKey = pageList.stream()
-                .map(CarbonPage::keyList)
-                .filter(Objects::nonNull)
-                .flatMap(Collection::stream)
-                .filter(it -> Objects.equals(key, it.key()))
-                .findFirst()
-                .orElse(null);
-        Assert.notNull(carbonKey, "key is absent");
-        var translation = carbonKey.translation();
-        Assert.notEmpty(translation, "translation is empty");
-        var textMap = translation.stream()
-                .collect(Collectors.toMap(CarbonText::locale, Function.identity()));
-        var text = textMap.get(locale);
-        if (text == null) {
-            var fallbackLocale = app.fallbackLocale();
-            text = textMap.get(fallbackLocale);
-        }
-        Assert.notNull(text, "key text is absent");
-        return text;
-    }
-
-    public @NotNull CarbonApp getApp(@NotNull String appId) {
-        var keyValue = this.keyValueRepository.queryKeyValue("%s:%s".formatted(CARBON, appId));
-        Assert.notNull(keyValue, "carbon app record is absent");
-        var value = keyValue.value();
-        Assert.notNull(value, "carbon app value is absent");
-        var app = Json.decodeValue(value, CarbonApp.class);
-        Assert.notNull(app, "app is absent");
-        return app;
-    }
-
 }

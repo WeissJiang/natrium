@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Declare exchanges on rabbit property set
@@ -23,9 +23,9 @@ public class ExchangeDeclarer {
     @PostConstruct
     public void declareExchange() {
         Assert.notNull(this.amqpAdmin, "this.amqpAdmin is null");
-        for (var exchange : List.of(Exchanges.NANO, Exchanges.MAIL)) {
-            this.amqpAdmin.declareExchange(new DirectExchange(exchange));
-        }
+        Stream.of(Exchanges.NANO, Exchanges.MAIL)
+                .map(DirectExchange::new)
+                .forEach(this.amqpAdmin::declareExchange);
     }
 
     @Autowired
