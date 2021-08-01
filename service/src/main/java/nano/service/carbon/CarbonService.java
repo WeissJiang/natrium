@@ -132,7 +132,7 @@ public class CarbonService {
     public @NotNull CarbonApp getApp(@NotNull String appId) {
         var keyValue = this.keyValueRepository.queryKeyValue("%s:%s".formatted(CARBON, appId));
         Assert.notNull(keyValue, "carbon app record is absent");
-        var value = keyValue.getValue();
+        var value = keyValue.value();
         Assert.notNull(value, "carbon app value is absent");
         var app = Json.decodeValue(value, CarbonApp.class);
         Assert.notNull(app, "app is absent");

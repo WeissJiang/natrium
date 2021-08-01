@@ -41,14 +41,14 @@ public class Session {
     }
 
     public @NotNull NanoChat getChat() {
-        return chat;
+        return this.chat;
     }
 
     public @NotNull NanoUser getUser() {
-        return user;
+        return this.user;
     }
 
     public @NotNull NanoToken getToken() {
-        return token;
+        return this.token;
     }
 }

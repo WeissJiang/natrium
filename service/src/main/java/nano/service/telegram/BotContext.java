@@ -27,7 +27,6 @@ public class BotContext {
     private Session session;
     private TelegramService telegramService;
 
-
     public BotContext(@NotNull Bot bot, @NotNull Map<String, ?> parameters) {
         this.bot = bot;
         this.parameters = parameters;

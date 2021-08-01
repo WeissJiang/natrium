@@ -29,7 +29,7 @@ public class AccountingService {
         if (keyValue == null) {
             return null;
         }
-        var value = keyValue.getValue();
+        var value = keyValue.value();
         if (value == null) {
             return null;
         }

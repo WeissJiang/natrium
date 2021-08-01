@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
-import static nano.support.Sugar.getFirst;
 
 /**
  * @author cbdyzj
@@ -70,7 +69,7 @@ public class SugarView extends AbstractTemplateView {
         var producibleMimeTypes = request.getAttribute(HandlerMapping.PRODUCIBLE_MEDIA_TYPES_ATTRIBUTE);
         if (producibleMimeTypes instanceof Set<?> mimeTypes) {
             if (!CollectionUtils.isEmpty(mimeTypes)) {
-                return requireNonNull(getFirst(mimeTypes)).toString();
+                return requireNonNull(CollectionUtils.firstElement(mimeTypes)).toString();
             }
         }
         return null;

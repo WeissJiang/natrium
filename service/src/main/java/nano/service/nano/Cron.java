@@ -41,9 +41,9 @@ public class Cron implements ApplicationContextAware {
         var taskRepository = this.context.getBean(TaskRepository.class);
         var taskList = taskRepository.queryAllAvailableTaskList();
         return map(taskList, task -> () -> {
-            var taskBean = this.context.getBean(task.getName(), Task.class);
-            taskBean.execute(Json.decodeValueAsMap(task.getOptions()));
-            taskRepository.updateLastExecutionTime(task.getId(), Timestamp.from(Instant.now()));
+            var taskBean = this.context.getBean(task.name(), Task.class);
+            taskBean.execute(Json.decodeValueAsMap(task.options()));
+            taskRepository.updateLastExecutionTime(task.id(), Timestamp.from(Instant.now()));
         });
     }
 }

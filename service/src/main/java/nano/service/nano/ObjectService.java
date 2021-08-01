@@ -78,7 +78,7 @@ public class ObjectService {
             Assert.notNull(keyValue, "object is not exist, key: " + objectKey);
             // Get data
             var nanoBlob = this.nanoBlobRepository.queryBlob(objectKey);
-            var encodedData = nanoBlob.getBlob();
+            var encodedData = nanoBlob.blob();
             var data = Base64.getDecoder().decode(encodedData);
             return mapToNanoObject(keyValue, data);
         });
@@ -95,7 +95,7 @@ public class ObjectService {
     }
 
     private static NanoObject mapToNanoObject(@NotNull KeyValue keyValue, byte[] data) {
-        var objectJson = keyValue.getValue();
+        var objectJson = keyValue.value();
         var objectMap = Json.decodeValueAsMap(objectJson);
         return new NanoObject(
                 String.valueOf(objectMap.get("key")),

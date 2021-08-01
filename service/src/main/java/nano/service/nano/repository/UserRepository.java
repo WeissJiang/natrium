@@ -8,12 +8,12 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
 
 import static nano.support.EntityUtils.slim;
-import static nano.support.Sugar.getFirst;
 
 @Repository
 public class UserRepository {
@@ -68,6 +68,6 @@ public class UserRepository {
         var rowMapper = new BeanPropertyRowMapper<>(NanoUser.class);
         var paramMap = Map.of("token", token);
         var userList = this.jdbcTemplate.query(slim(sql), paramMap, rowMapper);
-        return getFirst(userList);
+        return CollectionUtils.firstElement(userList);
     }
 }

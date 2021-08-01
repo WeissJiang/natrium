@@ -41,7 +41,7 @@ public class SimpleJdbcSelect<T> {
 
     public SimpleJdbcSelect(@NotNull Class<T> entityClass) {
         this.entityClass = entityClass;
-        this.entityRowMapper = DataClassRowMapper.newInstance(entityClass);
+        this.entityRowMapper = new DataClassRowMapper<>(entityClass);
     }
 
     public @NotNull SimpleJdbcSelect<T> usesJdbcTemplate(@NotNull NamedParameterJdbcTemplate jdbcTemplate) {

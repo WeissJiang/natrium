@@ -2,7 +2,7 @@ package nano.service.nano.repository;
 
 import nano.service.nano.entity.NanoTask;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -28,7 +28,7 @@ public class TaskRepository {
                 WHERE enabled = TRUE
                   AND last_execution_time + time_interval < NOW();
                 """;
-        var rowMapper = new BeanPropertyRowMapper<>(NanoTask.class);
+        var rowMapper = new DataClassRowMapper<>(NanoTask.class);
         return this.jdbcTemplate.query(slim(sql), rowMapper);
     }
 

@@ -90,34 +90,6 @@ public abstract class Sugar {
         return list.stream().anyMatch(predicate);
     }
 
-    public static <T> @Nullable T getFirst(@Nullable Collection<T> collection) {
-        if (collection == null) {
-            return null;
-        }
-        var first = (T) null;
-        for (T it : collection) {
-            first = it;
-            break;
-        }
-        return first;
-    }
-
-    public static <T> @Nullable T getLast(@Nullable Collection<T> collection) {
-        if (collection == null) {
-            return null;
-        }
-        // if is List
-        if (collection instanceof List<T> list) {
-            return list.get(list.size() - 1);
-        }
-        // other collection
-        var last = (T) null;
-        for (T it : collection) {
-            last = it;
-        }
-        return last;
-    }
-
     /**
      * A one-line string template engine
      *

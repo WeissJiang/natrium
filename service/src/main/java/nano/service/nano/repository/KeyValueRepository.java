@@ -4,7 +4,7 @@ import nano.service.nano.entity.KeyValue;
 import nano.support.jdbc.SimpleJdbcSelect;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -39,7 +39,7 @@ public class KeyValueRepository {
                 FROM key_value
                 WHERE key ~ :pattern;
                 """;
-        var rowMapper = new BeanPropertyRowMapper<>(KeyValue.class);
+        var rowMapper = new DataClassRowMapper<>(KeyValue.class);
         return this.jdbcTemplate.query(slim(sql), Map.of("pattern", pattern), rowMapper);
     }
 
