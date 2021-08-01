@@ -19,7 +19,7 @@ public class AuthenticationHandler implements Onion.Middleware<BotContext> {
     @Override
     public void via(@NotNull BotContext context, Onion.@NotNull Next next) throws Exception {
         var session = context.getSession();
-        if (session != null && !NanoToken.VALID.equals(session.getToken().getStatus())) {
+        if (session != null && !NanoToken.VALID.equals(session.getToken().status())) {
             context.replyMessage("Telegram token is not valid");
         } else {
             next.next();

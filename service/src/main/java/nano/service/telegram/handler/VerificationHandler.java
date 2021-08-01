@@ -48,8 +48,8 @@ public class VerificationHandler implements Onion.Middleware<BotContext> {
         var timeout = new ArrayList<String>();
         tokenResultMap.forEach((token, result) -> {
             switch (result) {
-                case NanoToken.VERIFIED -> verified.add(token.getName());
-                case NanoToken.VERIFYING_TIMEOUT -> timeout.add(token.getName());
+                case NanoToken.VERIFIED -> verified.add(token.name());
+                case NanoToken.VERIFYING_TIMEOUT -> timeout.add(token.name());
                 default -> throw new IllegalStateException("Illegal verification result");
             }
         });

@@ -2,7 +2,6 @@ package nano.service.telegram;
 
 import nano.support.Json;
 import nano.service.nano.model.Bot;
-import nano.service.nano.model.Session;
 import nano.service.util.JsonPathModule;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.io.Resource;
@@ -54,7 +53,7 @@ public class BotContext {
     }
 
     public List<String> getUserPrivilegeList() {
-        var privilege = this.getSession().getToken().getPrivilege();
+        var privilege = this.getSession().getToken().privilege();
         return Json.decodeValueAsList(privilege)
                 .stream()
                 .map(String::valueOf)

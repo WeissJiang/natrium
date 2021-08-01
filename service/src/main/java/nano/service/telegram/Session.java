@@ -1,4 +1,4 @@
-package nano.service.nano.model;
+package nano.service.telegram;
 
 import nano.service.nano.entity.NanoChat;
 import nano.service.nano.entity.NanoToken;

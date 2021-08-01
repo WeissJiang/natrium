@@ -35,7 +35,7 @@ public class MailHandler implements Onion.Middleware<BotContext> {
     }
 
     private void trySendMail(BotContext context) throws MessagingException {
-        var email = context.getSession().getUser().getEmail();
+        var email = context.getSession().getUser().email();
         if (ObjectUtils.isEmpty(email)) {
             context.replyMessage("The mail is not set, set mail: /setmail {email}");
             return;

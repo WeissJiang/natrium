@@ -45,8 +45,7 @@ public class MailSetupHandler implements Onion.Middleware<BotContext> {
             context.replyMessage("Illegal mail format");
             return;
         }
-        user.setEmail(mailAddress);
-        this.userService.createOrUpdateUser(user);
+        this.userService.updateUserEmail(user.id(), mailAddress);
         context.replyMessage("Succeed");
     }
 

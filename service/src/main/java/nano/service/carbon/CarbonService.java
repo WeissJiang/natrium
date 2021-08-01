@@ -43,42 +43,41 @@ public class CarbonService {
 
     public @NotNull List<CarbonAppOverview> getAppList() {
         return map(this.getAppIdList(), it -> {
-            var overview = new CarbonAppOverview();
             var app = this.getApp(it);
-            //
-            overview.setId(app.getId());
-            overview.setName(app.getName());
-            overview.setDescription(app.getDescription());
-            overview.setUrl(app.getUrl());
-            var pageList = requireNonNullElse(app.getPageList(), Collections.<CarbonPage>emptyList());
-            overview.setPageCount(pageList.size());
+            var pageList = requireNonNullElse(app.pageList(), Collections.<CarbonPage>emptyList());
             var keyCount = pageList.stream()
-                    .map(CarbonPage::getKeyList)
+                    .map(CarbonPage::keyList)
                     .filter(Objects::nonNull)
                     .mapToInt(Collection::size)
                     .sum();
-            overview.setKeyCount(keyCount);
-            return overview;
+            return new CarbonAppOverview(
+                    app.id(),
+                    app.name(),
+                    app.description(),
+                    app.url(),
+                    pageList.size(),
+                    keyCount
+            );
         });
     }
 
     public void createApp(@NotNull CarbonApp app) {
         validateApp(app);
-        this.keyValueRepository.createKeyValue("%s:%s".formatted(CARBON, app.getId()), Json.encode(app));
+        this.keyValueRepository.createKeyValue("%s:%s".formatted(CARBON, app.id()), Json.encode(app));
     }
 
     public void updateApp(@NotNull CarbonApp app) {
         validateApp(app);
-        this.keyValueRepository.updateKeyValue("%s:%s".formatted(CARBON, app.getId()), Json.encode(app));
+        this.keyValueRepository.updateKeyValue("%s:%s".formatted(CARBON, app.id()), Json.encode(app));
     }
 
     private static void validateApp(@NotNull CarbonApp app) {
         Assert.notNull(app, "app must be not null");
-        Assert.notNull(app.getId(), "app id must be not null");
-        Assert.notEmpty(app.getLocaleList(), "app locale list must be not empty");
-        Assert.notNull(app.getFallbackLocale(), "app fallback locale must be not null");
+        Assert.notNull(app.id(), "app id must be not null");
+        Assert.notEmpty(app.localeList(), "app locale list must be not empty");
+        Assert.notNull(app.fallbackLocale(), "app fallback locale must be not null");
         //
-        var pageList = app.getPageList();
+        var pageList = app.pageList();
         if (CollectionUtils.isEmpty(pageList)) {
             return;
         }
@@ -86,43 +85,43 @@ public class CarbonService {
         var keyKeyUnique = new Unique<String>();
         for (CarbonPage page : pageList) {
             Assert.notNull(page, "page must be not null");
-            Assert.notNull(page.getCode(), "page code must be not null");
-            pageCodeUnique.accept(page.getCode(), "duplicate page code");
+            Assert.notNull(page.code(), "page code must be not null");
+            pageCodeUnique.accept(page.code(), "duplicate page code");
             //
-            var keyList = page.getKeyList();
+            var keyList = page.keyList();
             if (CollectionUtils.isEmpty(keyList)) {
                 continue;
             }
             for (CarbonKey key : keyList) {
                 Assert.notNull(key, "key must be not null");
-                Assert.notNull(key.getKey(), "key key must be not null");
-                keyKeyUnique.accept(key.getKey(), "duplicate key key");
-                Assert.notNull(key.getPageCode(), "key page code must be not null");
-                Assert.isTrue(Objects.equals(page.getCode(), key.getPageCode()), "Key page code does not match");
-                Assert.notNull(key.getOriginal(), "key original must be not null");
+                Assert.notNull(key.key(), "key key must be not null");
+                keyKeyUnique.accept(key.key(), "duplicate key key");
+                Assert.notNull(key.pageCode(), "key page code must be not null");
+                Assert.isTrue(Objects.equals(page.code(), key.pageCode()), "Key page code does not match");
+                Assert.notNull(key.original(), "key original must be not null");
             }
         }
     }
 
     public @NotNull CarbonText getText(@NotNull String appId, @NotNull String key, @NotNull String locale) {
         var app = this.getApp(appId);
-        var pageList = app.getPageList();
+        var pageList = app.pageList();
         Assert.notEmpty(pageList, "app has no pages");
         var carbonKey = pageList.stream()
-                .map(CarbonPage::getKeyList)
+                .map(CarbonPage::keyList)
                 .filter(Objects::nonNull)
                 .flatMap(Collection::stream)
-                .filter(it -> Objects.equals(key, it.getKey()))
+                .filter(it -> Objects.equals(key, it.key()))
                 .findFirst()
                 .orElse(null);
         Assert.notNull(carbonKey, "key is absent");
-        var translation = carbonKey.getTranslation();
+        var translation = carbonKey.translation();
         Assert.notEmpty(translation, "translation is empty");
         var textMap = translation.stream()
-                .collect(Collectors.toMap(CarbonText::getLocale, Function.identity()));
+                .collect(Collectors.toMap(CarbonText::locale, Function.identity()));
         var text = textMap.get(locale);
         if (text == null) {
-            var fallbackLocale = app.getFallbackLocale();
+            var fallbackLocale = app.fallbackLocale();
             text = textMap.get(fallbackLocale);
         }
         Assert.notNull(text, "key text is absent");

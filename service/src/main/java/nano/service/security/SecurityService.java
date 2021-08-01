@@ -77,8 +77,8 @@ public class SecurityService {
         authState(StringUtils.hasText(token), "Missing token");
         var nanoToken = this.tokenRepository.queryToken(token);
         authState(nanoToken != null, "Illegal token");
-        authState(NanoToken.VALID.equals(nanoToken.getStatus()), "Invalid token");
-        var tokenPrivileges = mapToString(Json.decodeValueAsList(nanoToken.getPrivilege()));
+        authState(NanoToken.VALID.equals(nanoToken.status()), "Invalid token");
+        var tokenPrivileges = mapToString(Json.decodeValueAsList(nanoToken.privilege()));
         var exists = privilegeList.stream().anyMatch(tokenPrivileges::contains);
         authState(exists, "Insufficient token privilege");
     }
@@ -101,8 +101,8 @@ public class SecurityService {
         }
         var currentToken = this.tokenRepository.queryToken(token);
         Assert.notNull(currentToken, "Illegal token");
-        Assert.state(every(nanoTokenList, it -> Objects.equals(currentToken.getUserId(), it.getUserId())), "Abnormal operation permission");
-        this.tokenRepository.batchDeleteById(map(nanoTokenList, NanoToken::getId));
+        Assert.state(every(nanoTokenList, it -> Objects.equals(currentToken.userId(), it.userId())), "Abnormal operation permission");
+        this.tokenRepository.batchDeleteById(map(nanoTokenList, NanoToken::id));
     }
 
     /**
@@ -111,16 +111,14 @@ public class SecurityService {
     public List<TokenDTO> getAssociatedTokenList(String token) {
         Assert.hasText(token, "Illegal token");
         var nanoTokenList = this.tokenRepository.queryAssociatedTokenList(token);
-        return map(nanoTokenList, it -> {
-            var tokenDTO = new TokenDTO();
-            tokenDTO.setId(it.getId());
-            tokenDTO.setName(it.getName());
-            tokenDTO.setPrivilege(it.getPrivilege());
-            tokenDTO.setCreationTime(it.getCreationTime().toInstant());
-            tokenDTO.setLastActiveTime(it.getLastActiveTime().toInstant());
-            tokenDTO.setCurrent(Objects.equals(token, it.getToken()));
-            return tokenDTO;
-        });
+        return map(nanoTokenList, it -> new TokenDTO(
+                it.id(),
+                it.name(),
+                it.privilege(),
+                it.lastActiveTime().toInstant(),
+                it.creationTime().toInstant(),
+                Objects.equals(token, it.token())
+        ));
     }
 
     /**
@@ -129,15 +127,23 @@ public class SecurityService {
      */
     public @NotNull Map<String, String> createVerifyingToken(@NotNull String username, String ua) {
         var originalToken = generateUUID();
-        var token = new NanoToken();
-        token.setToken(TokenCode.desensitizeToken(originalToken));
-        token.setName(this.parseUserAgent(ua));
+        var tokenKey = TokenCode.desensitizeToken(originalToken);
+        var name = this.parseUserAgent(ua);
         var verificationCode = generateVerificationCode();
-        token.setStatus(NanoToken.verifyingStatus(username, verificationCode));
+        var status = NanoToken.verifyingStatus(username, verificationCode);
         var now = Timestamp.from(Instant.now());
-        token.setCreationTime(now);
-        token.setLastActiveTime(now);
-        token.setPrivilege(Json.encode(List.of(Privilege.BASIC)));
+        var privilege = Json.encode(List.of(Privilege.BASIC));
+        var token = new NanoToken(
+                null,
+                tokenKey,
+                name,
+                null,
+                null,
+                status,
+                privilege,
+                now,
+                now
+        );
         this.tokenRepository.createToken(token);
         return Map.of("token", originalToken, "verificationCode", verificationCode);
     }
@@ -148,7 +154,7 @@ public class SecurityService {
     public @NotNull Map<String, String> getTokenVerification(@NotNull String token) {
         var nanoToken = this.tokenRepository.queryToken(token);
         Assert.state(nanoToken != null, "Token not found");
-        var status = nanoToken.getStatus();
+        var status = nanoToken.status();
         Assert.hasText(status, "Token status requires not empty");
         var result = new HashMap<String, String>();
         switch (status) {
@@ -174,24 +180,26 @@ public class SecurityService {
      * Verify token
      */
     public Map<NanoToken, String> verifyToken(NanoUser user, NanoToken telegramToken, String verificationCode) {
-        var nanoTokenList = this.tokenRepository.queryVerifyingToken(user.getUsername(), verificationCode);
+        var nanoTokenList = this.tokenRepository.queryVerifyingToken(user.username(), verificationCode);
         var result = new HashMap<NanoToken, String>();
         var now = Timestamp.from(Instant.now());
         forEach(nanoTokenList, it -> {
-            it.setUserId(user.getId());
-            it.setLastActiveTime(now);
-            // copy telegram token privilege
-            it.setPrivilege(telegramToken.getPrivilege());
-            // verification timeout
-            if (verifyingTimeout(it)) {
-                result.put(it, NanoToken.VERIFYING_TIMEOUT);
+            var timeout = verifyingTimeout(it);
+            var token = new NanoToken(
+                    it.id(),
+                    it.token(),
+                    it.name(),
+                    it.chatId(),
+                    user.id(),
+                    timeout ? NanoToken.INVALID : NanoToken.VALID,
+                    telegramToken.privilege(),
+                    now,
+                    it.creationTime()
+            );
+            if (!timeout) {
+                this.tokenRepository.updateToken(token);
             }
-            // verified
-            else {
-                it.setStatus(NanoToken.VALID);
-                this.tokenRepository.updateToken(it);
-                result.put(it, NanoToken.VERIFIED);
-            }
+            result.put(token, timeout ? NanoToken.VERIFYING_TIMEOUT : NanoToken.VERIFIED);
         });
         return result;
     }
@@ -219,7 +227,7 @@ public class SecurityService {
      * Verification timeout, 5 minutes timeout
      */
     private static boolean verifyingTimeout(NanoToken nanoToken) {
-        var creationTime = nanoToken.getCreationTime();
+        var creationTime = nanoToken.creationTime();
         var now = Timestamp.from(Instant.now().minusSeconds(300));
         return now.after(creationTime);
     }

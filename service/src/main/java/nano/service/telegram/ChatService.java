@@ -25,12 +25,12 @@ public class ChatService {
     }
 
     private static ChatDTO convert(@NotNull NanoChat chat) {
-        var chatDTO = new ChatDTO();
-        chatDTO.setId(String.valueOf(chat.getId()));
-        chatDTO.setFirstname(chat.getFirstname());
-        chatDTO.setTitle(chat.getTitle());
-        chatDTO.setType(chat.getType());
-        chatDTO.setUsername(chat.getUsername());
-        return chatDTO;
+        return new ChatDTO(
+                String.valueOf(chat.id()),
+                chat.username(),
+                chat.title(),
+                chat.firstname(),
+                chat.type()
+        );
     }
 }

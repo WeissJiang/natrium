@@ -46,6 +46,10 @@ public class UserService {
         this.userRepository.upsertUser(user);
     }
 
+    public void updateUserEmail(Long userId, String email) {
+        this.userRepository.updateUserEmail(userId, email);
+    }
+
     public List<NanoToken> queryUserToken(Long userId) {
         return this.tokenRepository.queryUserTokenList(userId);
     }
@@ -56,7 +60,7 @@ public class UserService {
             return emptyList();
         }
         return nanoTokens.stream()
-                .map(NanoToken::getPrivilege)
+                .map(NanoToken::privilege)
                 .map(Json::decodeValueAsList)
                 .map(Sugar::mapToString)
                 .flatMap(Collection::stream)
@@ -70,10 +74,10 @@ public class UserService {
     }
 
     private static @NotNull UserDTO convertToUserDTO(@NotNull NanoUser user) {
-        var userDTO = new UserDTO();
-        userDTO.setId(String.valueOf(user.getId()));
-        userDTO.setUsername(user.getUsername());
-        userDTO.setFirstname(user.getFirstname());
-        return userDTO;
+        return new UserDTO(
+                String.valueOf(user.id()),
+                user.username(),
+                user.firstname()
+        );
     }
 }

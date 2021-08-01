@@ -2,7 +2,7 @@ package nano.service.telegram.handler;
 
 import nano.service.nano.entity.NanoChat;
 import nano.service.nano.entity.NanoUser;
-import nano.service.nano.model.Session;
+import nano.service.telegram.Session;
 import nano.service.telegram.BotContext;
 import nano.support.Onion;
 import nano.service.security.SessionService;
@@ -47,27 +47,27 @@ public class SessionInitializeHandler implements Onion.Middleware<BotContext> {
     }
 
     private NanoUser readUser(BotContext context) {
-        var user = new NanoUser();
         Number userId = context.read("$.message.from.id");
         Assert.notNull(userId, "userId is null");
-        user.setId(userId.longValue());
-        user.setUsername(context.read("$.message.from.username"));
-        user.setFirstname(context.read("$.message.from.first_name"));
-        user.setIsBot(context.read("$.message.from.is_bot"));
-        user.setLanguageCode(context.read("$.message.from.language_code"));
-        return user;
+
+        String username = context.read("$.message.from.username");
+        String firstname = context.read("$.message.from.first_name");
+        Boolean isBot = context.read("$.message.from.is_bot");
+        String languageCode = context.read("$.message.from.language_code");
+
+        return new NanoUser(userId.longValue(), username, firstname, languageCode, isBot, null);
     }
 
     private NanoChat readChat(BotContext context) {
-        var chat = new NanoChat();
         Number chatId = context.read("$.message.chat.id");
         Assert.notNull(chatId, "chatId is null");
-        chat.setId(chatId.longValue());
-        chat.setUsername(context.read("$.message.chat.username"));
-        chat.setFirstname(context.read("$.message.chat.first_name"));
-        chat.setTitle(context.read("$.message.chat.title"));
-        chat.setType(context.read("$.message.chat.type"));
-        return chat;
+
+        String username = context.read("$.message.chat.username");
+        String title = context.read("$.message.chat.title");
+        String firstname = context.read("$.message.chat.first_name");
+        String type = context.read("$.message.chat.type");
+
+        return new NanoChat(chatId.longValue(), username, title, firstname, type);
     }
 
     private Session buildSession(NanoChat chat, NanoUser user) {

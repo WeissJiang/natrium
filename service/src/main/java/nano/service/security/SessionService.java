@@ -3,7 +3,7 @@ package nano.service.security;
 import nano.service.nano.entity.NanoChat;
 import nano.service.nano.entity.NanoToken;
 import nano.service.nano.entity.NanoUser;
-import nano.service.nano.model.Session;
+import nano.service.telegram.Session;
 import nano.service.nano.repository.ChatRepository;
 import nano.service.nano.repository.TokenRepository;
 import nano.service.nano.repository.UserRepository;
@@ -16,9 +16,6 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
-
-import static nano.support.Sugar.every;
 
 @Service
 public class SessionService {
@@ -37,71 +34,61 @@ public class SessionService {
 
     @Transactional
     public @NotNull Session getSession(@NotNull NanoChat chat, @NotNull NanoUser user) {
-        this.updateOrCreateChatIfAbsent(chat);
-        this.updateOrCreateUserIfAbsent(user);
-        var token = this.getOrCreateTokenIfAbsent(user.getId(), chat.getId());
-        return new Session(chat, user, token);
+        var refreshedChat = this.refreshChat(chat);
+        var refreshedUser = this.refreshUser(user);
+        var refreshedToken = this.refreshToken(user.id(), chat.id());
+        return new Session(refreshedChat, refreshedUser, refreshedToken);
     }
 
-    private void updateOrCreateChatIfAbsent(@NotNull NanoChat incoming) {
-        var exist = this.chatRepository.queryChat(incoming.getId());
-        if (!Objects.equals(exist, incoming)) {
-            this.chatRepository.upsertChat(incoming);
+    private NanoChat refreshChat(@NotNull NanoChat chat) {
+        var exist = this.chatRepository.queryChat(chat.id());
+        if (!Objects.equals(chat, exist)) {
+            this.chatRepository.upsertChat(chat);
         }
+        return exist;
     }
 
-    private void updateOrCreateUserIfAbsent(@NotNull NanoUser incoming) {
-        var exist = this.userRepository.queryUser(incoming.getId());
+    private NanoUser refreshUser(@NotNull NanoUser user) {
+        var exist = this.userRepository.queryUser(user.id());
         if (exist == null) {
-            this.userRepository.upsertUser(incoming);
+            this.userRepository.upsertUser(user);
+            return user;
         }
-        // incoming not changed
-        else if (userNotChanged(incoming, exist)) {
-            incoming.setEmail(exist.getEmail());
-        }
-        //  incoming not changed
-        else {
-            incoming.setEmail(exist.getEmail());
-            this.userRepository.upsertUser(incoming);
-        }
-    }
-
-    /**
-     * Whether user changed
-     */
-    private static boolean userNotChanged(@NotNull NanoUser incoming, @NotNull NanoUser exist) {
-        List<Function<NanoUser, ?>> getterList = List.of(
-                NanoUser::getUsername,
-                NanoUser::getFirstname,
-                NanoUser::getLanguageCode
+        // copy email
+        var refreshedUser = new NanoUser(
+                user.id(),
+                user.username(),
+                user.firstname(),
+                user.languageCode(),
+                user.isBot(),
+                exist.email()
         );
-        return every(getterList, getter -> {
-            var incomingVal = getter.apply(incoming);
-            var existVal = getter.apply(exist);
-            return Objects.equals(incomingVal, existVal);
-        });
+        if (!Objects.equals(refreshedUser, exist)) {
+            this.userRepository.upsertUser(refreshedUser);
+        }
+        return refreshedUser;
     }
 
-    private @NotNull NanoToken getOrCreateTokenIfAbsent(@NotNull Long userId, @NotNull Long chatId) {
+    private @NotNull NanoToken refreshToken(@NotNull Long userId, @NotNull Long chatId) {
         var tokenKey = "%s-%s".formatted(userId, chatId);
         var token = this.tokenRepository.queryToken(tokenKey);
         var now = Timestamp.from(Instant.now());
         if (token == null) {
-            token = new NanoToken();
-            token.setPrivilege(Json.encode(List.of(Privilege.BASIC)));
-            token.setName("Telegram");
-            token.setCreationTime(now);
-            token.setLastActiveTime(now);
-            token.setUserId(userId);
-            token.setChatId(chatId);
-            token.setToken(tokenKey);
-            token.setStatus(NanoToken.VALID);
-            this.tokenRepository.createToken(token);
+            var newToken = new NanoToken(
+                    null,
+                    tokenKey,
+                    "Telegram",
+                    chatId,
+                    userId,
+                    NanoToken.VALID,
+                    Json.encode(List.of(Privilege.BASIC)),
+                    now,
+                    now
+            );
+            this.tokenRepository.createToken(newToken);
+            return newToken;
         }
-        // token exists
-        else {
-            this.tokenRepository.updateLastActiveTime(tokenKey, now);
-        }
+        this.tokenRepository.updateLastActiveTime(tokenKey, now);
         return token;
     }
 }

@@ -4,7 +4,7 @@ import nano.service.nano.entity.NanoUser;
 import nano.support.jdbc.SimpleJdbcSelect;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -65,9 +65,18 @@ public class UserRepository {
                 WHERE nt.status = 'VALID'
                   AND nt.token = :token;
                 """;
-        var rowMapper = new BeanPropertyRowMapper<>(NanoUser.class);
+        var rowMapper = new DataClassRowMapper<>(NanoUser.class);
         var paramMap = Map.of("token", token);
         var userList = this.jdbcTemplate.query(slim(sql), paramMap, rowMapper);
         return CollectionUtils.firstElement(userList);
+    }
+
+    public void updateUserEmail(Long id, String email) {
+        var sql = """
+                UPDATE nano_user
+                SET email = :email
+                WHERE id = :id;
+                """;
+        this.jdbcTemplate.update(slim(sql), Map.of("id", id, "email", email));
     }
 }
