@@ -35,7 +35,7 @@ public class KeyValueRepository {
 
     public @NotNull List<KeyValue> queryListByPattern(@NotNull String pattern) {
         var sql = """
-                SELECT key, value, last_updated_time, creation_time
+                SELECT id, key, value, last_updated_time, creation_time
                 FROM key_value
                 WHERE key ~ :pattern;
                 """;
