@@ -24,9 +24,7 @@ public class SessionService {
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
 
-    public SessionService(ChatRepository chatRepository,
-                          UserRepository userRepository,
-                          TokenRepository tokenRepository) {
+    public SessionService(ChatRepository chatRepository, UserRepository userRepository, TokenRepository tokenRepository) {
         this.chatRepository = chatRepository;
         this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;
@@ -48,7 +46,7 @@ public class SessionService {
         return exist;
     }
 
-    private NanoUser refreshUser(@NotNull NanoUser user) {
+    private @NotNull NanoUser refreshUser(@NotNull NanoUser user) {
         var exist = this.userRepository.queryUser(user.id());
         if (exist == null) {
             this.userRepository.upsertUser(user);

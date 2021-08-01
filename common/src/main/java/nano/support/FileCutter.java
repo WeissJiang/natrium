@@ -6,9 +6,10 @@ import org.springframework.core.io.InputStreamSource;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -23,24 +24,18 @@ public class FileCutter {
     private static final int BUFFER_SIZE = 8192;
     private static final String TEMP_FILE_PREFIX = "file-cutter";
 
-    private final Options options = createDefaultOptions();
-
-    public FileCutter() {
-    }
+    private final Options options;
 
     public FileCutter(@NotNull Options options) {
-        setIfNotNull(options::getFilename, this.options::setFilename);
-        setIfNotNull(options::getUnitSize, this.options::setUnitSize);
-        setIfNotNull(options::getPartSuffix, this.options::setPartSuffix);
+        this.options = options;
+    }
+
+    public FileCutter() {
+        this.options = createDefaultOptions();
     }
 
     private static @NotNull Options createDefaultOptions() {
-        var options = new Options();
-        options.setFilename(getId());
-        options.setPartSuffix(".part");
-        // 50MB
-        options.setUnitSize(50_000_000);
-        return options;
+        return new Options(getId(), ".part", 50_000_000);
     }
 
     /**
@@ -54,7 +49,7 @@ public class FileCutter {
             int read;
             var split = new HashMap<String, InputStreamSource>();
             for (int i = 1; ; i++) {
-                var partFilename = this.options.getFilename() + this.options.getPartSuffix() + i;
+                var partFilename = this.options.filename() + this.options.partSuffix() + i;
                 var tempFile = Files.createTempFile(TEMP_FILE_PREFIX, partFilename);
                 var os = Files.newOutputStream(tempFile);
                 try (os) {
@@ -62,7 +57,7 @@ public class FileCutter {
                     while ((read = is.read(buffer, 0, BUFFER_SIZE)) >= 0) {
                         os.write(buffer, 0, read);
                         transferred += read;
-                        if (transferred + BUFFER_SIZE > this.options.getUnitSize()) {
+                        if (transferred + BUFFER_SIZE > this.options.unitSize()) {
                             break;
                         }
                     }
@@ -82,7 +77,7 @@ public class FileCutter {
      * merge files
      */
     public @NotNull Pair<String, InputStreamSource> merge(@NotNull Map<String, InputStreamSource> partSourceMap) throws IOException {
-        var filename = this.options.getFilename();
+        var filename = this.options.filename();
         var tempFile = Files.createTempFile(TEMP_FILE_PREFIX, filename);
         tempFile.toFile().deleteOnExit();
         var os = Files.newOutputStream(tempFile);
@@ -104,7 +99,7 @@ public class FileCutter {
      * build zip file
      */
     public @NotNull InputStreamSource zip(@NotNull Map<String, InputStreamSource> sourceMap) throws IOException {
-        var filename = this.options.getFilename();
+        var filename = this.options.filename();
         var zipFilename = filename + ".zip";
         var tempFile = Files.createTempFile(TEMP_FILE_PREFIX, zipFilename);
         tempFile.toFile().deleteOnExit();
@@ -122,54 +117,17 @@ public class FileCutter {
         }
     }
 
-    /**
-     * get UUID
-     */
     private static @NotNull String getId() {
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
 
     /**
-     * set if not null
+     * FileCutter Options
      */
-    private static <O> void setIfNotNull(Supplier<O> getter, Consumer<O> setter) {
-        O o = getter.get();
-        if (o != null) {
-            setter.accept(o);
-        }
-    }
-
-    /**
-     * FileCutter options
-     */
-    public static class Options {
-
-        private String filename;
-        private String partSuffix;
-        private Integer unitSize;
-
-        public String getFilename() {
-            return filename;
-        }
-
-        public void setFilename(String filename) {
-            this.filename = filename;
-        }
-
-        public String getPartSuffix() {
-            return partSuffix;
-        }
-
-        public void setPartSuffix(String partSuffix) {
-            this.partSuffix = partSuffix;
-        }
-
-        public Integer getUnitSize() {
-            return unitSize;
-        }
-
-        public void setUnitSize(Integer unitSize) {
-            this.unitSize = unitSize;
-        }
+    public static record Options(
+            String filename,
+            String partSuffix,
+            Integer unitSize
+    ) {
     }
 }
