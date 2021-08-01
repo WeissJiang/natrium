@@ -41,7 +41,7 @@ public class Nano100Handler implements Onion.Middleware<BotContext> {
     @Override
     public void via(@NotNull BotContext context, Onion.@NotNull Next next) throws Exception {
 
-        if (Bot.NANO_100.equals(context.bot().name())) {
+        if (Bot.NANO_100.equals(context.getBot().name())) {
             this.fetchAndSendExtract(context);
         } else {
             next.next();
@@ -49,7 +49,7 @@ public class Nano100Handler implements Onion.Middleware<BotContext> {
     }
 
     private void fetchAndSendExtract(BotContext context) {
-        var text = context.text();
+        var text = context.getText();
         if (ObjectUtils.isEmpty(text)) {
             context.sendMessage("The title is empty, please input title");
             return;
@@ -95,11 +95,11 @@ public class Nano100Handler implements Onion.Middleware<BotContext> {
 
     private static void replyMessageWithoutPreview(BotContext context, String text) {
         var payload = Map.of(
-                "chat_id", context.chatId(),
-                "reply_to_message_id", context.messageId(),
+                "chat_id", context.getChatId(),
+                "reply_to_message_id", context.getMessageId(),
                 "disable_web_page_preview", true,
                 "text", text
         );
-        context.getTelegramService().sendMessage(context.bot(), payload);
+        context.getTelegramService().sendMessage(context.getBot(), payload);
     }
 }

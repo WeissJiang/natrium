@@ -25,8 +25,8 @@ public class MailHandler implements Onion.Middleware<BotContext> {
 
     @Override
     public void via(@NotNull BotContext context, Onion.@NotNull Next next) throws Exception {
-        var text = context.text();
-        var bot = context.bot();
+        var text = context.getText();
+        var bot = context.getBot();
         if (Bot.NANO.equals(bot.name()) && isMailCommand(text)) {
             this.trySendMail(context);
         } else {
@@ -40,7 +40,7 @@ public class MailHandler implements Onion.Middleware<BotContext> {
             context.replyMessage("The mail is not set, set mail: /setmail {email}");
             return;
         }
-        var message = getMailBody(context.text());
+        var message = getMailBody(context.getText());
         if (ObjectUtils.isEmpty(message)) {
             context.replyMessage("Mail content is empty, send mail: /mail {message}");
             return;

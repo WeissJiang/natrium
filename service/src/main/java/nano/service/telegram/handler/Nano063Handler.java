@@ -24,7 +24,7 @@ public class Nano063Handler implements Onion.Middleware<BotContext> {
 
     @Override
     public void via(@NotNull BotContext context, Onion.@NotNull Next next) throws Exception {
-        if (Bot.NANO_063.equals(context.bot().name())) {
+        if (Bot.NANO_063.equals(context.getBot().name())) {
             this.toPinyin(context);
         } else {
             next.next();
@@ -32,7 +32,7 @@ public class Nano063Handler implements Onion.Middleware<BotContext> {
     }
 
     private void toPinyin(BotContext context) {
-        var text = context.text();
+        var text = context.getText();
         if (ObjectUtils.isEmpty(text)) {
             context.sendMessage("Input text is empty, please input");
             return;

@@ -60,7 +60,7 @@ public class BotHandlerTests {
                 """;
         doAnswer(invocation -> {
             var context = invocation.getArgument(0, BotContext.class);
-            assertTrue(context.commands().contains("/start"));
+            assertTrue(context.getCommandList().contains("/start"));
             var next = invocation.getArgument(1, Onion.Next.class);
             next.next();
             return null;

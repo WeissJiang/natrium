@@ -33,7 +33,7 @@ public class ExceptionHandler implements Onion.Middleware<BotContext> {
      * Send message to terminal client if possible
      */
     private static void trySendMessage(BotContext context, String text) {
-        if (context.chatId() == null) {
+        if (context.getChatId() == null) {
             return;
         }
         try {

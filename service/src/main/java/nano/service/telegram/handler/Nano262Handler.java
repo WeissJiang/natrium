@@ -22,7 +22,7 @@ public class Nano262Handler implements Onion.Middleware<BotContext> {
 
     @Override
     public void via(@NotNull BotContext context, Onion.@NotNull Next next) throws Exception {
-        if (Bot.NANO_262.equals(context.bot().name())) {
+        if (Bot.NANO_262.equals(context.getBot().name())) {
             this.evalScript(context);
         } else {
             next.next();
@@ -30,7 +30,7 @@ public class Nano262Handler implements Onion.Middleware<BotContext> {
     }
 
     private void evalScript(BotContext context) {
-        var text = context.text();
+        var text = context.getText();
         if (ObjectUtils.isEmpty(text)) {
             context.sendMessage("The script is empty");
             return;

@@ -33,27 +33,27 @@ public class BotContext {
         this.parameterContext = JsonPathModule.parse(parameters);
     }
 
-    public Number chatId() {
+    public Number getChatId() {
         return this.read("$.message.chat.id");
     }
 
-    public Number fromId() {
+    public Number getMessageFromId() {
         return this.read("$.message.from.id");
     }
 
-    public String text() {
+    public String getText() {
         return this.read("$.message.text");
     }
 
-    public String chatType() {
+    public String getChatType() {
         return this.read("$.message.chat.type");
     }
 
-    public Number messageId() {
+    public Number getMessageId() {
         return this.read("$.message.message_id");
     }
 
-    public List<String> userPrivilegeList() {
+    public List<String> getUserPrivilegeList() {
         var privilege = this.getSession().getToken().getPrivilege();
         return Json.decodeValueAsList(privilege)
                 .stream()
@@ -62,24 +62,24 @@ public class BotContext {
                 .toList();
     }
 
-    public Instant date() {
+    public Instant getDate() {
         Number timestamp = this.read("$.message.date");
         Assert.notNull(timestamp, "timestamp is null");
         return Instant.ofEpochSecond(timestamp.longValue());
     }
 
 
-    public List<String> commands() {
+    public List<String> getCommandList() {
         List<Map<String, Object>> entities = this.read("$.message.entities");
         var commandEntities = filter(entities, it -> "bot_command".equals(it.get("type")));
         if (CollectionUtils.isEmpty(commandEntities)) {
             return emptyList();
         }
-        var text = this.text();
+        var text = this.getText();
         var commands = new ArrayList<String>();
         for (var entity : commandEntities) {
-            var offset = getInteger(entity.get("offset"));
-            var length = getInteger(entity.get("length"));
+            var offset = convertToInteger(entity.get("offset"));
+            var length = convertToInteger(entity.get("length"));
             if (offset == null || length == null) {
                 continue;
             }
@@ -104,33 +104,33 @@ public class BotContext {
 
     public void sendMessage(String text) {
         var payload = Map.of(
-                "chat_id", this.chatId(),
+                "chat_id", this.getChatId(),
                 "text", text
         );
-        this.getTelegramService().sendMessage(this.bot(), payload);
+        this.getTelegramService().sendMessage(this.getBot(), payload);
     }
 
     public void replyMessage(String text) {
         var payload = Map.of(
-                "chat_id", this.chatId(),
-                "reply_to_message_id", this.messageId(),
+                "chat_id", this.getChatId(),
+                "reply_to_message_id", this.getMessageId(),
                 "text", text
         );
-        this.getTelegramService().sendMessage(this.bot(), payload);
+        this.getTelegramService().sendMessage(this.getBot(), payload);
     }
 
     public void replyPhoto(Resource photo) {
-        this.getTelegramService().replyPhoto(this.bot(), this.chatId(), this.messageId(), photo);
+        this.getTelegramService().replyPhoto(this.getBot(), this.getChatId(), this.getMessageId(), photo);
     }
 
     public String getFileUrl(String fileId) {
-        var result = this.getTelegramService().getFile(this.bot(), fileId);
+        var result = this.getTelegramService().getFile(this.getBot(), fileId);
         var filePath = (String) JsonPathModule.read(result, "$.result.file_path");
         Assert.notNull(filePath, "filePath is null");
-        return TelegramService.getFileUrl(this.bot(), filePath);
+        return TelegramService.getFileUrl(this.getBot(), filePath);
     }
 
-    private static Integer getInteger(Object o) {
+    private static Integer convertToInteger(Object o) {
         if (o instanceof Integer) {
             return (Integer) o;
         }
@@ -161,7 +161,7 @@ public class BotContext {
         this.telegramService = telegramService;
     }
 
-    public Bot bot() {
+    public Bot getBot() {
         return this.bot;
     }
 

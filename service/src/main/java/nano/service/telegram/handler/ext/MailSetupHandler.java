@@ -25,8 +25,8 @@ public class MailSetupHandler implements Onion.Middleware<BotContext> {
 
     @Override
     public void via(@NotNull BotContext context, Onion.@NotNull Next next) throws Exception {
-        var text = context.text();
-        var bot = context.bot();
+        var text = context.getText();
+        var bot = context.getBot();
         if (Bot.NANO.equals(bot.name()) && isSetMailCommand(text)) {
             this.trySetMailAddress(context);
         } else {
@@ -36,11 +36,11 @@ public class MailSetupHandler implements Onion.Middleware<BotContext> {
 
     private void trySetMailAddress(BotContext context) {
         var user = context.getSession().getUser();
-        if (!context.userPrivilegeList().contains(Privilege.MAIL)) {
+        if (!context.getUserPrivilegeList().contains(Privilege.MAIL)) {
             context.replyMessage("Failed, no mail service permission");
             return;
         }
-        var mailAddress = getMailAddress(context.text());
+        var mailAddress = getMailAddress(context.getText());
         if (!EMAIL.test(mailAddress)) {
             context.replyMessage("Illegal mail format");
             return;

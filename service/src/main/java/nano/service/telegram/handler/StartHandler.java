@@ -20,8 +20,8 @@ public class StartHandler implements Onion.Middleware<BotContext> {
 
     @Override
     public void via(@NotNull BotContext context, Onion.@NotNull Next next) throws Exception {
-        var commands = context.commands();
-        var bot = context.bot();
+        var commands = context.getCommandList();
+        var bot = context.getBot();
         if (commands.contains("/start") || commands.contains("/start@" + bot.username())) {
             replyStartMessage(context);
         } else {
@@ -30,7 +30,7 @@ public class StartHandler implements Onion.Middleware<BotContext> {
     }
 
     private static void replyStartMessage(BotContext context) {
-        var bot = context.bot();
+        var bot = context.getBot();
         switch (bot.name()) {
             case Bot.NANO -> replyNanoStart(context);
             case Bot.NANO_026 -> context.replyMessage("ZH/EN translation");
@@ -50,12 +50,12 @@ public class StartHandler implements Onion.Middleware<BotContext> {
                 <a href="https://t.me/nano_262_bot">nano-262</a> - Evaluate JavaScript
                 """;
         var payload = Map.of(
-                "chat_id", context.chatId(),
-                "reply_to_message_id", context.messageId(),
+                "chat_id", context.getChatId(),
+                "reply_to_message_id", context.getMessageId(),
                 "parse_mode", "HTML",
                 "disable_web_page_preview", true,
                 "text", text
         );
-        context.getTelegramService().sendMessage(context.bot(), payload);
+        context.getTelegramService().sendMessage(context.getBot(), payload);
     }
 }
